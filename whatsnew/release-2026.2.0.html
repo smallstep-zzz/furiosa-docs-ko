@@ -423,9 +423,7 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 </li>
 <li><p><strong>최적화된 로짓 복사 I/O</strong>:</p>
 <ul>
-<li><p>Reduced the memory bottleneck in loading model outputs for sampling by copying
-only the slice actually consumed by the sampler, cutting host-device transfer
-volume per decode step.</p></li>
+<li><p>: 샘플러가 실제로 소비하는 슬라이스만 복사하여 sampling 모델 출력 로딩의 메모리 병목 현상을 줄였습니다. 이를 통해 각 decode 단계마다 호스트-장치 전송 볼륨이 줄었습니다.</p></li>
 </ul>
 </li>
 <li><p><strong>스케줄러 최적화</strong>:</p>

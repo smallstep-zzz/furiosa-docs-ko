@@ -417,8 +417,8 @@ helm<span class="w"> </span>install<span class="w"> </span>istio-base<span class
 </section>
 <section id="step-3-prepare-kubernetes-secret">
 <h3>단계 3: Kubernetes 비밀 준비<a class="headerlink" href="#step-3-prepare-kubernetes-secret" title="Link to this heading">#</a></h3>
-<p>우리가 사용할 것입니다 <code class="docutils literal notranslate"><span class="pre">llm-d</span></code> namespace to deploy llm-d with llm-d-modelservice Helm chart.
-Create a Kubernetes secret for your Hugging Face token:</p>
+<p>우리가 사용할 것입니다 <code class="docutils literal notranslate"><span class="pre">llm-d</span></code> llm를 llm-d-modelservice Helm 차트와 함께 배포하기 위한 네임스페이스를 만듭니다.
+Hugging Face token에 대한 Kubernetes 비밀을 만듭니다:</p>
 <div class="literal-block-wrapper docutils container" id="id4">
 <div class="code-block-caption"><span class="caption-text">hf-secret.yaml</span><a class="headerlink" href="#id4" title="Link to this code">#</a></div>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
@@ -443,8 +443,8 @@ kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> <
 </section>
 <section id="step-4-download-the-target-llm-model">
 <h3>단계 4: 대상 LLM 모델 다운로드<a class="headerlink" href="#step-4-download-the-target-llm-model" title="Link to this heading">#</a></h3>
-<p>Furiosa-LLM deployed using llm-d-modelservice can utilize PVCs to pre-download Hugging Face models.
-In this guide, we will pre-download the <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.1-8B-Instruct</span></code> 모델은 Hugging Face 허브에서 설정됩니다.</p>
+<p>llm-d-modelservice를 사용하여 배포된 Furiosa-LLM는 PVC를 사용하여 Hugging Face 모델을 미리 다운로드할 수 있습니다.
+이 가이드에서는 미리 다운로드합니다. <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.1-8B-Instruct</span></code> 모델은 Hugging Face 허브에서 설정됩니다.</p>
 <p>모델을 저장하기 위한 PVC 생성:</p>
 <div class="literal-block-wrapper docutils container" id="id5">
 <div class="code-block-caption"><span class="caption-text">model-pvc.yaml</span><a class="headerlink" href="#id5" title="Link to this code">#</a></div>

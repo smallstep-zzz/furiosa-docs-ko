@@ -373,8 +373,7 @@ Request 2: [S1] + [B]
 </ul>
 <p>token 경기가 계속되더라도 sliding-window 필요조건은 더 이상 만족하지 않습니다, Furiosa-LLM는 가장 긴 안전한 접두사만 재사용하고 나머지를 따릅니다. 이것은 아직도 재사용을 극화하는 동안 결과를 정확한 유지합니다.</p>
 <p>연습에서 하이브리드 모델에서 캐시가 짧은 경우 token 오버랩, 특히 recent-window 컨텍스트가 요청에 따라 다르거나 evicted되었습니다.</p>
-<p>This behavior is also affected by eviction policy. For sliding-window attention, Furiosa-LLM intentionally allows sliding-window blocks to be evicted independently of global blocks, including at intermediate (non-leaf) prefix-tree nodes.
-The rationale is memory efficiency: blocks outside the frequently reused window are treated as stale and can be reclaimed earlier to make room for more useful cache content. However, under high memory pressure, this might cause a scenario where token-prefix matching continues while sliding-window validity ends sooner; in that case, Furiosa-LLM safely reuses the longest prefix that still has a valid window.</p>
+<p>이러한 동작은 또한 이탈 정책에 영향을 받습니다. 슬라이딩 윈도우 어텐션의 경우, Furiosa-LLM는 전역 블록과 독립적으로 슬라이딩 윈도우 블록이 이탈되도록 의도적으로 허용합니다. 여기에는 중간 (비 잎) 접두사 트리 노드도 포함됩니다. 그 이유는 메모리 효율성 때문입니다. 자주 재사용되는 윈도우 외부의 블록은 오래된 것으로 간주되며 더 유용한 캐시 콘텐츠를 위한 공간을 확보하기 위해 더 일찍 회수할 수 있습니다. 그러나 높은 메모리 압력 하에서는 token-접두사 일치가 더 빨리 종료되는 동안에도 계속될 수 있습니다. 이 경우 Furiosa-LLM는 여전히 유효한 윈도우를 가진 가장 긴 접두사를 안전하게 재사용합니다.</p>
 </section>
 </section>
 <section id="performance-benefits">

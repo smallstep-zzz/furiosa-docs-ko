@@ -354,9 +354,7 @@ html
 </section>
 <section id="optimized-multimodal-serving">
 <h3>최적화된 멀티모달 서비스<a class="headerlink" href="#optimized-multimodal-serving" title="Link to this heading">#</a></h3>
-<p>The vision-language support introduced in 2026.3 now runs end to end on the regular FCFS
-scheduler. This unifies text-only and image-and-text requests under the same scheduling,
-prefix-cache, and data-parallel infrastructure instead of a separate proof-of-concept loop.</p>
+<p>2026.3에 도입된 비전-언어 지원은 이제 정규 FCFS 스케줄러에서 전체 과정을 실행합니다. 이는 텍스트만, 이미지와 텍스트 요청을 동일한 스케줄링, 프리픽스 캐시, 데이터 병렬 인프라 하에서 통합하여 별도의 프로토타입 루프를 대체합니다.</p>
 <p>Multimodal 요청 처리는 3개의 지역에서 낙관되었습니다:</p>
 <ul class="simple">
 <li><p><strong>배치 시 비전 인코딩:</strong> 여러 요청의 이미지는 동시 부하에서 throughput를 개선하기 위해 함께 인코딩 할 수 있습니다.</p></li>
@@ -391,10 +389,7 @@ cross-encoder.</p></li>
 <section id="profile-guided-decode-batching">
 <h3>Profile-Guided Decode Batching<a class="headerlink" href="#profile-guided-decode-batching" title="Link to this heading">#</a></h3>
 <p><strong>Profile-guided decode batching</strong> 실제 NPU 실행 및 I/O 비용을 사용하여 decode 일괄 처리 및 다른 컨텍스트 길이와 요청에 대한 양동이 선택을 최적화 할 수 있습니다. 원래 2025.3.0의 opt-in 기능으로 도입되었습니다. <strong>2026.4.0에서 생성 모델에 대한 기본으로 활성화</strong> 성능 개선 및 안정화에 따른 성능 향상.</p>
-<p>GPT-OSS-120B 벤치 마크에 따르면 (TP = 32, DP = 1), 기능 증가 ShareGPT output-token throughput 미디어에 의해 <strong>22.7%</strong> 출력당 평균 시간 감소 token (TPOT) 미디어에 의해 <strong>16.0%</strong> across 20 matched configurations. These combine five concurrency
-levels (16, 32, 64, 128, and 256) with prefix caching on/off and overlap scheduling
-on/off (5 × 2 × 2). Each configuration compares the feature enabled and disabled
-under otherwise identical conditions. Results vary by workload.</p>
+<p>GPT-OSS-120B 벤치 마크에 따르면 (TP = 32, DP = 1), 기능 증가 ShareGPT output-token throughput 미디어에 의해 <strong>22.7%</strong> 출력당 평균 시간 감소 token (TPOT) 미디어에 의해 <strong>16.0%</strong> 20개의 일치하는 구성에서. 이는 5개의 동시성 수준(16, 32, 64, 128, 및 256)과 prefix caching 켜기/끄기, 오버랩 스케줄링 켜기/끄기(5 × 2 × 2)를 결합합니다. 각 구성은 동일한 조건 하에서 활성화 및 비활성화된 기능을 비교합니다. 결과는 워크로드에 따라 다릅니다.</p>
 <figure class="align-default">
 <a class="reference internal image-reference" href="../_images/profile-guided-decode-batching-2026.4.svg"><img alt="Median output throughput gains and mean TPOT reductions with profile-guided decode batching enabled, for three GPT-OSS-120B workloads." src="../_images/profile-guided-decode-batching-2026.4.svg" style="width: 90%;"/>
 </a>
@@ -492,8 +487,7 @@ under otherwise identical conditions. Results vary by workload.</p>
 <ul>
 <li><p>DP를 위한 모델 무게를 병렬로 세웁니다.</p></li>
 <li><p>EDFs의 RoPE 캐시와 같은 Deduplicate 공유 ModelBuffer 업로드.</p></li>
-<li><p>Generate metadata for profile-guided decode batching about five times faster for large
-MoE models by reducing redundant scheduler-estimation quantization steps.</p></li>
+<li><p>MoE 모델의 경우, 대규모 모델에 대해 프로필 기반 decode batching를 5배 더 빠르게 생성하기 위해 중복된 스케줄러 추정 단계를 줄입니다.</p></li>
 <li><p>runtime 견적 I/O-buffer 메모리 모두에서 기본적으로 <code class="docutils literal notranslate"><span class="pre">LLM</span></code> 및 제공 경로;
 명시적 <code class="docutils literal notranslate"><span class="pre">--max-io-memory-mb</span></code> 값은 계속 사용 가능합니다.</p></li>
 <li><p>장치 메시에서 크기 peer-DRAM 창 및 FXB 경로에 명시된 I/O-memory 설정을 보존하십시오.</p></li>
@@ -501,8 +495,7 @@ MoE models by reducing redundant scheduler-estimation quantization steps.</p></l
 </li>
 <li><p><strong>스케줄링 및 분산 서비스</strong></p>
 <ul>
-<li><p>Improved profile-guided decode batching using measured compute and input-transfer
-costs, with cached startup profiles and a configurable scheduler CPU budget.</p></li>
+<li><p>측정된 컴퓨팅 및 입력 전송 비용을 사용하여 개선된 프로필 기반 decode batching를 사용하며, 캐시된 시작 프로필과 구성 가능한 스케줄러 예산을 제공합니다.</p></li>
 <li><p>향상된 엄격한 배치 구성 및 이동 non-critical 결과 오버랩 스케줄러의 NPU 파견 경로에서 처리. 참조 <a class="reference internal" href="../furiosa_llm/overlap-scheduling.html#overlapscheduling"><span class="std std-ref">겹치기 기획</span></a>.</p></li>
 <li><p>prefix-cache-aware 입학 견적, on-demand 퇴치 및 추가 long-context radix-cache 최적화를 추가했습니다.</p></li>
 <li><p>초기 PD-disaggregation 커넥터 수명주기, 입학 신호, 취소 처리 및 전용 교정 테스트가 추가되었습니다. 공공 서빙 워크플로는 실험적이다. 배치 완료 라우팅, layer-group DMA/network 전송 파이프, 그리고 1 GB는 큰 KV 전송에 대 한 Chunking을 추가. Mooncake-backed PD 통합 개발 남아.</p></li>
@@ -562,8 +555,8 @@ costs, with cached startup profiles and a configurable scheduler CPU budget.</p>
 <section id="bug-fixes">
 <h4>버그 수정<a class="headerlink" href="#bug-fixes" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>Fixed gpt-oss parsing in multi-turn tool-calling conversations and multi-turn Responses API
-requests.</p></li>
+<li><p>다중 턴 도구 호출 대화 및 다중 턴 응답에서 gpt-oss 파싱을 수정했습니다.
+요청.</p></li>
 <li><p>고정 hierarchical-cache 입학 deadlocks, auxiliary-cache 재로드 정렬, 부분 접두사 재사용 및 prefix-router 미러 일관성.</p></li>
 <li><p>고정 vision-language sampling 판 및 멀티 모달 position-offset 취급.</p></li>
 <li><p>고정 stop-string 취소 정리 및 structured-output 취소 레이스.</p></li>

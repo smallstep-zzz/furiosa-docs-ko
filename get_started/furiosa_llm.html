@@ -292,10 +292,9 @@ html
 <article class="bd-article">
 <section id="quick-start-with-furiosa-llm">
 <span id="gettingstartedfuriosallm"></span><h1>Furiosa-LLM를 사용한 빠른 시작<a class="headerlink" href="#quick-start-with-furiosa-llm" title="Link to this heading">#</a></h1>
-<p>Furiosa-LLM is a serving framework for LLM models that uses FuriosaAI’s NPU.
-It provides a Python API compatible with vLLM and a server compatible with
-OpenAI’s API.
-This document explains how to install and use Furiosa-LLM.</p>
+<p>Furiosa-LLM는 LLM 모델을 위한 FuriosaAI를 사용하는 서비스 프레임워크입니다.
+vLLM와 호환되는 Python 및 OpenAI의 API와 호환되는 서버를 제공합니다.
+이 문서는 Furiosa-LLM를 설치하고 사용하는 방법을 설명합니다.</p>
 <div class="admonition warning">
 <p class="admonition-title">경고</p>
 <p>이 문서는 Furiosa SDK 2026.4.1에 근거를 둡니다. 여기에서 설명된 특징 및 APIs는 미래에 변화하는 주제입니다.</p>
@@ -325,8 +324,8 @@ hf auth login --token $HF_TOKEN
 </section>
 <section id="offline-batch-inference-with-furiosa-llm">
 <h2>Furiosa-LLM와 오프라인 배치 Inference<a class="headerlink" href="#offline-batch-inference-with-furiosa-llm" title="Link to this heading">#</a></h2>
-<p>We now explain how to perform offline LLM inference using the Python API of Furiosa-LLM.
-First, import the <code class="docutils literal notranslate"><span class="pre">LLM</span></code> and <code class="docutils literal notranslate"><span class="pre">SamplingParams</span></code> furiosa_llm 모듈에서 클래스. <code class="docutils literal notranslate"><span class="pre">LLM</span></code> 클래스는 LLM 모델을로드하고 LLM inference에 대한 코어 API를 제공합니다.
+<p>이제 Furiosa-LLM의 Python 및 API를 사용하여 LLM 및 inference를 오프라인으로 사용하는 방법을 설명합니다.
+먼저, 다음을 가져옵니다. <code class="docutils literal notranslate"><span class="pre">LLM</span></code> and <code class="docutils literal notranslate"><span class="pre">SamplingParams</span></code> furiosa_llm 모듈에서 클래스. <code class="docutils literal notranslate"><span class="pre">LLM</span></code> 클래스는 LLM 모델을로드하고 LLM inference에 대한 코어 API를 제공합니다.
 <code class="docutils literal notranslate"><span class="pre">SamplingParams</span></code> 텍스트 생성에 대한 다양한 매개 변수를 지정하는 데 사용됩니다.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
 

@@ -323,8 +323,7 @@ html
 <span id="fxb"></span><h1>C Furiosa 실행 파일 묶음 (FXB)<a class="headerlink" href="#furiosa-executable-bundles-fxb" title="Link to this heading">#</a></h1>
 <p>Furiosa-LLM는 Furiosa NPU의 자산을 실행하는 Hugging Face 형식과 컴파일된 프로그램에 있는 모델 자산입니다. 모델 자산은 구성, 토큰화기 및 무게를 제공하지만, <strong>Furiosa 실행 파일 묶음
 (FXB)</strong> 컴파일된 커널을 제공합니다. 실행 가능한 배포는 두 부분 모두 필요로 합니다.</p>
-<p>Furiosa-LLM needs an FXB because the code executed on the NPU is compiled ahead of time for
-the model architecture and execution configuration. The resulting <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일은 컴파일된 binaries 및 metadata가로드하고 실행해야 하는 단일 아카이브입니다.</p>
+<p>Furiosa-LLM는 NPU에서 실행되는 코드가 모델 아키텍처 및 실행 구성에 대해 미리 컴파일되었기 때문에 FXB가 필요합니다. 그 결과 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일은 컴파일된 binaries 및 metadata가로드하고 실행해야 하는 단일 아카이브입니다.</p>
 <p>모델 자산에서 별도의 컴파일 된 프로그램을 유지하면 몇 가지 이점이 있습니다.</p>
 <ul class="simple">
 <li><p>모델은 서빙 호스트에 커널을 컴파일하지 않고 시작할 수 있습니다.</p></li>

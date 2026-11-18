@@ -293,10 +293,8 @@ html
 <span id="metricsexporter"></span><h1>Furiosa 메트릭스 내보내기 설치<a class="headerlink" href="#installing-furiosa-metrics-exporter" title="Link to this heading">#</a></h1>
 <section id="furiosa-metrics-exporter">
 <h2>Furiosa 메트릭스 내보내기<a class="headerlink" href="#furiosa-metrics-exporter" title="Link to this heading">#</a></h2>
-<p>Furiosa 메트릭 수출업자는 FuriosaAI NPU 장치와 관련된 미터의 컬렉션을 노출 <a class="reference external" href="https://prometheus.io/">프로메테우스</a> format.
-In a Kubernetes cluster, you can scrape the metrics provided by furiosa-metrics-exporter
-using Prometheus and visualize them with a Grafana dashboard.
-This can be easily set up using the <a class="reference external" href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus">프로메테우스 차트</a>
+<p>Furiosa 메트릭 수출업자는 FuriosaAI NPU 장치와 관련된 미터의 컬렉션을 노출 <a class="reference external" href="https://prometheus.io/">프로메테우스</a> Kubernetes 클러스터에서, Prometheus를 사용하여 furiosa-metrics-exporter에서 제공하는 메트릭을 수집하고 Grafana 대시보드를 사용하여 시각화할 수 있습니다.
+이를 쉽게 설정하려면 다음을 사용하십시오: <a class="reference external" href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus">프로메테우스 차트</a>
 and <a class="reference external" href="https://github.com/grafana/helm-charts/tree/main/charts/grafana">그라파나</a>
 furiosa-metrics-exporter Helm 차트와 함께 헬멧 차트.</p>
 <section id="deploying-furiosa-metrics-exporter-with-helm">
@@ -475,13 +473,13 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <td><p>Furiosa NPU 장치의 UUID</p></td>
 </tr>
 <tr class="row-even"><td><p>pci_bus_id</p></td>
-<td><p>The PCI bus ID of the Furiosa NPU device. e.g. 0000:c7:00.0</p></td>
+<td><p>Furiosa NPU 장치의 PCI 버스 ID. 예: 0000:c7:00.0</p></td>
 </tr>
 <tr class="row-odd"><td><p>firmware_version</p></td>
-<td><p>The firmware version of the Furiosa NPU device. e.g. 2025.1.0+696efad</p></td>
+<td><p>Furiosa NPU 장치의 firmware 버전. 예: 2025.1.0+696efad</p></td>
 </tr>
 <tr class="row-even"><td><p>driver_version</p></td>
-<td><p>The driver version of the Furiosa NPU device. e.g. 2025.1.0+f09a8d8</p></td>
+<td><p>Furiosa NPU 장치의 driver 버전. 예: 2025.1.0+f09a8d8</p></td>
 </tr>
 </tbody>
 </table>

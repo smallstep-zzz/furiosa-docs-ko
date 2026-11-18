@@ -289,10 +289,7 @@ html
 <article class="bd-article">
 <section id="performance-optimization">
 <span id="performanceoptimization"></span><h1>성능 최적화<a class="headerlink" href="#performance-optimization" title="Link to this heading">#</a></h1>
-<p>Furiosa-LLM provides settings to improve throughput and latency by tuning
-request admission, decode batching, token sampling, and KV cache reuse.
-Choose optimizations based on your workload and compare throughput, time to
-first token (TTFT), and time per output token (TPOT) under representative load.</p>
+<p>Furiosa-LLM는 throughput 및 latency를 튜닝하여 개선하는 설정을 제공합니다. 여기에는 요청 승인, decode, batching, token, sampling 및 KV cache 재사용이 포함됩니다. 워크로드에 따라 최적화를 선택하고, 대표적인 부하 조건에서 throughput, 첫 번째 token (TTFT) 및 출력당 token (TPOT) 시간을 비교하십시오.</p>
 <section id="limiting-the-context-length">
 <span id="servemaxmodellen"></span><h2>컨텍스트 길이 제한<a class="headerlink" href="#limiting-the-context-length" title="Link to this heading">#</a></h2>
 <p>작업 부하에 맞는 컨텍스트 제한을 설정하면 concurrency 및 throughput를 증가시킬 수 있습니다. 특히 명시된 output-token 제한없이 요청할 수 있습니다.</p>
@@ -318,12 +315,7 @@ first token (TTFT), and time per output token (TPOT) under representative load.<
 <span id="profileguideddecodebatching"></span><h2>Profile-Guided Decode Batching<a class="headerlink" href="#profile-guided-decode-batching" title="Link to this heading">#</a></h2>
 <p>Profile-guided decode batching는 decode 배치 구성 및 컴파일된 물통을 선택하는 측정한 실행 비용을 사용합니다. 동시 요청이 다른 상황 길이 및 batching 선택이 실행 비용에 영향을 미치는 경우 Furiosa-LLM 프로파일 NPU 실행 및 입력 전송을 개선할 수 있습니다. KV-cache 및 KV-cacheXQXQ는 초기 프로파일을 추가할 때 이러한 비용으로 추가됩니다.</p>
 <p>이 기능은 일반 모델에 의해 활성화됩니다. 풀 모델은 decode 단계가 없기 때문에 자동으로 비활성화됩니다. <code class="docutils literal notranslate"><span class="pre">--batch-scheduling-budget-ms</span></code>
-(전기: <code class="docutils literal notranslate"><span class="pre">1</span></code> ms) sets the CPU search budget for the default decode-batch
-optimizer. It is not a hard limit on total scheduling latency, and does not
-bound the separate experimental aggressive-batching policy. The budget is
-ignored when profile-guided batching is disabled. Start with the default budget;
-increasing it allows a longer search for efficient batches but can add CPU
-scheduling overhead. Compare throughput and TPOT before keeping a larger budget.</p>
+(전기: <code class="docutils literal notranslate"><span class="pre">1</span></code> (ms)는 기본 decode-배치 최적화 프로그램에 대한 CPU 검색 예산을 설정합니다. 이는 전체 스케줄링에 대한 엄격한 제한이 아니며, 별도의 실험적인 공격적인 batching 정책을 제한하지 않습니다. 프로파일 가이드 batching가 비활성화되면 예산은 무시됩니다. 기본 예산으로 시작하고, 이를 늘리면 효율적인 배치에 대한 더 긴 검색이 가능하지만 스케줄링 오버헤드를 추가할 수 있습니다. 더 큰 예산을 유지하기 전에 throughput 및 TPOT를 비교하십시오.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--profile-guided-decode-batching<span class="w"> </span>--batch-scheduling-budget-ms<span class="w"> </span><span class="m">1</span>
 </pre></div>
@@ -340,11 +332,8 @@ alias 없이; 예산 설정은 이름을 유지합니다.</p>
 </section>
 <section id="experimental-npu-sampling">
 <span id="npusampling"></span><h2>실험적인 NPU 샘플링<a class="headerlink" href="#experimental-npu-sampling" title="Link to this heading">#</a></h2>
-<p>NPU sampling selects the next token on the NPU for supported generative models.
-Use it when CPU token selection or logits transfers contribute significantly to
-decode latency, especially with larger batches. Moving sampling to the NPU can
-reduce TPOT and improve output throughput. Compatible FXB builds include sampling
-kernels by default; enable the path explicitly:</p>
+<p>NPU sampling는 지원되는 생성 모델에 대해 NPU에서 다음 token를 선택합니다.
+CPU 및 token 선택 또는 로짓 전송이 decode latency에 상당한 영향을 미치는 경우, 특히 큰 배치 크기의 경우에 사용합니다. sampling를 NPU로 이동하면 TPOT을 줄이고 출력 throughput를 개선할 수 있습니다. 호환되는 FXB 빌드는 기본적으로 sampling 커널을 포함합니다. 경로를 명시적으로 활성화합니다:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--experimental-enable-npu-sampling
 </pre></div>
 </div>
@@ -364,11 +353,7 @@ kernels by default; enable the path explicitly:</p>
 </section>
 <section id="experimental-hierarchical-prefix-caching">
 <h2>실험적인 조직 Prefix Caching<a class="headerlink" href="#experimental-hierarchical-prefix-caching" title="Link to this heading">#</a></h2>
-<p>Hierarchical prefix caching (HiCache) extends prefix reuse beyond NPU memory
-by offloading KV cache to host memory. Use it when requests repeatedly share long
-prefixes and the reusable working set exceeds the NPU cache capacity. Avoiding
-repeated prefill computation can reduce TTFT and improve throughput when reloading
-KV data is cheaper than recomputing the prefix.</p>
+<p>계층적 prefix caching (HiCache)는 NPU 메모리 외부의 offloading KV cache를 호스트 메모리로 확장하여 offloading 메모리 외부의 접두사 재사용을 확장합니다. 요청이 반복적으로 긴 접두사를 공유하고 재사용 가능한 작업 세트가 NPU 캐시 용량을 초과하는 경우에 사용합니다. 반복적인 prefill 계산을 피하면 KV 데이터를 다시 로드하는 것이 접두사를 다시 계산하는 것보다 저렴한 경우 TTFT를 줄이고 throughput를 개선할 수 있습니다.</p>
 <p>이 기능은 기본적으로 실험적이고 비활성화됩니다. 예를 들어 process-wide 16 GiB 호스트 KV cache를 활성화합니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--experimental-kv-offload-host-memory-gb<span class="w"> </span><span class="m">16</span>
 </pre></div>

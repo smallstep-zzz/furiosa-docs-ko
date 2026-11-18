@@ -292,13 +292,8 @@ html
 <article class="bd-article">
 <section id="harrier-oss-v1">
 <span id="furiosa-llm-model-harrier-oss-v1"></span><h1>해리어 OSS v1<a class="headerlink" href="#harrier-oss-v1" title="Link to this heading">#</a></h1>
-<p><a class="reference external" href="https://huggingface.co/microsoft/harrier-oss-v1-0.6b">해리어 OSS v1</a> is a
-family of multilingual text-embedding models developed by Microsoft. The 0.6B
-model uses a dense, decoder-only Qwen3 architecture, but it is trained with
-Harrier’s own multilingual, instruction-aware embedding recipe rather than the
-Qwen3-Embedding training recipe. It produces 1,024-dimensional embeddings
-through last-token pooling and L2 normalization for retrieval, clustering,
-semantic similarity, classification, bitext mining, and reranking.</p>
+<p><a class="reference external" href="https://huggingface.co/microsoft/harrier-oss-v1-0.6b">해리어 OSS v1</a> 는 Microsoft에서 개발한 다국어 텍스트-embedding 모델의
+가족입니다. 0.6B 모델은 밀집형, 디코더만 사용한 Qwen3 아키텍처를 사용하지만, Qwen3-Embedding 훈련 레시피 대신 Harrier의 자체 다국어, 지시 기반 embedding 레시피로 훈련됩니다. 마지막 token 풀링 및 L2 정규화를 통해 검색, 클러스터링, 의미적 유사성, 분류, 비텍스트 채굴 및 reranking에 1,024차원의 임베딩을 생성합니다.</p>
 <p>FuriosaAI는 Harrier OSS v1를 아래 출판합니다.
 <a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> 구성 요소가 Hugging Face 허브에 연결됨</a>, Furiosa 실행 가능한 번들 (FXB)를 배송하여 실행
 <a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> Furiosa-LLM와 함께. 동일한 업스트림 무게는 다른 프레임 워크에서 실행됩니다 (지속 변압기와 변압기와 같은); 그와 함께 사용, 아래 링크 업스트림 모델 카드를 참조하십시오.</p>
@@ -333,9 +328,7 @@ semantic similarity, classification, bitext mining, and reranking.</p>
 <section id="usage">
 <h2>사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <p>Furiosa-LLM로 이 모델을 실행하려면 아래 예제를 따르십시오.
-<a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>.
-You can use the model either online through the OpenAI-compatible server or
-offline through the Furiosa-LLM Python API.</p>
+<a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>모델은 OpenAI 호환 서버를 통해 온라인으로 또는 Furiosa-LLM, Python, API를 통해 오프라인으로 사용할 수 있습니다.</p>
 <section id="launch-the-server">
 <h3>서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
 <p>모델을 실행하려면, 매칭을 위한 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자:</p>

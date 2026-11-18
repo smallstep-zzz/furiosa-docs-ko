@@ -338,9 +338,7 @@ html
 <section id="how-it-works">
 <h2>어떻게 작동 하는 것 입니까?<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
 <p>기본 설정 <strong>열망</strong> 스케줄링 루프는 이전 배치의 결과를 처리 한 후 각 배치를 준비합니다. 이 순차적 의존도는 자연적이며, 다음 배치는 일반적으로 이전 배치의 지속적인 decode 요청에서 샘플 출력이 필요합니다.</p>
-<p>그리고 <strong>겹치는 것</strong> scheduling, Furiosa-LLM anticipates which active requests will need
-another decode step or another prompt chunk, then selects requests, allocates KV cache blocks,
-and prepares the next batch’s I/O buffers and actions while the current batch runs on the NPU.</p>
+<p>그리고 <strong>겹치는 것</strong> 스케줄링, Furiosa-LLM는 어떤 활성 요청이 추가적인 decode 단계 또는 추가적인 prompt 청크를 필요로 할지 예측한 다음 요청을 선택하고 KV cache 블록을 할당하고 현재 배치가 NPU에서 실행되는 동안 다음 배치의 I/O 버퍼 및 작업을 준비합니다.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Eager scheduling:
 CPU: [prepare A]             [prepare B]             [prepare C]
 NPU:             [execute A]             [execute B]             [execute C]

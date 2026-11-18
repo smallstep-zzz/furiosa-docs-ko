@@ -305,12 +305,10 @@ html
 <h2>파이프라인 병렬 처리 (PP)<a class="headerlink" href="#pipeline-parallelism-pp" title="Link to this heading">#</a></h2>
 <p>Pipeline Parallelism (PP)는 여러 장치에서 모델 수직 (보통 층 수준)을 분할하므로 단일 장치에서 모델 층의 하위 세트 만 사용합니다. 각 장치는 다른 부분 또는 "단"을 처리하고 모델의 중간 결과를 다음 장치로 전달합니다.</p>
 <p>10sor 병렬처럼, PP는 또한 단일 장치의 기억 발자국을 감소시킵니다. 이것은 모형의 단지 부분이고 그것의 중간 결과는 각 장치에 저장됩니다 때문에 입니다.</p>
-<p>Unlike TP, PP increases the throughput of model inference at the cost of
-increased latency
-Since each device processes a different part of the model sequentially, the
-end-to-end latency is determined by the accumulated latency of each stage.
-However, PP increases the throughput by processing multiple requests in
-parallel.</p>
+<p>TP와 달리, PP는 inference 모델의 throughput를 증가시키는 대신 latency를 증가시킵니다.
+각 장치는 모델의 서로 다른 부분을 순차적으로 처리하기 때문에,
+종점-대-종점 latency는 각 단계의 누적된 latency에 의해 결정됩니다.
+그러나 PP는 여러 요청을 병렬로 처리하여 throughput를 증가시킵니다.</p>
 </section>
 <section id="data-parallelism-dp">
 <h2>데이터 병렬 처리 (DP)<a class="headerlink" href="#data-parallelism-dp" title="Link to this heading">#</a></h2>

@@ -567,8 +567,7 @@ Request action:   [ reuse         ][ reload     ][ compute    ]
 <li><p><code class="docutils literal notranslate"><span class="pre">furiosa_llm_prefix_cache_hits</span></code>: 누적 캐시된 토큰을 재사용합니다.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">furiosa_llm_prefix_cache_queries</span></code>: 접두사 일치에 고려되는 누적 prompt 토큰.</p></li>
 <li><p>처음 token (TTFT)에 시간, 특히 충분한 캐시 churn 후에 NPU 캐시 용량을 초과하는.</p></li>
-<li><p>Host memory consumption, NPU utilization, request queueing, and end-to-end
-latency under the expected concurrency.</p></li>
+<li><p>호스트 메모리 소비, NPU 활용, 요청 큐잉, 그리고 예상되는 동시성 하에서 latency.</p></li>
 </ul>
 <p>prefix-cache 카운터는 NPU-resident와 host-resident를 결합합니다; 그들은 현재 캐시 계층을 식별하지 않습니다. 더 높은 결합된 히트률 따라서 호스트 오프로드가 latency 향상을 증명하지 않습니다. 따뜻한 steady-state에 TTFT 및 throughput를 비교하여 NPU 캐시 비션을 강제로 NPU.</p>
 <div class="admonition note">

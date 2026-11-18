@@ -1,388 +1,281 @@
 
-<!DOCTYPE html>
-
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
-    <script>
+html
+<html data-content_root="../../" lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
+<script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-0HTTHGM3MD');
     </script>
-    
-    <title>Chat &#8212; FuriosaAI Developer Center 2026.4.1 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<title>FuriosaAI 개발자 센터 2026.4.1 문서</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
+<!--
     this give us a css class that will be invisible only if js is disabled
   -->
-  <noscript>
-    <style>
+<noscript>
+<style>
       .pst-js-only { display: none !important; }
 
     </style>
-  </noscript>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=39f50d33" />
-  
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
-
-    <script src="../../_static/documentation_options.js?v=d27e8219"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/examples/llm_chat';</script>
-    <script>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../../_static/custom.css?v=39f50d33" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../../_static/documentation_options.js?v=d27e8219"></script>
+<script src="../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/examples/llm_chat';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/furiosa-ai/furiosa-ai.github.io/refs/heads/main/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2026.4.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
-    <link rel="icon" href="../../_static/favicon.png"/>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Embedding" href="llm_embed.html" />
-    <link rel="prev" title="Examples" href="../examples.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.4.1" />
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
-  
-  <dialog id="pst-search-dialog">
-    
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search..."
-         aria-label="Search..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<link href="../../_static/favicon.png" rel="icon"/>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="llm_embed.html" rel="next" title="Embedding"/>
+<link href="../examples.html" rel="prev" title="Examples"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="2026.4.1" name="docsearch:version"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>다시 꼭대기에</button>
+<dialog id="pst-search-dialog">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form>
-  </dialog>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
 </div>
-
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-
-  
-    
-  
-
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/doc-logo-dark.svg" class="logo__image only-light" alt=""/>
-    <img src="../../_static/doc-logo-light.svg" class="logo__image only-dark pst-js-only" alt=""/>
-  
-  
-    <p class="title logo__title">
-            <div class='sidebar-title mr-auto'>
-                Furiosa Docs
+<img alt="" class="logo__image only-light" src="../../_static/doc-logo-dark.svg"/>
+<img alt="" class="logo__image only-dark pst-js-only" src="../../_static/doc-logo-light.svg"/>
+<p class="title logo__title">
+<div class="sidebar-title mr-auto">
+                Furiosa 문서
             </div>
-        </p>
-  
+</p>
 </a></div>
-        <div class="sidebar-primary-item">
+<div class="sidebar-primary-item">
 <div class="version-switcher__container dropdown pst-js-only">
-  <button id="pst-version-switcher-button-2"
-    type="button"
-    class="version-switcher__button btn btn-sm dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-haspopup="listbox"
-    aria-controls="pst-version-switcher-list-2"
-    aria-label="Version switcher list"
-  >
-    Choose version  <!-- this text may get changed later by javascript -->
-    <span class="caret"></span>
-  </button>
-  <div id="pst-version-switcher-list-2"
-    class="version-switcher__menu dropdown-menu list-group-flush py-0"
-    role="listbox" aria-labelledby="pst-version-switcher-button-2">
-    <!-- dropdown will be populated by javascript on page load -->
-  </div>
+<button aria-controls="pst-version-switcher-list-2" aria-haspopup="listbox" aria-label="Version switcher list" class="version-switcher__button btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" id="pst-version-switcher-button-2" type="button">
+    버전 선택  <!-- this text may get changed later by javascript -->
+<span class="caret"></span>
+</button>
+<div aria-labelledby="pst-version-switcher-button-2" class="version-switcher__menu dropdown-menu list-group-flush py-0" id="pst-version-switcher-list-2" role="listbox">
+<!-- dropdown will be populated by javascript on page load -->
+</div>
 </div></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">개요</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../overview/rngd.html">FuriosaAI RNGD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../overview/software_stack.html">FuriosaAI’s Software Stack</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../whatsnew/index.html">What’s New</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.4.0.html">Furiosa SDK Release 2026.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.3.0.html">Furiosa SDK Release 2026.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.2.0.html">Furiosa SDK Release 2026.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.1.0.html">Furiosa SDK Release 2026.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2025.html">Release Notes for Furiosa SDK Release 2025.X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/software_stack.html">FuriosaAI의 소프트웨어 스택</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../whatsnew/index.html">무슨 일이야?</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.4.0.html">Furiosa SDK 해제 2026.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.3.0.html">Furiosa SDK 릴리스 2026.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.2.0.html">Furiosa SDK 릴리즈 2026.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.1.0.html">Furiosa SDK 배포 2026.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2025.html">Furiosa SDK 릴리즈 노트 2025.X</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../overview/roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/roadmap.html">로드맵</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">시작 해</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../get_started/prerequisites.html">Installing Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../get_started/furiosa_llm.html">Quick Start with Furiosa-LLM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../get_started/upgrade_guide.html">Upgrading FuriosaAI’s Software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/prerequisites.html">사전 설치</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/furiosa_llm.html">Furiosa-LLM를 사용한 빠른 시작</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/upgrade_guide.html">FuriosaAI 소프트웨어 업그레이드</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Furiosa-LLM</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../intro.html">Furiosa-LLM</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../supported_models.html">Supported Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../models/qwen3.html">Qwen3 (dense)</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../supported_models.html">지원 된 모델</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../models/qwen3.html">Qwen3 (밀집)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/qwen3-moe.html">Qwen3-MoE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/bge-m3.html">BGE-M3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/e5-mistral.html">E5-Mistral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/bge-reranker-v2-m3.html">BGE Reranker v2 M3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/harrier-oss-v1.html">Harrier OSS v1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/bge-reranker-v2-m3.html">BGE 레랑커 v2 M3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/harrier-oss-v1.html">해리어 OSS v1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/qwen3-embedding.html">Qwen3-Embedding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/qwen3-reranker.html">Qwen3-Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/qwen3-vl.html">Qwen3-VL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/gemma-4.html">Gemma 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/gemma-4.html">제마 4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/qwen2.5.html">Qwen2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/llama-3.1.html">Llama 3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/llama-3.3.html">Llama 3.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/mistral-nemo.html">Mistral NeMo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/llama-3.1.html">라마 3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/llama-3.3.html">라마 3.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/mistral-nemo.html">미스트랄 네모</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/gpt-oss.html">GPT-OSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/exaone-4.0.html">EXAONE 4.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/exaone-4.5.html">EXAONE 4.5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../models/k-exaone.html">K-EXAONE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../models/solar-open.html">Solar Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../models/solar-open.html">태양광 개방</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa-llm-serve.html">OpenAI-Compatible Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../responses-api.html">Responses API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../toolcalling.html">Tool Calling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../structured-output.html">Structured Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../vision-language.html">Vision-Language Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../performance-optimization.html">Performance Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa-llm-serve.html">OpenAI 호환 서버</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../responses-api.html">답변 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../toolcalling.html">도구 호출</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../structured-output.html">구조화된 출력</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../performance-optimization.html">성능 최적화</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../prefix-caching.html">Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../hierarchical-prefix-caching.html">Hierarchical Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overlap-scheduling.html">Overlap Scheduling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../hybrid-kv-cache.html">Hybrid KV Cache Management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../data-parallel-routing.html">Data-Parallel Routing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../fxb.html">Furiosa Executable Bundles (FXB)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../model-parallelism.html">Model Parallelism</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../reference.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../reference/llm.html">LLM class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference/sampling_params.html">SamplingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference/pooling_params.html">PoolingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference/llm_engine.html">LLMEngine class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../reference/async_llm_engine.html">AsyncLLMEngine class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hierarchical-prefix-caching.html">계층적 Prefix Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overlap-scheduling.html">겹치기 기획</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hybrid-kv-cache.html">하이브리드 KV Cache 관리</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../data-parallel-routing.html">Data-Parallel 라우팅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../fxb.html">C Furiosa 실행 파일 묶음 (FXB)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model-parallelism.html">모형 평행성</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../reference.html">API 참조</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../reference/llm.html">LLM급</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/sampling_params.html">SamplingParams 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/pooling_params.html"> ⁇ 링파램스 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/llm_engine.html">LLMEngine 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reference/async_llm_engine.html">AsyncLLMEngine 클래스</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../examples.html">Examples</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Chat</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../examples.html">예제</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">채팅</a></li>
 <li class="toctree-l2"><a class="reference internal" href="llm_embed.html">Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="llm_score.html">Scoring (Similarity Scoring)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="llm_rerank.html">Reranking (Document Reranking)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="online_chat_completion_logprobs.html">OpenAI-Compatible API with Logprobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_score.html">점수 (유사 점수)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="llm_rerank.html">재평가 (문서 재평가)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="online_chat_completion_logprobs.html">OpenAI 호환 API (Logprobs 포함)</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../k8s_deployment.html">Deploying Furiosa-LLM on Kubernetes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../mooncake_deployment.html">Using Mooncake with Furiosa-LLM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../k8s_deployment.html">Furiosa-LLM를 Kubernetes에 배포</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../mooncake_deployment.html">Mooncake를 Furiosa-LLM와 함께 사용하는 것을 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cloud Native Toolkit</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">클라우드 네이티브 툴킷</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../cloud_native_toolkit/intro.html">Cloud Native Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cloud_native_toolkit/container.html">Container Support</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes.html">Kubernetes Plugins</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/feature_discovery.html">Installing Furiosa Feature Discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/device_plugin.html">Installing Furiosa Device Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/dra_driver.html">Installing Furiosa DRA Driver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/metrics_exporter.html">Installing Furiosa Metrics Exporter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/npu_operator.html">Installing Furiosa NPU Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cloud_native_toolkit/intro.html">클라우드 네이티브 툴킷</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cloud_native_toolkit/container.html">컨테이너 지원</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes.html">Kubernetes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/feature_discovery.html">Furiosa 기능 디스커버리 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/device_plugin.html">Furiosa 장치 플러그인 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/dra_driver.html">Furiosa DRA Driver 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/metrics_exporter.html">Furiosa 메트릭스 내보내기 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cloud_native_toolkit/kubernetes/npu_operator.html">Furiosa NPU 운영자 설치</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../cloud_native_toolkit/llm_d.html">Deploying Furiosa-LLM with llm-d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../cloud_native_toolkit/llm_d.html">Furiosa-LLM를 llm 방법을 사용하여 배포</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Device Management</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">장치 관리</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../device_management/system_management_interface.html">Furiosa SMI</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../device_management/system_management_interface/furiosa_smi_cli.html">Furiosa SMI CLI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI 도서관</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../device_management/host_tuning.html">Host PCI Optimization Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../device_management/host_tuning.html">호스트 PCI 최적화 튜닝</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials and Examples</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">튜토리얼 및 예제</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK CookBook</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK 요리 가이드</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Customer Support</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">고객 지원</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">Forums</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">Customer Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">포럼</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">고객 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Other Links</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">다른 링크</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI Homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK Doc</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI 홈페이지</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK 문서 참조.</a></li>
 </ul>
-
-    </div>
+</div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item"><img id='furiosa_logo' width="100" /></div>
-      <div class="sidebar-primary-item">
-
-  <p class="copyright">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item"><img id="furiosa_logo" width="100"/></div>
+<div class="sidebar-primary-item">
+<p class="copyright">
     
-      © Copyright 2026 FuriosaAI Inc.
+      © 2026 FuriosaAI Inc. 저작권
       <br/>
-    
-  </p>
+</p>
 </div>
-  </div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main" role="main">
-        
-        
-
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
 <div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article d-print-none">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
+<div class="header-article-items__start">
+<div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
 </button></div>
-      
-    </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button></div>
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+<div class="header-article-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
 </button></div>
-      
-    </div>
-  
 </div>
 </div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Chat</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-        </div>
-    </div>
 </div>
-
-              
-                
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>채팅</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+</div>
+</div>
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <section id="chat">
-<span id="furiosallmexampleschat"></span><h1>Chat<a class="headerlink" href="#chat" title="Link to this heading">#</a></h1>
+<article class="bd-article">
+<section id="chat">
+<span id="furiosallmexampleschat"></span><h1>채팅<a class="headerlink" href="#chat" title="Link to this heading">#</a></h1>
 <div class="literal-block-wrapper docutils container" id="id1">
-<div class="code-block-caption"><span class="caption-text">Example of using LLM.chat() with Llama 3.1</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
+<div class="code-block-caption"><span class="caption-text">Llama 3.1와 LLM.chat()를 사용하는 예</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span><span class="s2">"furiosa-ai/Meta-Llama-3.1-8B-Instruct-FP8-dynamic"</span><span class="p">)</span>
@@ -437,90 +330,54 @@
 </div>
 </div>
 </section>
-
-
-                </article>
-              
-
-              
-              
-              
-              
-                <footer class="prev-next-footer d-print-none">
-                  
+</article>
+<footer class="prev-next-footer d-print-none">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="../examples.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Examples</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="llm_embed.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Embedding</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
+<a class="left-prev" href="../examples.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">이전</p>
+<p class="prev-next-title">예제</p>
 </div>
-                </footer>
-              
-            </div>
-            
-            
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
+</a>
+<a class="right-next" href="llm_embed.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">다음</p>
+<p class="prev-next-title">Embedding</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+</div>
+<footer class="bd-footer-content">
 <div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
+<div class="footer-item">
 <p class="component-author">
-By FuriosaAI, Inc.
+FuriosaAI, Inc.
 </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-
-  <p class="copyright">
-    
-      © Copyright 2026 FuriosaAI Inc.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
 </div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
-
-  <footer class="bd-footer">
-  </footer>
-  </body>
+<div class="footer-item">
+<p class="copyright">
+    
+      © 2026 FuriosaAI Inc. 저작권
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+</footer>
+</body>
 </html>

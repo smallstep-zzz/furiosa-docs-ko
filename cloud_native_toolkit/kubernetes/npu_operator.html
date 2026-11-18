@@ -1,477 +1,362 @@
 
-<!DOCTYPE html>
-
-
-<html lang="en" data-content_root="../../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
-    <script>
+html
+<html data-content_root="../../" lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
+<script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-0HTTHGM3MD');
     </script>
-    
-    <title>Installing Furiosa NPU Operator &#8212; FuriosaAI Developer Center 2026.4.1 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<title>Furiosa NPU 운영자 - FuriosaAI 개발자 센터 2026.4.1 문서 설치</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
+<!--
     this give us a css class that will be invisible only if js is disabled
   -->
-  <noscript>
-    <style>
+<noscript>
+<style>
       .pst-js-only { display: none !important; }
 
     </style>
-  </noscript>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=39f50d33" />
-  
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
-
-    <script src="../../_static/documentation_options.js?v=d27e8219"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'cloud_native_toolkit/kubernetes/npu_operator';</script>
-    <script>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../../_static/custom.css?v=39f50d33" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../../_static/documentation_options.js?v=d27e8219"></script>
+<script src="../../_static/doctools.js?v=9bcbadda"></script>
+<script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'cloud_native_toolkit/kubernetes/npu_operator';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/furiosa-ai/furiosa-ai.github.io/refs/heads/main/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2026.4.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
-    <link rel="icon" href="../../_static/favicon.png"/>
-    <link rel="index" title="Index" href="../../genindex.html" />
-    <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Deploying Furiosa-LLM with llm-d" href="../llm_d.html" />
-    <link rel="prev" title="Installing Furiosa Metrics Exporter" href="metrics_exporter.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.4.1" />
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
-  
-  <dialog id="pst-search-dialog">
-    
-<form class="bd-search d-flex align-items-center"
-      action="../../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search..."
-         aria-label="Search..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<link href="../../_static/favicon.png" rel="icon"/>
+<link href="../../genindex.html" rel="index" title="Index"/>
+<link href="../../search.html" rel="search" title="Search"/>
+<link href="../llm_d.html" rel="next" title="Deploying Furiosa-LLM with llm-d"/>
+<link href="metrics_exporter.html" rel="prev" title="Installing Furiosa Metrics Exporter"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="2026.4.1" name="docsearch:version"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>다시 꼭대기에</button>
+<dialog id="pst-search-dialog">
+<form action="../../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form>
-  </dialog>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
 </div>
-
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-
-  
-    
-  
-
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
 <a class="navbar-brand logo" href="../../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../../_static/doc-logo-dark.svg" class="logo__image only-light" alt=""/>
-    <img src="../../_static/doc-logo-light.svg" class="logo__image only-dark pst-js-only" alt=""/>
-  
-  
-    <p class="title logo__title">
-            <div class='sidebar-title mr-auto'>
-                Furiosa Docs
+<img alt="" class="logo__image only-light" src="../../_static/doc-logo-dark.svg"/>
+<img alt="" class="logo__image only-dark pst-js-only" src="../../_static/doc-logo-light.svg"/>
+<p class="title logo__title">
+<div class="sidebar-title mr-auto">
+                Furiosa 문서
             </div>
-        </p>
-  
+</p>
 </a></div>
-        <div class="sidebar-primary-item">
+<div class="sidebar-primary-item">
 <div class="version-switcher__container dropdown pst-js-only">
-  <button id="pst-version-switcher-button-2"
-    type="button"
-    class="version-switcher__button btn btn-sm dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-haspopup="listbox"
-    aria-controls="pst-version-switcher-list-2"
-    aria-label="Version switcher list"
-  >
-    Choose version  <!-- this text may get changed later by javascript -->
-    <span class="caret"></span>
-  </button>
-  <div id="pst-version-switcher-list-2"
-    class="version-switcher__menu dropdown-menu list-group-flush py-0"
-    role="listbox" aria-labelledby="pst-version-switcher-button-2">
-    <!-- dropdown will be populated by javascript on page load -->
-  </div>
+<button aria-controls="pst-version-switcher-list-2" aria-haspopup="listbox" aria-label="Version switcher list" class="version-switcher__button btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" id="pst-version-switcher-button-2" type="button">
+    버전 선택  <!-- this text may get changed later by javascript -->
+<span class="caret"></span>
+</button>
+<div aria-labelledby="pst-version-switcher-button-2" class="version-switcher__menu dropdown-menu list-group-flush py-0" id="pst-version-switcher-list-2" role="listbox">
+<!-- dropdown will be populated by javascript on page load -->
+</div>
 </div></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">개요</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../overview/rngd.html">FuriosaAI RNGD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../overview/software_stack.html">FuriosaAI’s Software Stack</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../whatsnew/index.html">What’s New</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.4.0.html">Furiosa SDK Release 2026.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.3.0.html">Furiosa SDK Release 2026.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.2.0.html">Furiosa SDK Release 2026.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.1.0.html">Furiosa SDK Release 2026.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2025.html">Release Notes for Furiosa SDK Release 2025.X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/software_stack.html">FuriosaAI의 소프트웨어 스택</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../whatsnew/index.html">무슨 일이야?</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.4.0.html">Furiosa SDK 해제 2026.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.3.0.html">Furiosa SDK 릴리스 2026.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.2.0.html">Furiosa SDK 릴리즈 2026.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2026.1.0.html">Furiosa SDK 배포 2026.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../whatsnew/release-2025.html">Furiosa SDK 릴리즈 노트 2025.X</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../overview/roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../overview/roadmap.html">로드맵</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">시작 해</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../../get_started/prerequisites.html">Installing Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../get_started/furiosa_llm.html">Quick Start with Furiosa-LLM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../get_started/upgrade_guide.html">Upgrading FuriosaAI’s Software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/prerequisites.html">사전 설치</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/furiosa_llm.html">Furiosa-LLM를 사용한 빠른 시작</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../get_started/upgrade_guide.html">FuriosaAI 소프트웨어 업그레이드</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Furiosa-LLM</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/intro.html">Furiosa-LLM</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../furiosa_llm/supported_models.html">Supported Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen3.html">Qwen3 (dense)</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../furiosa_llm/supported_models.html">지원 된 모델</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen3.html">Qwen3 (밀집)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen3-moe.html">Qwen3-MoE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/bge-m3.html">BGE-M3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/e5-mistral.html">E5-Mistral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/bge-reranker-v2-m3.html">BGE Reranker v2 M3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/harrier-oss-v1.html">Harrier OSS v1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/bge-reranker-v2-m3.html">BGE 레랑커 v2 M3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/harrier-oss-v1.html">해리어 OSS v1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen3-embedding.html">Qwen3-Embedding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen3-reranker.html">Qwen3-Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen3-vl.html">Qwen3-VL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/gemma-4.html">Gemma 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/gemma-4.html">제마 4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/qwen2.5.html">Qwen2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/llama-3.1.html">Llama 3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/llama-3.3.html">Llama 3.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/mistral-nemo.html">Mistral NeMo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/llama-3.1.html">라마 3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/llama-3.3.html">라마 3.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/mistral-nemo.html">미스트랄 네모</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/gpt-oss.html">GPT-OSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/exaone-4.0.html">EXAONE 4.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/exaone-4.5.html">EXAONE 4.5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/k-exaone.html">K-EXAONE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/solar-open.html">Solar Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/models/solar-open.html">태양광 개방</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/furiosa-llm-serve.html">OpenAI-Compatible Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/responses-api.html">Responses API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/toolcalling.html">Tool Calling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/structured-output.html">Structured Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/vision-language.html">Vision-Language Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/performance-optimization.html">Performance Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/furiosa-llm-serve.html">OpenAI 호환 서버</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/responses-api.html">답변 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/toolcalling.html">도구 호출</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/structured-output.html">구조화된 출력</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/performance-optimization.html">성능 최적화</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/prefix-caching.html">Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/hierarchical-prefix-caching.html">Hierarchical Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/overlap-scheduling.html">Overlap Scheduling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/hybrid-kv-cache.html">Hybrid KV Cache Management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/data-parallel-routing.html">Data-Parallel Routing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/fxb.html">Furiosa Executable Bundles (FXB)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/model-parallelism.html">Model Parallelism</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../furiosa_llm/reference.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/llm.html">LLM class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/sampling_params.html">SamplingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/pooling_params.html">PoolingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/llm_engine.html">LLMEngine class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/async_llm_engine.html">AsyncLLMEngine class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/hierarchical-prefix-caching.html">계층적 Prefix Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/overlap-scheduling.html">겹치기 기획</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/hybrid-kv-cache.html">하이브리드 KV Cache 관리</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/data-parallel-routing.html">Data-Parallel 라우팅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/fxb.html">C Furiosa 실행 파일 묶음 (FXB)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/model-parallelism.html">모형 평행성</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../furiosa_llm/reference.html">API 참조</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/llm.html">LLM급</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/sampling_params.html">SamplingParams 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/pooling_params.html"> ⁇ 링파램스 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/llm_engine.html">LLMEngine 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/reference/async_llm_engine.html">AsyncLLMEngine 클래스</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../furiosa_llm/examples.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_chat.html">Chat</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../furiosa_llm/examples.html">예제</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_chat.html">채팅</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_embed.html">Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_score.html">Scoring (Similarity Scoring)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_rerank.html">Reranking (Document Reranking)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/online_chat_completion_logprobs.html">OpenAI-Compatible API with Logprobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_score.html">점수 (유사 점수)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/llm_rerank.html">재평가 (문서 재평가)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../furiosa_llm/examples/online_chat_completion_logprobs.html">OpenAI 호환 API (Logprobs 포함)</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/k8s_deployment.html">Deploying Furiosa-LLM on Kubernetes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/mooncake_deployment.html">Using Mooncake with Furiosa-LLM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/k8s_deployment.html">Furiosa-LLM를 Kubernetes에 배포</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../furiosa_llm/mooncake_deployment.html">Mooncake를 Furiosa-LLM와 함께 사용하는 것을 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cloud Native Toolkit</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">클라우드 네이티브 툴킷</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../intro.html">Cloud Native Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../container.html">Container Support</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="../kubernetes.html">Kubernetes Plugins</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="feature_discovery.html">Installing Furiosa Feature Discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="device_plugin.html">Installing Furiosa Device Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="dra_driver.html">Installing Furiosa DRA Driver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metrics_exporter.html">Installing Furiosa Metrics Exporter</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Installing Furiosa NPU Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../intro.html">클라우드 네이티브 툴킷</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../container.html">컨테이너 지원</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../kubernetes.html">Kubernetes</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="feature_discovery.html">Furiosa 기능 디스커버리 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="device_plugin.html">Furiosa 장치 플러그인 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dra_driver.html">Furiosa DRA Driver 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metrics_exporter.html">Furiosa 메트릭스 내보내기 설치</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Furiosa NPU 운영자 설치</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../llm_d.html">Deploying Furiosa-LLM with llm-d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../llm_d.html">Furiosa-LLM를 llm 방법을 사용하여 배포</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Device Management</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">장치 관리</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../device_management/system_management_interface.html">Furiosa SMI</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../device_management/system_management_interface/furiosa_smi_cli.html">Furiosa SMI CLI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI 도서관</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../../device_management/host_tuning.html">Host PCI Optimization Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../device_management/host_tuning.html">호스트 PCI 최적화 튜닝</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials and Examples</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">튜토리얼 및 예제</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK CookBook</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK 요리 가이드</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Customer Support</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">고객 지원</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">Forums</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">Customer Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">포럼</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">고객 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Other Links</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">다른 링크</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI Homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK Doc</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI 홈페이지</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK 문서 참조.</a></li>
 </ul>
-
-    </div>
+</div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item"><img id='furiosa_logo' width="100" /></div>
-      <div class="sidebar-primary-item">
-
-  <p class="copyright">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item"><img id="furiosa_logo" width="100"/></div>
+<div class="sidebar-primary-item">
+<p class="copyright">
     
-      © Copyright 2026 FuriosaAI Inc.
+      © 2026 FuriosaAI Inc. 저작권
       <br/>
-    
-  </p>
+</p>
 </div>
-  </div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main" role="main">
-        
-        
-
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
 <div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article d-print-none">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
+<div class="header-article-items__start">
+<div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
 </button></div>
-      
-    </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button></div>
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+<div class="header-article-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
 </button></div>
-      
-        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
+<div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
 </button></div>
-      
-    </div>
-  
 </div>
 </div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Installing Furiosa NPU Operator</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2>  </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-npu-operator">Furiosa NPU Operator</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managed-components">Managed components</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-furiosa-npu-operator-with-helm">Deploying Furiosa NPU Operator with Helm</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-for-furiosa-metrics-exporter">Configuration for <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-nodes-for-deployment">Selecting nodes for deployment</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#affinity-for-managed-components">Affinity for managed components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-configuration-for-managed-components">Common configuration for managed components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-system-manager-configuration">Furiosa System Manager configuration</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-using-device-plugin-and-dra-driver">Important note: Using Device Plugin and DRA Driver</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-deviceclass-secondary-resource">Important note: <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> secondary resource</a></li>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Furiosa NPU 운영자 설치</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-npu-operator">Furiosa NPU 운영자</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managed-components">관리된 구성요소</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">전제 조건</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-furiosa-npu-operator-with-helm">Helm와 Furiosa NPU 운영자 배포</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">예제 사용</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-for-furiosa-metrics-exporter">구성 <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-nodes-for-deployment">배포를 위한 노드 선택</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#affinity-for-managed-components">관리 구성 요소에 대한 어피니티</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-configuration-for-managed-components">관리 구성품에 대한 일반적인 구성</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-system-manager-configuration">Furiosa 시스템 관리자 구성</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-using-device-plugin-and-dra-driver">중요 참고: 장치 플러그인 및 DRA Driver 사용</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-deviceclass-secondary-resource">중요한 점: <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> 부차원 자원</a></li>
 </ul>
 </li>
 </ul>
-            </nav>
-        </div>
-    </div>
+</nav>
 </div>
-
-              
-                
+</div>
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <section id="installing-furiosa-npu-operator">
-<h1>Installing Furiosa NPU Operator<a class="headerlink" href="#installing-furiosa-npu-operator" title="Link to this heading">#</a></h1>
+<article class="bd-article">
+<section id="installing-furiosa-npu-operator">
+<h1>Furiosa NPU 운영자 설치<a class="headerlink" href="#installing-furiosa-npu-operator" title="Link to this heading">#</a></h1>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Furiosa NPU Operator is in <strong>alpha</strong> stage. Its features are experimental and may
-change in future releases.</p>
-<p>The operator may not be fully stable or feature-complete. Use caution when
-deploying it in production environments.</p>
+<p class="admonition-title">참고</p>
+<p>Furiosa NPU 운영자는 [ ]에 있습니다. <strong>알파</strong> 단계. 그것의 특징은 실험적이고 미래 방출에서 변화할지도 모릅니다.</p>
+<p>운영자는 완전히 안정되거나 feature-complete가 될 수 없습니다. 생산 환경에서 배포 할 때주의를 사용합니다.</p>
 </div>
 <section id="furiosa-npu-operator">
-<h2>Furiosa NPU Operator<a class="headerlink" href="#furiosa-npu-operator" title="Link to this heading">#</a></h2>
-<p>The <strong>Furiosa NPU Operator</strong> is a Kubernetes operator that automates the deployment
-and management of FuriosaAI NPU devices within a Kubernetes cluster. It deploys and
-configures the drivers and cloud-native components required to use FuriosaAI NPUs in
-containerized workloads.</p>
+<h2>Furiosa NPU 운영자<a class="headerlink" href="#furiosa-npu-operator" title="Link to this heading">#</a></h2>
+<p>The <strong>Furiosa NPU 운영자</strong> FuriosaAI Kubernetes 클러스터 내에서 NPU 장치의 배포 및 관리를 자동화하는 Kubernetes 운영자입니다. 그것은 컨테이너 작업 부하에서 FuriosaAI NPUs를 사용하는 데 필요한 드라이버 및 cloud-native 구성 요소를 배치하고 구성합니다.</p>
 </section>
 <section id="managed-components">
-<h2>Managed components<a class="headerlink" href="#managed-components" title="Link to this heading">#</a></h2>
-<p>The following components are managed by the Furiosa NPU Operator:</p>
+<h2>관리된 구성요소<a class="headerlink" href="#managed-components" title="Link to this heading">#</a></h2>
+<p>다음 구성 요소는 Furiosa NPU 운영자에 의해 관리됩니다.</p>
 <ul class="simple">
-<li><p>Furiosa Feature Discovery</p></li>
-<li><p>Furiosa Device Plugin</p></li>
+<li><p>Furiosa 기능 탐색</p></li>
+<li><p>Furiosa 장치 플러그인</p></li>
 <li><p>Furiosa DRA Driver</p></li>
-<li><p>Furiosa Metrics Exporter</p></li>
-<li><p>Furiosa System Manager</p></li>
+<li><p>Furiosa 메트릭스 내보내기</p></li>
+<li><p>Furiosa 시스템 관리자</p></li>
 </ul>
 </section>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
-<p>The Furiosa NPU Operator requires the following prerequisites:</p>
+<h2>전제 조건<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>Furiosa NPU 운영자는 다음과 같은 필수 조건을 요구합니다:</p>
 <ul class="simple">
-<li><p>Deploying <a class="reference external" href="https://github.com/kubernetes-sigs/node-feature-discovery">Node Feature Discovery</a>
-in the cluster is recommended to discover FuriosaAI NPU devices.</p>
+<li><p>배포 <a class="reference external" href="https://github.com/kubernetes-sigs/node-feature-discovery">노드 기능 탐지</a>
+클러스터에서 FuriosaAI NPU 장치를 발견하는 것이 좋습니다.</p>
 <ul>
-<li><p>Nodes with FuriosaAI NPU devices must have the label
-<code class="docutils literal notranslate"><span class="pre">feature.node.kubernetes.io/pci-1200_1ed2.present:</span> <span class="pre">&quot;true&quot;</span></code>.</p></li>
+<li><p>FuriosaAI NPU 장치를 가진 노드는 상표가 있어야 합니다
+<code class="docutils literal notranslate"><span class="pre">feature.node.kubernetes.io/pci-1200_1ed2.present:</span> <span class="pre">"true"</span></code>.</p></li>
 </ul>
 </li>
-<li><p>Kubernetes <strong>1.34+</strong> is required if you want to use Furiosa DRA Driver.</p>
+<li><p>Kubernetes <strong>1.34+</strong> Furiosa DRA Driver를 사용하려는 경우 필수입니다.</p>
 <ul>
-<li><p>In this case, <a class="reference external" href="https://github.com/cncf-tags/container-device-interface">CDI</a>
-must be enabled on each node.</p></li>
-<li><p>Starting from <a class="reference external" href="https://containerd.io/">containerd</a> <strong>2.0</strong>, CDI is enabled by default.</p></li>
+<li><p>이 경우, <a class="reference external" href="https://github.com/cncf-tags/container-device-interface">CDI</a>
+각 노드에서 활성화해야 합니다.</p></li>
+<li><p>시작으로 <a class="reference external" href="https://containerd.io/">컨테이너</a> <strong>2.0</strong>, CDI는 기본적으로 활성화됩니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="deploying-furiosa-npu-operator-with-helm">
-<h2>Deploying Furiosa NPU Operator with Helm<a class="headerlink" href="#deploying-furiosa-npu-operator-with-helm" title="Link to this heading">#</a></h2>
-<p>The Furiosa NPU Operator Helm chart is available at:
+<h2>Helm와 Furiosa NPU 운영자 배포<a class="headerlink" href="#deploying-furiosa-npu-operator-with-helm" title="Link to this heading">#</a></h2>
+<p>Furiosa NPU 운영자 Helm 차트는 다음과 같습니다.
 <a class="github reference external" href="https://github.com/furiosa-ai/helm-charts">furiosa-ai/helm-charts</a></p>
-<p>To configure deployment, modify:
+<p>배포 설정을 구성하려면 다음을 수정합니다:
 <code class="docutils literal notranslate"><span class="pre">charts/furiosa-npu-operator/values.yaml</span></code></p>
-<p>Deploy the operator:</p>
+<p>운영자 배포:</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>furiosa<span class="w"> </span>https://furiosa-ai.github.io/helm-charts
 helm<span class="w"> </span>repo<span class="w"> </span>update
 helm<span class="w"> </span>install<span class="w"> </span>furiosa-npu-operator<span class="w"> </span>furiosa/furiosa-npu-operator<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-n<span class="w"> </span>furiosa-system<span class="w"> </span>--create-namespace
 </pre></div>
 </div>
-<p>After the Furiosa NPU Operator is successfully deployed, create a
-<code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> Custom Resource to manage cloud-native components for
-FuriosaAI NPU devices.</p>
+<p>Furiosa NPU 운영자가 성공적으로 배포 한 후, 생성
+<code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> FuriosaAI NPU 장치에 대한 cloud-native 구성 요소를 관리 할 수있는 사용자 정의 리소스.</p>
 </section>
 <section id="example-usage">
-<h2>Example usage<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h2>
-<p>The example below creates a <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> resource to deploy managed
-components.</p>
+<h2>예제 사용<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h2>
+<p>아래 예시는 다음과 같이 작동합니다: <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> 관리 구성 요소를 배포하는 리소스.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">furiosa.ai/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FuriosaClusterConfig</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -514,28 +399,23 @@ components.</p>
 <span class="w">      </span><span class="nt">autoUpgrade</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 </pre></div>
 </div>
-<p>Creating the above <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> resource will deploy Furiosa Feature
-Discovery, Furiosa DRA Driver, Furiosa Metrics Exporter, and Furiosa System
-Manager on nodes where FuriosaAI NPUs are present.</p>
+<p>위와 같은 것을 만드는 것 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> 자원은 Furiosa 기능 디스커버리, Furiosa DRA Driver, Furiosa Metrics Exporter 및 Furiosa System Manager를 배포합니다. FuriosaAI NPU가 현재 있습니다.</p>
 <section id="configuration-for-furiosa-metrics-exporter">
-<h3>Configuration for <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code><a class="headerlink" href="#configuration-for-furiosa-metrics-exporter" title="Link to this heading">#</a></h3>
-<p>You can configure <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code> by modifying the <code class="docutils literal notranslate"><span class="pre">config</span></code> field
-under the <code class="docutils literal notranslate"><span class="pre">metricsExporter</span></code> section in <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
-<p>Available options:</p>
+<h3>구성 <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code><a class="headerlink" href="#configuration-for-furiosa-metrics-exporter" title="Link to this heading">#</a></h3>
+<p>설정할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code> 이 조항의 <code class="docutils literal notranslate"><span class="pre">config</span></code> 아래의 필드 <code class="docutils literal notranslate"><span class="pre">metricsExporter</span></code> 이 부분에서 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
+<p>사용할 수 있는 옵션:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">serviceType</span></code>: Type of Kubernetes Service to create. Default: <code class="docutils literal notranslate"><span class="pre">ClusterIP</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">servicePort</span></code>: Port the metrics exporter listens on. Default: <code class="docutils literal notranslate"><span class="pre">6254</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enableScrapeAnnotations</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code>, adds Prometheus scrape annotations to
-the metrics exporter Pod. Default: <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">collectInterval</span></code>: Interval (in seconds) at which metrics are collected.
-Default: <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">serviceType</span></code>: Kubernetes 서비스의 종류가 생성됩니다. 기본값: <code class="docutils literal notranslate"><span class="pre">ClusterIP</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">servicePort</span></code>: 메트릭 수출업자가 들어갑니다. 기본값: <code class="docutils literal notranslate"><span class="pre">6254</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enableScrapeAnnotations</span></code>: If <code class="docutils literal notranslate"><span class="pre">true</span></code>, Prometheus 스크랩 annotations metrics exporter Pod 를 추가한다. 기본값: <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">collectInterval</span></code>: 메트릭이 수집되는 인터밸브(초). 기본값: <code class="docutils literal notranslate"><span class="pre">10</span></code>.</p></li>
 </ul>
 </section>
 <section id="selecting-nodes-for-deployment">
-<h3>Selecting nodes for deployment<a class="headerlink" href="#selecting-nodes-for-deployment" title="Link to this heading">#</a></h3>
-<p>You can specify which nodes to deploy the managed components to by setting
+<h3>배포를 위한 노드 선택<a class="headerlink" href="#selecting-nodes-for-deployment" title="Link to this heading">#</a></h3>
+<p>노드가 관리된 구성 요소를 설정하여 배포할 수 있습니다.
 <code class="docutils literal notranslate"><span class="pre">nodeSelector</span></code> in <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
-<p>Example: deploy only on nodes labeled <code class="docutils literal notranslate"><span class="pre">furiosa.ai/npu:</span> <span class="pre">&quot;true&quot;</span></code>:</p>
+<p>예제: 노드에서만 라벨을 배치 <code class="docutils literal notranslate"><span class="pre">furiosa.ai/npu:</span> <span class="pre">"true"</span></code>:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">furiosa.ai/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FuriosaClusterConfig</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -546,18 +426,16 @@ Default: <code class="docutils literal notranslate"><span class="pre">10</span><
 <span class="w">  </span><span class="c1"># ... other configurations ...</span>
 </pre></div>
 </div>
-<p>You can create multiple <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> resources, but each node can only
-be managed by <strong>one</strong> <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
-<p>If multiple <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> resources match the same node, they will all
-be marked with the <code class="docutils literal notranslate"><span class="pre">nodeCoverageCollision</span></code> condition and reconciliation will stop.</p>
+<p>여러 개의 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> 리소스, 각 노드는 관리할 수 있습니다. <strong>one</strong> <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
+<p>복수의 경우 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> 같은 노드와 일치하는 리소스는 모두 표시될 것입니다. <code class="docutils literal notranslate"><span class="pre">nodeCoverageCollision</span></code> 상태와 재조합은 멈추게 합니다.</p>
 </section>
 <section id="affinity-for-managed-components">
-<h3>Affinity for managed components<a class="headerlink" href="#affinity-for-managed-components" title="Link to this heading">#</a></h3>
-<p>You can set <code class="docutils literal notranslate"><span class="pre">affinity</span></code> for managed components in <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
+<h3>관리 구성 요소에 대한 어피니티<a class="headerlink" href="#affinity-for-managed-components" title="Link to this heading">#</a></h3>
+<p>설정할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">affinity</span></code> 관리되는 구성 요소에 사용되는 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>.</p>
 <ul class="simple">
-<li><p>The <code class="docutils literal notranslate"><span class="pre">affinity</span></code> setting is applied to all managed components.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">affinity</span></code> 설정은 모든 관리 구성품에 적용됩니다.</p></li>
 </ul>
-<p>Default <code class="docutils literal notranslate"><span class="pre">affinity</span></code>:</p>
+<p>기본 설정 <code class="docutils literal notranslate"><span class="pre">affinity</span></code>:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">furiosa.ai/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FuriosaClusterConfig</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -575,9 +453,8 @@ be marked with the <code class="docutils literal notranslate"><span class="pre">
 <span class="w">  </span><span class="c1"># ... other configurations ...</span>
 </pre></div>
 </div>
-<p>If you do not set <code class="docutils literal notranslate"><span class="pre">affinity</span></code>, the operator applies the default configuration above.</p>
-<p>To override <code class="docutils literal notranslate"><span class="pre">affinity</span></code>, set your own configuration. To clear affinity entirely,
-set it to an empty object:</p>
+<p>설정하지 않는 경우 <code class="docutils literal notranslate"><span class="pre">affinity</span></code>, 연산자는 위의 기본 구성을 적용합니다.</p>
+<p>과장하기 <code class="docutils literal notranslate"><span class="pre">affinity</span></code>, 당신의 자신의 윤곽을 놓으십시오. 전적으로 affinity를, 빈 목표에 그것을 놓기 위하여:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">furiosa.ai/v1alpha1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FuriosaClusterConfig</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -589,67 +466,64 @@ set it to an empty object:</p>
 </div>
 </section>
 <section id="common-configuration-for-managed-components">
-<h3>Common configuration for managed components<a class="headerlink" href="#common-configuration-for-managed-components" title="Link to this heading">#</a></h3>
-<p>You can configure common options for these managed components:</p>
+<h3>관리 구성품에 대한 일반적인 구성<a class="headerlink" href="#common-configuration-for-managed-components" title="Link to this heading">#</a></h3>
+<p>이러한 관리 구성 요소에 대한 일반적인 옵션을 구성할 수 있습니다:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">featureDiscovery</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">devicePlugin</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">draDriver</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">metricsExporter</span></code></p></li>
 </ul>
-<p>Common options:</p>
+<p>일반적인 옵션:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code>: Enable/disable the component. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">registry</span></code>: Container image registry. Default: <code class="docutils literal notranslate"><span class="pre">docker.io/furiosaai</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">image</span></code>: Container image name. Default depends on the component
-(e.g., <code class="docutils literal notranslate"><span class="pre">furiosa-feature-discovery</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: Container image tag. <strong>Required.</strong></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">imagePullPolicy</span></code>: Image pull policy. Default: <code class="docutils literal notranslate"><span class="pre">IfNotPresent</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">imagePullSecrets</span></code>: Image pull secrets.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">resources</span></code>: Resource requests and limits.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tolerations</span></code>: Tolerations.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">updateStrategy</span></code>: DaemonSet update strategy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code>: Enable/disable 구성 요소. 기본값 : <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">registry</span></code>: 컨테이너 이미지 레지스트리. 기본값: <code class="docutils literal notranslate"><span class="pre">docker.io/furiosaai</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">image</span></code>: 컨테이너 이미지 이름. 기본값은 구성 요소 (e.g., <code class="docutils literal notranslate"><span class="pre">furiosa-feature-discovery</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: 컨테이너 이미지 태그. <strong>필요해요</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imagePullPolicy</span></code>: 이미지 풀 정책. 기본값: <code class="docutils literal notranslate"><span class="pre">IfNotPresent</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imagePullSecrets</span></code>: 이미지 풀 시크릿.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resources</span></code>: 리소스 요청 및 제한.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tolerations</span></code>: 용납성</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">updateStrategy</span></code>: 데몬셋 업데이트 전략.</p></li>
 </ul>
 </section>
 <section id="furiosa-system-manager-configuration">
-<h3>Furiosa System Manager configuration<a class="headerlink" href="#furiosa-system-manager-configuration" title="Link to this heading">#</a></h3>
-<p>Configure Furiosa System Manager under the <code class="docutils literal notranslate"><span class="pre">systemManager</span></code> section.</p>
-<p>Available options:</p>
+<h3>Furiosa 시스템 관리자 구성<a class="headerlink" href="#furiosa-system-manager-configuration" title="Link to this heading">#</a></h3>
+<p>Furiosa 시스템 관리자 구성 <code class="docutils literal notranslate"><span class="pre">systemManager</span></code> 부문</p>
+<p>사용할 수 있는 옵션:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code>: Enable/disable the component. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">registry</span></code>: Container image registry. Default: <code class="docutils literal notranslate"><span class="pre">docker.io/furiosaai</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">installerImagePrefix</span></code>: Installer image name prefix.
-Default: <code class="docutils literal notranslate"><span class="pre">furiosa-system-manager-installer</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">validatorImage</span></code>: Validator image name.
-Default: <code class="docutils literal notranslate"><span class="pre">furiosa-system-manager-validator</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: Container image tag. <strong>Required.</strong></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enableDriverInstall</span></code>: Enable driver installation. Default: <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enableFirmwareInstall</span></code>: Enable firmware installation. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">imagePullPolicy</span></code>: Image pull policy. Default: <code class="docutils literal notranslate"><span class="pre">IfNotPresent</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">imagePullSecrets</span></code>: Image pull secrets.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">resources</span></code>: Resource requests and limits.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tolerations</span></code>: Tolerations.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">upgradePolicy</span></code>: Upgrade policy.</p>
+<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code>: Enable/disable 구성 요소. 기본값 : <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">registry</span></code>: 컨테이너 이미지 레지스트리. 기본값: <code class="docutils literal notranslate"><span class="pre">docker.io/furiosaai</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">installerImagePrefix</span></code>: Installer 이미지 이름 접두사. 기본값: <code class="docutils literal notranslate"><span class="pre">furiosa-system-manager-installer</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">validatorImage</span></code>: 검증 이미지 이름.
+기본값: <code class="docutils literal notranslate"><span class="pre">furiosa-system-manager-validator</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>: 컨테이너 이미지 태그. <strong>필요해요</strong></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enableDriverInstall</span></code>: driver 설치가 가능합니다. 기본값: <code class="docutils literal notranslate"><span class="pre">true</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">enableFirmwareInstall</span></code>: firmware 설치가 가능합니다. 기본값: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imagePullPolicy</span></code>: 이미지 풀 정책. 기본값: <code class="docutils literal notranslate"><span class="pre">IfNotPresent</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">imagePullSecrets</span></code>: 이미지 풀 시크릿.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">resources</span></code>: 리소스 요청 및 제한.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tolerations</span></code>: 용납성</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">upgradePolicy</span></code>: 개선 정책.</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">autoUpgrade</span></code>: Enable automatic upgrade. Default: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">maxParallelUpgrades</span></code>: Max nodes upgraded in parallel. Default: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">maxUnavailable</span></code>: Max unavailable during upgrade. Default: <code class="docutils literal notranslate"><span class="pre">25%</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">autoUpgrade</span></code>: 자동 업그레이드 활성화. 기본값: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxParallelUpgrades</span></code>: Max 노드가 병렬로 업그레이드되었습니다. 기본값: <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">maxUnavailable</span></code>: 업그레이드 중 최대 사용 가능. 기본값: <code class="docutils literal notranslate"><span class="pre">25%</span></code>.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="important-note-using-device-plugin-and-dra-driver">
-<h3>Important note: Using Device Plugin and DRA Driver<a class="headerlink" href="#important-note-using-device-plugin-and-dra-driver" title="Link to this heading">#</a></h3>
-<p>FuriosaAI NPUs can be managed using either the Device Plugin or the DRA Driver.</p>
-<p>However, using both simultaneously on the same node is not supported and may lead to conflicts.</p>
-<p>If both are enabled in <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>, the operator will set the
-<code class="docutils literal notranslate"><span class="pre">invalidSpec</span></code> condition on the resource and stop reconciliation.</p>
+<h3>중요 참고: 장치 플러그인 및 DRA Driver 사용<a class="headerlink" href="#important-note-using-device-plugin-and-dra-driver" title="Link to this heading">#</a></h3>
+<p>FuriosaAI NPU는 장치 플러그인 또는 DRA Driver를 사용하여 관리될 수 있습니다.</p>
+<p>그러나 동일한 노드에서 동시에 사용하는 것은 지원되지 않으며 충돌이 발생할 수 있습니다.</p>
+<p>둘 다 활성화된 경우 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>, 운영자는 다음을 설정합니다.
+<code class="docutils literal notranslate"><span class="pre">invalidSpec</span></code> 자원의 상태와 재건축을 중지합니다.</p>
 </section>
 <section id="important-note-deviceclass-secondary-resource">
-<h3>Important note: <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> secondary resource<a class="headerlink" href="#important-note-deviceclass-secondary-resource" title="Link to this heading">#</a></h3>
-<p>If you enable the DRA Driver in <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>, a <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> resource
-is created with a fixed name: <code class="docutils literal notranslate"><span class="pre">npu.furiosa.ai</span></code>.</p>
-<p>Example:</p>
+<h3>중요한 점: <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> 부차원 자원<a class="headerlink" href="#important-note-deviceclass-secondary-resource" title="Link to this heading">#</a></h3>
+<p>DRA Driver를 활성화하는 경우: <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code>, a <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> 리소스는 고정 된 이름으로 만들어집니다 : <code class="docutils literal notranslate"><span class="pre">npu.furiosa.ai</span></code>.</p>
+<p>예를 들어:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeviceClass</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -669,9 +543,9 @@ is created with a fixed name: <code class="docutils literal notranslate"><span c
 <span class="w">        </span><span class="nt">expression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">device.driver == 'npu.furiosa.ai'</span>
 </pre></div>
 </div>
-<p>If multiple <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> resources enable the DRA Driver, the existing
-<code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> is not modified except for <code class="docutils literal notranslate"><span class="pre">metadata.ownerReferences</span></code>.</p>
-<p>Example with two owners:</p>
+<p>복수의 경우 <code class="docutils literal notranslate"><span class="pre">FuriosaClusterConfig</span></code> 리소스는 기존의 DRA Driver를 활성화합니다.
+<code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> 는 다음 사항을 제외하고 수정되지 않습니다. <code class="docutils literal notranslate"><span class="pre">metadata.ownerReferences</span></code>.</p>
+<p>두 명의 소유자를 사용하는 예시:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DeviceClass</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -698,119 +572,79 @@ is created with a fixed name: <code class="docutils literal notranslate"><span c
 </section>
 </section>
 </section>
-
-
-                </article>
-              
-
-              
-              
-              
-              
-                <footer class="prev-next-footer d-print-none">
-                  
+</article>
+<footer class="prev-next-footer d-print-none">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="metrics_exporter.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Installing Furiosa Metrics Exporter</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="../llm_d.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Deploying Furiosa-LLM with llm-d</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
+<a class="left-prev" href="metrics_exporter.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">이전</p>
+<p class="prev-next-title">Furiosa 메트릭스 내보내기 설치</p>
 </div>
-                </footer>
-              
-            </div>
-            
-            
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> 
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-npu-operator">Furiosa NPU Operator</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managed-components">Managed components</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-furiosa-npu-operator-with-helm">Deploying Furiosa NPU Operator with Helm</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">Example usage</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-for-furiosa-metrics-exporter">Configuration for <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-nodes-for-deployment">Selecting nodes for deployment</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#affinity-for-managed-components">Affinity for managed components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-configuration-for-managed-components">Common configuration for managed components</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-system-manager-configuration">Furiosa System Manager configuration</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-using-device-plugin-and-dra-driver">Important note: Using Device Plugin and DRA Driver</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-deviceclass-secondary-resource">Important note: <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> secondary resource</a></li>
+</a>
+<a class="right-next" href="../llm_d.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">다음</p>
+<p class="prev-next-title">Furiosa-LLM를 llm 방법을 사용하여 배포</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i>
+</div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-npu-operator">Furiosa NPU 운영자</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#managed-components">관리된 구성요소</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">전제 조건</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deploying-furiosa-npu-operator-with-helm">Helm와 Furiosa NPU 운영자 배포</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example-usage">예제 사용</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#configuration-for-furiosa-metrics-exporter">구성 <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-nodes-for-deployment">배포를 위한 노드 선택</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#affinity-for-managed-components">관리 구성 요소에 대한 어피니티</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#common-configuration-for-managed-components">관리 구성품에 대한 일반적인 구성</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#furiosa-system-manager-configuration">Furiosa 시스템 관리자 구성</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-using-device-plugin-and-dra-driver">중요 참고: 장치 플러그인 및 DRA Driver 사용</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#important-note-deviceclass-secondary-resource">중요한 점: <code class="docutils literal notranslate"><span class="pre">DeviceClass</span></code> 부차원 자원</a></li>
 </ul>
 </li>
 </ul>
-  </nav></div>
-
+</nav></div>
 </div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-<div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
-<p class="component-author">
-By FuriosaAI, Inc.
-</p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-
-  <p class="copyright">
-    
-      © Copyright 2026 FuriosaAI Inc.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
 </div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
-
-  <footer class="bd-footer">
-  </footer>
-  </body>
+<footer class="bd-footer-content">
+<div class="bd-footer-content__inner container">
+<div class="footer-item">
+<p class="component-author">
+FuriosaAI, Inc.
+</p>
+</div>
+<div class="footer-item">
+<p class="copyright">
+    
+      © 2026 FuriosaAI Inc. 저작권
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+</footer>
+</body>
 </html>

@@ -1,402 +1,298 @@
 
-<!DOCTYPE html>
-
-
-<html lang="en" data-content_root="../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
-    <script>
+html
+<html data-content_root="../" lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
+<script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-0HTTHGM3MD');
     </script>
-    
-    <title>Furiosa Executable Bundles (FXB) &#8212; FuriosaAI Developer Center 2026.4.1 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<title>Furiosa 실행 가능한 번들 (FXB) - FuriosaAI 개발자 센터 2026.4.1 문서</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
+<!--
     this give us a css class that will be invisible only if js is disabled
   -->
-  <noscript>
-    <style>
+<noscript>
+<style>
       .pst-js-only { display: none !important; }
 
     </style>
-  </noscript>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=39f50d33" />
-  
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
-
-    <script src="../_static/documentation_options.js?v=d27e8219"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/fxb';</script>
-    <script>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=39f50d33" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=d27e8219"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/fxb';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/furiosa-ai/furiosa-ai.github.io/refs/heads/main/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2026.4.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
-    <link rel="icon" href="../_static/favicon.png"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Model Parallelism" href="model-parallelism.html" />
-    <link rel="prev" title="Data-Parallel Routing" href="data-parallel-routing.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.4.1" />
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
-  
-  <dialog id="pst-search-dialog">
-    
-<form class="bd-search d-flex align-items-center"
-      action="../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search..."
-         aria-label="Search..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<link href="../_static/favicon.png" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="model-parallelism.html" rel="next" title="Model Parallelism"/>
+<link href="data-parallel-routing.html" rel="prev" title="Data-Parallel Routing"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="2026.4.1" name="docsearch:version"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>다시 꼭대기에</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form>
-  </dialog>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
 </div>
-
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-
-  
-    
-  
-
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
 <a class="navbar-brand logo" href="../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../_static/doc-logo-dark.svg" class="logo__image only-light" alt=""/>
-    <img src="../_static/doc-logo-light.svg" class="logo__image only-dark pst-js-only" alt=""/>
-  
-  
-    <p class="title logo__title">
-            <div class='sidebar-title mr-auto'>
-                Furiosa Docs
+<img alt="" class="logo__image only-light" src="../_static/doc-logo-dark.svg"/>
+<img alt="" class="logo__image only-dark pst-js-only" src="../_static/doc-logo-light.svg"/>
+<p class="title logo__title">
+<div class="sidebar-title mr-auto">
+                Furiosa 문서
             </div>
-        </p>
-  
+</p>
 </a></div>
-        <div class="sidebar-primary-item">
+<div class="sidebar-primary-item">
 <div class="version-switcher__container dropdown pst-js-only">
-  <button id="pst-version-switcher-button-2"
-    type="button"
-    class="version-switcher__button btn btn-sm dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-haspopup="listbox"
-    aria-controls="pst-version-switcher-list-2"
-    aria-label="Version switcher list"
-  >
-    Choose version  <!-- this text may get changed later by javascript -->
-    <span class="caret"></span>
-  </button>
-  <div id="pst-version-switcher-list-2"
-    class="version-switcher__menu dropdown-menu list-group-flush py-0"
-    role="listbox" aria-labelledby="pst-version-switcher-button-2">
-    <!-- dropdown will be populated by javascript on page load -->
-  </div>
+<button aria-controls="pst-version-switcher-list-2" aria-haspopup="listbox" aria-label="Version switcher list" class="version-switcher__button btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" id="pst-version-switcher-button-2" type="button">
+    버전 선택  <!-- this text may get changed later by javascript -->
+<span class="caret"></span>
+</button>
+<div aria-labelledby="pst-version-switcher-button-2" class="version-switcher__menu dropdown-menu list-group-flush py-0" id="pst-version-switcher-list-2" role="listbox">
+<!-- dropdown will be populated by javascript on page load -->
+</div>
 </div></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">개요</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../overview/rngd.html">FuriosaAI RNGD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview/software_stack.html">FuriosaAI’s Software Stack</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../whatsnew/index.html">What’s New</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.4.0.html">Furiosa SDK Release 2026.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.3.0.html">Furiosa SDK Release 2026.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.2.0.html">Furiosa SDK Release 2026.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.1.0.html">Furiosa SDK Release 2026.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2025.html">Release Notes for Furiosa SDK Release 2025.X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/software_stack.html">FuriosaAI의 소프트웨어 스택</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../whatsnew/index.html">무슨 일이야?</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.4.0.html">Furiosa SDK 해제 2026.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.3.0.html">Furiosa SDK 릴리스 2026.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.2.0.html">Furiosa SDK 릴리즈 2026.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2026.1.0.html">Furiosa SDK 배포 2026.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../whatsnew/release-2025.html">Furiosa SDK 릴리즈 노트 2025.X</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview/roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/roadmap.html">로드맵</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">시작 해</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../get_started/prerequisites.html">Installing Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/furiosa_llm.html">Quick Start with Furiosa-LLM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/upgrade_guide.html">Upgrading FuriosaAI’s Software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/prerequisites.html">사전 설치</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/furiosa_llm.html">Furiosa-LLM를 사용한 빠른 시작</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/upgrade_guide.html">FuriosaAI 소프트웨어 업그레이드</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Furiosa-LLM</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="intro.html">Furiosa-LLM</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="supported_models.html">Supported Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="models/qwen3.html">Qwen3 (dense)</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="supported_models.html">지원 된 모델</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="models/qwen3.html">Qwen3 (밀집)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/qwen3-moe.html">Qwen3-MoE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/bge-m3.html">BGE-M3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/e5-mistral.html">E5-Mistral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/bge-reranker-v2-m3.html">BGE Reranker v2 M3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/harrier-oss-v1.html">Harrier OSS v1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/bge-reranker-v2-m3.html">BGE 레랑커 v2 M3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/harrier-oss-v1.html">해리어 OSS v1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/qwen3-embedding.html">Qwen3-Embedding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/qwen3-reranker.html">Qwen3-Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/qwen3-vl.html">Qwen3-VL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/gemma-4.html">Gemma 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/gemma-4.html">제마 4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/qwen2.5.html">Qwen2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/llama-3.1.html">Llama 3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/llama-3.3.html">Llama 3.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/mistral-nemo.html">Mistral NeMo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/llama-3.1.html">라마 3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/llama-3.3.html">라마 3.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/mistral-nemo.html">미스트랄 네모</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/gpt-oss.html">GPT-OSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/exaone-4.0.html">EXAONE 4.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/exaone-4.5.html">EXAONE 4.5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="models/k-exaone.html">K-EXAONE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="models/solar-open.html">Solar Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="models/solar-open.html">태양광 개방</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="furiosa-llm-serve.html">OpenAI-Compatible Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="responses-api.html">Responses API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="toolcalling.html">Tool Calling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="structured-output.html">Structured Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="vision-language.html">Vision-Language Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="performance-optimization.html">Performance Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="furiosa-llm-serve.html">OpenAI 호환 서버</a></li>
+<li class="toctree-l1"><a class="reference internal" href="responses-api.html">답변 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="toolcalling.html">도구 호출</a></li>
+<li class="toctree-l1"><a class="reference internal" href="structured-output.html">구조화된 출력</a></li>
+<li class="toctree-l1"><a class="reference internal" href="vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="performance-optimization.html">성능 최적화</a></li>
 <li class="toctree-l1"><a class="reference internal" href="prefix-caching.html">Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hierarchical-prefix-caching.html">Hierarchical Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="overlap-scheduling.html">Overlap Scheduling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="hybrid-kv-cache.html">Hybrid KV Cache Management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="data-parallel-routing.html">Data-Parallel Routing</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Furiosa Executable Bundles (FXB)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="model-parallelism.html">Model Parallelism</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference/llm.html">LLM class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/sampling_params.html">SamplingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/pooling_params.html">PoolingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/llm_engine.html">LLMEngine class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="reference/async_llm_engine.html">AsyncLLMEngine class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hierarchical-prefix-caching.html">계층적 Prefix Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="overlap-scheduling.html">겹치기 기획</a></li>
+<li class="toctree-l1"><a class="reference internal" href="hybrid-kv-cache.html">하이브리드 KV Cache 관리</a></li>
+<li class="toctree-l1"><a class="reference internal" href="data-parallel-routing.html">Data-Parallel 라우팅</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">C Furiosa 실행 파일 묶음 (FXB)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="model-parallelism.html">모형 평행성</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="reference.html">API 참조</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="reference/llm.html">LLM급</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/sampling_params.html">SamplingParams 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/pooling_params.html"> ⁇ 링파램스 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/llm_engine.html">LLMEngine 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference/async_llm_engine.html">AsyncLLMEngine 클래스</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="examples.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/llm_chat.html">Chat</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="examples.html">예제</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/llm_chat.html">채팅</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/llm_embed.html">Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/llm_score.html">Scoring (Similarity Scoring)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/llm_rerank.html">Reranking (Document Reranking)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/online_chat_completion_logprobs.html">OpenAI-Compatible API with Logprobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/llm_score.html">점수 (유사 점수)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/llm_rerank.html">재평가 (문서 재평가)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/online_chat_completion_logprobs.html">OpenAI 호환 API (Logprobs 포함)</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="k8s_deployment.html">Deploying Furiosa-LLM on Kubernetes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="mooncake_deployment.html">Using Mooncake with Furiosa-LLM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="k8s_deployment.html">Furiosa-LLM를 Kubernetes에 배포</a></li>
+<li class="toctree-l1"><a class="reference internal" href="mooncake_deployment.html">Mooncake를 Furiosa-LLM와 함께 사용하는 것을 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cloud Native Toolkit</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">클라우드 네이티브 툴킷</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/intro.html">Cloud Native Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/container.html">Container Support</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../cloud_native_toolkit/kubernetes.html">Kubernetes Plugins</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/feature_discovery.html">Installing Furiosa Feature Discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/device_plugin.html">Installing Furiosa Device Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/dra_driver.html">Installing Furiosa DRA Driver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/metrics_exporter.html">Installing Furiosa Metrics Exporter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/npu_operator.html">Installing Furiosa NPU Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/intro.html">클라우드 네이티브 툴킷</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/container.html">컨테이너 지원</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cloud_native_toolkit/kubernetes.html">Kubernetes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/feature_discovery.html">Furiosa 기능 디스커버리 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/device_plugin.html">Furiosa 장치 플러그인 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/dra_driver.html">Furiosa DRA Driver 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/metrics_exporter.html">Furiosa 메트릭스 내보내기 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/npu_operator.html">Furiosa NPU 운영자 설치</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/llm_d.html">Deploying Furiosa-LLM with llm-d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/llm_d.html">Furiosa-LLM를 llm 방법을 사용하여 배포</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Device Management</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">장치 관리</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../device_management/system_management_interface.html">Furiosa SMI</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html">Furiosa SMI CLI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI 도서관</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../device_management/host_tuning.html">Host PCI Optimization Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../device_management/host_tuning.html">호스트 PCI 최적화 튜닝</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials and Examples</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">튜토리얼 및 예제</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK CookBook</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK 요리 가이드</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Customer Support</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">고객 지원</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">Forums</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">Customer Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">포럼</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">고객 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Other Links</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">다른 링크</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI Homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK Doc</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI 홈페이지</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK 문서 참조.</a></li>
 </ul>
-
-    </div>
+</div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item"><img id='furiosa_logo' width="100" /></div>
-      <div class="sidebar-primary-item">
-
-  <p class="copyright">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item"><img id="furiosa_logo" width="100"/></div>
+<div class="sidebar-primary-item">
+<p class="copyright">
     
-      © Copyright 2026 FuriosaAI Inc.
+      © 2026 FuriosaAI Inc. 저작권
       <br/>
-    
-  </p>
+</p>
 </div>
-  </div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main" role="main">
-        
-        
-
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
 <div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article d-print-none">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
+<div class="header-article-items__start">
+<div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
 </button></div>
-      
-    </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button></div>
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+<div class="header-article-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
 </button></div>
-      
-        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
+<div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
 </button></div>
-      
-    </div>
-  
 </div>
 </div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Furiosa Executable Bundles (FXB)</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2>  </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-an-fxb-for-a-model">Building an FXB for a model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>C Furiosa 실행 파일 묶음 (FXB)</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">설치</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-an-fxb-for-a-model">FXB를 특정 모델에 맞게 구성하는 방법</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">전제 조건</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models-runnable-with-furiosa-llm">Models runnable with Furiosa-LLM</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-directory-containing-an-fxb">Model directory containing an FXB</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-an-fxb-directly">Specifying an FXB directly</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models-runnable-with-furiosa-llm">Furiosa-LLM를 사용하여 실행 가능한 모델</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-directory-containing-an-fxb">FXB를 포함하는 모델 디렉토리</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-an-fxb-directly">직접 FXB를 지정</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-compatibility">FXB compatibility</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serving-a-model-with-a-compatible-cached-fxb">Serving a model with a compatible cached FXB</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-a-compatible-fxb-into-the-cache">Step 1 — Get a compatible FXB into the cache</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-check-compatibility">Step 2 — Check compatibility</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-serve-the-model">Step 3 — Serve the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-compatibility">FXB 호환성</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serving-a-model-with-a-compatible-cached-fxb">호환 캐시 FXB와 모델 제공</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-a-compatible-fxb-into-the-cache">단계 1 — 캐시에 호환 FXB를 가져옵니다</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-check-compatibility">단계 2 — 호환성 확인</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-serve-the-model">단계 3 — 모델 실행</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-reference">Command reference</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-reference">지휘자 참조</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-build"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-download"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">download</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-add"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code></a></li>
@@ -409,127 +305,101 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-inspect"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">inspect</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fingerprint-and-compatibility">Fingerprint and Compatibility</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-test-build">Quick test build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-build">Production build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-topology">Deployment topology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fingerprint-and-compatibility">지문 및 호환성</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">가장 좋은 방법</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-test-build">빠른 테스트 구축</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-build">생산 구축</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-topology">배포 토폴로지</a></li>
 </ul>
 </li>
 </ul>
-            </nav>
-        </div>
-    </div>
+</nav>
 </div>
-
-              
-                
+</div>
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <section id="furiosa-executable-bundles-fxb">
-<span id="fxb"></span><h1>Furiosa Executable Bundles (FXB)<a class="headerlink" href="#furiosa-executable-bundles-fxb" title="Link to this heading">#</a></h1>
-<p>A model served by Furiosa-LLM consists of two parts: the model assets in Hugging Face
-format and the compiled program that runs those assets on the Furiosa NPU. The model assets
-provide the configuration, tokenizer, and weights, while a <strong>Furiosa Executable Bundle
-(FXB)</strong> provides the compiled kernels. A runnable deployment needs both parts.</p>
+<article class="bd-article">
+<section id="furiosa-executable-bundles-fxb">
+<span id="fxb"></span><h1>C Furiosa 실행 파일 묶음 (FXB)<a class="headerlink" href="#furiosa-executable-bundles-fxb" title="Link to this heading">#</a></h1>
+<p>Furiosa-LLM는 Furiosa NPU의 자산을 실행하는 Hugging Face 형식과 컴파일된 프로그램에 있는 모델 자산입니다. 모델 자산은 구성, 토큰화기 및 무게를 제공하지만, <strong>Furiosa 실행 파일 묶음
+(FXB)</strong> 컴파일된 커널을 제공합니다. 실행 가능한 배포는 두 부분 모두 필요로 합니다.</p>
 <p>Furiosa-LLM needs an FXB because the code executed on the NPU is compiled ahead of time for
-the model architecture and execution configuration. The resulting <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> file is a single
-archive containing the compiled binaries and the metadata needed to load and run them.</p>
-<p>Keeping the compiled program separate from the model assets has several benefits:</p>
+the model architecture and execution configuration. The resulting <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일은 컴파일된 binaries 및 metadata가로드하고 실행해야 하는 단일 아카이브입니다.</p>
+<p>모델 자산에서 별도의 컴파일 된 프로그램을 유지하면 몇 가지 이점이 있습니다.</p>
 <ul class="simple">
-<li><p>A model can start without compiling kernels on the serving host.</p></li>
-<li><p>The FXB can be copied, cached, or published with a model.</p></li>
-<li><p>Compatible models can reuse the same FXB when only their weights change.</p></li>
+<li><p>모델은 서빙 호스트에 커널을 컴파일하지 않고 시작할 수 있습니다.</p></li>
+<li><p>FXB는 모델로 복사, 캐시 또는 게시 할 수 있습니다.</p></li>
+<li><p>호환 모델은 동일한 FXB를 재사용 할 수 있습니다.</p></li>
 </ul>
-<p>An FXB does not contain the model weights and does not replace the Hugging Face model
-directory. Furiosa-LLM still reads the configuration, tokenizer, and weights from that
-directory or repository.</p>
-<p>This page follows the model lifecycle from building an FXB to supplying it with the model
-assets and reusing it with compatible models. Detailed command behavior, bundle metadata,
-and compatibility rules are described in the later sections.</p>
+<p>FXB는 모델 무게를 포함하지 않으며 Hugging Face 모델 디렉토리를 대체하지 않습니다. Furiosa-LLM는 여전히 구성, 토큰화기 및 그 디렉토리 또는 저장소에서 무게를 읽습니다.</p>
+<p>이 페이지는 FXB를 구축하여 모델 자산을 공급하고 호환 모델로 재사용하는 모델 라이프사이클을 따릅니다. 자세한 명령 행동, 번들 메타데이터 및 호환성 규칙은 나중에 섹션에 설명되어 있습니다.</p>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>FuriosaAI publishes a set of pre-compiled FXB bundles for popular models on the
-<a class="reference external" href="https://huggingface.co/furiosa-ai">Hugging Face Hub 🤗 - FuriosaAI organization</a>.
-You can download one of these and serve it for any compatible model with the workflow below.</p>
+<p>FuriosaAI는 대중적인 모형을 위한 pre-compiled FXB 뭉치의 세트를 발행합니다
+<a class="reference external" href="https://huggingface.co/furiosa-ai">Hugging Face 허브 - FuriosaAI 조직</a>. 이 중 하나를 다운로드하고 아래의 작업 흐름과 호환 모델에 대해 제공합니다.</p>
 </div>
 <section id="installation">
-<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
-<p>FXB includes the <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> bundle format and the framework for building, distributing, and
-loading bundles. Furiosa-LLM exposes this lifecycle through the <code class="docutils literal notranslate"><span class="pre">fxb</span></code> CLI.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">fxb</span></code> CLI ships with the Furiosa-LLM package, so there is nothing extra to install.
-If you have not installed Furiosa-LLM yet, follow <a class="reference internal" href="../get_started/furiosa_llm.html#installingfuriosallm"><span class="std std-ref">Installing Furiosa-LLM</span></a>:</p>
+<h2>설치<a class="headerlink" href="#installation" title="Link to this heading">#</a></h2>
+<p>FXB은 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 번들 형식과 건물, 배포 및 로딩 번들을위한 프레임 워크. Furiosa-LLM는이 수명주기를 통해 노출 <code class="docutils literal notranslate"><span class="pre">fxb</span></code> CLI</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fxb</span></code> CLI는 Furiosa-LLM 패키지로 배송하므로 설치하기에는 추가가 없습니다. Furiosa-LLM를 설치하지 않은 경우 다음을 따르십시오. <a class="reference internal" href="../get_started/furiosa_llm.html#installingfuriosallm"><span class="std std-ref">Furiosa-LLM 설치</span></a>:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip<span class="w"> </span>setuptools<span class="w"> </span>wheel<span class="w"> </span>uv
 uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>--torch-backend<span class="o">=</span>auto<span class="w"> </span>furiosa-llm
 </pre></div>
 </div>
-<p>Verify that the CLI is available:</p>
+<p>CLI가 사용 가능한지 확인하십시오:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="o">--</span><span class="n">help</span>
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">fxb</span></code> CLI covers the whole FXB lifecycle: building, downloading, caching, compatibility
-checking, and inspection. The cache and inspection subcommands use the same local cache that
-<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> consults at serving time.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fxb</span></code> CLI는 전체적인 FXB 수명주기를 포함합니다: 건물, 다운로드, 캐싱, 겸용성 검사 및 검사. 시렁과 검사 subcommands는 동일한 국부적으로 시렁을 이용합니다
+<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> 참조</p>
 </section>
 <section id="building-an-fxb-for-a-model">
-<span id="buildingfxb"></span><h2>Building an FXB for a model<a class="headerlink" href="#building-an-fxb-for-a-model" title="Link to this heading">#</a></h2>
+<span id="buildingfxb"></span><h2>FXB를 특정 모델에 맞게 구성하는 방법<a class="headerlink" href="#building-an-fxb-for-a-model" title="Link to this heading">#</a></h2>
 <section id="prerequisites">
-<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
-<p>Building an FXB requires the AArch64 GNU C cross-compiler and target C library headers.
-On Debian or Ubuntu, install the required packages with:</p>
+<h3>전제 조건<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
+<p>FXB를 구축하려면 AArch64 GNU C cross-compiler 및 대상 C 라이브러리 헤더가 필요합니다. Debian 또는 Ubuntu에서 필요한 패키지를 설치하십시오.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>update
 sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>--no-install-recommends<span class="w"> </span>gcc-aarch64-linux-gnu<span class="w"> </span>libc6-dev-arm64-cross
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Building FXBs is not currently supported on RHEL or other RPM-based distributions.
-The EPEL cross-compiler does not provide the AArch64 glibc userspace sysroot required
-by <code class="docutils literal notranslate"><span class="pre">furiosa-tcc</span></code>.</p>
+<p class="admonition-title">참고</p>
+<p>건물 FXB는 현재 RHEL 또는 기타 RPM-based 배포판에서 지원되지 않습니다. EPEL cross-compiler는 AArch64 glibc 사용자 공간 sysroot를 제공하지 않습니다. <code class="docutils literal notranslate"><span class="pre">furiosa-tcc</span></code>.</p>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code> to compile a model into an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> bundle:</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code> 모델을 컴파일하여 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 묶음:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">build</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">fp8</span>
 </pre></div>
 </div>
-<p>The first argument is a Hugging Face model ID or a local path (a path must start with <code class="docutils literal notranslate"><span class="pre">.</span></code> or
-<code class="docutils literal notranslate"><span class="pre">/</span></code>). The second is the output path; the <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> extension is appended automatically when the
-path has none, so the command above writes <code class="docutils literal notranslate"><span class="pre">qwen3-8b-fp8.fxb</span></code>.</p>
-<p>Preview the resolved configuration and bucket plan without compiling using <code class="docutils literal notranslate"><span class="pre">--dry-run</span></code>:</p>
+<p>첫 번째 인수는 Hugging Face 모델 ID 또는 로컬 경로 ( 경로가 시작해야 함) <code class="docutils literal notranslate"><span class="pre">.</span></code> or
+<code class="docutils literal notranslate"><span class="pre">/</span></code>). 두번째는 산출 경로입니다; <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 확장은 자동으로 none를 가지고 있을 때, 위의 명령을 쓰기 <code class="docutils literal notranslate"><span class="pre">qwen3-8b-fp8.fxb</span></code>.</p>
+<p>해결 된 구성 및 버킷 계획을 사용하여 컴파일하지 않고 미리보기 <code class="docutils literal notranslate"><span class="pre">--dry-run</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">build</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">fp8</span> <span class="o">--</span><span class="n">dry</span><span class="o">-</span><span class="n">run</span>
 </pre></div>
 </div>
-<p>Common options:</p>
+<p>일반적인 옵션:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span></code> — number of PEs per tensor-parallel group (default: the model
-preset).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-pp/--pipeline-parallel-size</span></code> — pipeline-parallel size (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span></code> — override the model’s maximum context length for bucket selection. This
-shapes what gets compiled into the bundle; <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> takes an option of the same
-name that only caps admission at serve time (see <a class="reference internal" href="performance-optimization.html#servemaxmodellen"><span class="std std-ref">Limiting the Context Length</span></a>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-O/--optim-level</span></code> — bucket-filtering optimization level: <code class="docutils literal notranslate"><span class="pre">O0</span></code> (minimal), <code class="docutils literal notranslate"><span class="pre">O1</span></code> (half),
-<code class="docutils literal notranslate"><span class="pre">O2</span></code> (quarter), <code class="docutils literal notranslate"><span class="pre">O3</span></code> (full, the default).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--convert</span></code> — task override for models with an ambiguous architecture: <code class="docutils literal notranslate"><span class="pre">embed</span></code> rewrites
+<li><p><code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span></code> - tensor-parallel 그룹 당 PEs의 수 (과태: 모형 미리 설치).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-pp/--pipeline-parallel-size</span></code> — pipeline-parallel 크기 (기본값: <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span></code> — 모델의 최대 컨텍스트 길이를 버킷 선택에 덮어줍니다. 이 모양은 묶어 묶어 버리는 것을 의미합니다. <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> 봉사 시간에만 입장할 수 있는 동일한 이름의 선택권을 가지고 갑니다 (see <a class="reference internal" href="performance-optimization.html#servemaxmodellen"><span class="std std-ref">컨텍스트 길이 제한</span></a>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-O/--optim-level</span></code> — bucket-filtering 최적화 수준: <code class="docutils literal notranslate"><span class="pre">O0</span></code> (최소) <code class="docutils literal notranslate"><span class="pre">O1</span></code> (반)
+<code class="docutils literal notranslate"><span class="pre">O2</span></code> (제4분기) <code class="docutils literal notranslate"><span class="pre">O3</span></code> (전체, 기본).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--convert</span></code> - 주변 건축물과 모델에 대한 작업 override: <code class="docutils literal notranslate"><span class="pre">embed</span></code> 다시 쓰기
 <code class="docutils literal notranslate"><span class="pre">*ForCausalLM</span></code> → <code class="docutils literal notranslate"><span class="pre">*Model</span></code>; <code class="docutils literal notranslate"><span class="pre">score</span></code>/<code class="docutils literal notranslate"><span class="pre">classify</span></code> → <code class="docutils literal notranslate"><span class="pre">*ForSequenceClassification</span></code>
-(default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, i.e. keep the architecture from <code class="docutils literal notranslate"><span class="pre">config.json</span></code>).</p></li>
+(전기: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, i.e. 아키텍처를 유지 <code class="docutils literal notranslate"><span class="pre">config.json</span></code>).</p></li>
 </ul>
-<p>After building, register the bundle in the cache so <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code> and <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> can
-find it:</p>
+<p>건물 후에, 캐시에 있는 뭉치를 이렇게 등록하십시오 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code> and <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> 찾을 수 있습니다:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">add</span> <span class="o">./</span><span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">fp8</span><span class="o">.</span><span class="n">fxb</span>
 </pre></div>
 </div>
-<p>For production build recommendations, see <a class="reference internal" href="#fxbbestpractices"><span class="std std-ref">Best Practices</span></a>.</p>
+<p>생산 빌드 권고를 위해, 참조 <a class="reference internal" href="#fxbbestpractices"><span class="std std-ref">가장 좋은 방법</span></a>.</p>
 </section>
 </section>
 <section id="models-runnable-with-furiosa-llm">
-<h2>Models runnable with Furiosa-LLM<a class="headerlink" href="#models-runnable-with-furiosa-llm" title="Link to this heading">#</a></h2>
-<p>Furiosa-LLM loads the model assets and the FXB together. The model assets must follow the
-Hugging Face Hub directory format and include files such as <code class="docutils literal notranslate"><span class="pre">config.json</span></code>, tokenizer files,
-and model weights. A model can be distributed or invoked in either of the following forms.</p>
+<h2>Furiosa-LLM를 사용하여 실행 가능한 모델<a class="headerlink" href="#models-runnable-with-furiosa-llm" title="Link to this heading">#</a></h2>
+<p>Furiosa-LLM는 모델 자산과 FXB를 함께로드합니다. 모델 자산은 Hugging Face 허브 디렉토리 형식을 따라야하며 같은 파일을 포함합니다. <code class="docutils literal notranslate"><span class="pre">config.json</span></code>, Tokenizer 파일 및 모델 무게. 모델은 다음 양식 중 하나에서 배포 또는 호출 할 수 있습니다.</p>
 <section id="model-directory-containing-an-fxb">
-<h3>Model directory containing an FXB<a class="headerlink" href="#model-directory-containing-an-fxb" title="Link to this heading">#</a></h3>
-<p>Place a compatible <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> file in the Hugging Face model directory alongside the model
-configuration, tokenizer, and weights:</p>
+<h3>FXB를 포함하는 모델 디렉토리<a class="headerlink" href="#model-directory-containing-an-fxb" title="Link to this heading">#</a></h3>
+<p>호환 가능한 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> Hugging Face 모델 디렉토리에 모델 구성, Tokenizer 및 무게와 함께 파일:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>my-model/
   config.json
   tokenizer.json
@@ -539,93 +409,71 @@ configuration, tokenizer, and weights:</p>
   my-model.fxb
 </pre></div>
 </div>
-<p>The directory can be stored locally or published as a repository on the Hugging Face Hub.
-Furiosa-LLM discovers the bundled FXB automatically:</p>
+<p>디렉토리는 로컬로 저장하거나 Hugging Face 허브에 저장소로 게시 할 수 있습니다. Furiosa-LLM는 번들 FXB를 자동으로 검색합니다.</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">furiosa-llm serve ./my-model</span>
 </pre></div>
 </div>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">furiosa-llm serve furiosa-ai/Qwen3-8B-FP8</span>
 </pre></div>
 </div>
-<p>This form is convenient for distributing a self-contained model repository that is ready to
-serve.</p>
+<p>이 양식은 self-contained 모델 저장소를 배포하는 것이 편리합니다.</p>
 </section>
 <section id="specifying-an-fxb-directly">
-<h3>Specifying an FXB directly<a class="headerlink" href="#specifying-an-fxb-directly" title="Link to this heading">#</a></h3>
-<p>Keep the model assets and FXB in separate locations and select the bundle with <code class="docutils literal notranslate"><span class="pre">--fxb</span></code>:</p>
+<h3>직접 FXB를 지정<a class="headerlink" href="#specifying-an-fxb-directly" title="Link to this heading">#</a></h3>
+<p>모델 자산과 FXB를 별도의 위치에 유지하고 번들을 선택하십시오. <code class="docutils literal notranslate"><span class="pre">--fxb</span></code>:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">furiosa-llm serve Qwen/Qwen3-8B-FP8 --fxb ./qwen3-8b-fp8.fxb</span>
 </pre></div>
 </div>
-<p>The first argument still identifies the Hugging Face model repository or local directory from
-which Furiosa-LLM loads the configuration, tokenizer, and weights. <code class="docutils literal notranslate"><span class="pre">--fxb</span></code> selects only the
-compiled bundle. This form is useful for testing a newly built FXB, pinning a specific bundle,
-or reusing one FXB with multiple compatible models.</p>
-<p>The Python API provides the same separation:</p>
+<p>첫 번째 인수는 여전히 Hugging Face 모델 저장소 또는 로컬 디렉토리를 식별합니다. Furiosa-LLM는 구성, Tokenizer 및 무게를로드합니다. <code class="docutils literal notranslate"><span class="pre">--fxb</span></code> 컴파일된 번들만 선택합니다. 이 형태는 새로 만들어진 FXB를 테스트하는 데 유용합니다. 특정 번들을 피하거나 여러 호환 모델과 함께 FXB를 재사용합니다.</p>
+<p>Python API는 동일한 별거를 제공합니다:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span>
 
 <span class="n">llm</span> <span class="o">=</span> <span class="n">LLM</span><span class="p">(</span><span class="s2">"Qwen/Qwen3-8B-FP8"</span><span class="p">,</span> <span class="n">fxb</span><span class="o">=</span><span class="s2">"./qwen3-8b-fp8.fxb"</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For automatic discovery through the local FXB cache, see <a class="reference internal" href="#servingfromcachedfxb"><span class="std std-ref">Serving a model with a compatible cached FXB</span></a>.</p>
+<p>로컬 FXB 캐시를 통해 자동 발견을 위해, 참조 <a class="reference internal" href="#servingfromcachedfxb"><span class="std std-ref">호환 캐시 FXB와 모델 제공</span></a>.</p>
 </section>
 </section>
 <section id="fxb-compatibility">
-<h2>FXB compatibility<a class="headerlink" href="#fxb-compatibility" title="Link to this heading">#</a></h2>
-<p>FXB compatibility is determined by an <strong>architecture fingerprint</strong>. The fingerprint includes
-the model architecture and the <code class="docutils literal notranslate"><span class="pre">config.json</span></code> fields that affect kernel generation, such as
-hidden dimensions, attention configuration, mixture-of-experts settings, and quantization
-format. Model weights themselves are not part of the fingerprint.</p>
-<p>As a result, an existing FXB can usually be reused when:</p>
+<h2>FXB 호환성<a class="headerlink" href="#fxb-compatibility" title="Link to this heading">#</a></h2>
+<p>FXB 호환성은 결정됩니다 <strong>아키텍처 지문</strong>. 지문은 모형 건축술과 포함합니다 <code class="docutils literal notranslate"><span class="pre">config.json</span></code> 커널 생성에 영향을 미치는 필드는 숨겨진 크기, 관심 구성, mixture-of-experts 설정 및 quantization 형식과 같은 형태입니다. 모델 무게는 지문의 일부가 아닙니다.</p>
+<p>결과적으로 기존 FXB는 일반적으로 재사용 될 수 있습니다.</p>
 <ul class="simple">
-<li><p>a model is fine-tuned without changing its kernel-affecting configuration;</p></li>
-<li><p>weights are updated while the architecture and fingerprint fields remain the same; or</p></li>
-<li><p>another model repository has the same architecture fingerprint.</p></li>
+<li><p>모델은 fine-tuned 구성을 변경하지 않고 fine-tuned입니다.</p></li>
+<li><p>건축과 지문 분야가 동일하게 남아 있는 동안 무게는 개정됩니다; 또는</p></li>
+<li><p>다른 모형 저장소에는 동일한 건축 지문이 있습니다.</p></li>
 </ul>
-<p>A new FXB is required when a change affects the compiled kernels. Examples include changing
-the architecture, model dimensions, attention or expert configuration, quantization format,
-or another fingerprint field. Compatibility matching is strict; a fine-tuned model is not
-automatically compatible if its configuration also changes.</p>
-<p>Architecture compatibility is not the only deployment constraint. The FXB must also be
-suitable for the installed Furiosa software version and the intended tensor-parallel and
-context-length configuration. See <a class="reference internal" href="#fxbfingerprint"><span class="std std-ref">Fingerprint and Compatibility</span></a> for the exact matching rules and
-compatibility limitations.</p>
+<p>새로운 FXB는 변경이 컴파일된 커널에 영향을 미칠 때 필요합니다. 예를 들어 아키텍처, 모델 치수, 주의 또는 전문가 구성, quantization 형식 또는 다른 지문 필드를 변경할 수 있습니다. 호환성 일치는 엄격합니다. fine-tuned 모델은 구성이 변경되는 경우 자동으로 호환되지 않습니다.</p>
+<p>아키텍처 호환성은 단지 배포 제약이 아닙니다. FXB는 또한 설치 Furiosa 소프트웨어 버전과 의도 된 tensor-parallel 및 context-length 구성에 적합해야합니다. 참조 <a class="reference internal" href="#fxbfingerprint"><span class="std std-ref">지문 및 호환성</span></a> 정확한 일치 규칙 및 호환성 제한을 위해.</p>
 </section>
 <section id="serving-a-model-with-a-compatible-cached-fxb">
-<span id="servingfromcachedfxb"></span><h2>Serving a model with a compatible cached FXB<a class="headerlink" href="#serving-a-model-with-a-compatible-cached-fxb" title="Link to this heading">#</a></h2>
-<p>A model’s own Hugging Face repository may not ship an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> of its own. When that happens,
-Furiosa-LLM can still serve it by reusing a <strong>fingerprint-compatible</strong> bundle from your local
-cache (see <a class="reference internal" href="#fxbfingerprint"><span class="std std-ref">Fingerprint and Compatibility</span></a> for how compatibility is determined). This is especially useful
-when the model weights are updated, or when you serve a fine-tuned model or a variation of a
-supported model: as long as the architecture fingerprint is unchanged, you can reuse an existing
-FXB instead of compiling a new one for every weight update or variant. The workflow is:</p>
+<span id="servingfromcachedfxb"></span><h2>호환 캐시 FXB와 모델 제공<a class="headerlink" href="#serving-a-model-with-a-compatible-cached-fxb" title="Link to this heading">#</a></h2>
+<p>모델 자체 Hugging Face 저장소는 배송되지 않을 수 있습니다 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 자체의. 그 일이 일어날 때, Furiosa-LLM는 여전히 그것을 reusing에 의해 봉사 할 수있다 <strong>fingerprint-compatible</strong> 로컬 캐시에서 [bundle]를 가져오십시오 (자세한 내용은 다음을 참조) <a class="reference internal" href="#fxbfingerprint"><span class="std std-ref">지문 및 호환성</span></a> 호환성이 결정되는 방법에 대한). 이 모델 무게가 업데이트 될 때 특히 유용합니다. 또는 지원 모델의 fine-tuned 모델 또는 변형을 제공 할 때 : 건축 지문이 변하지 않는 한, 당신은 기존 FXB 대신 모든 무게 업데이트 또는 변종에 대한 새로운 것을 컴파일 할 수 있습니다. 작업 흐름은 다음과 같습니다.</p>
 <ol class="arabic simple">
-<li><p>Get a compatible FXB into the cache — either download one from the Hub, or add one you already
-have on disk.</p></li>
-<li><p>Check that the cached bundle is compatible with the model you want to serve.</p></li>
-<li><p>Serve the model — Furiosa-LLM finds and uses the cached bundle automatically.</p></li>
+<li><p>호환 FXB를 캐시로 가져 오기 - 허브에서 하나를 다운로드하거나 디스크에 이미 하나 추가하십시오.</p></li>
+<li><p>캐시드 번들은 당신이 봉사하고 싶은 모델과 호환됩니다.</p></li>
+<li><p>모델을 Serve — Furiosa-LLM는 찾아서 캐시된 번들을 자동으로 사용합니다.</p></li>
 </ol>
-<p>The example below serves <code class="docutils literal notranslate"><span class="pre">Qwen/Qwen3-8B-FP8</span></code> (which does not ship an FXB) by reusing the
-<code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-8B-FP8</span></code> bundle, which has the same fingerprint.</p>
+<p>아래 예시는 <code class="docutils literal notranslate"><span class="pre">Qwen/Qwen3-8B-FP8</span></code> (FXB를 발송하지 않는)
+<code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-8B-FP8</span></code> 동일한 지문이 있는 번들.</p>
 <section id="step-1-get-a-compatible-fxb-into-the-cache">
-<h3>Step 1 — Get a compatible FXB into the cache<a class="headerlink" href="#step-1-get-a-compatible-fxb-into-the-cache" title="Link to this heading">#</a></h3>
-<p>Download a published bundle from the Hub:</p>
+<h3>단계 1 — 캐시에 호환 FXB를 가져옵니다<a class="headerlink" href="#step-1-get-a-compatible-fxb-into-the-cache" title="Link to this heading">#</a></h3>
+<p>Hub에서 출판된 번들을 다운로드:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">download</span> <span class="n">furiosa</span><span class="o">-</span><span class="n">ai</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span>
 </pre></div>
 </div>
-<p>This fetches every <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> in the repository into the cache and prints where each was stored.
-Restrict the download to a single file with <code class="docutils literal notranslate"><span class="pre">--file</span></code>, pick a branch/tag/commit with
-<code class="docutils literal notranslate"><span class="pre">--revision</span></code>, and re-fetch a cached bundle with <code class="docutils literal notranslate"><span class="pre">--force</span></code>.</p>
-<p>Alternatively, register an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> you already have on disk — for example one you just built (see
-<a class="reference internal" href="#buildingfxb"><span class="std std-ref">Building an FXB for a model</span></a>) or copied from another machine:</p>
+<p>이것은 모든 것을 가져옵니다. <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 저장소에서 캐시 및 인쇄에 각각 저장되었다. 다운로드를 단일 파일로 제한 <code class="docutils literal notranslate"><span class="pre">--file</span></code>, branch/tag/commit 중 하나를 선택하고,
+<code class="docutils literal notranslate"><span class="pre">--revision</span></code>, 그리고 re-fetch는 캐시된 패키지로, <code class="docutils literal notranslate"><span class="pre">--force</span></code>.</p>
+<p>또는, 이전 옵션 또는 설정을 등록합니다. <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 당신은 이미 디스크에 있다 — 예를 들어 하나만 내장 (see)
+<a class="reference internal" href="#buildingfxb"><span class="std std-ref">FXB를 특정 모델에 맞게 구성하는 방법</span></a>) 또는 다른 머신에서 복사된 경우:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">add</span> <span class="o">./</span><span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">fp8</span><span class="o">.</span><span class="n">fxb</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">add</span></code> copies the file into the cache and standardizes its name from the bundle’s manifest, so a
-bare <code class="docutils literal notranslate"><span class="pre">out.fxb</span></code> becomes consistent with downloaded bundles.</p>
+<p><code class="docutils literal notranslate"><span class="pre">add</span></code> 파일을 캐시로 복사하고 번들의 표현에서 이름을 표준화하므로 베어 <code class="docutils literal notranslate"><span class="pre">out.fxb</span></code> 다운로드 된 번들로 일관성이됩니다.</p>
 </section>
 <section id="step-2-check-compatibility">
-<h3>Step 2 — Check compatibility<a class="headerlink" href="#step-2-check-compatibility" title="Link to this heading">#</a></h3>
-<p>First, confirm the bundle landed in the cache with <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span> <span class="pre">ls</span></code>:</p>
+<h3>단계 2 — 호환성 확인<a class="headerlink" href="#step-2-check-compatibility" title="Link to this heading">#</a></h3>
+<p>첫째, 묶음은 캐시에 착륙 확인 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span> <span class="pre">ls</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">cache</span> <span class="n">ls</span>
 </pre></div>
 </div>
@@ -636,9 +484,7 @@ furiosa-ai/Qwen3-8B-FP8  Qwen3ForCausalLM   4.1 GiB  2026.3.0 (a1b2c3)   2026.3.
 1 file(s), 4.1 GiB
 </pre></div>
 </div>
-<p>A bundle added with <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code> appears here under the <code class="docutils literal notranslate"><span class="pre">local</span></code> repo id. Now confirm it is
-compatible with the target model. <code class="docutils literal notranslate"><span class="pre">check</span></code> reads the target repository’s model configuration and
-lists every cached FXB whose fingerprint matches:</p>
+<p> ⁇ 이 추가된 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code> 는 다음 항목 아래에 표시됩니다: <code class="docutils literal notranslate"><span class="pre">local</span></code> repo id. 이제 대상 모델과 호환됩니다. <code class="docutils literal notranslate"><span class="pre">check</span></code> 대상 저장소의 모델 구성 및 목록은 모든 캐시 된 FXB를 참조하여 지문 일치 :</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">check</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span>
 </pre></div>
 </div>
@@ -653,51 +499,41 @@ Compatible cached FXB (1):
 Recommended: /root/.cache/furiosa/llm/fxb/models--furiosa-ai--Qwen3-8B-FP8/snapshots/&lt;sha&gt;/Qwen3-8B-FP8-&lt;npu&gt;-&lt;rt&gt;-&lt;ts&gt;.fxb
 </pre></div>
 </div>
-<p>The bundle marked <code class="docutils literal notranslate"><span class="pre">✔</span></code> is the <strong>recommended</strong> one. The <code class="docutils literal notranslate"><span class="pre">FuriosaIR</span></code> column is annotated with the
-build-match status:</p>
+<p>표시된 묶음 <code class="docutils literal notranslate"><span class="pre">✔</span></code> 그것은 <strong>추천</strong> 한쪽. <code class="docutils literal notranslate"><span class="pre">FuriosaIR</span></code> 열은 build-match 상태에 annotated:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">match</span></code> — the bundle’s FuriosaIR (compiler) revision matches your running build. This bundle
-is served automatically.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">stale</span></code> — the bundle is fingerprint-compatible but was built with a <em>different</em> FuriosaIR
-revision. It is <strong>not</strong> served automatically (see the next step).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">match</span></code> — 번들의 FuriosaIR (compiler) 개정은 당신의 운영하는 구조 일치합니다. 이 뭉치는 자동적으로 봉사됩니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">stale</span></code> — 번들은 fingerprint-compatible이지만 내장되었습니다. <em>다른</em> FuriosaIR
+버전입니다. 이는 <strong>not</strong> 자동적으로 제공 (다음 단계 참조).</p></li>
 </ul>
-<p>If no compatible bundle is cached, <code class="docutils literal notranslate"><span class="pre">check</span></code> prints a message and exits with a non-zero status.</p>
+<p>호환 가능한 묶음이 캐시되지 않은 경우, <code class="docutils literal notranslate"><span class="pre">check</span></code> non-zero 상태로 메시지 및 출구를 인쇄합니다.</p>
 </section>
 <section id="step-3-serve-the-model">
-<h3>Step 3 — Serve the model<a class="headerlink" href="#step-3-serve-the-model" title="Link to this heading">#</a></h3>
-<p>Serve the target model as usual. Furiosa-LLM resolves the FXB to run in this order:</p>
+<h3>단계 3 — 모델 실행<a class="headerlink" href="#step-3-serve-the-model" title="Link to this heading">#</a></h3>
+<p>평소처럼 대상 모델을 세울 수 있습니다. Furiosa-LLM는 FXB를 해결하여이 주문에서 실행합니다.</p>
 <ol class="arabic simple">
-<li><p>an explicit <code class="docutils literal notranslate"><span class="pre">--fxb</span> <span class="pre">&lt;path&gt;</span></code> (used as-is);</p></li>
-<li><p>an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> shipped inside the model’s own repository;</p></li>
-<li><p>the <strong>local cache</strong> — the recommended compatible bundle, but only if its FuriosaIR revision
-matches the running build.</p></li>
+<li><p>명백한 <code class="docutils literal notranslate"><span class="pre">--fxb</span> <span class="pre">&lt;path&gt;</span></code> (이용된 as-is);</p></li>
+<li><p>an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 모형의 자신의 저장소 안쪽에 발송하는;</p></li>
+<li><p>the <strong>로컬 캐시</strong> — 권장 호환 번들, 하지만 그것의 FuriosaIR 개정 실행 빌드 일치 하는 경우에만.</p></li>
 </ol>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">furiosa</span><span class="o">-</span><span class="n">llm</span> <span class="n">serve</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span>
 </pre></div>
 </div>
-<p>When the cache fallback is used, Furiosa-LLM logs an <code class="docutils literal notranslate"><span class="pre">INFO</span></code> line naming the cached bundle it
-picked. The same resolution applies to the Python <code class="docutils literal notranslate"><span class="pre">LLM(...)</span></code> API, since both go through the same
-code path.</p>
+<p>캐시가 사용되면 Furiosa-LLM는 로그 <code class="docutils literal notranslate"><span class="pre">INFO</span></code> 묶음 묶음을 묶는 선. 동일한 해결책은 Python에 적용합니다 <code class="docutils literal notranslate"><span class="pre">LLM(...)</span></code> API는, 둘 다 동일한 부호 경로를 통해 갈기 때문에.</p>
 <div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<p>If the cache holds only <strong>stale</strong> (FuriosaIR-revision-mismatched) compatible bundles, serving
-fails rather than silently loading a bundle built for a different compiler revision. The error
-tells you to choose one explicitly:</p>
+<p class="admonition-title">경고</p>
+<p>캐시가 [데이터 유형]만 포함하고 있다면 <strong>낡은</strong> (FuriosaIR-revision-mismatched) 호환 번들, 서빙은 다른 compiler 개정을 위해 건설된 번들을 침묵적으로 적재하는 것보다 실패합니다. 오류는 당신이 1개의 명시적으로 선택할 것을 말합니다:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">furiosa</span><span class="o">-</span><span class="n">llm</span> <span class="n">serve</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="o">--</span><span class="n">fxb</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">stale</span><span class="o">-</span><span class="n">bundle</span><span class="o">.</span><span class="n">fxb</span>
 </pre></div>
 </div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The cache lives at <code class="docutils literal notranslate"><span class="pre">~/.cache/furiosa/llm/fxb</span></code> by default
-(<code class="docutils literal notranslate"><span class="pre">$XDG_CACHE_HOME/furiosa/llm/fxb</span></code> when <code class="docutils literal notranslate"><span class="pre">XDG_CACHE_HOME</span></code> is set). Every <code class="docutils literal notranslate"><span class="pre">fxb</span></code> cache
-subcommand accepts <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> to use a different location. The cache is only consulted for a
-Hugging Face repo id — a local model path bypasses it.</p>
+<p class="admonition-title">참고</p>
+<p>캐쉬는 <code class="docutils literal notranslate"><span class="pre">~/.cache/furiosa/llm/fxb</span></code> 기본적으로 (<code class="docutils literal notranslate"><span class="pre">$XDG_CACHE_HOME/furiosa/llm/fxb</span></code> 언제 <code class="docutils literal notranslate"><span class="pre">XDG_CACHE_HOME</span></code> 설정되어 있습니다.) <code class="docutils literal notranslate"><span class="pre">fxb</span></code> 캐시
+서브 명령은 다음을 허용합니다: <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> 다른 위치를 사용하려면. 캐시는 Hugging Face repo id - 로컬 모델 경로 우회에 대해 상담됩니다.</p>
 </div>
 <div class="admonition tip">
 <p class="admonition-title">Tip</p>
-<p>Some repositories are gated. Authorize the Hugging Face Hub before downloading or checking them,
-the same way as in <a class="reference internal" href="../get_started/furiosa_llm.html#authorizinghuggingfacehub"><span class="std std-ref">Authorizing Hugging Face Hub (Optional)</span></a>:</p>
+<p>몇몇 저장소는 문질러집니다. 다운로드하기 전에 Hugging Face 허브를 허가하고 검사하기 전에, 것과 같이 동일한 방법 <a class="reference internal" href="../get_started/furiosa_llm.html#authorizinghuggingfacehub"><span class="std std-ref">(선택) Hugging Face 허브 승인</span></a>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>hf auth login --token $HF_TOKEN
 </pre></div>
 </div>
@@ -705,46 +541,39 @@ the same way as in <a class="reference internal" href="../get_started/furiosa_ll
 </section>
 </section>
 <section id="command-reference">
-<span id="fxbclireference"></span><h2>Command reference<a class="headerlink" href="#command-reference" title="Link to this heading">#</a></h2>
-<p>Every subcommand that touches the cache accepts <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> (default:
+<span id="fxbclireference"></span><h2>지휘자 참조<a class="headerlink" href="#command-reference" title="Link to this heading">#</a></h2>
+<p>캐시를 접촉하는 모든 subcommand는 받아들입니다 <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> (전기:
 <code class="docutils literal notranslate"><span class="pre">~/.cache/furiosa/llm/fxb</span></code>).</p>
 <section id="fxb-build">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code><a class="headerlink" href="#fxb-build" title="Link to this heading">#</a></h3>
-<p>Build an FXB artifact from a model.</p>
+<p>모델로부터 FXB 아티팩트를 생성합니다.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">build</span> <span class="o">&lt;</span><span class="n">model</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">output_path</span><span class="o">&gt;</span> <span class="p">[</span><span class="n">options</span><span class="p">]</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">model</span></code> — a Hugging Face model id or a local path (a path starts with <code class="docutils literal notranslate"><span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">/</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">output_path</span></code> — where to write the <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> (<code class="docutils literal notranslate"><span class="pre">.fxb</span></code> appended when missing).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span> <span class="pre">N</span></code> — PEs per tensor-parallel group (default: model preset).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-pp/--pipeline-parallel-size</span> <span class="pre">N</span></code> — pipeline-parallel size (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span> <span class="pre">N</span></code> — maximum context length used for bucket filtering.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-O/--optim-level</span> <span class="pre">{O0,O1,O2,O3}</span></code> — bucket-filtering level (default: <code class="docutils literal notranslate"><span class="pre">O3</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--convert</span> <span class="pre">{auto,embed,score,classify}</span></code> — task override (default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — resolve config and buckets and print the build summary without compiling.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--build-report</span></code> — print a per-kernel compilation timing report after the build.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--slow-kernel-threshold</span> <span class="pre">DURATION</span></code> — log running kernels exceeding this duration every
-five seconds, with their types, buckets, and elapsed times, longest-running first.
-Accepts a non-negative integer in seconds or with an <code class="docutils literal notranslate"><span class="pre">s</span></code>, <code class="docutils literal notranslate"><span class="pre">m</span></code>, or <code class="docutils literal notranslate"><span class="pre">h</span></code> suffix
-(default: <code class="docutils literal notranslate"><span class="pre">15m</span></code>; <code class="docutils literal notranslate"><span class="pre">0</span></code> disables slow-kernel reporting).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--concurrency</span> <span class="pre">N</span></code> — maximum kernel compilations to run in parallel (default: <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dump-tc</span> <span class="pre">DIR</span></code> — dump the generated TC/DSL files to <code class="docutils literal notranslate"><span class="pre">DIR</span></code> for debugging.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">model</span></code> - Hugging Face 모델 ID 또는 로컬 경로 ( 경로가 시작 <code class="docutils literal notranslate"><span class="pre">.</span></code> or <code class="docutils literal notranslate"><span class="pre">/</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">output_path</span></code> — 작성 위치 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> (<code class="docutils literal notranslate"><span class="pre">.fxb</span></code> (필요한 경우 추가)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span> <span class="pre">N</span></code> — tensor-parallel 그룹 당 PEs (과태: 모형 미리 설치).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-pp/--pipeline-parallel-size</span> <span class="pre">N</span></code> — pipeline-parallel 크기 (기본값: <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span> <span class="pre">N</span></code> - 버킷 필터링에 사용되는 최대 컨텍스트 길이.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-O/--optim-level</span> <span class="pre">{O0,O1,O2,O3}</span></code> – bucket-filtering 레벨 (기본값: <code class="docutils literal notranslate"><span class="pre">O3</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--convert</span> <span class="pre">{auto,embed,score,classify}</span></code> — 작업 덮어쓰기 (기본값: <code class="docutils literal notranslate"><span class="pre">auto</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — config 및 Buckets를 해결하고 컴파일 없이 빌드 요약을 인쇄합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--build-report</span></code> — 빌드 후 per-kernel 컴파일 타이밍 보고서를 인쇄합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--slow-kernel-threshold</span> <span class="pre">DURATION</span></code> - 이 기간을 초과하는 커널을 실행하는 로그는 각 5 초마다 유형, 버킷 및 탈출 된 시간, longest-running 첫째. 몇 초 또는 초에 non-negative 정수를 허용 <code class="docutils literal notranslate"><span class="pre">s</span></code>, <code class="docutils literal notranslate"><span class="pre">m</span></code>, or <code class="docutils literal notranslate"><span class="pre">h</span></code> 후자 (전기: <code class="docutils literal notranslate"><span class="pre">15m</span></code>; <code class="docutils literal notranslate"><span class="pre">0</span></code> slow-kernel 보고를 비활성화합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--concurrency</span> <span class="pre">N</span></code> - 최대 커널 컴파일을 병렬로 실행 (기본: <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dump-tc</span> <span class="pre">DIR</span></code> — 생성 된 TC/DSL 파일을 덤프 <code class="docutils literal notranslate"><span class="pre">DIR</span></code> 디버깅을 위해</p></li>
 </ul>
-<p>Advanced options (leave unset unless you know you need them):</p>
+<p>고급 옵션 (당신이 그들을 필요로하지 않는 한 설정 해제):</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--no-fast-fail</span></code> — keep building the remaining kernels after a compilation failure.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--skip-bucket-validation</span></code> — skip the prefill/decode attention-size check (bring-up only).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--enable-collective-dq</span></code> — enable collective dynamic quantization; only selected models support it.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--tokenwise-buckets</span> <span class="pre">1,2,4,8</span></code> / <code class="docutils literal notranslate"><span class="pre">--attention-buckets</span> <span class="pre">'(1,128,128),(1,1024,1)'</span></code> — override the bucket plan.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--no-fast-fail</span></code> - 컴파일 실패 후 나머지 커널을 구축하십시오.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--skip-bucket-validation</span></code> — prefill/decode attention-size 체크 (bring-up 전용)를 건너뛰십시오.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--enable-collective-dq</span></code> — 공동 동적 quantization를 활성화; 선택한 모델만 지원한다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--tokenwise-buckets</span> <span class="pre">1,2,4,8</span></code> / <code class="docutils literal notranslate"><span class="pre">--attention-buckets</span> <span class="pre">'(1,128,128),(1,1024,1)'</span></code> — 버킷 계획을 재정의합니다.</p></li>
 </ul>
-<p>On success (non-dry-run) it prints <code class="docutils literal notranslate"><span class="pre">Artifact</span> <span class="pre">Build</span> <span class="pre">Completed</span></code>.</p>
-<p>Slow-kernel reporting is enabled by default, including in FXB build CI. Elapsed
-compilation time excludes time spent waiting for a concurrency slot. Each update
-adds new log lines instead of rewriting terminal output, making slow kernels
-visible in CI logs while the build is running. Reporting does not stop or time
-out a compilation. FXB build CI uses the CLI default without additional configuration.</p>
-<p>To investigate shorter stalls, lower the threshold:</p>
+<p>성공 시 (non-dry-run) 다음 내용을 출력합니다. <code class="docutils literal notranslate"><span class="pre">Artifact</span> <span class="pre">Build</span> <span class="pre">Completed</span></code>.</p>
+<p>Slow-kernel 보고는 기본적으로 FXB 빌드 CI를 포함하여 활성화됩니다. 컴파일 시간이 계산된 시간을 제외하고는 concurrency 슬롯을 기다리게 됩니다. 각 업데이트는 빌드가 실행되는 동안 CI 로그에서 볼 수 있는 반 커널을 만들고 터미널 출력 대신 새로운 로그 라인을 추가합니다. 보고는 멈추지 않거나 컴파일 시간을 하지 않습니다. FXB 빌드 CI는 추가 구성 없이 CLI 기본을 사용합니다.</p>
+<p>더 짧은 축을 조사하기 위해, 문턱을 낮추십시오:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">build</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">fp8</span> \
     <span class="o">--</span><span class="n">concurrency</span> <span class="mi">8</span> <span class="o">--</span><span class="n">slow</span><span class="o">-</span><span class="n">kernel</span><span class="o">-</span><span class="n">threshold</span> <span class="mi">2</span><span class="n">m</span>
 </pre></div>
@@ -752,53 +581,45 @@ out a compilation. FXB build CI uses the CLI default without additional configur
 </section>
 <section id="fxb-download">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">download</span></code><a class="headerlink" href="#fxb-download" title="Link to this heading">#</a></h3>
-<p>Download an FXB bundle from a Hugging Face repository into the cache.</p>
+<p>Hugging Face 저장소에서 FXB 번들을 캐시에 다운로드하십시오.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">download</span> <span class="o">&lt;</span><span class="n">repo_id</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">--</span><span class="n">file</span> <span class="n">F</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">revision</span> <span class="n">R</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">force</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">D</span><span class="p">]</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">repo_id</span></code> — the Hugging Face repository id.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--file</span> <span class="pre">F</span></code> — restrict the download to a single <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> by filename.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--revision</span> <span class="pre">R</span></code> — repository revision (branch, tag, or commit).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--force</span></code> — re-download even if the bundle is already cached.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">repo_id</span></code> — Hugging Face 저장소 ID.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--file</span> <span class="pre">F</span></code> — 다운로드 범위를 단일 항목으로 제한 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일 이름으로</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--revision</span> <span class="pre">R</span></code> - 저장소 개정 (브레이크, 태그, 또는 커밋).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--force</span></code> — re-download는 뭉치가 이미 캐시된 경우에 조차.</p></li>
 </ul>
 </section>
 <section id="fxb-add">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code><a class="headerlink" href="#fxb-add" title="Link to this heading">#</a></h3>
-<p>Add local <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> files to the cache. Like <code class="docutils literal notranslate"><span class="pre">download</span></code>, it fills the cache — from files on disk
-rather than from the Hub. The stored filename is standardized from each bundle’s manifest, and the
-files are copied (the originals are left in place). Multiple paths are accepted, so a shell glob such
-as <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span> <span class="pre">*.fxb</span></code> adds every matching bundle; an invalid bundle is reported without aborting the
-rest, and the command exits non-zero if any failed.</p>
+<p>로컬을 추가 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 캐시에 저장할 파일 (예: <code class="docutils literal notranslate"><span class="pre">download</span></code>, 그것은 캐시를 채우고 - 허브에서 디스크에 파일에서. 저장 파일 이름은 각 번의 표현에서 표준화되고, 파일은 복사됩니다 (원래는 장소에서 왼쪽). 여러 경로가 허용됩니다, 그래서 같은 쉘 glob 등 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span> <span class="pre">*.fxb</span></code> 매칭 번들을 추가합니다. 잘못된 번들은 나머지를 낙태하지 않고 보고되며, 명령은 non-zero를 종료합니다.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">add</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;...</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">D</span><span class="p">]</span>
 </pre></div>
 </div>
 </section>
 <section id="fxb-check">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code><a class="headerlink" href="#fxb-check" title="Link to this heading">#</a></h3>
-<p>Find cached FXBs compatible with a Hugging Face repository’s model config (see
-<a class="reference internal" href="#fxbfingerprint"><span class="std std-ref">Fingerprint and Compatibility</span></a> for how compatibility is determined).</p>
+<p>Hugging Face 저장소의 모델 구성과 호환되는 캐시 된 FXBs 찾기 (see)
+<a class="reference internal" href="#fxbfingerprint"><span class="std std-ref">지문 및 호환성</span></a> 어떻게 호환성이 결정되는지).</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">check</span> <span class="o">&lt;</span><span class="n">repo_id</span><span class="o">&gt;</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">D</span><span class="p">]</span>
 </pre></div>
 </div>
-<p>Prints the target fingerprint, a table of compatible cached bundles (recommended one marked <code class="docutils literal notranslate"><span class="pre">✔</span></code>,
-with each bundle’s FuriosaIR revision annotated <code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">match</span></code> or <code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">stale</span></code>), and the recommended
-path. Exits with a non-zero status when no compatible bundle is cached.</p>
+<p>대상 지문을 인쇄, 호환 캐시 번들 테이블 (표시 된 것을 수정) <code class="docutils literal notranslate"><span class="pre">✔</span></code>, 각 번의 FuriosaIR 개정으로 <code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">match</span></code> or <code class="docutils literal notranslate"><span class="pre">—</span> <span class="pre">stale</span></code>) 및 권장 경로. 호환 번들가 캐시되지 않을 때 non-zero 상태와 출구.</p>
 </section>
 <section id="fxb-cache">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span></code><a class="headerlink" href="#fxb-cache" title="Link to this heading">#</a></h3>
-<p>Inspect and prune what is already cached. Adding to the cache lives at the top level
-(<code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">download</span></code> / <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code>); <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span></code> is purely the inventory-management group, with the
-subcommands <code class="docutils literal notranslate"><span class="pre">ls</span></code>, <code class="docutils literal notranslate"><span class="pre">rm</span></code>, and <code class="docutils literal notranslate"><span class="pre">prune</span></code>.</p>
+<p>Inspect 및 prune 이미 캐시 된 것. 상단 수준에서 캐시 생활에 추가 (<code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">download</span></code> / <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code>); <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span></code> 순수 inventory-management 그룹, subcommands와 <code class="docutils literal notranslate"><span class="pre">ls</span></code>, <code class="docutils literal notranslate"><span class="pre">rm</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">prune</span></code>.</p>
 </section>
 <section id="fxb-cache-ls">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span> <span class="pre">ls</span></code><a class="headerlink" href="#fxb-cache-ls" title="Link to this heading">#</a></h3>
-<p>List cached FXB bundles.</p>
+<p>캐시된 FXB 묶음을 나열합니다.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">cache</span> <span class="n">ls</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span><span class="o">/--</span><span class="n">quiet</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">D</span><span class="p">]</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-q/--quiet</span></code> — print only the <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> paths (useful for scripting).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-q/--quiet</span></code>  ⁇  오직 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 경로 (스크립팅에 유용).</p></li>
 </ul>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>REPO ID                  ARCH               SIZE     FuriosaIR           FURIOSA-LLM         FXB FILE
 -----------------------  -----------------  -------  ------------------  ------------------  -----------------------------------
@@ -810,44 +631,39 @@ furiosa-ai/Qwen3-8B-FP8  Qwen3ForCausalLM   4.1 GiB  2026.3.0 (a1b2c3)   2026.3.
 </section>
 <section id="fxb-cache-rm">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span> <span class="pre">rm</span></code><a class="headerlink" href="#fxb-cache-rm" title="Link to this heading">#</a></h3>
-<p>Remove cached FXB bundles. Requires at least one selector (a repo id or <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> filename) or
-<code class="docutils literal notranslate"><span class="pre">--all</span></code>. Without <code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> it shows what will be removed and prompts for confirmation.</p>
+<p>캐시된 FXB 번들을 제거하십시오. 적어도 1개의 선별기를 요구합니다 (repo id 또는 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일 이름) 또는
+<code class="docutils literal notranslate"><span class="pre">--all</span></code>- 그렇지 않으면 <code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> 그것은 확인을 위해 제거되고 신속한 것을 보여줍니다.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">cache</span> <span class="n">rm</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">selector</span><span class="o">&gt;...</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="nb">all</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dry</span><span class="o">-</span><span class="n">run</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">y</span><span class="o">/--</span><span class="n">yes</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">D</span><span class="p">]</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">selectors</span></code> — repo ids or <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> filenames to remove.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--all</span></code> — remove everything in the cache.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — show what would be removed without deleting anything.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> — do not prompt for confirmation (required when stdin is not interactive).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">selectors</span></code>  ⁇  repo ID 또는 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일 이름을 제거해야 합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--all</span></code> — 캐시의 모든 내용을 제거합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — 아무것도 삭제하지 않고 제거 될 것 이다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> — 확인을 위한 prompt가 아닙니다 (Stdin가 대화식이 아닙니다).</p></li>
 </ul>
 </section>
 <section id="fxb-cache-prune">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">cache</span> <span class="pre">prune</span></code><a class="headerlink" href="#fxb-cache-prune" title="Link to this heading">#</a></h3>
-<p>Remove cached bundles by FuriosaIR version. By default it removes bundles that are <em>stale</em> for the
-running build — those whose FuriosaIR (compiler) revision does not match the running build, or whose
-revision is unknown — so they would never be served automatically anyway. With <code class="docutils literal notranslate"><span class="pre">--older-than</span></code> it
-instead removes bundles whose FuriosaIR version is below a given semantic version. Like <code class="docutils literal notranslate"><span class="pre">rm</span></code>, it
-previews and prompts unless <code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> is given.</p>
+<p>FuriosaIR 버전으로 캐시 된 번들을 제거하십시오. 기본적으로 번들을 제거하면 <em>낡은</em> 실행 빌드의 경우 - FuriosaIR (compiler) 개정이 실행 빌드와 일치하지 않습니다, 또는 그 개정은 알 수 없습니다 - 그래서 그들은 자동으로 어쨌든 제공되지 않습니다. <code class="docutils literal notranslate"><span class="pre">--older-than</span></code> FuriosaIR 버전이 주어진 semantic 버전의 밑에 있는 번들을 제거하십시오. <code class="docutils literal notranslate"><span class="pre">rm</span></code>, "it"
+미리보기 및 안내를 제공합니다, 단 <code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> 수요가 주어집니다.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">cache</span> <span class="n">prune</span> <span class="p">[</span><span class="o">--</span><span class="n">older</span><span class="o">-</span><span class="n">than</span> <span class="n">IR_VERSION</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">dry</span><span class="o">-</span><span class="n">run</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">y</span><span class="o">/--</span><span class="n">yes</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">cache</span><span class="o">-</span><span class="nb">dir</span> <span class="n">D</span><span class="p">]</span>
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--older-than</span> <span class="pre">IR_VERSION</span></code> — remove bundles whose FuriosaIR version is older than <code class="docutils literal notranslate"><span class="pre">IR_VERSION</span></code>,
-e.g. <code class="docutils literal notranslate"><span class="pre">2026.3.0</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;2026.3.0</span></code>, or <code class="docutils literal notranslate"><span class="pre">&lt;=2026.2.0</span></code> (a bare version means <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>). Bundles with no
-recorded FuriosaIR version are kept. When omitted, prune targets the running build’s stale bundles.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — show what would be removed without deleting anything.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> — do not prompt for confirmation (required when stdin is not interactive).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--older-than</span> <span class="pre">IR_VERSION</span></code> - FuriosaIR 버전이 이전되는 번들을 제거하십시오. <code class="docutils literal notranslate"><span class="pre">IR_VERSION</span></code>,
+e.g. <code class="docutils literal notranslate"><span class="pre">2026.3.0</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;2026.3.0</span></code>, or <code class="docutils literal notranslate"><span class="pre">&lt;=2026.2.0</span></code> (빈 버전은) <code class="docutils literal notranslate"><span class="pre">&lt;</span></code>). 기록된 FuriosaIR 버전이 없는 뭉치는 지켜집니다. omitted 때, prune는 운영하는 구조의 stale 뭉치를 표합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — 아무것도 삭제하지 않고 제거 될 것 이다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-y/--yes</span></code> — 확인을 위한 prompt가 아닙니다 (Stdin가 대화식이 아닙니다).</p></li>
 </ul>
 </section>
 <section id="fxb-show">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">show</span></code><a class="headerlink" href="#fxb-show" title="Link to this heading">#</a></h3>
-<p>Show bundle metadata: general info (format version, UUID, <code class="docutils literal notranslate"><span class="pre">created_at</span></code>, tool versions), the model
-fingerprint, the parallel configuration, and the kernel/bucket summary.</p>
+<p>번들 메타 데이터보기 : 일반 정보 (format version, UUID, <code class="docutils literal notranslate"><span class="pre">created_at</span></code>, 공구 버전), 모형 지문, 평행한 윤곽 및 kernel/bucket 요약.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">show</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">path</span></code> may be an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> file or an extracted artifact directory.</p>
+<p><code class="docutils literal notranslate"><span class="pre">path</span></code> 또는 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일 또는 추출 된 artifact 디렉토리.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>──────────────────────────────────────────────────────────────────────────
 FXB Bundle — qwen3-8b-fp8.fxb
 ──────────────────────────────────────────────────────────────────────────
@@ -890,13 +706,11 @@ FXB Bundle — qwen3-8b-fp8.fxb
 </section>
 <section id="fxb-inspect">
 <h3><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">inspect</span></code><a class="headerlink" href="#fxb-inspect" title="Link to this heading">#</a></h3>
-<p>Inspect the per-kernel input/output signatures recorded in the bundle. For each kernel and bucket,
-it prints the size, shape, and dtype of every input and output tensor.</p>
+<p>per-kernel input/output 시그니처를 묶습니다. 각 커널과 버킷을 위해 각 입력 및 출력 테서의 크기, 모양 및 디타입을 인쇄합니다.</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">inspect</span> <span class="o">&lt;</span><span class="n">path</span><span class="o">&gt;</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">path</span></code> may be an <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> file or an extracted artifact directory. The output lists one block per
-kernel/bucket; the excerpt below shows the first entry:</p>
+<p><code class="docutils literal notranslate"><span class="pre">path</span></code> 또는 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일 또는 추출 된 artifact 디렉토리. 출력 목록 kernel/bucket 당 하나의 블록; 아래 발췌는 첫 번째 항목을 보여줍니다 :</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>first_tokenwise (tw1):
   Inputs:
     [0] size=4         shape=[Broadcast=1]|[0_1=1:1]  dtype=raw_i32
@@ -914,70 +728,48 @@ kernel/bucket; the excerpt below shows the first entry:</p>
 </section>
 </section>
 <section id="fingerprint-and-compatibility">
-<span id="fxbfingerprint"></span><h2>Fingerprint and Compatibility<a class="headerlink" href="#fingerprint-and-compatibility" title="Link to this heading">#</a></h2>
-<p>The key property of an FXB is its <strong>architecture fingerprint</strong> — the value Furiosa-LLM uses to
-decide whether a bundle is compatible with a given model. The manifest records the model’s
-architecture and the configuration fields that determine the compiled kernels, and a bundle is
-considered compatible with a model when their fingerprints match. A single FXB is therefore
-reusable across <em>any</em> Hugging Face model that shares the same fingerprint, not just the one it was
-built from — which is what makes it possible to serve a model whose own repository ships no <code class="docutils literal notranslate"><span class="pre">.fxb</span></code>
-by reusing a compatible bundle from your local cache.</p>
-<p>The fingerprint is built from the model architecture plus the <code class="docutils literal notranslate"><span class="pre">config.json</span></code> fields that affect
-kernel generation — the dimensions, attention and mixture-of-experts settings, and quantization
-that <strong>furiosa-kernels reads at build time</strong>. Representative examples are <code class="docutils literal notranslate"><span class="pre">hidden_size</span></code>,
-<code class="docutils literal notranslate"><span class="pre">num_attention_heads</span></code>, <code class="docutils literal notranslate"><span class="pre">sliding_window</span></code>, the expert counts for MoE models, and the quantization
-<code class="docutils literal notranslate"><span class="pre">format</span></code>. Two repositories that differ in any of these compile to different kernels and must not
-share an FXB; fields used only at load time are not part of the fingerprint.</p>
-<p>Matching is <strong>strict</strong>: two models are compatible only if their architecture and all
-fingerprint fields are equal. Use <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code> to verify a match before reusing a bundle.</p>
+<span id="fxbfingerprint"></span><h2>지문 및 호환성<a class="headerlink" href="#fingerprint-and-compatibility" title="Link to this heading">#</a></h2>
+<p>FXB의 주요 특징은 다음과 같습니다: <strong>아키텍처 지문</strong> - 값 Furiosa-LLM는 주어진 모델과 호환 여부를 결정하기 위해 사용합니다. 이 표는 모델의 아키텍처와 컴파일된 커널을 결정하는 구성 필드를 기록하며, 지문 일치시 모델과 호환됩니다. 단일 FXB는 그러므로 다시 사용할 수 있습니다 <em>any</em> 같은 지문을 공유하는 Hugging Face 모델은 하나에서 구축되지 않았습니다. 자체 저장소 선박이 아니었던 모델에 대해 가능한 것이 무엇인지 알 수 있습니다. <code class="docutils literal notranslate"><span class="pre">.fxb</span></code>
+로컬 캐시에서 호환 번들을 재사용함으로써.</p>
+<p>지문은 모형 건축술에서 더하기 건축됩니다 <code class="docutils literal notranslate"><span class="pre">config.json</span></code> 커널 생성에 영향을 미치는 필드 - 치수, 관심 및 mixture-of-experts 설정 및 quantization <strong>furiosa — 빌드 시 커널 읽기</strong>대표적인 예시는 다음과 같습니다. <code class="docutils literal notranslate"><span class="pre">hidden_size</span></code>,
+<code class="docutils literal notranslate"><span class="pre">num_attention_heads</span></code>, <code class="docutils literal notranslate"><span class="pre">sliding_window</span></code>, MoE 모형을 위한 전문가 조사, 및 quantization
+<code class="docutils literal notranslate"><span class="pre">format</span></code>. 다른 커널에 이 컴파일과 다른 두 개의 저장소는 FXB를 공유하지 않아야 합니다; 로드 시간에만 사용되는 필드는 지문의 일부가 아닙니다.</p>
+<p>일치하는 것은 <strong>엄격한</strong>: 두 가지 모델은 건축과 모든 지문 필드가 동일하게 호환됩니다. 사용 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code> 번들을 재사용하기 전에 일치를 확인합니다.</p>
 <div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The fingerprint-based compatibility matching is <strong>experimental</strong>. The exact set of fields that
-make up the fingerprint, and how they are compared, may change in future releases. Always verify
-a match with <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code> before relying on a cached bundle for a different model.</p>
+<p class="admonition-title">참고</p>
+<p>fingerprint-based 호환성 일치는 입니다 <strong>실험적</strong>. 지문을 만들 수있는 필드의 정확한 설정, 그들은 비교, 미래 릴리스에서 변경할 수 있습니다. 항상 일치를 확인합니다 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code> 다른 모델에 대 한 캐시 번에 의존 하기 전에.</p>
 </div>
 </section>
 <section id="best-practices">
-<span id="fxbbestpractices"></span><h2>Best Practices<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code> trades build time against the runtime coverage and performance of the resulting
-bundle. The right options depend on what you are building for. The scenarios below cover the common
-cases; FuriosaAI’s own per-model production configurations live in the build matrix at
+<span id="fxbbestpractices"></span><h2>가장 좋은 방법<a class="headerlink" href="#best-practices" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code> runtime 적용 및 결과 번들의 성능에 대한 시간을 거래하십시오. 올바른 옵션은 건물에 따라 다릅니다. 아래의 시나리오는 일반적인 사례를 커버합니다. FuriosaAI의 자체 per-model 생산 구성은 빌드 매트릭스에서 라이브합니다.
 <code class="docutils literal notranslate"><span class="pre">.github/fxb-artifacts.yaml</span></code>.</p>
 <section id="quick-test-build">
-<h3>Quick test build<a class="headerlink" href="#quick-test-build" title="Link to this heading">#</a></h3>
-<p>When you just want a runnable bundle as fast as possible — bring-up, a smoke test, or checking that
-a model compiles at all — minimize the number of kernels that get compiled and parallelize the
-build:</p>
+<h3>빠른 테스트 구축<a class="headerlink" href="#quick-test-build" title="Link to this heading">#</a></h3>
+<p>가능한 한 빨리 실행 가능한 번들을 원할 때 - bring-up, 연기 테스트, 또는 모델을 모두 컴파일하는 것을 검사 — 컴파일하고 빌드를 평행시키는 커널 수를 최소화:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-O</span> <span class="pre">O0</span></code> — the minimal bucket set, so far fewer kernels are compiled. This is the single biggest
-lever on build time.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span></code> — cap the context length to something small so fewer and smaller buckets are
-generated.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--concurrency</span></code> — raise above the default of <code class="docutils literal notranslate"><span class="pre">1</span></code> to compile kernels in parallel and use the
-available cores on the build host.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — resolve the config and bucket plan and print the build summary <em>without</em>
-compiling, so you can confirm the plan before spending any compile time.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-O</span> <span class="pre">O0</span></code> — 최소 버킷 세트, 지금까지 몇 커널이 컴파일됩니다. 이것은 빌드 시간에 하나의 가장 큰 레버입니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span></code> — 작은 몇 가지와 작은 버킷이 생성되는 상황에 맞는 길이를 캡합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--concurrency</span></code> — 기본값보다 높은 수준으로 <code class="docutils literal notranslate"><span class="pre">1</span></code> 병렬에서 커널을 컴파일하고 빌드 호스트에서 사용할 수 있는 코어를 사용합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> — config 및 Bucket 계획 수정 및 빌드 요약 인쇄 <em>없는 것</em>
+컴파일하기 전에 계획을 확인 할 수 있습니다.</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preview the plan first, then build a minimal bundle quickly</span>
 <span class="n">fxb</span> <span class="n">build</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">test</span><span class="o">.</span><span class="n">fxb</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">model</span><span class="o">-</span><span class="nb">len</span> <span class="mi">4096</span> <span class="o">--</span><span class="n">dry</span><span class="o">-</span><span class="n">run</span>
 <span class="n">fxb</span> <span class="n">build</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">test</span><span class="o">.</span><span class="n">fxb</span> <span class="o">-</span><span class="n">O</span> <span class="n">O0</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">model</span><span class="o">-</span><span class="nb">len</span> <span class="mi">4096</span> <span class="o">--</span><span class="n">concurrency</span> <span class="mi">8</span>
 </pre></div>
 </div>
-<p>A bundle built with <code class="docutils literal notranslate"><span class="pre">-O</span> <span class="pre">O0</span></code> runs, but it only covers a minimal set of buckets; expect reduced
-performance and coverage compared with a full build. Do not serve it in production.</p>
+<p> ⁇ 이 만든 <code class="docutils literal notranslate"><span class="pre">-O</span> <span class="pre">O0</span></code> 실행, 하지만 그것은 단지 물통의 최소 세트를 다룹니다; 전체 빌드와 비교된 성능과 적용을 감소 기대. 생산에서 그것을 제공 하지 마십시오.</p>
 </section>
 <section id="production-build">
-<h3>Production build<a class="headerlink" href="#production-build" title="Link to this heading">#</a></h3>
-<p>For the bundle you actually serve, favor full bucket coverage and a configuration that matches the
-deployment, accepting a longer build:</p>
+<h3>생산 구축<a class="headerlink" href="#production-build" title="Link to this heading">#</a></h3>
+<p>번들을 위해 실제로 봉사, 호의 전체 버킷 적용 및 구성을 일치 배포, 더 긴 빌드를 수용:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">-O</span> <span class="pre">O3</span></code> — the full bucket set (this is the default; set it explicitly to make the intent clear).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span></code> — match the serving topology (8 PEs per card — e.g. <code class="docutils literal notranslate"><span class="pre">8</span></code> for a
-single card, <code class="docutils literal notranslate"><span class="pre">32</span></code> for four).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span></code> — set to the maximum context length you actually serve, so buckets are sized
-for the real workload rather than over-built.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--concurrency</span></code> — set high to saturate the build host and shorten the (longer) full build.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--build-report</span></code> — print per-kernel compilation timing to spot unexpectedly slow kernels.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-O</span> <span class="pre">O3</span></code> - 전체 버킷 세트 (이 기본값입니다; 그대로 그대로 그대로 그대로 그대로 그대로 유지).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span></code> — 서빙 topology (8 PEs 카드 당 - e.g. <code class="docutils literal notranslate"><span class="pre">8</span></code> 한 카드만 있으면 <code class="docutils literal notranslate"><span class="pre">32</span></code> 4개로)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--max-model-len</span></code> — 실제로 봉사하는 최대 상황에 놓으십시오, 그래서 물통은 over-built 보다는 오히려 진짜 워크로드를 위해 치수를 재십시오.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--concurrency</span></code> — 빌드 호스트를 포용하고 (longer) 전체 빌드를 단축합니다.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--build-report</span></code> — per-kernel 컴파일 타이밍을 예기치 않게 느린 커널에 인쇄합니다.</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">fxb</span> <span class="n">build</span> <span class="n">openai</span><span class="o">/</span><span class="n">gpt</span><span class="o">-</span><span class="n">oss</span><span class="o">-</span><span class="mi">120</span><span class="n">b</span> <span class="n">gpt</span><span class="o">-</span><span class="n">oss</span><span class="o">-</span><span class="mi">120</span><span class="n">b</span><span class="o">.</span><span class="n">fxb</span> \
     <span class="o">-</span><span class="n">O</span> <span class="n">O3</span> <span class="o">-</span><span class="n">tp</span> <span class="mi">32</span> <span class="o">--</span><span class="nb">max</span><span class="o">-</span><span class="n">model</span><span class="o">-</span><span class="nb">len</span> <span class="mi">32768</span> <span class="o">--</span><span class="n">concurrency</span> <span class="mi">24</span> <span class="o">--</span><span class="n">build</span><span class="o">-</span><span class="n">report</span>
@@ -985,13 +777,8 @@ for the real workload rather than over-built.</p></li>
 </div>
 </section>
 <section id="deployment-topology">
-<h3>Deployment topology<a class="headerlink" href="#deployment-topology" title="Link to this heading">#</a></h3>
-<p><strong>Tensor parallelism is fixed at build time</strong>, while <strong>pipeline and data parallelism are set when
-you serve.</strong> A bundle’s <code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span></code> shapes the compiled kernels (each kernel is
-sharded for that tensor-parallel degree), so it is part of the FXB and cannot be changed
-afterward — build with the <code class="docutils literal notranslate"><span class="pre">-tp</span></code> you intend to deploy. Pipeline and data parallelism, by
-contrast, replicate and stage the already-compiled bundle across more PEs without recompiling, so
-they are chosen at <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> time via <code class="docutils literal notranslate"><span class="pre">-pp/--pipeline-parallel-size</span></code> and
+<h3>배포 토폴로지<a class="headerlink" href="#deployment-topology" title="Link to this heading">#</a></h3>
+<p><strong>Tensor 평행은 건축 시간에 조정됩니다</strong>, <strong>파이프라인과 자료 평행은 당신이 봉사할 때 놓입니다.</strong> 한 묶음 <code class="docutils literal notranslate"><span class="pre">-tp/--tensor-parallel-size</span></code> 컴파일된 커널을 형성 (각 커널은 tensor-parallel 정도를 위해 sharded), 그래서 FXB의 일부이며 나중에 변경할 수 없습니다 - 빌드 <code class="docutils literal notranslate"><span class="pre">-tp</span></code> 배포하려는 경우. 대조, 복제 및 단계에 의해 파이프라인 및 데이터 병렬, already-compiled 번들을 다시 컴파일하지 않고, 그래서 그들은 선택 <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> 시간 <code class="docutils literal notranslate"><span class="pre">-pp/--pipeline-parallel-size</span></code> and
 <code class="docutils literal notranslate"><span class="pre">-dp/--data-parallel-size</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Built once for tensor-parallel size 8; deployed with pipeline and data parallelism</span>
 <span class="n">furiosa</span><span class="o">-</span><span class="n">llm</span> <span class="n">serve</span> <span class="n">Qwen</span><span class="o">/</span><span class="n">Qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">B</span><span class="o">-</span><span class="n">FP8</span> <span class="o">--</span><span class="n">fxb</span> <span class="o">./</span><span class="n">qwen3</span><span class="o">-</span><span class="mi">8</span><span class="n">b</span><span class="o">-</span><span class="n">fp8</span><span class="o">.</span><span class="n">fxb</span> <span class="o">-</span><span class="n">pp</span> <span class="mi">2</span> <span class="o">-</span><span class="n">dp</span> <span class="mi">4</span>
@@ -1000,71 +787,52 @@ they are chosen at <code class="docutils literal notranslate"><span class="pre">
 </section>
 </section>
 </section>
-
-
-                </article>
-              
-
-              
-              
-              
-              
-                <footer class="prev-next-footer d-print-none">
-                  
+</article>
+<footer class="prev-next-footer d-print-none">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="data-parallel-routing.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Data-Parallel Routing</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="model-parallelism.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Model Parallelism</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
+<a class="left-prev" href="data-parallel-routing.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">이전</p>
+<p class="prev-next-title">Data-Parallel 라우팅</p>
 </div>
-                </footer>
-              
-            </div>
-            
-            
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> 
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-an-fxb-for-a-model">Building an FXB for a model</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+</a>
+<a class="right-next" href="model-parallelism.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">다음</p>
+<p class="prev-next-title">모형 평행성</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i>
+</div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">설치</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-an-fxb-for-a-model">FXB를 특정 모델에 맞게 구성하는 방법</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">전제 조건</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models-runnable-with-furiosa-llm">Models runnable with Furiosa-LLM</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-directory-containing-an-fxb">Model directory containing an FXB</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-an-fxb-directly">Specifying an FXB directly</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#models-runnable-with-furiosa-llm">Furiosa-LLM를 사용하여 실행 가능한 모델</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#model-directory-containing-an-fxb">FXB를 포함하는 모델 디렉토리</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#specifying-an-fxb-directly">직접 FXB를 지정</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-compatibility">FXB compatibility</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serving-a-model-with-a-compatible-cached-fxb">Serving a model with a compatible cached FXB</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-a-compatible-fxb-into-the-cache">Step 1 — Get a compatible FXB into the cache</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-check-compatibility">Step 2 — Check compatibility</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-serve-the-model">Step 3 — Serve the model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-compatibility">FXB 호환성</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#serving-a-model-with-a-compatible-cached-fxb">호환 캐시 FXB와 모델 제공</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-1-get-a-compatible-fxb-into-the-cache">단계 1 — 캐시에 호환 FXB를 가져옵니다</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-2-check-compatibility">단계 2 — 호환성 확인</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#step-3-serve-the-model">단계 3 — 모델 실행</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-reference">Command reference</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#command-reference">지휘자 참조</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-build"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">build</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-download"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">download</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-add"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">add</span></code></a></li>
@@ -1077,65 +845,44 @@ they are chosen at <code class="docutils literal notranslate"><span class="pre">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fxb-inspect"><code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">inspect</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fingerprint-and-compatibility">Fingerprint and Compatibility</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">Best Practices</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-test-build">Quick test build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-build">Production build</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-topology">Deployment topology</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fingerprint-and-compatibility">지문 및 호환성</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#best-practices">가장 좋은 방법</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-test-build">빠른 테스트 구축</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#production-build">생산 구축</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#deployment-topology">배포 토폴로지</a></li>
 </ul>
 </li>
 </ul>
-  </nav></div>
-
+</nav></div>
 </div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-<div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
-<p class="component-author">
-By FuriosaAI, Inc.
-</p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-
-  <p class="copyright">
-    
-      © Copyright 2026 FuriosaAI Inc.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
 </div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
-
-  <footer class="bd-footer">
-  </footer>
-  </body>
+<footer class="bd-footer-content">
+<div class="bd-footer-content__inner container">
+<div class="footer-item">
+<p class="component-author">
+FuriosaAI, Inc.
+</p>
+</div>
+<div class="footer-item">
+<p class="copyright">
+    
+      © 2026 FuriosaAI Inc. 저작권
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+</footer>
+</body>
 </html>

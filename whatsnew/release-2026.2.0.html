@@ -1,478 +1,340 @@
 
-<!DOCTYPE html>
-
-
-<html lang="en" data-content_root="../" >
-
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
-    <script>
+html
+<html data-content_root="../" lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="width=device-width, initial-scale=1" name="viewport"/>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-0HTTHGM3MD"></script>
+<script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
         gtag('config', 'G-0HTTHGM3MD');
     </script>
-    
-    <title>Furiosa SDK Release 2026.2 &#8212; FuriosaAI Developer Center 2026.4.1 documentation</title>
-  
-  
-  
-  <script data-cfasync="false">
+<title>Furiosa SDK 릴리스 2026.2 - FuriosaAI 개발자 센터 2026.4.1 문서</title>
+<script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!--
+<!--
     this give us a css class that will be invisible only if js is disabled
   -->
-  <noscript>
-    <style>
+<noscript>
+<style>
       .pst-js-only { display: none !important; }
 
     </style>
-  </noscript>
-  
-  <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
-
-    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=a3416100" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=39f50d33" />
-  
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
-  <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
-
-    <script src="../_static/documentation_options.js?v=d27e8219"></script>
-    <script src="../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../_static/copybutton.js?v=f281be69"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
-    <script src="../_static/design-tabs.js?v=f930bc37"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'whatsnew/release-2026.2.0';</script>
-    <script>
+</noscript>
+<!-- Loaded before other Sphinx assets -->
+<link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet"/>
+<link href="../_static/pygments.css?v=8f2a1f02" rel="stylesheet" type="text/css"/>
+<link href="../_static/styles/sphinx-book-theme.css?v=a3416100" rel="stylesheet" type="text/css"/>
+<link href="../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
+<link href="../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../_static/custom.css?v=39f50d33" rel="stylesheet" type="text/css"/>
+<!-- So that users can add custom icons -->
+<script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+<!-- Pre-loaded scripts that we'll load fully later -->
+<link as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<link as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" rel="preload"/>
+<script src="../_static/documentation_options.js?v=d27e8219"></script>
+<script src="../_static/doctools.js?v=9bcbadda"></script>
+<script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+<script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+<script src="../_static/design-tabs.js?v=f930bc37"></script>
+<script>DOCUMENTATION_OPTIONS.pagename = 'whatsnew/release-2026.2.0';</script>
+<script>
         DOCUMENTATION_OPTIONS.theme_version = '0.16.1';
         DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/furiosa-ai/furiosa-ai.github.io/refs/heads/main/versions.json';
         DOCUMENTATION_OPTIONS.theme_switcher_version_match = '2026.4.1';
         DOCUMENTATION_OPTIONS.show_version_warning_banner =
             true;
         </script>
-    <link rel="icon" href="../_static/favicon.png"/>
-    <link rel="index" title="Index" href="../genindex.html" />
-    <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Furiosa SDK Release 2026.1" href="release-2026.1.0.html" />
-    <link rel="prev" title="Furiosa SDK Release 2026.3.0" href="release-2026.3.0.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="2026.4.1" />
-  </head>
-  
-  
-  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
-
-  
-  
-  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
-  
-  <div id="pst-scroll-pixel-helper"></div>
-  
-  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
-  
-  <dialog id="pst-search-dialog">
-    
-<form class="bd-search d-flex align-items-center"
-      action="../search.html"
-      method="get">
-  <i class="fa-solid fa-magnifying-glass"></i>
-  <input type="search"
-         class="form-control"
-         name="q"
-         placeholder="Search..."
-         aria-label="Search..."
-         autocomplete="off"
-         autocorrect="off"
-         autocapitalize="off"
-         spellcheck="false"/>
-  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+<link href="../_static/favicon.png" rel="icon"/>
+<link href="../genindex.html" rel="index" title="Index"/>
+<link href="../search.html" rel="search" title="Search"/>
+<link href="release-2026.1.0.html" rel="next" title="Furiosa SDK Release 2026.1"/>
+<link href="release-2026.3.0.html" rel="prev" title="Furiosa SDK Release 2026.3.0"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="en" name="docsearch:language"/>
+<meta content="2026.4.1" name="docsearch:version"/>
+</head>
+<body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
+<div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
+<div id="pst-scroll-pixel-helper"></div>
+<button class="btn rounded-pill" id="pst-back-to-top" type="button">
+<i class="fa-solid fa-arrow-up"></i>다시 꼭대기에</button>
+<dialog id="pst-search-dialog">
+<form action="../search.html" class="bd-search d-flex align-items-center" method="get">
+<i class="fa-solid fa-magnifying-glass"></i>
+<input aria-label="Search..." autocapitalize="off" autocomplete="off" autocorrect="off" class="form-control" name="q" placeholder="Search..." spellcheck="false" type="search"/>
+<span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form>
-  </dialog>
-
-  <div class="pst-async-banner-revealer d-none">
-  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</dialog>
+<div class="pst-async-banner-revealer d-none">
+<aside aria-label="Version warning" class="d-none d-print-none" id="bd-header-version-warning"></aside>
 </div>
-
-  
-    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
-    </header>
-  
-
-  <div class="bd-container">
-    <div class="bd-container__inner bd-page-width">
-      
-      
-      
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
-        
-
-  
-  <div class="sidebar-header-items sidebar-primary__section">
-    
-    
-    
-    
-  </div>
-  
-    <div class="sidebar-primary-items__start sidebar-primary__section">
-        <div class="sidebar-primary-item">
-
-  
-    
-  
-
+<header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+</header>
+<div class="bd-container">
+<div class="bd-container__inner bd-page-width">
+<dialog id="pst-primary-sidebar-modal"></dialog>
+<div class="bd-sidebar-primary bd-sidebar" id="pst-primary-sidebar">
+<div class="sidebar-header-items sidebar-primary__section">
+</div>
+<div class="sidebar-primary-items__start sidebar-primary__section">
+<div class="sidebar-primary-item">
 <a class="navbar-brand logo" href="../index.html">
-  
-  
-  
-  
-  
-    
-    
-      
-    
-    
-    <img src="../_static/doc-logo-dark.svg" class="logo__image only-light" alt=""/>
-    <img src="../_static/doc-logo-light.svg" class="logo__image only-dark pst-js-only" alt=""/>
-  
-  
-    <p class="title logo__title">
-            <div class='sidebar-title mr-auto'>
-                Furiosa Docs
+<img alt="" class="logo__image only-light" src="../_static/doc-logo-dark.svg"/>
+<img alt="" class="logo__image only-dark pst-js-only" src="../_static/doc-logo-light.svg"/>
+<p class="title logo__title">
+<div class="sidebar-title mr-auto">
+                Furiosa 문서
             </div>
-        </p>
-  
+</p>
 </a></div>
-        <div class="sidebar-primary-item">
+<div class="sidebar-primary-item">
 <div class="version-switcher__container dropdown pst-js-only">
-  <button id="pst-version-switcher-button-2"
-    type="button"
-    class="version-switcher__button btn btn-sm dropdown-toggle"
-    data-bs-toggle="dropdown"
-    aria-haspopup="listbox"
-    aria-controls="pst-version-switcher-list-2"
-    aria-label="Version switcher list"
-  >
-    Choose version  <!-- this text may get changed later by javascript -->
-    <span class="caret"></span>
-  </button>
-  <div id="pst-version-switcher-list-2"
-    class="version-switcher__menu dropdown-menu list-group-flush py-0"
-    role="listbox" aria-labelledby="pst-version-switcher-button-2">
-    <!-- dropdown will be populated by javascript on page load -->
-  </div>
+<button aria-controls="pst-version-switcher-list-2" aria-haspopup="listbox" aria-label="Version switcher list" class="version-switcher__button btn btn-sm dropdown-toggle" data-bs-toggle="dropdown" id="pst-version-switcher-button-2" type="button">
+    버전 선택  <!-- this text may get changed later by javascript -->
+<span class="caret"></span>
+</button>
+<div aria-labelledby="pst-version-switcher-button-2" class="version-switcher__menu dropdown-menu list-group-flush py-0" id="pst-version-switcher-list-2" role="listbox">
+<!-- dropdown will be populated by javascript on page load -->
+</div>
 </div></div>
-        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item navbar-nav active">
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Overview</span></p>
+<div class="sidebar-primary-item"><nav aria-label="Main" class="bd-links bd-docs-nav">
+<div class="bd-toc-item navbar-nav active">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">개요</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../overview/rngd.html">FuriosaAI RNGD</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview/software_stack.html">FuriosaAI’s Software Stack</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">What’s New</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="release-2026.4.0.html">Furiosa SDK Release 2026.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="release-2026.3.0.html">Furiosa SDK Release 2026.3.0</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Furiosa SDK Release 2026.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="release-2026.1.0.html">Furiosa SDK Release 2026.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="release-2025.html">Release Notes for Furiosa SDK Release 2025.X</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/software_stack.html">FuriosaAI의 소프트웨어 스택</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">무슨 일이야?</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="release-2026.4.0.html">Furiosa SDK 해제 2026.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-2026.3.0.html">Furiosa SDK 릴리스 2026.3.0</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Furiosa SDK 릴리즈 2026.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-2026.1.0.html">Furiosa SDK 배포 2026.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="release-2025.html">Furiosa SDK 릴리즈 노트 2025.X</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../overview/roadmap.html">Roadmap</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/roadmap.html">로드맵</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">시작 해</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../get_started/prerequisites.html">Installing Prerequisites</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/furiosa_llm.html">Quick Start with Furiosa-LLM</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../get_started/upgrade_guide.html">Upgrading FuriosaAI’s Software</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/prerequisites.html">사전 설치</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/furiosa_llm.html">Furiosa-LLM를 사용한 빠른 시작</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../get_started/upgrade_guide.html">FuriosaAI 소프트웨어 업그레이드</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Furiosa-LLM</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/intro.html">Furiosa-LLM</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../furiosa_llm/supported_models.html">Supported Models</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen3.html">Qwen3 (dense)</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../furiosa_llm/supported_models.html">지원 된 모델</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen3.html">Qwen3 (밀집)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen3-moe.html">Qwen3-MoE</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/bge-m3.html">BGE-M3</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/e5-mistral.html">E5-Mistral</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/bge-reranker-v2-m3.html">BGE Reranker v2 M3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/harrier-oss-v1.html">Harrier OSS v1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/bge-reranker-v2-m3.html">BGE 레랑커 v2 M3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/harrier-oss-v1.html">해리어 OSS v1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen3-embedding.html">Qwen3-Embedding</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen3-reranker.html">Qwen3-Reranker</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen3-vl.html">Qwen3-VL</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/gemma-4.html">Gemma 4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/gemma-4.html">제마 4</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/qwen2.5.html">Qwen2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/llama-3.1.html">Llama 3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/llama-3.3.html">Llama 3.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/mistral-nemo.html">Mistral NeMo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/llama-3.1.html">라마 3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/llama-3.3.html">라마 3.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/mistral-nemo.html">미스트랄 네모</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/gpt-oss.html">GPT-OSS</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/exaone-4.0.html">EXAONE 4.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/exaone-4.5.html">EXAONE 4.5</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/k-exaone.html">K-EXAONE</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/solar-open.html">Solar Open</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/models/solar-open.html">태양광 개방</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/furiosa-llm-serve.html">OpenAI-Compatible Server</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/responses-api.html">Responses API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/toolcalling.html">Tool Calling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/structured-output.html">Structured Output</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/vision-language.html">Vision-Language Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/performance-optimization.html">Performance Optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/furiosa-llm-serve.html">OpenAI 호환 서버</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/responses-api.html">답변 API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/toolcalling.html">도구 호출</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/structured-output.html">구조화된 출력</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/performance-optimization.html">성능 최적화</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/prefix-caching.html">Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/hierarchical-prefix-caching.html">Hierarchical Prefix Caching</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/overlap-scheduling.html">Overlap Scheduling</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/hybrid-kv-cache.html">Hybrid KV Cache Management</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/data-parallel-routing.html">Data-Parallel Routing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/fxb.html">Furiosa Executable Bundles (FXB)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/model-parallelism.html">Model Parallelism</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../furiosa_llm/reference.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/llm.html">LLM class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/sampling_params.html">SamplingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/pooling_params.html">PoolingParams class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/llm_engine.html">LLMEngine class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/async_llm_engine.html">AsyncLLMEngine class</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/hierarchical-prefix-caching.html">계층적 Prefix Caching</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/overlap-scheduling.html">겹치기 기획</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/hybrid-kv-cache.html">하이브리드 KV Cache 관리</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/data-parallel-routing.html">Data-Parallel 라우팅</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/fxb.html">C Furiosa 실행 파일 묶음 (FXB)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/model-parallelism.html">모형 평행성</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../furiosa_llm/reference.html">API 참조</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/llm.html">LLM급</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/sampling_params.html">SamplingParams 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/pooling_params.html"> ⁇ 링파램스 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/llm_engine.html">LLMEngine 클래스</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/reference/async_llm_engine.html">AsyncLLMEngine 클래스</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../furiosa_llm/examples.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_chat.html">Chat</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../furiosa_llm/examples.html">예제</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_chat.html">채팅</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_embed.html">Embedding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_score.html">Scoring (Similarity Scoring)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_rerank.html">Reranking (Document Reranking)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/online_chat_completion_logprobs.html">OpenAI-Compatible API with Logprobs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_score.html">점수 (유사 점수)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/llm_rerank.html">재평가 (문서 재평가)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../furiosa_llm/examples/online_chat_completion_logprobs.html">OpenAI 호환 API (Logprobs 포함)</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/k8s_deployment.html">Deploying Furiosa-LLM on Kubernetes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/mooncake_deployment.html">Using Mooncake with Furiosa-LLM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/k8s_deployment.html">Furiosa-LLM를 Kubernetes에 배포</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../furiosa_llm/mooncake_deployment.html">Mooncake를 Furiosa-LLM와 함께 사용하는 것을 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Cloud Native Toolkit</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">클라우드 네이티브 툴킷</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/intro.html">Cloud Native Toolkit</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/container.html">Container Support</a></li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../cloud_native_toolkit/kubernetes.html">Kubernetes Plugins</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/feature_discovery.html">Installing Furiosa Feature Discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/device_plugin.html">Installing Furiosa Device Plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/dra_driver.html">Installing Furiosa DRA Driver</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/metrics_exporter.html">Installing Furiosa Metrics Exporter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/npu_operator.html">Installing Furiosa NPU Operator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/intro.html">클라우드 네이티브 툴킷</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/container.html">컨테이너 지원</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../cloud_native_toolkit/kubernetes.html">Kubernetes</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/feature_discovery.html">Furiosa 기능 디스커버리 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/device_plugin.html">Furiosa 장치 플러그인 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/dra_driver.html">Furiosa DRA Driver 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/metrics_exporter.html">Furiosa 메트릭스 내보내기 설치</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cloud_native_toolkit/kubernetes/npu_operator.html">Furiosa NPU 운영자 설치</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/llm_d.html">Deploying Furiosa-LLM with llm-d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cloud_native_toolkit/llm_d.html">Furiosa-LLM를 llm 방법을 사용하여 배포</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Device Management</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">장치 관리</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1 has-children"><a class="reference internal" href="../device_management/system_management_interface.html">Furiosa SMI</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html">Furiosa SMI CLI</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI Library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_lib.html">Furiosa SMI 도서관</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference internal" href="../device_management/host_tuning.html">Host PCI Optimization Tuning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../device_management/host_tuning.html">호스트 PCI 최적화 튜닝</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Tutorials and Examples</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">튜토리얼 및 예제</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK CookBook</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/furiosa-ai/sdk-cookbook">FuriosaAI SDK 요리 가이드</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Customer Support</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">고객 지원</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">Forums</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">Customer Support</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://forums.furiosa.ai">포럼</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.atlassian.net/servicedesk/customer/portals/">고객 지원</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Other Links</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">다른 링크</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI Homepage</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK Doc</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa.ai">FuriosaAI 홈페이지</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://furiosa-ai.github.io/docs/latest/en/">Furiosa Gen 1 NPU SDK 문서 참조.</a></li>
 </ul>
-
-    </div>
+</div>
 </nav></div>
-    </div>
-  
-  
-  <div class="sidebar-primary-items__end sidebar-primary__section">
-      <div class="sidebar-primary-item"><img id='furiosa_logo' width="100" /></div>
-      <div class="sidebar-primary-item">
-
-  <p class="copyright">
+</div>
+<div class="sidebar-primary-items__end sidebar-primary__section">
+<div class="sidebar-primary-item"><img id="furiosa_logo" width="100"/></div>
+<div class="sidebar-primary-item">
+<p class="copyright">
     
-      © Copyright 2026 FuriosaAI Inc.
+      © 2026 FuriosaAI Inc. 저작권
       <br/>
-    
-  </p>
+</p>
 </div>
-  </div>
-
-
-      </div>
-      
-      <main id="main-content" class="bd-main" role="main">
-        
-        
-
+</div>
+</div>
+<main class="bd-main" id="main-content" role="main">
 <div class="sbt-scroll-pixel-helper"></div>
-
-          <div class="bd-content">
-            <div class="bd-article-container">
-              
-              <div class="bd-header-article d-print-none">
+<div class="bd-content">
+<div class="bd-article-container">
+<div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
-  
-    <div class="header-article-items__start">
-      
-        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <span class="fa-solid fa-bars"></span>
+<div class="header-article-items__start">
+<div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle primary sidebar">
+<span class="fa-solid fa-bars"></span>
 </button></div>
-      
-    </div>
-  
-  
-    <div class="header-article-items__end">
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</div>
+<div class="header-article-items__end">
+<div class="header-article-item">
+<button aria-label="Search" class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Search">
+<i class="fa-solid fa-magnifying-glass fa-lg"></i>
 </button></div>
-      
-        <div class="header-article-item">
-
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+<div class="header-article-item">
+<button aria-label="Color mode" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" data-bs-placement="bottom" data-bs-title="Color mode" data-bs-toggle="tooltip">
+<i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+<i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+<i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
 </button></div>
-      
-        <div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
+<div class="header-article-item"><button class="sidebar-toggle secondary-toggle btn btn-sm" data-bs-placement="bottom" data-bs-toggle="tooltip" title="Toggle secondary sidebar">
+<span class="fa-solid fa-list"></span>
 </button></div>
-      
-    </div>
-  
 </div>
 </div>
-              
-              
-
-<div id="jb-print-docs-body" class="onlyprint">
-    <h1>Furiosa SDK Release 2026.2</h1>
-    <!-- Table of contents -->
-    <div id="print-main-content">
-        <div id="jb-print-toc">
-            
-            <div>
-                <h2>  </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">Highlights</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qwen3-and-exaone4-performance-improvements">Qwen3 and Exaone4 Performance Improvements</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#per-model-bucket-presets">Per-Model Bucket Presets</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-parallel-router-with-prefix-aware-routing">Data Parallel Router with Prefix-Aware Routing</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prefix-caching-is-now-on-by-default">Prefix Caching Is Now On by Default</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#response-api-phase-1">Response API (Phase 1)</a></li>
+</div>
+<div class="onlyprint" id="jb-print-docs-body">
+<h1>Furiosa SDK 릴리즈 2026.2</h1>
+<!-- Table of contents -->
+<div id="print-main-content">
+<div id="jb-print-toc">
+<div>
+<h2> </h2>
+</div>
+<nav aria-label="Page">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">주요 내용</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qwen3-and-exaone4-performance-improvements">Qwen3 및 Exaone4 성능 개선</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#per-model-bucket-presets">Per-Model 버킷 프리셋</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-parallel-router-with-prefix-aware-routing">Prefix-Aware Routing를 가진 자료 평행한 대패</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prefix-caching-is-now-on-by-default">Prefix Caching는 기본적으로 활성화됨</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#response-api-phase-1">응답 API (단계 1)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#all-changes">All Changes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#major-features-improvements">Major Features &amp; Improvements</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-efficiency-improvements">Performance &amp; Efficiency Improvements</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usability-improvements">API &amp; Usability Improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#all-changes">모든 변화</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#major-features-improvements">주요 기능 및 개선 사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-efficiency-improvements">성과 &amp; 효율성 개선</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usability-improvements">API 및 사용성 개선</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes-deprecations">🚨 Breaking Changes &amp; Deprecations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#released-components">📦 Released Components</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-packages">Python packages</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apt-packages">APT packages</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker-images">Docker images</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes-deprecations">🚨 주요 변경 사항 및 폐기</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#released-components">📦 출시된 구성 요소</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-packages">Python 패키지</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apt-packages">APT 패키지</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker-images">Docker 이미지</a></li>
 </ul>
 </li>
 </ul>
-            </nav>
-        </div>
-    </div>
+</nav>
 </div>
-
-              
-                
+</div>
+</div>
 <div id="searchbox"></div>
-                <article class="bd-article">
-                  
-  <section id="furiosa-sdk-release-2026-2">
-<span id="release2026-2-0"></span><h1>Furiosa SDK Release 2026.2<a class="headerlink" href="#furiosa-sdk-release-2026-2" title="Link to this heading">#</a></h1>
-<p>We are happy to announce the release of <strong>Furiosa SDK 2026.2</strong>.</p>
-<p>Building on the foundation laid in 2026.1, this release focuses on making production
-deployments faster, easier to configure, and easier to scale out. We have improved
-serving performance for <strong>Qwen3</strong> and <strong>Exaone4</strong>, removed most of the bucket-tuning
-ceremony from artifact builds via <strong>preset-based configuration</strong>, introduced an
-independent <strong>Data Parallel (DP) Router</strong> with a <strong>prefix-aware</strong> variant, enabled
-<strong>prefix caching by default</strong>, and shipped the first phase of the <strong>Response API
+<article class="bd-article">
+<section id="furiosa-sdk-release-2026-2">
+<span id="release2026-2-0"></span><h1>Furiosa SDK 릴리즈 2026.2<a class="headerlink" href="#furiosa-sdk-release-2026-2" title="Link to this heading">#</a></h1>
+<p>우리는의 출시를 발표하게 행복합니다. <strong>Furiosa SDK 2026.2</strong>.</p>
+<p>2026.1에 배치된 기초에 건물, 이 방출은 생산 배치를 더 빠르게 만들기에 집중하고, 형성하게 쉬운, 그리고 더 쉬운 확장합니다. 우리는 개량한 서빙 성과가 있습니다 <strong>Qwen3</strong> and <strong>엑소네4</strong>, artifact에서 bucket-tuning 행사의 대부분 제거 <strong>preset-based 구성</strong>독립적인 <strong>데이터 병렬 (DP) 라우터</strong> a <strong>prefix-aware</strong> 변종, 활성화
+<strong>기본값: prefix caching</strong>, 및 첫 번째 단계의 배송 <strong>응답 API
 (/v1/responses)</strong>.</p>
-<p>If you are upgrading from 2026.1, please also read the
-<a class="reference internal" href="#release2026-2-0-breakingchanges"><span class="std std-ref">🚨 Breaking Changes &amp; Deprecations</span></a> section and the <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">Upgrading FuriosaAI’s Software</span></a>.</p>
+<p>2026.1에서 업그레이드하는 경우, 또한 읽으십시오
+<a class="reference internal" href="#release2026-2-0-breakingchanges"><span class="std std-ref">🚨 주요 변경 사항 및 폐기</span></a> 부문 및 <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a>.</p>
 <section id="highlights">
-<h2>Highlights<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
+<h2>주요 내용<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <section id="qwen3-and-exaone4-performance-improvements">
-<h3>Qwen3 and Exaone4 Performance Improvements<a class="headerlink" href="#qwen3-and-exaone4-performance-improvements" title="Link to this heading">#</a></h3>
-<p>Two of the most frequently deployed model families on RNGD see meaningful throughput
-improvements in this release, with per-request latencies held at 2026.1 levels.
-<strong>Qwen3</strong> artifacts ship with expanded prefill, decode, and append buckets (including
-a 64k append bucket for Qwen3-32B-FP8) so more of the real-world request distribution
-hits well-tuned kernels, and <strong>Exaone4</strong> gains more high-batch and append buckets
-along with <a class="reference internal" href="../furiosa_llm/hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">Hybrid KV Cache Management</span></a>, which splits KV memory
-into separate global-attention and sliding-window pools and reclaims sliding-window
-blocks as soon as they fall outside the active window — reducing memory waste and
-lifting effective concurrency on long-context workloads.</p>
-<p>Across a sweep of input length, output length, and concurrency, tokens/second
-throughput improved by <strong>74.9% on average over 2026.1</strong>, rising to <strong>84.8%</strong> in the
-low-concurrency regime (concurrency below 64), while TTFT and TPOT remain in line
-with the 2026.1 baseline.</p>
+<h3>Qwen3 및 Exaone4 성능 개선<a class="headerlink" href="#qwen3-and-exaone4-performance-improvements" title="Link to this heading">#</a></h3>
+<p>RNGD에 가장 자주 배치 된 모델 가족 중 두 가지는 throughput 등급에서 per-request latencies와 함께이 릴리스에서 의미있는 throughput 개선을 볼 수 있습니다.
+<strong>Qwen3</strong> prefill, decode 및 부트 버킷 (Qwen3-32B-FP8에 대한 64k 부트 버킷 포함)를 확장하여 real-world 요청 배포가 well-tuned 커널을 표시하고 <strong>엑소네4</strong> 더 많은 high-batch와 함께 부드킷을 얻을 <a class="reference internal" href="../furiosa_llm/hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a>global-attention 및 sliding-window 풀과 sliding-window 블록을 별도로 분리하는 KV 메모리를 분할하는 KV 메모리는 활성 창 밖에 떨어지기 때문에 long-context 워크로드에서 메모리 낭비 및 리프팅 효과적인 통화를 줄입니다.</p>
+<p>입력 길이, 출력 길이 및 concurrency, tokens/second throughput에 의해 개선된의 청소를 건너 <strong>평균적으로 2026.1에서 74.9%</strong>, 상승하여 <strong>84.8%</strong> low-concurrency (64 아래 통화)에서 TTFT 및 TPOT는 2026.1 기본 라인과 함께 라인에 남아 있습니다.</p>
 </section>
 <section id="per-model-bucket-presets">
-<h3>Per-Model Bucket Presets<a class="headerlink" href="#per-model-bucket-presets" title="Link to this heading">#</a></h3>
-<p>Good bucket configuration — the set of prefill, decode, and append bucket sizes
-an artifact is compiled for — is one of the highest-leverage knobs for serving
-performance, and also one of the hardest to tune by hand. In 2026.2,
-<code class="docutils literal notranslate"><span class="pre">ArtifactBuilder</span></code> absorbs that complexity: every supported model ships with
-<strong>per-model bucket presets</strong>, tuned by the Furiosa team to match each model’s
-architecture and cover its full maximum context, and applied automatically at
-build time.</p>
-<p>The design goal is simple — <strong>the default build should produce the best artifact
-for typical serving workloads</strong>, without requiring the user to reason about
-bucketization at all:</p>
+<h3>Per-Model 버킷 프리셋<a class="headerlink" href="#per-model-bucket-presets" title="Link to this heading">#</a></h3>
+<p>좋은 양동이 구성 - prefill, decode의 세트, 그리고 부동이 크기에 대한 artifact가 컴파일된다 - 제공 성능을위한 highest-leverage 손잡이 중 하나이며, 또한 손으로 조정하는 가장 어려운 중 하나입니다. 2026.2에서,
+<code class="docutils literal notranslate"><span class="pre">ArtifactBuilder</span></code> 그 복잡성을 흡수: 모든 지원 모델 배와 함께
+<strong>per-model 템플릿 설정</strong>, Furiosa 팀에 의해 조정 각 모델의 아키텍처에 일치 하 고 전체 최대 컨텍스트를 커버 하 고 빌드 시간에 자동으로 적용.</p>
+<p>설계 목표는 간단합니다: <strong>기본 빌드는 일반적인 서빙 작업 부하에 가장 적합한 것을 생성해야합니다.</strong>사용자를 요구하지 않고 모든 양동이에 대한 이유 :</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build an artifact for Qwen3-32B-FP8 and write it to ./Qwen3-32B-FP8</span>
 furiosa-llm<span class="w"> </span>build<span class="w"> </span>Qwen/Qwen3-32B-FP8<span class="w"> </span>-tp<span class="w"> </span><span class="m">8</span><span class="w"> </span>./Qwen3-32B-FP8
 </pre></div>
 </div>
-<p>Explicit bucket arguments are still supported and take precedence, so workload-
-specific tuning remains available for users who need it.</p>
+<p>Explicit 양동이 인수는 여전히 지원되고 선행을 취합니다. 따라서 workload- 특정 조정은 필요한 사용자에게 사용할 수 있습니다.</p>
 </section>
 <section id="data-parallel-router-with-prefix-aware-routing">
-<h3>Data Parallel Router with Prefix-Aware Routing<a class="headerlink" href="#data-parallel-router-with-prefix-aware-routing" title="Link to this heading">#</a></h3>
-<p>2026.2 introduces a first-class <strong>Data Parallel (DP) Router</strong> for horizontally scaled
-deployments. The router sits in front of the frontend and dispatches each request to
-a DP replica before any engine-local scheduling happens, so clients see a single
-entry point while each replica runs its own scheduler independently.</p>
-<p>Two routing policies are available. <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> distributes requests evenly
-across replicas; <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> inspects the tokenized prefix and prefers the
-replica that already holds matching prefix cache entries — important for workloads
-with shared leading tokens, such as chatbots with long system prompts or RAG systems,
-where naive round-robin scatters shared prefixes across replicas and destroys cache
-locality. The policy is selected via <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>, and defaults
-to <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> when prefix caching is enabled and <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> otherwise:</p>
+<h3>Prefix-Aware Routing를 가진 자료 평행한 대패<a class="headerlink" href="#data-parallel-router-with-prefix-aware-routing" title="Link to this heading">#</a></h3>
+<p>2026.2는 first-class를 소개합니다. <strong>데이터 병렬 (DP) 라우터</strong> 수평으로 확장 된 배포를 위해. 라우터는 프런트 엔드의 앞에 앉아서 모든 engine-local 스케줄링이 발생하기 전에 DP 복제에 각 요청을 파견, 그래서 클라이언트는 단일 항목 포인트를 참조하면서 각 복제는 독립적으로 자신의 스케줄러를 실행합니다.</p>
+<p>두 가지 라우팅 정책이 있습니다. <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> 복제를 통해 균등하게 요청을 배포합니다. <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> 토큰화 된 접두사를 검사하고 이미 접두사 캐시 항목과 일치하는 복제를 선호한다 - 긴 시스템 프롬프트 또는 RAG 시스템과 같은 공유 주요 토큰과 같은 워크로드에 중요한, 해군 round-robin 사기꾼이 복제를 통해 공유 접두사를 공유하고 캐시 지방을 파괴한다. 정책은 통해 선택됩니다 <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> prefix caching이 활성화된 경우, <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> 다른 경우:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Explicitly use prefix-aware routing</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--data-parallel-size<span class="w"> </span>&lt;N&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--data-parallel-routing-policy<span class="w"> </span>&lt;policy&gt;
@@ -480,34 +342,25 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 </div>
 </section>
 <section id="prefix-caching-is-now-on-by-default">
-<h3>Prefix Caching Is Now On by Default<a class="headerlink" href="#prefix-caching-is-now-on-by-default" title="Link to this heading">#</a></h3>
-<p>Prefix caching was introduced in 2026.1 behind an opt-in flag. After a release of
-production use and several correctness and performance improvements, it is now
-<strong>enabled by default</strong> in 2026.2. You no longer need any flag to benefit from it.</p>
-<p>Alongside the default flip, we landed several refinements:</p>
+<h3>Prefix Caching는 기본적으로 활성화됨<a class="headerlink" href="#prefix-caching-is-now-on-by-default" title="Link to this heading">#</a></h3>
+<p>Prefix caching는 opt-in 플래그 뒤에 2026.1에서 소개되었습니다. 생산 사용 및 여러 교정 및 성능 개선의 출시 후, 지금입니다
+<strong>기본 설정으로 설정</strong> 2026.2에서. 더 이상 어떤 플래그를 필요로하지 않습니다.</p>
+<p>기본 플립 외에도 여러 가지 정제를 착륙했습니다.</p>
 <ul class="simple">
-<li><p><strong>Prefix cache hit deferral</strong> maximizes the cache hit rate by briefly deferring
-requests that are about to match an in-flight prefix, instead of kicking them off to
-a fresh prefill.</p></li>
-<li><p><strong>Prefix caching is applied to decoded outputs</strong> as well, so multi-turn
-conversations benefit from the cache even on the continuation side.</p></li>
+<li><p><strong>프리픽스 캐시 히트 지연</strong> in-flight 접두사와 일치하기에 대한 간단한 방어 요청으로 캐시 히트 레이트를 극대화합니다. 대신 신선한 prefill로 킥링합니다.</p></li>
+<li><p><strong>Prefix caching는 디코딩 출력에 적용됩니다.</strong> 뿐만 아니라 multi-turn 대화는 계속적인 측에 조차 캐시에서 이익을 얻습니다.</p></li>
 </ul>
-<p>If you need to disable prefix caching for a specific deployment — for example, for
-workloads that rarely share prefixes across requests, or for benchmarking runs where
-cache-hit variance would distort the measurements — pass <code class="docutils literal notranslate"><span class="pre">--no-enable-prefix-caching</span></code>:</p>
+<p>특정 배포를 위해 prefix caching를 비활성화해야 하는 경우 — 예를 들어, 요청을 통해 미리 설정할 수 있는 워크로드 또는 벤치마킹 실행을 위해 cache-hit 가변이 측정을 중단할 경우 — 패스 <code class="docutils literal notranslate"><span class="pre">--no-enable-prefix-caching</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--no-enable-prefix-caching
 </pre></div>
 </div>
 </section>
 <section id="response-api-phase-1">
-<h3>Response API (Phase 1)<a class="headerlink" href="#response-api-phase-1" title="Link to this heading">#</a></h3>
-<p>2026.2 adds initial support for the <a class="reference external" href="https://developers.openai.com/api/reference/responses/overview">Response API</a> at
-<code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code>. The Response API is OpenAI’s newer, more expressive alternative to
-Chat Completions, and this release covers enough of the surface area to be useful for
-straightforward request/response flows.</p>
-<p>This is labeled <strong>Phase 1</strong> intentionally: the endpoint accepts requests and produces
-well-formed responses, but a number of advanced behaviors are still being rolled out.</p>
-<p>A minimal example using the OpenAI Python client:</p>
+<h3>응답 API (단계 1)<a class="headerlink" href="#response-api-phase-1" title="Link to this heading">#</a></h3>
+<p>2026.2는 초기 지원 기능을 추가합니다. <a class="reference external" href="https://developers.openai.com/api/reference/responses/overview">응답 API</a> at
+<code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code>. 응답 API는 OpenAI의 더 새로운, 채팅 완료에 더 표현적인 대안이고, 이 방출은 똑바른 request/response 교류를 위해 유용한 표면 지역의 충분히 커버합니다.</p>
+<p>이것은 표기되어 있습니다 <strong>단계 1</strong> 의도적으로: endpoint는 요청을 받아들이고 well-formed 응답을 생성하지만, 고급 행동의 수는 여전히 구출됩니다.</p>
+<p>OpenAI Python 클라이언트를 사용하는 최소 예:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"http://localhost:8000/v1"</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">"EMPTY"</span><span class="p">)</span>
@@ -519,172 +372,149 @@ well-formed responses, but a number of advanced behaviors are still being rolled
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For the full endpoint list, supported parameters, multi-turn conversations via
-<code class="docutils literal notranslate"><span class="pre">previous_response_id</span></code>, streaming, tool calling, and structured output, see
-<a class="reference internal" href="../furiosa_llm/responses-api.html#responsesapi"><span class="std std-ref">Responses API</span></a>.</p>
-<hr class="docutils" />
-<p>The complete list of changes in this release is summarized in the All Changes section
-below.</p>
+<p>전체 엔드포인트 목록의 경우 지원되는 매개 변수, multi-turn 대화를 통해
+<code class="docutils literal notranslate"><span class="pre">previous_response_id</span></code>, 스트리밍, 도구 호출, 및 구조 출력, 참조
+<a class="reference internal" href="../furiosa_llm/responses-api.html#responsesapi"><span class="std std-ref">답변 API</span></a>.</p>
+<hr class="docutils"/>
+<p>이 릴리스의 변경의 전체 목록은 아래의 모든 변경 섹션에서 요약됩니다.</p>
 </section>
 </section>
 <section id="all-changes">
-<span id="release2026-2-0-allchanges"></span><h2>All Changes<a class="headerlink" href="#all-changes" title="Link to this heading">#</a></h2>
+<span id="release2026-2-0-allchanges"></span><h2>모든 변화<a class="headerlink" href="#all-changes" title="Link to this heading">#</a></h2>
 <section id="major-features-improvements">
-<h3>Major Features &amp; Improvements<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h3>
+<h3>주요 기능 및 개선 사항<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Data Parallel (DP) Router</strong></p>
+<li><p><strong>데이터 병렬 (DP) 라우터</strong></p>
 <ul>
-<li><p>Introduced a dedicated DP router that schedules requests across DP replicas independently,
-enabling horizontal scale-out of inference workers with fine-grained control over request
-distribution.</p></li>
-<li><p><strong>Prefix-aware routing</strong> dispatches requests with shared prefixes to replicas that already
-hold matching prefix cache entries, maximizing cross-request cache hit rate in multi-tenant
-deployments.</p></li>
-<li><p>The DP router is placed in front of the frontend so that routing decisions happen before any
-engine-local scheduling, reducing cross-replica contention.</p></li>
+<li><p>독립적으로 DP 복제를 통해 요청을 일정하는 전용 DP 라우터를 도입하여 inference 노동자의 수평 scale-out를 사용하여 fine-grained 제어를 요청 배포합니다.</p></li>
+<li><p><strong>Prefix-aware 라우팅</strong> multi-tenant 배포에서 multi-tenant 캐시 히트 레이트를 극대화하는 프리픽스 캐시 항목에 대한 공유 접두사 요청을 전달합니다.</p></li>
+<li><p>DP 라우터는 engine-local 스케줄링 전에 결정이 발생하기 때문에 frontend의 앞에 배치됩니다. cross-replica 콘텐츠 감소.</p></li>
 </ul>
 </li>
-<li><p><strong>Prefix Caching Enabled by Default</strong></p>
+<li><p><strong>Prefix Caching는 기본적으로 활성화됩니다.</strong></p>
 <ul>
-<li><p>Prefix caching is now enabled by default for all deployments, delivering lower
-Time-To-First-Token (TTFT) out of the box.</p></li>
-<li><p>Additional refinements include <strong>prefix cache hit deferral</strong> to maximize cache hit rate,
-applying prefix caching to decoded outputs, and guaranteeing auxiliary block length
-equivalence for safe prefix cache insertion in hybrid attention models.</p></li>
+<li><p>Prefix caching는 이제 모든 배포에 기본적으로 활성화되어 Time-To-First-Token (TTFT)를 박스에서 제공합니다.</p></li>
+<li><p>추가적인 개선 사항으로는 <strong>프리픽스 캐시 히트 지연</strong> prefix caching를 적용하여 출력을 디코딩하고, 하이브리드주의 모델의 안전한 접두사 캐시 삽입을 위한 보조 블록 길이 평형을 보장합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>Response API and OpenAI-compatible API</strong></p>
+<li><p><strong>응답 API와 OpenAI 호환 API</strong></p>
 <ul>
-<li><p><strong>Response API (/v1/responses)</strong>: Added support for the Response API, enabling
-stateful interactions.</p></li>
-<li><p><strong>Tokenize / Detokenize API</strong>: Added <code class="docutils literal notranslate"><span class="pre">/tokenize</span></code> and <code class="docutils literal notranslate"><span class="pre">/detokenize</span></code> endpoints for
-server-side tokenization and detokenization.</p></li>
-<li><p><strong>Embeddings ``dimensions`` parameter</strong>: Support for requesting a specific embedding
-dimensionality via the <code class="docutils literal notranslate"><span class="pre">dimensions</span></code> field.</p></li>
+<li><p><strong>응답 API (/v1/responses)</strong>: 응답 API에 대한 지원이 추가되며, 현명한 상호 작용을 가능하게 합니다.</p></li>
+<li><p><strong>토큰화 / 역토큰화 API</strong>: 추가 <code class="docutils literal notranslate"><span class="pre">/tokenize</span></code> and <code class="docutils literal notranslate"><span class="pre">/detokenize</span></code> server-side 토큰화 및 탈 토큰화를위한 엔드 포인트.</p></li>
+<li><p><strong>``dimensions`` 매개변수를 사용하여 임베딩 생성</strong>: 특정 embedding 차원을 요청하는 지원 <code class="docutils literal notranslate"><span class="pre">dimensions</span></code> 현장</p></li>
 </ul>
 </li>
-<li><p><strong>Broader Platform Support</strong></p>
+<li><p><strong>더 넓은 플랫폼 지원</strong></p>
 <ul>
-<li><p><strong>ARM64 hosts (AArch64)</strong>: The Furiosa SDK now runs on ARM64-based servers, with
-AArch64 SIMD support in the host runtime so the vectorized optimizations
-introduced in 2026.1 apply on ARM just as they do on x86-64.</p></li>
-<li><p><strong>Red Hat Enterprise Linux (RHEL)</strong>: RPM packages are now published, extending
-first-class OS support beyond Debian/Ubuntu to RHEL-based distributions.</p></li>
+<li><p><strong>ARM64 호스트 (AArch64)</strong>: Furiosa SDK는 이제 ARM64-based 서버에서 실행되며 호스트 runtime에서 AArch64 SIMD 지원으로 2026.1에서 도입된 벡터화 최적화는 x86-64에서 x86-64에 적용됩니다.</p></li>
+<li><p><strong>Red Hat Enterprise Linux (RHEL)</strong>: RPM 패키지는 Debian/Ubuntu를 RHEL-based 배포에 Debian/Ubuntu를 넘어 first-class OS 지원을 확장하고 있습니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="performance-efficiency-improvements">
-<h3>Performance &amp; Efficiency Improvements<a class="headerlink" href="#performance-efficiency-improvements" title="Link to this heading">#</a></h3>
+<h3>성과 &amp; 효율성 개선<a class="headerlink" href="#performance-efficiency-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Model-specific optimizations</strong>:</p>
+<li><p><strong>Model-specific 최적화</strong>:</p>
 <ul>
-<li><p>Expanded and re-tuned prefill, decode, and append buckets for <strong>Qwen3</strong> and
-<strong>Exaone4</strong> so more of the real-world request distribution hits well-tuned
-kernels, combined with compiler optimized for lower-batch buckets.</p></li>
+<li><p>확장 및 re-tuned prefill, decode 및 부드킷을위한 <strong>Qwen3</strong> and
+<strong>엑소네4</strong> real-world 요청 배포는 well-tuned 커널을 보았으므로 compiler와 lower-batch 버킷에 최적화되어 있습니다.</p></li>
 </ul>
 </li>
-<li><p><strong>Optimized logit copy I/O</strong>:</p>
+<li><p><strong>최적화된 로짓 복사 I/O</strong>:</p>
 <ul>
 <li><p>Reduced the memory bottleneck in loading model outputs for sampling by copying
 only the slice actually consumed by the sampler, cutting host-device transfer
 volume per decode step.</p></li>
 </ul>
 </li>
-<li><p><strong>Scheduler optimizations</strong>:</p>
+<li><p><strong>스케줄러 최적화</strong>:</p>
 <ul>
-<li><p><strong>Prefix cache hit deferral</strong> maximizes cross-request cache hit rate by briefly
-deferring requests that are about to match an in-flight prefix.</p></li>
-<li><p>Further optimization of the <strong>prefix-aware DP router</strong> keeps the routing
-decision fast even for very long shared prefixes.</p></li>
+<li><p><strong>프리픽스 캐시 히트 지연</strong> in-flight 접두사와 일치하기에 대한 간단한 deferring 요청에 의해 cross-request 캐시 히트 레이트를 극대화합니다.</p></li>
+<li><p>추가적인 최적화는 <strong>prefix-aware DP 라우터</strong> 매우 긴 공유 접두사를 위해 빠른 여정 결정을 유지하십시오.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="api-usability-improvements">
-<h3>API &amp; Usability Improvements<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h3>
+<h3>API 및 사용성 개선<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Serving Options</strong>:</p>
+<li><p><strong>서비스 옵션</strong>:</p>
 <ul>
-<li><p>Added <code class="docutils literal notranslate"><span class="pre">--served-model-name</span></code> option to customize the model ID exposed via the
-OpenAI-compatible API (useful for aliasing or drop-in replacements).</p></li>
-<li><p>Added <code class="docutils literal notranslate"><span class="pre">--chat-template-content-format</span></code> argument for multi-part chat content rendering.</p></li>
+<li><p>추가 <code class="docutils literal notranslate"><span class="pre">--served-model-name</span></code> OpenAI 호환 API (aliasing 또는 drop-in 교체에 적합)를 통해 노출 된 모델 ID를 사용자 정의 할 수 있습니다.</p></li>
+<li><p>추가 <code class="docutils literal notranslate"><span class="pre">--chat-template-content-format</span></code> multi-part 채팅 콘텐츠 렌더링에 대한 인수.</p></li>
 </ul>
 </li>
-<li><p><strong>Sampling Defaults</strong>:</p>
+<li><p><strong>Sampling 기본값</strong>:</p>
 <ul>
-<li><p>Default sampling parameters can now be sourced from the model’s
-<code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>, aligning server behavior with the model’s recommended defaults.</p></li>
+<li><p>기본 sampling 매개 변수는 이제 모델의 소스가 될 수 있습니다
+<code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>, 모델의 권장된 기본값으로 서버 동작을 정렬합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>Usage &amp; Observability</strong>:</p>
+<li><p><strong>사용법 및 관찰</strong>:</p>
 <ul>
-<li><p>Usage response is augmented with <strong>cached_tokens</strong> and prompt/completion token details.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sampling_done</span></code> metric now includes the device ID for per-device breakdown.</p></li>
+<li><p>사용 응답에 추가됨 <strong>cached_tokens</strong> 그리고 prompt/completion token 세부사항.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sampling_done</span></code> 미터는 지금 per-device 고장을 위한 장치 ID를 포함합니다.</p></li>
 </ul>
 </li>
 <li><p><strong>CLI</strong>:</p>
 <ul>
-<li><p>New <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">version</span></code> subcommand reports the installed SDK version.</p></li>
+<li><p>New <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">version</span></code> subcommand는 설치된 SDK 버전을 보고합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>Chat Completion API</strong>:</p>
+<li><p><strong>채팅 완료 API</strong>:</p>
 <ul>
-<li><p>Request token length is validated against the maximum available KV blocks, preventing
-requests that cannot fit even in an empty cache.</p></li>
+<li><p>token 길이는 최대 사용 가능한 KV 블록에 대해 검증되며 빈 캐시에도 적합 할 수없는 요청을 방지합니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 </section>
 <section id="breaking-changes-deprecations">
-<span id="release2026-2-0-breakingchanges"></span><h2>🚨 Breaking Changes &amp; Deprecations<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
+<span id="release2026-2-0-breakingchanges"></span><h2>🚨 주요 변경 사항 및 폐기<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>–prefill-chunk-size Removed</strong>:</p>
+<li><p><strong>–prefill-chunk-size 제거</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> CLI option has been removed. Prefill chunking is now managed
-internally by the scheduler.</p></li>
-<li><p><strong>Migration</strong>: Remove <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> from your launch scripts; no replacement is
-required.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> CLI 옵션이 제거되었습니다. Prefill chunking은 이제 스케줄러에 의해 내부적으로 관리됩니다.</p></li>
+<li><p><strong>이주</strong>: 제거 <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> 시작 스크립트에서; 교체가 필요하지 않습니다.</p></li>
 </ul>
 </li>
-<li><p><strong>PyTorch Upgrade to 2.10</strong>:</p>
+<li><p><strong>PyTorch 2.10로 업그레이드</strong>:</p>
 <ul>
-<li><p>PyTorch dependency bumped from 2.7 to 2.10.</p></li>
-<li><p><strong>Migration</strong>: Ensure your environment supports PyTorch 2.10.x.</p></li>
+<li><p>PyTorch는 2.7에서 2.10에 융해한 종속성입니다.</p></li>
+<li><p><strong>이주</strong>: 환경을 보장하는 것은 PyTorch 2.10.x를 지원합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>reasoning_content Deprecated</strong>:</p>
+<li><p><strong>reasoning_content (더 이상 사용되지 않음)</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code> field in chat completions responses is being renamed to
-<code class="docutils literal notranslate"><span class="pre">reasoning</span></code> for consistency with upstream conventions. Both fields are populated
-in 2026.2, so existing clients continue to work unchanged; <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code>
-will remain available for at least one more release cycle before removal.</p></li>
-<li><p><strong>Migration</strong>: Update client code to read the <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> field before the
-removal lands.</p></li>
+<li><p>The <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code> 채팅 완료 응답의 필드는 이름
+<code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 업스트림 컨벤션과의 일관성을 위해. 두 필드는 2026.2에서 대중화됩니다, 그래서 기존 클라이언트는 변경되지 않는 작업을 계속; <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code>
+제거하기 전에 적어도 하나의 더 많은 릴리스 사이클 동안 사용할 수 있습니다.</p></li>
+<li><p><strong>이주</strong>: 클라이언트 코드를 업데이트하여 읽도록 <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 제거 작업 전에 해당
+필드를 설정합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>guided_decoding Renamed to structured_output</strong>:</p>
+<li><p><strong>guided_decoding는 structured_output로 이름을 변경했습니다</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">guided_decoding</span></code> parameter group has been renamed to <code class="docutils literal notranslate"><span class="pre">structured_output</span></code>.</p></li>
-<li><p><strong>Migration</strong>: Update any request payloads or SDK calls that reference
+<li><p>The <code class="docutils literal notranslate"><span class="pre">guided_decoding</span></code> 해당 파라미터 그룹의 이름이 변경되었습니다. <code class="docutils literal notranslate"><span class="pre">structured_output</span></code>.</p></li>
+<li><p><strong>이주</strong>: 모든 요청 페이로드 또는 SDK 통화를 업데이트하십시오.
 <code class="docutils literal notranslate"><span class="pre">guided_decoding</span></code>.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="released-components">
-<h2>📦 Released Components<a class="headerlink" href="#released-components" title="Link to this heading">#</a></h2>
+<h2>📦 출시된 구성 요소<a class="headerlink" href="#released-components" title="Link to this heading">#</a></h2>
 <section id="python-packages">
-<h3>Python packages<a class="headerlink" href="#python-packages" title="Link to this heading">#</a></h3>
+<h3>Python 패키지<a class="headerlink" href="#python-packages" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
-<col style="width: 80.0%" />
-<col style="width: 20.0%" />
+<col style="width: 80.0%"/>
+<col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Package name</p></th>
-<th class="head"><p>Version</p></th>
+<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
+<th class="head"><p>버전</p></th>
 </tr>
 </thead>
 <tbody>
@@ -694,7 +524,7 @@ removal lands.</p></li>
 <tr class="row-odd"><td><p>furiosa-llm</p></td>
 <td><p>2026.2.0</p></td>
 </tr>
-<tr class="row-even"><td><p>furiosa-torch</p></td>
+<tr class="row-even"><td><p>furiosa -불</p></td>
 <td><p>2026.2.0</p></td>
 </tr>
 </tbody>
@@ -702,15 +532,15 @@ removal lands.</p></li>
 </div>
 </section>
 <section id="apt-packages">
-<h3>APT packages<a class="headerlink" href="#apt-packages" title="Link to this heading">#</a></h3>
+<h3>APT 패키지<a class="headerlink" href="#apt-packages" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
-<col style="width: 80.0%" />
-<col style="width: 20.0%" />
+<col style="width: 80.0%"/>
+<col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Package name</p></th>
-<th class="head"><p>Version</p></th>
+<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
+<th class="head"><p>버전</p></th>
 </tr>
 </thead>
 <tbody>
@@ -731,14 +561,14 @@ removal lands.</p></li>
 </div>
 </section>
 <section id="docker-images">
-<h3>Docker images<a class="headerlink" href="#docker-images" title="Link to this heading">#</a></h3>
+<h3>Docker 이미지<a class="headerlink" href="#docker-images" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
-<col style="width: 80.0%" />
-<col style="width: 20.0%" />
+<col style="width: 80.0%"/>
+<col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>Image</p></th>
+<tr class="row-odd"><th class="head"><p>이미지</p></th>
 <th class="head"><p>Tag</p></th>
 </tr>
 </thead>
@@ -755,126 +585,86 @@ removal lands.</p></li>
 </section>
 </section>
 </section>
-
-
-                </article>
-              
-
-              
-              
-              
-              
-                <footer class="prev-next-footer d-print-none">
-                  
+</article>
+<footer class="prev-next-footer d-print-none">
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="release-2026.3.0.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Furiosa SDK Release 2026.3.0</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="release-2026.1.0.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Furiosa SDK Release 2026.1</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
+<a class="left-prev" href="release-2026.3.0.html" title="previous page">
+<i class="fa-solid fa-angle-left"></i>
+<div class="prev-next-info">
+<p class="prev-next-subtitle">이전</p>
+<p class="prev-next-title">Furiosa SDK 릴리스 2026.3.0</p>
 </div>
-                </footer>
-              
-            </div>
-            
-            
-              
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> 
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">Highlights</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qwen3-and-exaone4-performance-improvements">Qwen3 and Exaone4 Performance Improvements</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#per-model-bucket-presets">Per-Model Bucket Presets</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-parallel-router-with-prefix-aware-routing">Data Parallel Router with Prefix-Aware Routing</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prefix-caching-is-now-on-by-default">Prefix Caching Is Now On by Default</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#response-api-phase-1">Response API (Phase 1)</a></li>
+</a>
+<a class="right-next" href="release-2026.1.0.html" title="next page">
+<div class="prev-next-info">
+<p class="prev-next-subtitle">다음</p>
+<p class="prev-next-title">Furiosa SDK 배포 2026.1</p>
+</div>
+<i class="fa-solid fa-angle-right"></i>
+</a>
+</div>
+</footer>
+</div>
+<dialog id="pst-secondary-sidebar-modal"></dialog>
+<div class="bd-sidebar-secondary bd-toc" id="pst-secondary-sidebar"><div class="sidebar-secondary-items sidebar-secondary__inner">
+<div class="sidebar-secondary-item">
+<div class="page-toc tocsection onthispage">
+<i class="fa-solid fa-list"></i>
+</div>
+<nav class="bd-toc-nav page-toc">
+<ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#highlights">주요 내용</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#qwen3-and-exaone4-performance-improvements">Qwen3 및 Exaone4 성능 개선</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#per-model-bucket-presets">Per-Model 버킷 프리셋</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#data-parallel-router-with-prefix-aware-routing">Prefix-Aware Routing를 가진 자료 평행한 대패</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prefix-caching-is-now-on-by-default">Prefix Caching는 기본적으로 활성화됨</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#response-api-phase-1">응답 API (단계 1)</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#all-changes">All Changes</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#major-features-improvements">Major Features &amp; Improvements</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-efficiency-improvements">Performance &amp; Efficiency Improvements</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usability-improvements">API &amp; Usability Improvements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#all-changes">모든 변화</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#major-features-improvements">주요 기능 및 개선 사항</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#performance-efficiency-improvements">성과 &amp; 효율성 개선</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#api-usability-improvements">API 및 사용성 개선</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes-deprecations">🚨 Breaking Changes &amp; Deprecations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#released-components">📦 Released Components</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-packages">Python packages</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apt-packages">APT packages</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker-images">Docker images</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#breaking-changes-deprecations">🚨 주요 변경 사항 및 폐기</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#released-components">📦 출시된 구성 요소</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#python-packages">Python 패키지</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#apt-packages">APT 패키지</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#docker-images">Docker 이미지</a></li>
 </ul>
 </li>
 </ul>
-  </nav></div>
-
+</nav></div>
 </div></div>
-              
-            
-          </div>
-          <footer class="bd-footer-content">
-            
-<div class="bd-footer-content__inner container">
-  
-  <div class="footer-item">
-    
-<p class="component-author">
-By FuriosaAI, Inc.
-</p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-
-  <p class="copyright">
-    
-      © Copyright 2026 FuriosaAI Inc.
-      <br/>
-    
-  </p>
-
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
-  <div class="footer-item">
-    
-  </div>
-  
 </div>
-          </footer>
-        
-
-      </main>
-    </div>
-  </div>
-  
-  <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
-
-  <footer class="bd-footer">
-  </footer>
-  </body>
+<footer class="bd-footer-content">
+<div class="bd-footer-content__inner container">
+<div class="footer-item">
+<p class="component-author">
+FuriosaAI, Inc.
+</p>
+</div>
+<div class="footer-item">
+<p class="copyright">
+    
+      © 2026 FuriosaAI Inc. 저작권
+      <br/>
+</p>
+</div>
+<div class="footer-item">
+</div>
+<div class="footer-item">
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+<!-- Scripts loaded after <body> so the DOM is not blocked -->
+<script defer="" src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer="" src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+<footer class="bd-footer">
+</footer>
+</body>
 </html>

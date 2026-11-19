@@ -246,3 +246,42 @@ var copyTargetText = (trigger) => {
 }
 
 runWhenDOMLoaded(addCopyButtonToCodeCells)
+
+// Keep translated prose readable while preserving API names and code blocks.
+runWhenDOMLoaded(() => {
+  const terms = [
+    ['tensor operator', '텐서 연산자(tensor operator)'],
+    ['operator', '연산자(operator)'],
+    ['compiler', '컴파일러(compiler)'],
+    ['runtime', '런타임(runtime)'],
+    ['driver', '드라이버(driver)'],
+    ['firmware', '펌웨어(firmware)'],
+    ['kernel', '커널(kernel)'],
+    ['graph', '그래프(graph)'],
+    ['model', '모델(model)'],
+    ['tensor', '텐서(tensor)'],
+    ['memory', '메모리(memory)'],
+    ['software', '소프트웨어(software)'],
+    ['hardware', '하드웨어(hardware)'],
+    ['compiler cache', '컴파일러 캐시(compiler cache)'],
+    ['benchmark', '벤치마크(benchmark)'],
+    ['profiler', '프로파일러(profiler)'],
+    ['serving', '서빙(serving)'],
+    ['quantization', '양자화(quantization)'],
+    ['deployment', '배포(deployment)'],
+    ['configuration', '구성(configuration)'],
+    ['environment', '환경(environment)']
+  ]
+  const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT)
+  const nodes = []
+  while (walker.nextNode()) nodes.push(walker.currentNode)
+  nodes.forEach(node => {
+    if (node.parentElement.closest('pre, code, script, style')) return
+    let value = node.nodeValue
+    terms.forEach(([english, korean]) => {
+      const escaped = english.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      value = value.replace(new RegExp(`\\b${escaped}\\b(?!\\s*\\()`, 'gi'), korean)
+    })
+    if (value !== node.nodeValue) node.nodeValue = value
+  })
+})

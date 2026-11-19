@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -295,47 +295,47 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="samplingparams-class">
-<span id="samplingparams"></span><h1>SamplingParams 클래스<a class="headerlink" href="#samplingparams-class" title="Link to this heading">#</a></h1>
+<span id="samplingparams"></span><h1 data-original-en="SamplingParams class">SamplingParams 클래스<a class="headerlink" href="#samplingparams-class" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="furiosa_llm.SamplingParams">
+<dt class="sig sig-object py" data-original-en="class furiosa_llm.SamplingParams(*, n: int = 1, repetition_penalty: float = 1.0, temperature: float = 1.0, top_p: float = 1.0, top_k: int = -1, min_p: float = 0.0, stop: str | list[str] | None = None, stop_token_ids: list[int] | None = None, include_stop_str_in_output: bool = False, ignore_eos: bool = False, max_tokens: int | None = 16, min_tokens: int = 0, skip_special_tokens: bool = True, logprobs: int | None = None, prompt_logprobs: int | None = None, output_kind: RequestOutputKind = RequestOutputKind.CUMULATIVE, structured_outputs: StructuredOutputsParams | None = None, reasoning_structured_outputs: StructuredOutputsParams | None = None, extra_args: dict | None = None)[source]" id="furiosa_llm.SamplingParams">
 <em class="property"><span class="pre">클래스</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">furiosa_llm</span></span><span class="sig-name descname"><span class="pre">샘플링제품</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repetition_penalty</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">파운드</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">temperature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">파운드</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">파운드</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">파운드</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">멈춰라</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">목록</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stop_token_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">목록</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_stop_str_in_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore_eos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_special_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">로그보드</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt_logprobs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_kind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">요청OutputKind</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">RequestOutputKind.CUMULATIVE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">structured_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">구조화된 OutputsParams</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reasoning_structured_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">구조화된 OutputsParams</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">명령</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/furiosa_llm/sampling_params.html#SamplingParams"><span class="viewcode-link"><span class="pre">[원]</span></span></a><a class="headerlink" href="#furiosa_llm.SamplingParams" title="Link to this definition">#</a></dt>
-<dd><p>기본: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>텍스트 생성을위한 Sampling 매개 변수.</p>
+<dd><p data-original-en="Bases: object">기본: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p data-original-en="Sampling parameters for text generation.">텍스트 생성을위한 Sampling 매개 변수.</p>
 <dl class="field-list simple">
-<dt class="field-odd">매개 변수<span class="colon">:</span></dt>
+<dt class="field-odd" data-original-en="Parameters:">매개 변수<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>n</strong> – 주어진 prompt를 위한 반환에 산출 순서의 수.</p></li>
-<li><p><strong>repetition_penalty</strong> – prompt와 지금까지 생성 된 텍스트에 나타나는지 여부를 기준으로 새로운 토큰을 포괄하는 Float. Values &gt; 1는 새로운 토큰을 사용하는 모델을 권장합니다. 값 &lt; 1는 토큰을 반복하는 모델을 권장합니다.</p></li>
-<li><p><strong>temperature</strong> – sampling의 임의성을 제어하는 Float. 더 낮은 값은 모델보다 세분화되어 더 높은 값이 모델보다 무작위로 만듭니다. Zero는 sampling를 의미합니다.</p></li>
-<li><p><strong>top_p</strong> – 고려할 토큰의 누적 확률을 제어하는 Float. (0, 1]에 있어야합니다. 1로 설정하여 모든 토큰을 고려하십시오.</p></li>
-<li><p><strong>top_k</strong> – 고려해야 할 최고 토큰의 수를 제어하는 정수. 모든 토큰을 고려하기 위해 -1로 설정하십시오.</p></li>
-<li><p><strong>min_p</strong> – token에 대한 최소 확률을 나타내는 Float는 가장 가능성이 token의 확률과 상대로 간주됩니다. [0, 1]에 있어야합니다. 0로 설정하여 이것을 비활성화하십시오.</p></li>
-<li><p><strong>멈춰라</strong> – 목록 또는 단일 non-empty 문자열(s)는 첫 번째 문자열이 일치할 때 생성을 중지합니다. 기본적으로, 일치된 스톱 문자열은 반환된 텍스트에서 제거됩니다. 스트리밍할 때, Furiosa-LLM는 가장 긴 구성된 스톱 문자열까지 추적 창을 유지하여 방출되는 부분 일치를 방지할 수 있습니다.</p></li>
-<li><p><strong>stop_token_ids</strong> – 생성될 때 생성을 중지하는 Token ID. 반환된 출력은 정지 토큰이 특별한 토큰이 없는 중지 토큰을 포함합니다.</p></li>
-<li><p><strong>include_stop_str_in_output</strong> - 반환된 텍스트의 일치한 정지 문자열을 유지 여부. False에 기본값. True가 완료된 token 내에서 일치 후 텍스트가 제거됩니다. 스트리밍은이 모드에서 stop-string 창을 추적 할 필요가 없습니다.</p></li>
-<li><p><strong>ignore_eos</strong> – EOS token를 무시하고 EOS token가 생성된 후 토큰을 생성하는 것.</p></li>
-<li><p><strong>max_tokens</strong> – 출력 시퀀스 당 생성하는 토큰의 최대 수. 값이 None인 경우 최대 시퀀스 길이로 캡핑됩니다.</p></li>
-<li><p><strong>min_tokens</strong> – EOS 또는 stop_token_ids 이전에 출력 시퀀스 당 생성하는 토큰의 최소 수는 생성될 수 있습니다.</p></li>
-<li><p><strong>skip_special_tokens</strong> – 출력에 있는 특별한 토큰을 건너는 것.</p></li>
-<li><p><strong>로그보드</strong> – 출력당 반환할 로그 확률의 개수 ZXQ.
+<li><p data-original-en="n – Number of output sequences to return for the given prompt."><strong>n</strong> – 주어진 prompt를 위한 반환에 산출 순서의 수.</p></li>
+<li><p data-original-en="repetition_penalty – Float that penalizes new tokens based on whether they appear in the prompt and the generated text so far. Values &gt; 1 encourage the model to use new tokens, while values &lt; 1 encourage the model to repeat tokens."><strong>repetition_penalty</strong> – prompt와 지금까지 생성 된 텍스트에 나타나는지 여부를 기준으로 새로운 토큰을 포괄하는 Float. Values &gt; 1는 새로운 토큰을 사용하는 모델을 권장합니다. 값 &lt; 1는 토큰을 반복하는 모델을 권장합니다.</p></li>
+<li><p data-original-en="temperature – Float that controls the randomness of the sampling. Lower values make the model more deterministic, while higher values make the model more random. Zero means greedy sampling."><strong>temperature</strong> – sampling의 임의성을 제어하는 Float. 더 낮은 값은 모델보다 세분화되어 더 높은 값이 모델보다 무작위로 만듭니다. Zero는 sampling를 의미합니다.</p></li>
+<li><p data-original-en="top_p – Float that controls the cumulative probability of the top tokens to consider. Must be in (0, 1]. Set to 1 to consider all tokens."><strong>top_p</strong> – 고려할 토큰의 누적 확률을 제어하는 Float. (0, 1]에 있어야합니다. 1로 설정하여 모든 토큰을 고려하십시오.</p></li>
+<li><p data-original-en="top_k – Integer that controls the number of top tokens to consider. Set to -1 to consider all tokens."><strong>top_k</strong> – 고려해야 할 최고 토큰의 수를 제어하는 정수. 모든 토큰을 고려하기 위해 -1로 설정하십시오.</p></li>
+<li><p data-original-en="min_p – Float that represents the minimum probability for a token to be considered, relative to the probability of the most likely token. Must be in [0, 1]. Set to 0 to disable this."><strong>min_p</strong> – token에 대한 최소 확률을 나타내는 Float는 가장 가능성이 token의 확률과 상대로 간주됩니다. [0, 1]에 있어야합니다. 0로 설정하여 이것을 비활성화하십시오.</p></li>
+<li><p data-original-en="stop – List or single non-empty string(s) that stop generation when the first string is matched. By default, the matched stop string is removed from the returned text. When streaming, Furiosa-LLM may hold back a trailing window up to the longest configured stop string to prevent a partial match from being emitted."><strong>멈춰라</strong> – 목록 또는 단일 non-empty 문자열(s)는 첫 번째 문자열이 일치할 때 생성을 중지합니다. 기본적으로, 일치된 스톱 문자열은 반환된 텍스트에서 제거됩니다. 스트리밍할 때, Furiosa-LLM는 가장 긴 구성된 스톱 문자열까지 추적 창을 유지하여 방출되는 부분 일치를 방지할 수 있습니다.</p></li>
+<li><p data-original-en="stop_token_ids – Token IDs that stop the generation when they are generated. The returned output will contain the stop tokens unless the stop tokens are special tokens."><strong>stop_token_ids</strong> – 생성될 때 생성을 중지하는 Token ID. 반환된 출력은 정지 토큰이 특별한 토큰이 없는 중지 토큰을 포함합니다.</p></li>
+<li><p data-original-en="include_stop_str_in_output – Whether to retain the matched stop string in the returned text. Defaults to False. When True, text after the match within the token that completed it is removed. Streaming does not need to hold back a trailing stop-string window in this mode."><strong>include_stop_str_in_output</strong> - 반환된 텍스트의 일치한 정지 문자열을 유지 여부. False에 기본값. True가 완료된 token 내에서 일치 후 텍스트가 제거됩니다. 스트리밍은이 모드에서 stop-string 창을 추적 할 필요가 없습니다.</p></li>
+<li><p data-original-en="ignore_eos – Whether to ignore the EOS token and continue generating tokens after the EOS token is generated."><strong>ignore_eos</strong> – EOS token를 무시하고 EOS token가 생성된 후 토큰을 생성하는 것.</p></li>
+<li><p data-original-en="max_tokens – Maximum number of tokens to generate per output sequence. If the value is None, it is capped to the maximum sequence length."><strong>max_tokens</strong> – 출력 시퀀스 당 생성하는 토큰의 최대 수. 값이 None인 경우 최대 시퀀스 길이로 캡핑됩니다.</p></li>
+<li><p data-original-en="min_tokens – Minimum number of tokens to generate per output sequence before EOS or stop_token_ids can be generated"><strong>min_tokens</strong> – EOS 또는 stop_token_ids 이전에 출력 시퀀스 당 생성하는 토큰의 최소 수는 생성될 수 있습니다.</p></li>
+<li><p data-original-en="skip_special_tokens – Whether to skip special tokens in the output."><strong>skip_special_tokens</strong> – 출력에 있는 특별한 토큰을 건너는 것.</p></li>
+<li><p data-original-en="logprobs – Number of log probabilities to return per output token. When set to None, no probability is returned. If set to a non-None value, the result includes the log probabilities of the specified number of most likely tokens, as well as the chosen tokens. Note that the implementation follows the OpenAI API: The API will always return the log probability of the sampled token, so there may be up to logprobs+1 elements in the response."><strong>로그보드</strong> – 출력당 반환할 로그 확률의 개수 ZXQ.
 None로 설정하면 확률이 반환되지 않습니다. None
 이외의 값을 설정하면 지정된 개수의 가장 가능성 있는 토큰의 로그 확률뿐만 아니라 선택된 토큰도 포함된 결과를 얻을 수 있습니다.
 참고: 구현은 OpenAI, API를 따릅니다. API는 항상 샘플링된 token의 로그 확률을 반환하므로, 최대 <cite>로그보드+1</cite> 응답에서 요소.</p></li>
-<li><p><strong>prompt_logprobs</strong> 까지의 로그 확률을 얻을 수 있습니다.
+<li><p data-original-en="prompt_logprobs – Number of log probabilities to return per prompt token. When set to None (default), no prompt logprobs are returned. When set to a non-negative integer, returns the top-k log probabilities for each prompt token position, plus the actual token’s logprob. Set to -1 to return log probabilities for all vocabulary tokens. Warning: Using -1 can cause significant memory and network overhead as it returns logprobs for the entire vocabulary (e.g., ~150K tokens for Qwen models) at each prompt position."><strong>prompt_logprobs</strong> 까지의 로그 확률을 얻을 수 있습니다.
 <strong>경고</strong>: -1를 사용하여 중요한 메모리와 네트워크 오버 헤드를 유발할 수 있습니다. 전체 어휘 (e.g., 각 prompt 위치에 Qwen 모델의 ~150K 토큰).</p></li>
-<li><p><strong>structured_outputs</strong> – Structured 출력 요구 사항을 지정하는 매개 변수.</p></li>
-<li><p><strong>reasoning_structured_outputs</strong> – 모델 출력의 원인과 일치하는 매개 변수. 이것은 응답 내용에 구조 출력 요구 사항을 적용하기 전에 이유 토큰을 스트립하는 데 사용됩니다.</p></li>
-<li><p><strong>extra_args</strong> - 표준 sampling 매개 변수와 함께 수행되는 중재 추가 인수. API 요청의 모든 추가 (undeclared) 키는 여기에 수집됩니다. 특정 소비자는 그들이 돌보는 키를 추출; e.g. <code class="docutils literal notranslate"><span class="pre">kv_transfer_params</span></code> 이 딕셔너리에서 추출됩니다.</p></li>
-<li><p><strong>kv_transfer_params</strong> – 원격 KV 커넥터의 액세스 포인트, 추출 <code class="docutils literal notranslate"><span class="pre">extra_args["kv_transfer_params"]</span></code>. 2개의 ZMQ 엔드포인트 중 하나가 있을 수 있습니다 (<code class="docutils literal notranslate"><span class="pre">"host:port"</span></code>): <code class="docutils literal notranslate"><span class="pre">"remote_decoder"</span></code> and
+<li><p data-original-en="structured_outputs – Parameter for specifying structured output requirements."><strong>structured_outputs</strong> – Structured 출력 요구 사항을 지정하는 매개 변수.</p></li>
+<li><p data-original-en="reasoning_structured_outputs – Parameter that matches the reasoning part of model output. This will be used to strip the reasoning tokens before applying structured output requirements on the answer content."><strong>reasoning_structured_outputs</strong> – 모델 출력의 원인과 일치하는 매개 변수. 이것은 응답 내용에 구조 출력 요구 사항을 적용하기 전에 이유 토큰을 스트립하는 데 사용됩니다.</p></li>
+<li><p data-original-en="extra_args – Arbitrary additional arguments carried alongside the standard sampling parameters. All extra (undeclared) keys of an API request are collected here. Specific consumers extract the keys they care about; e.g. kv_transfer_params is extracted from this dict."><strong>extra_args</strong> - 표준 sampling 매개 변수와 함께 수행되는 중재 추가 인수. API 요청의 모든 추가 (undeclared) 키는 여기에 수집됩니다. 특정 소비자는 그들이 돌보는 키를 추출; e.g. <code class="docutils literal notranslate"><span class="pre">kv_transfer_params</span></code> 이 딕셔너리에서 추출됩니다.</p></li>
+<li><p data-original-en='kv_transfer_params – Access point of the remote KV connector, extracted from extra_args["kv_transfer_params"]. There can be one of two ZMQ endpoints ("host:port"): "remote_decoder" and "remote_prefiller". If set, the worker connects to the given endpoint to enable PD-disaggregated prefill or decoding. "id" is the shared identifier of the P-D pair: it must be the same value on both the prefiller and the decoder, and the connector uses it to match the two sides.'><strong>kv_transfer_params</strong> – 원격 KV 커넥터의 액세스 포인트, 추출 <code class="docutils literal notranslate"><span class="pre">extra_args["kv_transfer_params"]</span></code>. 2개의 ZMQ 엔드포인트 중 하나가 있을 수 있습니다 (<code class="docutils literal notranslate"><span class="pre">"host:port"</span></code>): <code class="docutils literal notranslate"><span class="pre">"remote_decoder"</span></code> and
 <code class="docutils literal notranslate"><span class="pre">"remote_prefiller"</span></code>. 설정된 경우, worker는 PD-disaggregated prefill 또는 디코딩을 활성화하기 위해 주어진 endpoint에 연결됩니다. <code class="docutils literal notranslate"><span class="pre">"id"</span></code> P-D 쌍의 공유 식별자입니다: 그것은 prefiller와 암호해독기 둘 다에 동일한 값이어야 하고, 연결관은 2개의 측과 일치하기 위하여 그것을 이용합니다.</p></li>
 </ul>
 </dd>
 </dl>
 </dd></dl>
 <section id="default-sampling-parameters-from-generation-config-json">
-<span id="defaultsamplingparams"></span><h2>기본 샘플링 파라미터는 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code><a class="headerlink" href="#default-sampling-parameters-from-generation-config-json" title="Link to this heading">#</a></h2>
-<p>모델 저장소 또는 로컬 디렉토리가 포함 된 경우 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 파일, Furiosa-LLM는 아래 나열된 필드에 효과적인 기본으로 값을 사용합니다. 이 값은 소스 모델 구성에서 직접 읽고 사용자 정의되지 않습니다. 파일이 absent 인 경우, 일반 <code class="docutils literal notranslate"><span class="pre">SamplingParams()</span></code> 기본값이 적용됩니다.</p>
-<p>아래와 같이 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 키는 존중되며, 다음과 같이 매핑됩니다.
+<span id="defaultsamplingparams"></span><h2 data-original-en="Default Sampling Parameters from generation_config.json">기본 샘플링 파라미터는 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code><a class="headerlink" href="#default-sampling-parameters-from-generation-config-json" title="Link to this heading">#</a></h2>
+<p data-original-en="If the model repository or local directory contains a generation_config.json file, Furiosa-LLM uses its values as the effective defaults for the fields listed below. These values are read directly from the source model configuration and are not customized. If the file is absent, the plain SamplingParams() defaults apply.">모델 저장소 또는 로컬 디렉토리가 포함 된 경우 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 파일, Furiosa-LLM는 아래 나열된 필드에 효과적인 기본으로 값을 사용합니다. 이 값은 소스 모델 구성에서 직접 읽고 사용자 정의되지 않습니다. 파일이 absent 인 경우, 일반 <code class="docutils literal notranslate"><span class="pre">SamplingParams()</span></code> 기본값이 적용됩니다.</p>
+<p data-original-en="The following generation_config.json keys are honored, and are mapped to SamplingParams fields as shown:">아래와 같이 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 키는 존중되며, 다음과 같이 매핑됩니다.
 <code class="docutils literal notranslate"><span class="pre">SamplingParams</span></code> 표시된 필드:</p>
 <div class="pst-scrollable-table-container"><table class="table table-center">
 <colgroup>
@@ -373,79 +373,79 @@ None로 설정하면 확률이 반환되지 않습니다. None
 </table>
 </div>
 <section id="offline-api-llm-generate-llm-chat-llm-stream-generate">
-<h3>오프라인 API (<code class="docutils literal notranslate"><span class="pre">LLM.generate</span></code> / <code class="docutils literal notranslate"><span class="pre">LLM.chat</span></code> / <code class="docutils literal notranslate"><span class="pre">LLM.stream_generate</span></code>)<a class="headerlink" href="#offline-api-llm-generate-llm-chat-llm-stream-generate" title="Link to this heading">#</a></h3>
-<p>: 오프라인 API는 <strong>바이너리 결정</strong> 호출자가 전달하는 경우 <code class="docutils literal notranslate"><span class="pre">sampling_params</span></code>:</p>
+<h3 data-original-en="Offline API (LLM.generate / LLM.chat / LLM.stream_generate)">오프라인 API (<code class="docutils literal notranslate"><span class="pre">LLM.generate</span></code> / <code class="docutils literal notranslate"><span class="pre">LLM.chat</span></code> / <code class="docutils literal notranslate"><span class="pre">LLM.stream_generate</span></code>)<a class="headerlink" href="#offline-api-llm-generate-llm-chat-llm-stream-generate" title="Link to this heading">#</a></h3>
+<p data-original-en="The offline API uses a binary decision based on whether the caller passes sampling_params:">: 오프라인 API는 <strong>바이너리 결정</strong> 호출자가 전달하는 경우 <code class="docutils literal notranslate"><span class="pre">sampling_params</span></code>:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">sampling_params=None</span></code> (기본 설정) — 모델의
+<li><p data-original-en="sampling_params=None (the default) — the model’s generation_config.json defaults are applied. See furiosa_llm.LLM.get_default_sampling_params()."><code class="docutils literal notranslate"><span class="pre">sampling_params=None</span></code> (기본 설정) — 모델의
 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 기본 설정이 적용됩니다.
 <a class="reference internal" href="llm.html#furiosa_llm.LLM.get_default_sampling_params" title="furiosa_llm.LLM.get_default_sampling_params"><code class="xref py py-meth docutils literal notranslate"><span class="pre">furiosa_llm.LLM.get_default_sampling_params()</span></code></a>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sampling_params=SamplingParams(...)</span></code> — 사용자의 객체는 as-is를 사용합니다. 모델의 per-field 병합이 없습니다. <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>
+<li><p data-original-en="sampling_params=SamplingParams(...) — the user’s object is used as-is. No per-field merge with the model’s generation_config.json is performed."><code class="docutils literal notranslate"><span class="pre">sampling_params=SamplingParams(...)</span></code> — 사용자의 객체는 as-is를 사용합니다. 모델의 per-field 병합이 없습니다. <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>
 수행됩니다.</p></li>
 </ul>
 </section>
 <section id="openai-compatible-server">
-<h3>OpenAI 호환 서버<a class="headerlink" href="#openai-compatible-server" title="Link to this heading">#</a></h3>
-<p>Chat Completions, Completions 및 응답 엔드포인트는 세 계층의 각 sampling 관련 필드를 해결합니다.</p>
+<h3 data-original-en="OpenAI-compatible server">OpenAI 호환 서버<a class="headerlink" href="#openai-compatible-server" title="Link to this heading">#</a></h3>
+<p data-original-en="The Chat Completions, Completions, and Responses endpoints resolve each sampling-related field in three tiers:">Chat Completions, Completions 및 응답 엔드포인트는 세 계층의 각 sampling 관련 필드를 해결합니다.</p>
 <ol class="arabic simple">
-<li><p>요청 몸에서 지정된 값은 설정된 경우.</p></li>
-<li><p>모델의 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>, 현존하는 경우</p></li>
-<li><p>API 기본값은 endpoint의 매개 변수 테이블에 표시됩니다. <a class="reference internal" href="../furiosa-llm-serve.html#chatcompletionsapireference"><span class="std std-ref">API 챗 (/v1/chat/completions)</span></a>, <a class="reference internal" href="../furiosa-llm-serve.html#completionsapireference"><span class="std std-ref">완료 API (/v1/completions)</span></a>, 그리고 <a class="reference internal" href="../responses-api.html#responsesapireference"><span class="std std-ref">API 참조</span></a>).</p></li>
+<li><p data-original-en="The value specified in the request body, if set.">요청 몸에서 지정된 값은 설정된 경우.</p></li>
+<li><p data-original-en="The value from the model’s generation_config.json, if present.">모델의 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>, 현존하는 경우</p></li>
+<li><p data-original-en="The API default shown in the endpoint’s parameter table (see Chat API (/v1/chat/completions), Completions API (/v1/completions), and API Reference).">API 기본값은 endpoint의 매개 변수 테이블에 표시됩니다. <a class="reference internal" href="../furiosa-llm-serve.html#chatcompletionsapireference"><span class="std std-ref">API 챗 (/v1/chat/completions)</span></a>, <a class="reference internal" href="../furiosa-llm-serve.html#completionsapireference"><span class="std std-ref">완료 API (/v1/completions)</span></a>, 그리고 <a class="reference internal" href="../responses-api.html#responsesapireference"><span class="std std-ref">API 참조</span></a>).</p></li>
 </ol>
 </section>
 </section>
 <section id="examples">
-<h2>예제<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
-<p>이 섹션은 SDK에서 사용할 수있는 token 세대 방법을 사용하는 방법을 제공합니다.</p>
+<h2 data-original-en="Examples">예제<a class="headerlink" href="#examples" title="Link to this heading">#</a></h2>
+<p data-original-en="This section provides examples of how to use the token generation methods available in the SDK.">이 섹션은 SDK에서 사용할 수있는 token 세대 방법을 사용하는 방법을 제공합니다.</p>
 <section id="basic-greedy-search">
-<h3>1. 기본적인 탐욕적 검색<a class="headerlink" href="#basic-greedy-search" title="Link to this heading">#</a></h3>
+<h3 data-original-en="1. Basic Greedy Search">1. 기본적인 탐욕적 검색<a class="headerlink" href="#basic-greedy-search" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SamplingParams</span><span class="p">(</span><span class="n">min_tokens</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Basic Greedy Search 메소드는 토큰의 순서를 생성하고 최소한의 것을 보장합니다. <code class="docutils literal notranslate"><span class="pre">min_tokens</span></code> 그리고 <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> 생산됩니다.</p>
+<p data-original-en="The Basic Greedy Search method generates a sequence of tokens, ensuring that at least min_tokens and up to max_tokens are produced.">Basic Greedy Search 메소드는 토큰의 순서를 생성하고 최소한의 것을 보장합니다. <code class="docutils literal notranslate"><span class="pre">min_tokens</span></code> 그리고 <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> 생산됩니다.</p>
 <ul class="simple">
-<li><p><strong>매개 변수:</strong></p>
+<li><p data-original-en="Parameters:"><strong>매개 변수:</strong></p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>: 생성하는 토큰의 최소 수.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_tokens</span></code>: 생성하기 위한 토큰의 최대 수.</p></li>
+<li><p data-original-en="min_tokens: Minimum number of tokens to generate."><code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>: 생성하는 토큰의 최소 수.</p></li>
+<li><p data-original-en="max_tokens: Maximum number of tokens to generate."><code class="docutils literal notranslate"><span class="pre">max_tokens</span></code>: 생성하기 위한 토큰의 최대 수.</p></li>
 </ul>
 </li>
-<li><p><strong>행동:</strong></p>
+<li><p data-original-en="Behavior:"><strong>행동:</strong></p>
 <ul>
-<li><p>세대는 도달하기 전에 종결 될 수있다 <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> Sequence (EOS) token의 끝이 생성되는 경우에.</p></li>
-<li><p>EOS token는 지정된 도달하기 전에 생성되지 않습니다 <code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>.</p></li>
+<li><p data-original-en="Generation may terminate before reaching max_tokens if an End Of Sequence (EOS) token is generated.">세대는 도달하기 전에 종결 될 수있다 <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> Sequence (EOS) token의 끝이 생성되는 경우에.</p></li>
+<li><p data-original-en="The EOS token will not be generated before reaching the specified min_tokens.">EOS token는 지정된 도달하기 전에 생성되지 않습니다 <code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <hr class="docutils"/>
 <section id="random-sampling-with-top-p-top-k-parameters">
-<h3>2. 무작위 샘플링을 지원하며 <code class="docutils literal notranslate"><span class="pre">top_p</span></code> / <code class="docutils literal notranslate"><span class="pre">top_k</span></code> 매개 변수<a class="headerlink" href="#random-sampling-with-top-p-top-k-parameters" title="Link to this heading">#</a></h3>
+<h3 data-original-en="2. Random Sampling with top_p / top_k Parameters">2. 무작위 샘플링을 지원하며 <code class="docutils literal notranslate"><span class="pre">top_p</span></code> / <code class="docutils literal notranslate"><span class="pre">top_k</span></code> 매개 변수<a class="headerlink" href="#random-sampling-with-top-p-top-k-parameters" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">SamplingParams</span><span class="p">(</span><span class="n">min_tokens</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">max_tokens</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">top_p</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">top_k</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>이 방법은 token 세대의 임의 sampling 기술을 사용하여 다양한 출력을 허용합니다.</p>
+<p data-original-en="This method uses random sampling techniques for token generation, allowing for diverse outputs.">이 방법은 token 세대의 임의 sampling 기술을 사용하여 다양한 출력을 허용합니다.</p>
 <ul class="simple">
-<li><p><strong>매개 변수:</strong></p>
+<li><p data-original-en="Parameters:"><strong>매개 변수:</strong></p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>: 생성하는 토큰의 최소 수.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">max_tokens</span></code>: 생성하기 위한 토큰의 최대 수.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">top_p</span></code>: nucleus sampling를 위한 Cumulative 확률.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">top_k</span></code>: 가장 높은 확률 토큰의 수를 고려합니다.</p></li>
+<li><p data-original-en="min_tokens: Minimum number of tokens to generate."><code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>: 생성하는 토큰의 최소 수.</p></li>
+<li><p data-original-en="max_tokens: Maximum number of tokens to generate."><code class="docutils literal notranslate"><span class="pre">max_tokens</span></code>: 생성하기 위한 토큰의 최대 수.</p></li>
+<li><p data-original-en="top_p: Cumulative probability for nucleus sampling."><code class="docutils literal notranslate"><span class="pre">top_p</span></code>: nucleus sampling를 위한 Cumulative 확률.</p></li>
+<li><p data-original-en="top_k: Number of highest probability tokens to consider."><code class="docutils literal notranslate"><span class="pre">top_k</span></code>: 가장 높은 확률 토큰의 수를 고려합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>행동:</strong></p>
+<li><p data-original-en="Behavior:"><strong>행동:</strong></p>
 <ul>
-<li><p>각 세대는 동일한 입력 텍스트 및 매개 변수와 다른 결과를 산출 할 수 있습니다, variability을 강화.</p></li>
-<li><p>세대는 도달하기 전에 종결 될 수있다 <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> Sequence (EOS) token의 끝이 생성되는 경우에.</p></li>
-<li><p>EOS token는 지정된 도달하기 전에 생성되지 않습니다 <code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>.</p></li>
+<li><p data-original-en="Each generation may yield different results, even with the same input text and parameters, enhancing variability.">각 세대는 동일한 입력 텍스트 및 매개 변수와 다른 결과를 산출 할 수 있습니다, variability을 강화.</p></li>
+<li><p data-original-en="Generation may terminate before reaching max_tokens if an End Of Sequence (EOS) token is generated.">세대는 도달하기 전에 종결 될 수있다 <code class="docutils literal notranslate"><span class="pre">max_tokens</span></code> Sequence (EOS) token의 끝이 생성되는 경우에.</p></li>
+<li><p data-original-en="The EOS token will not be generated before reaching the specified min_tokens.">EOS token는 지정된 도달하기 전에 생성되지 않습니다 <code class="docutils literal notranslate"><span class="pre">min_tokens</span></code>.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <hr class="docutils"/>
 <section id="stop-strings">
-<h3>3 스톱 문자열<a class="headerlink" href="#stop-strings" title="Link to this heading">#</a></h3>
-<p>non-empty 문자열 목록을 전달하고 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 첫 번째 문자열이 일치할 때 최종 세대. 기본적으로, 일치 문자열은 반환된 텍스트에서 제거됩니다. stop-string 일치 세트 <code class="docutils literal notranslate"><span class="pre">finish_reason</span></code> to <code class="docutils literal notranslate"><span class="pre">"stop"</span></code> 을 기록하고,
+<h3 data-original-en="3. Stop Strings">3 스톱 문자열<a class="headerlink" href="#stop-strings" title="Link to this heading">#</a></h3>
+<p data-original-en='Pass a list of non-empty strings to stop to end generation when the first string is matched. By default, the matched string is removed from the returned text. A stop-string match sets finish_reason to "stop" and records the matched string in stop_reason:'>non-empty 문자열 목록을 전달하고 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 첫 번째 문자열이 일치할 때 최종 세대. 기본적으로, 일치 문자열은 반환된 텍스트에서 제거됩니다. stop-string 일치 세트 <code class="docutils literal notranslate"><span class="pre">finish_reason</span></code> to <code class="docutils literal notranslate"><span class="pre">"stop"</span></code> 을 기록하고,
 일치하는 문자열을 <code class="docutils literal notranslate"><span class="pre">stop_reason</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span><span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="s2">"&lt;END&gt;"</span><span class="p">])</span>
 <span class="n">output</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="s2">"Write a short answer."</span><span class="p">,</span> <span class="n">params</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -453,7 +453,7 @@ None로 설정하면 확률이 반환되지 않습니다. None
 <span class="c1"># output.stop_reason is "&lt;END&gt;".</span>
 </pre></div>
 </div>
-<p>Set <code class="docutils literal notranslate"><span class="pre">include_stop_str_in_output=True</span></code> 일치 문자열을 유지하려면. token를 완료하면 일치하는 문자는 여전히 제거됩니다.</p>
+<p data-original-en="Set include_stop_str_in_output=True to retain the matched string. Text after the match within the completing token is still removed:">Set <code class="docutils literal notranslate"><span class="pre">include_stop_str_in_output=True</span></code> 일치 문자열을 유지하려면. token를 완료하면 일치하는 문자는 여전히 제거됩니다.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">SamplingParams</span><span class="p">(</span>
     <span class="n">stop</span><span class="o">=</span><span class="p">[</span><span class="s2">"&lt;END&gt;"</span><span class="p">],</span>
     <span class="n">include_stop_str_in_output</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -462,7 +462,7 @@ None로 설정하면 확률이 반환되지 않습니다. None
 <span class="c1"># If the model generates "Answer&lt;END&gt;", output.text is "Answer&lt;END&gt;".</span>
 </pre></div>
 </div>
-<p>기본 배제 동작을 가진 스트림 출력을 위해 Furiosa-LLM는 가장 긴 설정된 정지 문자열까지 추적 창을 지연시킬 수 있으므로 부분 일치는 출력으로 누출되지 않습니다. Retained-stop 모드는 지연이 필요하지 않습니다.</p>
+<p data-original-en="For streamed output with the default exclusion behavior, Furiosa-LLM may delay emitting a trailing window up to the longest configured stop string so a partial match does not leak into the output. Retained-stop mode does not need that delay.">기본 배제 동작을 가진 스트림 출력을 위해 Furiosa-LLM는 가장 긴 설정된 정지 문자열까지 추적 창을 지연시킬 수 있으므로 부분 일치는 출력으로 누출되지 않습니다. Retained-stop 모드는 지연이 필요하지 않습니다.</p>
 </section>
 </section>
 </section>

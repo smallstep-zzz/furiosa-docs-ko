@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -290,28 +290,28 @@ html
 <section id="kubernetes-plugins">
 <span id="kubernetes"></span><h1>Kubernetes<a class="headerlink" href="#kubernetes-plugins" title="Link to this heading">#</a></h1>
 <section id="kubernetes-support">
-<span id="kubernetesversioninfo"></span><h2>Kubernetes 지원<a class="headerlink" href="#kubernetes-support" title="Link to this heading">#</a></h2>
-<p>우리는 Kubernetes와 CRI runtime의 뒤에 오는 버전을 지원합니다:</p>
+<span id="kubernetesversioninfo"></span><h2 data-original-en="Kubernetes Support">Kubernetes 지원<a class="headerlink" href="#kubernetes-support" title="Link to this heading">#</a></h2>
+<p data-original-en="We do support the following versions of Kubernetes and CRI runtime:">우리는 Kubernetes와 CRI runtime의 뒤에 오는 버전을 지원합니다:</p>
 <ul class="simple">
-<li><p>Kubernetes: v1.24.0 또는 그 이상 버전</p></li>
-<li><p>helm v3.0.0 또는 그 이상 버전</p></li>
-<li><p>CRI Runtime: <a class="reference external" href="https://github.com/containerd/containerd">컨테이너</a> or <a class="reference external" href="https://github.com/cri-o/cri-o">CRI-O</a></p></li>
+<li><p data-original-en="Kubernetes: v1.24.0 or later">Kubernetes: v1.24.0 또는 그 이상 버전</p></li>
+<li><p data-original-en="helm v3.0.0 or later">helm v3.0.0 또는 그 이상 버전</p></li>
+<li><p data-original-en="CRI Runtime: containerd or CRI-O">CRI Runtime: <a class="reference external" href="https://github.com/containerd/containerd">컨테이너</a> or <a class="reference external" href="https://github.com/cri-o/cri-o">CRI-O</a></p></li>
 </ul>
 <div class="admonition note">
-<p class="admonition-title">참고</p>
-<p>Docker는 Kubernetes에 있는 콘테이너 runtime로 공식적으로 deprecated. 콘테이너 runtime로 콘테이너 또는 CRI-O를 사용하는 것이 좋습니다. 그렇지 않으면 NPU 플러그인을 가진 예상치 못한 문제점을 직면할지도 모릅니다. 자세한 내용은, 보십시오 <a class="reference external" href="https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/">여기</a>.</p>
+<p class="admonition-title" data-original-en="Note">참고</p>
+<p data-original-en="Docker is officially deprecated as a container runtime in Kubernetes. It is recommended to use containerd or CRI-O as a container runtime. Otherwise you may face unexpected issues with NPU plugins. For more information, see here.">Docker는 Kubernetes에 있는 콘테이너 runtime로 공식적으로 deprecated. 콘테이너 runtime로 콘테이너 또는 CRI-O를 사용하는 것이 좋습니다. 그렇지 않으면 NPU 플러그인을 가진 예상치 못한 문제점을 직면할지도 모릅니다. 자세한 내용은, 보십시오 <a class="reference external" href="https://kubernetes.io/blog/2020/12/02/dont-panic-kubernetes-and-docker/">여기</a>.</p>
 </div>
 </section>
 <section id="npu-plugins-deployment-guide">
-<h2>NPU 플러그인 배포 가이드<a class="headerlink" href="#npu-plugins-deployment-guide" title="Link to this heading">#</a></h2>
-<p>관리자로서, 당신은 설치해야 <a class="reference internal" href="../get_started/prerequisites.html#installingprerequisites"><span class="std std-ref">전제 조건</span></a> driver, firmware와 같은 NPU 노드. 사전 예약이 설치되지 않은 경우 NPU 플러그인은 오류를 반환합니다.</p>
-<p>우리는 Helm 차트를 사용하여 NPU 플러그인을 배포하는 것이 좋습니다. 각 플러그인의 배포를 개별적으로 제어하는 것은 어렵기 때문입니다. NPU 플러그인이 non-NPU 노드에 배포되면 플러그인은 지원되지 않은 오류와 팟이 CrashLoopBackOff 상태에있을 것입니다.</p>
-<p>hlm 차트는 기본적으로 Node Feature Discovery (NFD)를 배포합니다. 일단 NFD가 배포되면 NPU 노드는 PCI ID 및 기능으로 자동으로 라벨링됩니다. 다음은 NPU 노드에 첨부된 라벨의 예입니다.</p>
+<h2 data-original-en="NPU Plugins Deployment Guide">NPU 플러그인 배포 가이드<a class="headerlink" href="#npu-plugins-deployment-guide" title="Link to this heading">#</a></h2>
+<p data-original-en="As an administrator, you have to install prerequisites such as driver, firmware on NPU nodes. If prerequisites are not installed, the NPU plugins will return an error.">관리자로서, 당신은 설치해야 <a class="reference internal" href="../get_started/prerequisites.html#installingprerequisites"><span class="std std-ref">전제 조건</span></a> driver, firmware와 같은 NPU 노드. 사전 예약이 설치되지 않은 경우 NPU 플러그인은 오류를 반환합니다.</p>
+<p data-original-en="We recommend to deploy NPU plugins using Helm charts. Since it is difficult to control deployment of each plugin individually. If NPU plugins are deployed on non-NPU nodes, the plugins will return not supported errors and the pods will be in a CrashLoopBackOff state.">우리는 Helm 차트를 사용하여 NPU 플러그인을 배포하는 것이 좋습니다. 각 플러그인의 배포를 개별적으로 제어하는 것은 어렵기 때문입니다. NPU 플러그인이 non-NPU 노드에 배포되면 플러그인은 지원되지 않은 오류와 팟이 CrashLoopBackOff 상태에있을 것입니다.</p>
+<p data-original-en="The helm chart deploy the Node Feature Discovery (NFD) by default. Once NFD is deployed, NPU nodes are automatically labelled with PCI IDs and capabilities. Here is an example of the labels that are attached to the NPU node:">hlm 차트는 기본적으로 Node Feature Discovery (NFD)를 배포합니다. 일단 NFD가 배포되면 NPU 노드는 PCI ID 및 기능으로 자동으로 라벨링됩니다. 다음은 NPU 노드에 첨부된 라벨의 예입니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>feature.node.kubernetes.io/pci-1200_1ed2.present:<span class="w"> </span><span class="s2">"true"</span>
 feature.node.kubernetes.io/pci-1200_1ed2.sriov.capable:<span class="w"> </span><span class="s2">"true"</span>
 </pre></div>
 </div>
-<p>NPU Plugins helm chart set nodeAffinity like below to control the deploy of NPU plugins only on NPU 노드.</p>
+<p data-original-en="The NPU Plugins helm chart set nodeAffinity like below to control the deployment of NPU plugins only on NPU nodes.">NPU Plugins helm chart set nodeAffinity like below to control the deploy of NPU plugins only on NPU 노드.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>affinity:
 <span class="w">  </span>nodeAffinity:
 <span class="w">    </span>requiredDuringSchedulingIgnoredDuringExecution:
@@ -324,29 +324,29 @@ feature.node.kubernetes.io/pci-1200_1ed2.sriov.capable:<span class="w"> </span><
 </pre></div>
 </div>
 <div class="admonition note">
-<p class="admonition-title">참고</p>
-<p>클러스터에 배포된 NFD가 이미 있다면, NFD 배포를 건너뛰기 위해 helm-chart를 구성할 수 있습니다. 그러나 NFD는 기본 라벨 정책을 보장해야 합니다. 기본 라벨 정책에는 PCI 클래스와 상표의 Vendor ID 필드가 포함되어 있습니다.</p>
+<p class="admonition-title" data-original-en="Note">참고</p>
+<p data-original-en="If you already have NFD deployed in your cluster, you can configure helm-chart to skip NFD deployment. However, you need to ensure that NFD has default label policy. Default label policy includes PCI class and Vendor ID fields in the label.">클러스터에 배포된 NFD가 이미 있다면, NFD 배포를 건너뛰기 위해 helm-chart를 구성할 수 있습니다. 그러나 NFD는 기본 라벨 정책을 보장해야 합니다. 기본 라벨 정책에는 PCI 클래스와 상표의 Vendor ID 필드가 포함되어 있습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>feature.node.kubernetes.io/pci_&lt;CLASS_ID&gt;_&lt;VENDOR_ID&gt;.present
 </pre></div>
 </div>
-<p>일부 경우 NFD는 라벨의 PCI 클래스 필드를 omit으로 구성됩니다.</p>
+<p data-original-en="In some cases, NFD is configured to omit PCI class field in the label.">일부 경우 NFD는 라벨의 PCI 클래스 필드를 omit으로 구성됩니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>feature.node.kubernetes.io/pci_&lt;VENDOR_ID&gt;.present
 </pre></div>
 </div>
-<p>이 문제를 해결하기 위해 두 가지 옵션이 있습니다. 다른 라벨 정책과 클러스터에 두 개의 NFD 인스턴스를 배치하거나 taint 및 toleration을 사용하여 관리하거나 NPU 플러그인 Helm 차트를 수정하여 올바른 라벨을 사용하십시오.</p>
+<p data-original-en="You have two options to resolve this issue: either deploy two NFD instances in the cluster with different label policies, managing them using taint and toleration,or modify the NPU plugins Helm chart to use the correct label.">이 문제를 해결하기 위해 두 가지 옵션이 있습니다. 다른 라벨 정책과 클러스터에 두 개의 NFD 인스턴스를 배치하거나 taint 및 toleration을 사용하여 관리하거나 NPU 플러그인 Helm 차트를 수정하여 올바른 라벨을 사용하십시오.</p>
 </div>
-<p>각 플러그인의 정보 및 구성에 대한 다음 링크를 참조하십시오:</p>
+<p data-original-en="See the following links for more information and configurations of each plugin:">각 플러그인의 정보 및 구성에 대한 다음 링크를 참조하십시오:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="kubernetes/feature_discovery.html">Furiosa 기능 디스커버리 설치</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kubernetes/device_plugin.html">Furiosa 장치 플러그인 설치</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kubernetes/dra_driver.html">Furiosa DRA Driver 설치</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kubernetes/metrics_exporter.html">Furiosa 메트릭스 내보내기 설치</a></li>
-<li class="toctree-l1"><a class="reference internal" href="kubernetes/npu_operator.html">Furiosa NPU 운영자 설치</a></li>
+<li class="toctree-l1" data-original-en="Installing Furiosa Feature Discovery"><a class="reference internal" href="kubernetes/feature_discovery.html">Furiosa 기능 디스커버리 설치</a></li>
+<li class="toctree-l1" data-original-en="Installing Furiosa Device Plugin"><a class="reference internal" href="kubernetes/device_plugin.html">Furiosa 장치 플러그인 설치</a></li>
+<li class="toctree-l1" data-original-en="Installing Furiosa DRA Driver"><a class="reference internal" href="kubernetes/dra_driver.html">Furiosa DRA Driver 설치</a></li>
+<li class="toctree-l1" data-original-en="Installing Furiosa Metrics Exporter"><a class="reference internal" href="kubernetes/metrics_exporter.html">Furiosa 메트릭스 내보내기 설치</a></li>
+<li class="toctree-l1" data-original-en="Installing Furiosa NPU Operator"><a class="reference internal" href="kubernetes/npu_operator.html">Furiosa NPU 운영자 설치</a></li>
 </ul>
 </div>
-<p>NPU 플러그인을 설치하면 클러스터가 Furiosa NPU를 schedulable 리소스로 노출시킵니다. <code class="docutils literal notranslate"><span class="pre">furiosa.ai/rngd</span></code>.</p>
-<p>노드가 준비되도록하려면 용량 and/or Allocatable 필드를 검사할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">v1.node</span></code> 객체. 2 RNGD NPUs가 있는 노드의 예입니다.</p>
+<p data-original-en="Once you have installed the NPU plugins, your cluster exposes Furiosa NPUs as schedulable resources, such as furiosa.ai/rngd.">NPU 플러그인을 설치하면 클러스터가 Furiosa NPU를 schedulable 리소스로 노출시킵니다. <code class="docutils literal notranslate"><span class="pre">furiosa.ai/rngd</span></code>.</p>
+<p data-original-en="To ensure your node is ready, you can examine Capacity and/or Allocatable field of v1.node object. Here is an example of node that has 2 RNGD NPUs:">노드가 준비되도록하려면 용량 and/or Allocatable 필드를 검사할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">v1.node</span></code> 객체. 2 RNGD NPUs가 있는 노드의 예입니다.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">...</span>
 <span class="nt">status</span><span class="p">:</span>
 <span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
@@ -369,21 +369,21 @@ feature.node.kubernetes.io/pci-1200_1ed2.sriov.capable:<span class="w"> </span><
 <span class="nn">...</span>
 </pre></div>
 </div>
-<p>다음 명령은 표시해야 합니다. <code class="docutils literal notranslate"><span class="pre">Capacity</span></code> Kubernetes 클러스터의 각 노드의 필드.</p>
+<p data-original-en="The following command should show the Capacity field of each node in the Kubernetes cluster.">다음 명령은 표시해야 합니다. <code class="docutils literal notranslate"><span class="pre">Capacity</span></code> Kubernetes 클러스터의 각 노드의 필드.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-o<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">'.items[] | .metadata.name as $name | .status.capacity | to_entries | map("    \(.key): \(.value)") | $name + ":\n  capacity:\n" + join("\n")'</span>
 </pre></div>
 </div>
 </section>
 <section id="requesting-npus">
-<h2>NPU를 요청하는<a class="headerlink" href="#requesting-npus" title="Link to this heading">#</a></h2>
-<p>NPU 리소스를 요청하여 파드의 컨테이너에서 NPU를 소모할 수 있습니다. CPU 또는 메모리를 요청하는 것과 같은 방식입니다.</p>
-<p>그러나 NPU는 사용자 정의 리소스로 노출되어 있기 때문에 NPU 리소스를 요청할 때 몇 가지 제한이 있습니다.</p>
+<h2 data-original-en="Requesting NPUs">NPU를 요청하는<a class="headerlink" href="#requesting-npus" title="Link to this heading">#</a></h2>
+<p data-original-en="You can consume NPUs from your containers in a Pod by requesting NPU resources, the same way you request CPU or memory.">NPU 리소스를 요청하여 파드의 컨테이너에서 NPU를 소모할 수 있습니다. CPU 또는 메모리를 요청하는 것과 같은 방식입니다.</p>
+<p data-original-en="However, since NPUs are exposed as a custom resource, there are some limitations you should be aware of when requesting NPU resources:">그러나 NPU는 사용자 정의 리소스로 노출되어 있기 때문에 NPU 리소스를 요청할 때 몇 가지 제한이 있습니다.</p>
 <ul class="simple">
-<li><p>NPU를 지정할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">limits</span></code> 명시하지 않고 <code class="docutils literal notranslate"><span class="pre">requests</span></code>kubernetes가 요청이 지정되지 않은 경우 요청으로 제한을 사용할 수 있기 때문에.</p></li>
-<li><p>두 위치 모두에 NPU를 지정할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">limits</span></code> and <code class="docutils literal notranslate"><span class="pre">requests</span></code> 하지만 이 두 값은 동일해야 합니다.</p></li>
-<li><p>NPU를 지정할 수 없습니다. <code class="docutils literal notranslate"><span class="pre">request</span></code> 명시하지 않고 <code class="docutils literal notranslate"><span class="pre">limits</span></code>.</p></li>
+<li><p data-original-en="You can specify NPU limits without specifying requests, because kubernetes will use limit as request if request is not specified.">NPU를 지정할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">limits</span></code> 명시하지 않고 <code class="docutils literal notranslate"><span class="pre">requests</span></code>kubernetes가 요청이 지정되지 않은 경우 요청으로 제한을 사용할 수 있기 때문에.</p></li>
+<li><p data-original-en="You can specify NPU in both limits and requests but these two values must be equal.">두 위치 모두에 NPU를 지정할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">limits</span></code> and <code class="docutils literal notranslate"><span class="pre">requests</span></code> 하지만 이 두 값은 동일해야 합니다.</p></li>
+<li><p data-original-en="You cannot specify NPU request without specifying limits.">NPU를 지정할 수 없습니다. <code class="docutils literal notranslate"><span class="pre">request</span></code> 명시하지 않고 <code class="docutils literal notranslate"><span class="pre">limits</span></code>.</p></li>
 </ul>
-<p>다음은 2 RNGD NPU를 요청하는 파드의 예시입니다.</p>
+<p data-original-en="Here is an example manifest for a Pod that requests 2 RNGD NPUs:">다음은 2 RNGD NPU를 요청하는 파드의 예시입니다.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -402,9 +402,9 @@ feature.node.kubernetes.io/pci-1200_1ed2.sriov.capable:<span class="w"> </span><
 </div>
 </section>
 <section id="scheduling-npus-with-specific-requirements">
-<h2>특정 요구 사항에 따라 NPU를 계획<a class="headerlink" href="#scheduling-npus-with-specific-requirements" title="Link to this heading">#</a></h2>
-<p>특정 경우 특정 하드웨어 또는 소프트웨어 요구 사항을 충족하는 노드의 NPU 워크로드를 일정 할 수 있습니다. 특정 driver 버전. 경우 <a class="reference internal" href="kubernetes/feature_discovery.html#featurediscovery"><span class="std std-ref">Furiosa 기능 탐색</span></a> 클러스터에 배포되어 노드는 driver 버전을 포함한 하드웨어 및 소프트웨어 구성을 기반으로 자동으로 라벨을 붙입니다. 이는 사용자가 특정 요구 사항을 충족하는 노드에서 Pod을 스케줄 할 수 있습니다.</p>
-<p>예를 들어, 특정 driver 버전과 함께 2 RNGD NPUs를 요청하는 파드를 일정하게 사용하는 방법을 보여줍니다.</p>
+<h2 data-original-en="Scheduling NPUs With Specific Requirements">특정 요구 사항에 따라 NPU를 계획<a class="headerlink" href="#scheduling-npus-with-specific-requirements" title="Link to this heading">#</a></h2>
+<p data-original-en="In certain cases, user may need to schedule NPU workload on node that meet specific hardware or software requirements, such as particular driver versions. If the Furiosa Feature Discovery is deployed in your cluster, nodes are automatically labelled based on their hardware and software configurations including driver version. This allows user to schedule Pod on nodes that meet specific requirements.">특정 경우 특정 하드웨어 또는 소프트웨어 요구 사항을 충족하는 노드의 NPU 워크로드를 일정 할 수 있습니다. 특정 driver 버전. 경우 <a class="reference internal" href="kubernetes/feature_discovery.html#featurediscovery"><span class="std std-ref">Furiosa 기능 탐색</span></a> 클러스터에 배포되어 노드는 driver 버전을 포함한 하드웨어 및 소프트웨어 구성을 기반으로 자동으로 라벨을 붙입니다. 이는 사용자가 특정 요구 사항을 충족하는 노드에서 Pod을 스케줄 할 수 있습니다.</p>
+<p data-original-en="Following example shows how to use affinity to schedule a Pod that request 2 RNGD NPUs with specific driver version:">예를 들어, 특정 driver 버전과 함께 2 RNGD NPUs를 요청하는 파드를 일정하게 사용하는 방법을 보여줍니다.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Pod</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -432,9 +432,9 @@ feature.node.kubernetes.io/pci-1200_1ed2.sriov.capable:<span class="w"> </span><
 </div>
 </section>
 <section id="known-issues">
-<h2>알려진 문제<a class="headerlink" href="#known-issues" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Known Issues">알려진 문제<a class="headerlink" href="#known-issues" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>NPU와 같은 외부 장치를 사용하는 팟은 시작하지 않고 노드가 재시작할 때 UnexpectedAdmissionError에서 종료됩니다. 이 일이 kubelet이 pod를 재시작할 때 외부 리소스를 할당할 때 레이스 상태를 가지고 있기 때문에 발생합니다. 이 문제는 kubelet이 pod에 추적됩니다. <a class="reference external" href="https://github.com/kubernetes/kubernetes/issues/128043">kubernetes/kubernetes#128043</a></p></li>
+<li><p data-original-en="A pod that uses an external device, like an NPU, may not restart and will end up in an UnexpectedAdmissionError when the node is restarted. This happens because the kubelet has a race condition when allocating external resources to the restarting pod. The issue is tracked in kubernetes/kubernetes#128043">NPU와 같은 외부 장치를 사용하는 팟은 시작하지 않고 노드가 재시작할 때 UnexpectedAdmissionError에서 종료됩니다. 이 일이 kubelet이 pod를 재시작할 때 외부 리소스를 할당할 때 레이스 상태를 가지고 있기 때문에 발생합니다. 이 문제는 kubelet이 pod에 추적됩니다. <a class="reference external" href="https://github.com/kubernetes/kubernetes/issues/128043">kubernetes/kubernetes#128043</a></p></li>
 </ul>
 </section>
 </section>

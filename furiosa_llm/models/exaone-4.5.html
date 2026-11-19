@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -292,49 +292,49 @@ html
 <article class="bd-article">
 <section id="exaone-4-5">
 <span id="furiosa-llm-model-exaone-4-5"></span><h1>EXAONE 4.5<a class="headerlink" href="#exaone-4-5" title="Link to this heading">#</a></h1>
-<p><a class="reference external" href="https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B-FP8">EXAONE 4.5</a> LG AI 연구의 open-weight vision-language 모델입니다. 그것은 이미지를 처리하고 텍스트를 처리하기 위해 dense EXAONE 4 language-model 아키텍처와 함께 전용 비전 인코더를 통합하고 하이브리드 소싱 및 도구 호출을 지원합니다.</p>
-<p>Furiosa-LLM는 상류를 사용하여 EXAONE 4.5를 실행합니다 <strong>FP8</strong> 릴리스. 선택된 선형 무게 사용 정적 FP8 quantization 동적 per-token FP8 활성화 quantization를 사용 하 여 비전 인코더 및 관심 투사 높은 정밀도에 체재. FuriosaAI는 pre-compiled 빌드를 게시
+<p data-original-en="EXAONE 4.5 is LG AI Research’s open-weight vision-language model. It integrates a dedicated vision encoder with the dense EXAONE 4 language-model architecture to handle images and text, and supports hybrid reasoning and tool calling."><a class="reference external" href="https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B-FP8">EXAONE 4.5</a> LG AI 연구의 open-weight vision-language 모델입니다. 그것은 이미지를 처리하고 텍스트를 처리하기 위해 dense EXAONE 4 language-model 아키텍처와 함께 전용 비전 인코더를 통합하고 하이브리드 소싱 및 도구 호출을 지원합니다.</p>
+<p data-original-en="Furiosa-LLM runs EXAONE 4.5 using the upstream FP8 release. Selected linear weights use static FP8 quantization with dynamic per-token FP8 activation quantization, while the vision encoder and attention projections stay in higher precision. FuriosaAI publishes a pre-compiled build under the furiosa-ai organization on the Hugging Face Hub, shipping a Furiosa Executable Bundle (FXB) for running the model on FuriosaAI RNGD with Furiosa-LLM. The same upstream weights also run on other frameworks (such as vLLM, SGLang, and Transformers); for usage with those, see the upstream model card linked below.">Furiosa-LLM는 상류를 사용하여 EXAONE 4.5를 실행합니다 <strong>FP8</strong> 릴리스. 선택된 선형 무게 사용 정적 FP8 quantization 동적 per-token FP8 활성화 quantization를 사용 하 여 비전 인코더 및 관심 투사 높은 정밀도에 체재. FuriosaAI는 pre-compiled 빌드를 게시
 <a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> 구성 요소가 Hugging Face 허브에 연결됨</a>, Furiosa 실행 가능한 번들 (FXB)을 배송하여 모델 실행
 <a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> Furiosa-LLM로. 동일한 상류 무게는 또한 다른 기구 (vLLM, SGLang 및 변압기와 같은); 그와 함께 사용을 위해, 아래에 연결되는 상류 모형 카드를 보십시오.</p>
 <section id="available-models">
-<h2>사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Available Models">사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>모델</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Model">모델</p></th>
 <th class="head"><p>Quantization</p></th>
-<th class="head"><p>RNGD 카드</p></th>
-<th class="head"><p>노트</p></th>
+<th class="head"><p data-original-en="RNGD cards">RNGD 카드</p></th>
+<th class="head"><p data-original-en="Notes">노트</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/EXAONE-4.5-33B-FP8"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/EXAONE-4.5-33B-FP8</span></code></a></p></td>
 <td><p>FP8</p></td>
 <td><p>4</p></td>
-<td><p>33B dense vision-language 모델; 기본적으로 생각</p></td>
+<td><p data-original-en="33B dense vision-language model; thinking by default">33B dense vision-language 모델; 기본적으로 생각</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <ul class="simple">
-<li><p><strong>건축:</strong> EXAONE 4.5 (고밀도 vision-language), <code class="docutils literal notranslate"><span class="pre">Exaone4_5_ForConditionalGeneration</span></code></p></li>
-<li><p><strong>입력 / 출력:</strong> 이미지 + 텍스트 / 텍스트</p></li>
-<li><p><strong>Quantization:</strong> 선택된 선형 무게는 quantized <strong>FP8</strong> (정전, per-channel), 상류 FP8 릴리스 뒤에, 그리고 그들의 활성화 사용 <strong>동적 per-token FP8 quantization</strong> runtime에서. 상류 윤곽은 시각 인코더, 주의 투상, LM 머리 및 FP8 quantization에서 MTP 주의 투상을 제외합니다; KV cache는 16-bit 정밀도에서 체재합니다.</p></li>
+<li><p data-original-en="Architecture: EXAONE 4.5 (dense vision-language), Exaone4_5_ForConditionalGeneration"><strong>건축:</strong> EXAONE 4.5 (고밀도 vision-language), <code class="docutils literal notranslate"><span class="pre">Exaone4_5_ForConditionalGeneration</span></code></p></li>
+<li><p data-original-en="Input / Output: Image + Text / Text"><strong>입력 / 출력:</strong> 이미지 + 텍스트 / 텍스트</p></li>
+<li><p data-original-en="Quantization: Selected linear weights are quantized to FP8 (static, per-channel), following the upstream FP8 release, and their activations use dynamic per-token FP8 quantization at runtime. The upstream configuration excludes the vision encoder, attention projections, LM head, and MTP attention projections from FP8 quantization; the KV cache stays in 16-bit precision."><strong>Quantization:</strong> 선택된 선형 무게는 quantized <strong>FP8</strong> (정전, per-channel), 상류 FP8 릴리스 뒤에, 그리고 그들의 활성화 사용 <strong>동적 per-token FP8 quantization</strong> runtime에서. 상류 윤곽은 시각 인코더, 주의 투상, LM 머리 및 FP8 quantization에서 MTP 주의 투상을 제외합니다; KV cache는 16-bit 정밀도에서 체재합니다.</p></li>
 </ul>
 </section>
 <section id="usage">
-<h2>사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p>Furiosa-LLM를 사용하여이 모델을 실행하려면 아래 예제 명령을 따르십시오
+<h2 data-original-en="Usage">사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p data-original-en="To run this model with Furiosa-LLM, follow the example commands below after installing Furiosa-LLM and its prerequisites.">Furiosa-LLM를 사용하여이 모델을 실행하려면 아래 예제 명령을 따르십시오
 <a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>.</p>
 <section id="launch-the-server">
-<h3>서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
-<p>기본적으로 EXAONE 4.5 이유를 설정하고 생각을 전환 할 수 있습니다 (see)
+<h3 data-original-en="Launch the server">서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
+<p data-original-en="EXAONE 4.5 reasons by default and can switch thinking on and off (see Advanced Usage). Launch the server with the qwen3 reasoning parser so its chain of thought is separated from the final answer:">기본적으로 EXAONE 4.5 이유를 설정하고 생각을 전환 할 수 있습니다 (see)
 <a class="reference internal" href="#advanced-usage">발전 된 사용</a>). 서버를 시작하고 <code class="docutils literal notranslate"><span class="pre">qwen3</span></code> 파서가 너무 생각의 체인이 최종 답변에서 분리되어 있다고 생각했습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Launch the server, listening on port 8000 by default</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/EXAONE-4.5-33B-FP8<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--reasoning-parser<span class="w"> </span>qwen3
 </pre></div>
 </div>
-<p>또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">hermes</span></code> tool-call 파서 사용; 유지
+<p data-original-en="To also enable tool (function) calling, add the hermes tool-call parser; keep --reasoning-parser qwen3 so thinking is still parsed into its own field:">또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">hermes</span></code> tool-call 파서 사용; 유지
 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code> 그래서 생각은 여전히 자신의 필드에 패러다임 :</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/EXAONE-4.5-33B-FP8<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
@@ -342,7 +342,7 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/EXAON
 <span class="w">  </span>--tool-call-parser<span class="w"> </span>hermes
 </pre></div>
 </div>
-<p>서버가 준비되면 다음을 볼 수 있습니다.</p>
+<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음을 볼 수 있습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>INFO:<span class="w">     </span>Started<span class="w"> </span>server<span class="w"> </span>process<span class="w"> </span><span class="o">[</span><span class="m">27507</span><span class="o">]</span>
 INFO:<span class="w">     </span>Waiting<span class="w"> </span><span class="k">for</span><span class="w"> </span>application<span class="w"> </span>startup.
 INFO:<span class="w">     </span>Application<span class="w"> </span>startup<span class="w"> </span>complete.
@@ -351,8 +351,8 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </section>
 <section id="basic-usage">
-<h3>기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
-<p>서버는 OpenAI 호환 API를 노출합니다. text-only 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>:</p>
+<h3 data-original-en="Basic Usage">기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="The server exposes an OpenAI-compatible API. You can send a text-only request with curl:">서버는 OpenAI 호환 API를 노출합니다. text-only 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -362,7 +362,7 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
 </pre></div>
 </div>
-<p>이미지를 문의하려면 [구체적인 정보 삽입]을 전달하십시오. <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 메시지의 내용 부분:</p>
+<p data-original-en="To ask about an image, pass an image_url content part in the message:">이미지를 문의하려면 [구체적인 정보 삽입]을 전달하십시오. <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 메시지의 내용 부분:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -378,13 +378,13 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">image_url.url</span></code> 필드는 원격 연결을 허용합니다. <code class="docutils literal notranslate"><span class="pre">http://</span></code>/<code class="docutils literal notranslate"><span class="pre">https://</span></code> URL, 즉, 내장된
+<p data-original-en="The image_url.url field accepts a remote http:///https:// URL, an inline base64 data: URL, or a local file:// path (the last requires the --allowed-local-media-path flag described under Advanced Usage).">The <code class="docutils literal notranslate"><span class="pre">image_url.url</span></code> 필드는 원격 연결을 허용합니다. <code class="docutils literal notranslate"><span class="pre">http://</span></code>/<code class="docutils literal notranslate"><span class="pre">https://</span></code> URL, 즉, 내장된
 base64 <code class="docutils literal notranslate"><span class="pre">data:</span></code> URL, 또는 지역 <code class="docutils literal notranslate"><span class="pre">file://</span></code> 경로 (마지막 단계에서는
 <code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code> 아래에 설명된 깃발 <a class="reference internal" href="#advanced-usage">발전 된 사용</a>).</p>
-<p>그리고 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code>, EXAONE 4.5는 마지막 대답에서 따로따로 그것의 reasoning를 돌려보냅니다:</p>
+<p data-original-en="With --reasoning-parser qwen3, EXAONE 4.5 returns its reasoning separately from the final answer:">그리고 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code>, EXAONE 4.5는 마지막 대답에서 따로따로 그것의 reasoning를 돌려보냅니다:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">response.choices[].message.reasoning</span></code> (non-streaming)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">response.choices[].delta.reasoning</span></code> [ 스트리밍 ]</p></li>
+<li><p data-original-en="response.choices[].delta.reasoning (streaming)"><code class="docutils literal notranslate"><span class="pre">response.choices[].delta.reasoning</span></code> [ 스트리밍 ]</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
@@ -400,12 +400,12 @@ base64 <code class="docutils literal notranslate"><span class="pre">data:</span>
 </pre></div>
 </div>
 <blockquote>
-<div><p><strong>참고:</strong> The <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 필드는 OpenAI API 사양의 일부가 아니지만 다양한 컨벤션 (OpenAI Agents SDK, vLLM 및 기타)입니다. 그것은 그 대신 콘텐츠가 포함 된 응답에만 나타납니다. 그렇지 않으면 그에 도달 <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>.</p>
+<div><p data-original-en="Note: The reasoning field is not part of the OpenAI API specification but is a widely followed convention (the OpenAI Agents SDK, vLLM, and others). It appears only in responses that contain reasoning content; accessing it otherwise raises an AttributeError."><strong>참고:</strong> The <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 필드는 OpenAI API 사양의 일부가 아니지만 다양한 컨벤션 (OpenAI Agents SDK, vLLM 및 기타)입니다. 그것은 그 대신 콘텐츠가 포함 된 응답에만 나타납니다. 그렇지 않으면 그에 도달 <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>.</p>
 </div></blockquote>
 </section>
 <section id="advanced-usage">
-<h3>발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
-<p><strong>다중 모드 제공 옵션.</strong> 이 예제는 로컬 이미지를 허용합니다.
+<h3 data-original-en="Advanced Usage">발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="Multimodal serving options. This example allows local images under /srv/media, restricts remote image fetches to cdn.example.com, and limits each request to four images:"><strong>다중 모드 제공 옵션.</strong> 이 예제는 로컬 이미지를 허용합니다.
 <code class="docutils literal notranslate"><span class="pre">/srv/media</span></code>에서 확인하십시오. <code class="docutils literal notranslate"><span class="pre">cdn.example.com</span></code>, 각 4개의 이미지에 각 요구 한계:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/EXAONE-4.5-33B-FP8<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
@@ -414,19 +414,19 @@ base64 <code class="docutils literal notranslate"><span class="pre">data:</span>
 <span class="w">  </span>--image-limit-per-prompt<span class="w"> </span><span class="m">4</span>
 </pre></div>
 </div>
-<p>See <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#server-options">서버 옵션</a>
+<p data-original-en="See Server Options in the Vision-Language Models guide for the full option reference and defaults.">See <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#server-options">서버 옵션</a>
 Vision-Language 모델은 전체 옵션 참조 및 기본값에 대한 가이드입니다.</p>
-<p><strong>이미지 처리 옵션.</strong> 이 예제는 10-second HTTP image-fetch 타임아웃을 설정하고 사용 <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code> and <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code> 이미지 크기 조정 제한:</p>
+<p data-original-en="Image processing options. This example sets a 10-second HTTP image-fetch timeout and uses min_pixels and max_pixels to bound image resizing:"><strong>이미지 처리 옵션.</strong> 이 예제는 10-second HTTP image-fetch 타임아웃을 설정하고 사용 <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code> and <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code> 이미지 크기 조정 제한:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/EXAONE-4.5-33B-FP8<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--media-io-kwargs<span class="w"> </span><span class="s1">'{"image": {"timeout": 10}}'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--mm-processor-kwargs<span class="w"> </span><span class="s1">'{"min_pixels": 4096, "max_pixels": 200704}'</span>
 </pre></div>
 </div>
-<p>지원된 값에 대해서는, 행동을 정성화하고, per-request는 과대를 강화하고, 보기
+<p data-original-en="For supported values, sizing behavior, and per-request overrides, see Multimodal Options in the Vision-Language Models guide.">지원된 값에 대해서는, 행동을 정성화하고, per-request는 과대를 강화하고, 보기
 <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#multimodal-options">멀티모달 옵션</a>
 Vision-Language 모델 가이드.</p>
-<p><strong>생각하는 것을 멈추는 것.</strong> 기본으로 EXAONE 4.5 이유. 단일 요청에 대해 생각하기 위해, 패스 <code class="docutils literal notranslate"><span class="pre">enable_thinking</span></code> 통행 <code class="docutils literal notranslate"><span class="pre">chat_template_kwargs</span></code>; 응답은 그 후에 이유가 없는 내용을, 그래서 단지 읽습니다 <code class="docutils literal notranslate"><span class="pre">message.content</span></code>:</p>
+<p data-original-en="Turning thinking off. EXAONE 4.5 reasons by default. To turn thinking off for a single request, pass enable_thinking through chat_template_kwargs; the response then carries no reasoning content, so read only message.content:"><strong>생각하는 것을 멈추는 것.</strong> 기본으로 EXAONE 4.5 이유. 단일 요청에 대해 생각하기 위해, 패스 <code class="docutils literal notranslate"><span class="pre">enable_thinking</span></code> 통행 <code class="docutils literal notranslate"><span class="pre">chat_template_kwargs</span></code>; 응답은 그 후에 이유가 없는 내용을, 그래서 단지 읽습니다 <code class="docutils literal notranslate"><span class="pre">message.content</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Disable thinking for a single request</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">"furiosa-ai/EXAONE-4.5-33B-FP8"</span><span class="p">,</span>
@@ -436,14 +436,14 @@ Vision-Language 모델 가이드.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>기본적으로 non-thinking에 대한 모든 요청으로 서버를 실행합니다.
+<p data-original-en="To default every request to non-thinking, launch the server with --default-chat-template-kwargs (a request can still re-enable thinking with its own chat_template_kwargs):">기본적으로 non-thinking에 대한 모든 요청으로 서버를 실행합니다.
 <code class="docutils literal notranslate"><span class="pre">--default-chat-template-kwargs</span></code> (요청은 여전히 re-enable가 자신의 생각을 할 수 있음) <code class="docutils literal notranslate"><span class="pre">chat_template_kwargs</span></code>):</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/EXAONE-4.5-33B-FP8<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--reasoning-parser<span class="w"> </span>qwen3<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--default-chat-template-kwargs<span class="w"> </span><span class="s1">'{"enable_thinking": false}'</span>
 </pre></div>
 </div>
-<p><strong>도구 호출.</strong> 서버를 [구체적인 정보 삽입]을 사용하여 시작할 때
+<p data-original-en="Tool calling. With the server launched using --enable-auto-tool-choice --tool-call-parser hermes (see Launch the server), pass tools in the request and let the model decide when to call them. See the Tool Calling guide for a complete client example and details on tool-choice options."><strong>도구 호출.</strong> 서버를 [구체적인 정보 삽입]을 사용하여 시작할 때
 <code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span> <span class="pre">--tool-call-parser</span> <span class="pre">hermes</span></code> ( 참조)
 <a class="reference internal" href="#launch-the-server">서버를 시작하세요</a>), 통과 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 요청에서 모델을 결정할 때 호출합니다. 참조
 <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출 가이드</a>
@@ -451,12 +451,12 @@ tool-choice 옵션에 대한 완벽한 클라이언트 예 및 세부 사항.</p
 </section>
 </section>
 <section id="learn-more">
-<h2>더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Learn more">더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a> - 이미지 입력 형식 및 다중 서버 옵션</p></li>
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
-<li><p>전류 모델 카드: <a class="reference external" href="https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B-FP8">LGAI-EXAONE/EXAONE-4.5-33B-FP8</a></p></li>
+<li><p data-original-en="Vision-Language Models — image input formats and multimodal server options"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a> - 이미지 입력 형식 및 다중 서버 옵션</p></li>
+<li><p data-original-en="Tool Calling — parsers, tool-choice options, and more examples"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
+<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference and serving options"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
+<li><p data-original-en="Upstream model card: LGAI-EXAONE/EXAONE-4.5-33B-FP8">전류 모델 카드: <a class="reference external" href="https://huggingface.co/LGAI-EXAONE/EXAONE-4.5-33B-FP8">LGAI-EXAONE/EXAONE-4.5-33B-FP8</a></p></li>
 </ul>
 </section>
 </section>

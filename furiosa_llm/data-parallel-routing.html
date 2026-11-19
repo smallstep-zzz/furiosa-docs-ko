@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -290,93 +290,93 @@ html
 <article class="bd-article">
 <section id="data-parallel-routing">
 <span id="dataparallelrouting"></span><h1>Data-Parallel Routing<a class="headerlink" href="#data-parallel-routing" title="Link to this heading">#</a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">data_parallel_size</span></code>가 1보다 크면 Furiosa-LLM은 같은 모델의 데이터 병렬(DP) 복제본을 여러 개 실행합니다. DP 라우터는 새 요청을 어느 복제본에 보낼지 결정합니다.</p>
-<p>기본 정책은 점수 기반 DP 라우팅입니다. 요청의 프롬프트를 많이 캐시한 복제본을 우선하되, 이미 많은 토큰을 처리 중인 복제본에 요청이 몰리지 않도록 합니다.</p>
+<p data-original-en="When data_parallel_size is greater than 1, Furiosa-LLM runs multiple data-parallel (DP) replicas of the same model. The DP router chooses which replica receives each new request."><code class="docutils literal notranslate"><span class="pre">data_parallel_size</span></code>가 1보다 크면 Furiosa-LLM은 같은 모델의 데이터 병렬(DP) 복제본을 여러 개 실행합니다. DP 라우터는 새 요청을 어느 복제본에 보낼지 결정합니다.</p>
+<p data-original-en="Furiosa-LLM uses scoring-based DP routing by default. It is designed to keep requests near useful prefix-cache state while avoiding replicas that already have a larger token workload.">기본 정책은 점수 기반 DP 라우팅입니다. 요청의 프롬프트를 많이 캐시한 복제본을 우선하되, 이미 많은 토큰을 처리 중인 복제본에 요청이 몰리지 않도록 합니다.</p>
 <section id="how-scoring-works">
 <h2>How Scoring Works<a class="headerlink" href="#how-scoring-works" title="Link to this heading">#</a></h2>
-<p>라우터는 실행 중인 각 DP 복제본에 대해 두 지표를 계산합니다.</p>
+<p data-original-en="For each live DP replica, the router computes two signals:">라우터는 실행 중인 각 DP 복제본에 대해 두 지표를 계산합니다.</p>
 <ul class="simple">
-<li><p><strong>프롬프트 접두사 일치율(Prefix locality)</strong>은 새 프롬프트에서 해당 복제본의 Prefix Cache와 일치하는 부분이 차지하는 비율입니다.</p>
-<li><p><strong>토큰 부하(Load pressure)</strong>는 해당 복제본에 배정된 활성 컨텍스트 토큰 수입니다. 프롬프트 토큰은 요청이 배정될 때 집계하고, 생성 토큰은 요청이 끝날 때까지 부하에 반영합니다.</p>
-</ul>
-<p>라우터는 부하가 낮을수록 높은 부하 점수를 부여합니다. 이 점수와 접두사 일치 점수를 가중합해 최종 점수가 가장 높은 복제본에 요청을 보냅니다. 동점이면 실행 중인 복제본 가운데 첫 번째를 선택합니다.</p>
+<li><p data-original-en="Prefix locality: how much of the new prompt matches that replica’s prefix cache, as a fraction of the prompt length."><strong>프롬프트 접두사 일치율(Prefix locality)</strong>은 새 프롬프트에서 해당 복제본의 Prefix Cache와 일치하는 부분이 차지하는 비율입니다.</p>
+<li><p data-original-en="Load pressure: the number of active context tokens already routed to that replica. Prompt tokens are charged when the request is routed, and generated tokens are charged until the request completes."><strong>토큰 부하(Load pressure)</strong>는 해당 복제본에 배정된 활성 컨텍스트 토큰 수입니다. 프롬프트 토큰은 요청이 배정될 때 집계하고, 생성 토큰은 요청이 끝날 때까지 부하에 반영합니다.</p>
+</li></li></ul>
+<p data-original-en="The router normalizes lower load pressure into a higher load score, combines it with the prefix-locality score, and sends the request to the replica with the highest final score. Exact ties keep the first live DP replica.">라우터는 부하가 낮을수록 높은 부하 점수를 부여합니다. 이 점수와 접두사 일치 점수를 가중합해 최종 점수가 가장 높은 복제본에 요청을 보냅니다. 동점이면 실행 중인 복제본 가운데 첫 번째를 선택합니다.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>final_score = prefix_weight * prefix_score + load_weight * load_score
 </pre></div>
 </div>
-<p>라우터는 가상 Prefix Cache로 각 복제본의 KV Cache 이벤트를 추적해 접두사 일치율을 계산합니다. 캐시는 복제본별로 유지되므로, 지금 요청을 어디에 보내느냐에 따라 다음 요청이 캐시를 재사용할 수 있는 위치가 달라집니다.</p>
+<p data-original-en="The prefix-locality signal is based on a lightweight virtual prefix cache that tracks each DP replica’s KV-cache events. It does not move KV cache between replicas. Since prefix caches are DP-local, routing a request to a replica also affects where later requests can get cache hits.">라우터는 가상 Prefix Cache로 각 복제본의 KV Cache 이벤트를 추적해 접두사 일치율을 계산합니다. 캐시는 복제본별로 유지되므로, 지금 요청을 어디에 보내느냐에 따라 다음 요청이 캐시를 재사용할 수 있는 위치가 달라집니다.</p>
 </section>
 <section id="routing-policies">
-<h2>라우팅 정책<a class="headerlink" href="#routing-policies" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>로 라우팅 정책을 선택합니다.</p>
+<h2 data-original-en="Routing Policies">라우팅 정책<a class="headerlink" href="#routing-policies" title="Link to this heading">#</a></h2>
+<p data-original-en="Use --data-parallel-routing-policy to choose the routing policy:"><code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>로 라우팅 정책을 선택합니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>정책</p></th>
-<th class="head"><p>행동</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Policy">정책</p></th>
+<th class="head"><p data-original-en="Behavior">행동</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">scoring</span></code></p></td>
-<td><p>기본 정책입니다. 프롬프트 접두사 일치율과 토큰 부하를 함께 고려합니다.</p></td>
+<td><p data-original-en="Default. Balances prefix locality and token-load pressure.">기본 정책입니다. 프롬프트 접두사 일치율과 토큰 부하를 함께 고려합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">round-robin</span></code></p></td>
-<td><p>DP 복제본에 순서대로 요청을 보냅니다. 단순한 벤치마크나 캐시를 고려하지 않는 라우팅에 사용할 수 있습니다.</p></td>
+<td><p data-original-en="Sends requests to DP replicas in order. This can be useful for simple benchmarking or when cache-aware routing is not desired.">DP 복제본에 순서대로 요청을 보냅니다. 단순한 벤치마크나 캐시를 고려하지 않는 라우팅에 사용할 수 있습니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
 <section id="scoring-profiles">
-<h2>점수 프로파일<a class="headerlink" href="#scoring-profiles" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">scoring</span></code> 정책에서 <code class="docutils literal notranslate"><span class="pre">--data-parallel-scoring-profile</span></code>로 접두사 일치와 부하 사이의 가중치를 조정합니다.</p>
+<h2 data-original-en="Scoring Profiles">점수 프로파일<a class="headerlink" href="#scoring-profiles" title="Link to this heading">#</a></h2>
+<p data-original-en="When using scoring, use --data-parallel-scoring-profile to tune the prefix-locality/load tradeoff:"><code class="docutils literal notranslate"><span class="pre">scoring</span></code> 정책에서 <code class="docutils literal notranslate"><span class="pre">--data-parallel-scoring-profile</span></code>로 접두사 일치와 부하 사이의 가중치를 조정합니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>프로파일</p></th>
-<th class="head"><p>접두사 일치 / 부하 가중치</p></th>
-<th class="head"><p>사용할 때</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Profile">프로파일</p></th>
+<th class="head"><p data-original-en="Prefix/load weights">접두사 일치 / 부하 가중치</p></th>
+<th class="head"><p data-original-en="Use when">사용할 때</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">balanced</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.55</span> <span class="pre">/</span> <span class="pre">0.45</span></code></p></td>
-<td><p>기본값입니다. 여러 유형의 요청이 섞여 있거나 요청 특성을 아직 모를 때 적합합니다.</p></td>
+<td><p data-original-en="Default. Use for most serving workloads when workload characteristics are mixed or unknown.">기본값입니다. 여러 유형의 요청이 섞여 있거나 요청 특성을 아직 모를 때 적합합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">locality</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.90</span> <span class="pre">/</span> <span class="pre">0.10</span></code></p></td>
-<td><p>시스템 프롬프트가 반복되는 요청, 여러 턴의 대화, 공통 문서를 프롬프트 앞부분에 넣는 RAG 요청에 적합합니다.</p></td>
+<td><p data-original-en="Prefer this for workloads with repeated system prompts, multi-turn conversations, or RAG-style document prefixes.">시스템 프롬프트가 반복되는 요청, 여러 턴의 대화, 공통 문서를 프롬프트 앞부분에 넣는 RAG 요청에 적합합니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">load</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.10</span> <span class="pre">/</span> <span class="pre">0.90</span></code></p></td>
-<td><p>공통 접두사가 드물거나 부하를 고르게 분산하는 것이 중요할 때 적합합니다. 긴 시스템 프롬프트나 문서 접두사의 재사용을 우선하면 한 복제본에 부하가 몰릴 수 있습니다.</p></td>
+<td><p data-original-en="Prefer this when prompts rarely share prefixes, or when balanced compute load matters more than cache locality. Extremely long shared system prompts or document prefixes can overload one DP replica when locality is prioritized.">공통 접두사가 드물거나 부하를 고르게 분산하는 것이 중요할 때 적합합니다. 긴 시스템 프롬프트나 문서 접두사의 재사용을 우선하면 한 복제본에 부하가 몰릴 수 있습니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>Prefix Caching을 끄면 접두사 일치율을 활용할 수 없으므로 Furiosa-LLM은 <code class="docutils literal notranslate"><span class="pre">load</span></code> 프로파일을 사용합니다. 이전 <code class="docutils literal notranslate"><span class="pre">prefix-aware</span></code> 프로파일에 해당하는 설정은 <code class="docutils literal notranslate"><span class="pre">locality</span></code>입니다.</p>
+<p data-original-en="If prefix caching is disabled, Furiosa-LLM falls back to the load profile because prefix locality no longer provides useful signal. The old prefix-aware profile name has been removed; use locality instead.">Prefix Caching을 끄면 접두사 일치율을 활용할 수 없으므로 Furiosa-LLM은 <code class="docutils literal notranslate"><span class="pre">load</span></code> 프로파일을 사용합니다. 이전 <code class="docutils literal notranslate"><span class="pre">prefix-aware</span></code> 프로파일에 해당하는 설정은 <code class="docutils literal notranslate"><span class="pre">locality</span></code>입니다.</p>
 </section>
 <section id="configuration">
-<h2>구성<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
-<p>기본 설정은 점수 기반 라우팅과 <code class="docutils literal notranslate"><span class="pre">balanced</span></code> 프로파일입니다.</p>
+<h2 data-original-en="Configuration">구성<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p data-original-en="The default behavior is scoring-based routing with the balanced profile:">기본 설정은 점수 기반 라우팅과 <code class="docutils literal notranslate"><span class="pre">balanced</span></code> 프로파일입니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--data-parallel-size<span class="w"> </span><span class="m">2</span>
 </pre></div>
 </div>
-<p>Prefix Cache 재사용을 더 우선하는 설정입니다.</p>
+<p data-original-en="To bias routing toward prefix-cache reuse:">Prefix Cache 재사용을 더 우선하는 설정입니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--data-parallel-size<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--data-parallel-routing-policy<span class="w"> </span>scoring<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--data-parallel-scoring-profile<span class="w"> </span>locality
 </pre></div>
 </div>
-<p>복제본을 순서대로 사용하는 설정입니다.</p>
+<p data-original-en="To use round-robin routing:">복제본을 순서대로 사용하는 설정입니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--data-parallel-size<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--data-parallel-routing-policy<span class="w"> </span>round-robin
 </pre></div>
 </div>
-<p>점수 프로파일은 <code class="docutils literal notranslate"><span class="pre">scoring</span></code> 정책에 적용됩니다. <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span> <span class="pre">round-robin</span></code>을 쓸 때는 점수 프로파일을 기본값으로 두세요.</p>
+<p data-original-en="The scoring profile only affects scoring. Do not set a non-default scoring profile with --data-parallel-routing-policy round-robin.">점수 프로파일은 <code class="docutils literal notranslate"><span class="pre">scoring</span></code> 정책에 적용됩니다. <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span> <span class="pre">round-robin</span></code>을 쓸 때는 점수 프로파일을 기본값으로 두세요.</p>
 </section>
 <section id="python-api">
 <h2>Python API<a class="headerlink" href="#python-api" title="Link to this heading">#</a></h2>
-<p>Python에서는 같은 설정을 <code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code>에 전달합니다.</p>
+<p data-original-en="The same settings can be passed through SchedulerConfig:">Python에서는 같은 설정을 <code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code>에 전달합니다.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm.metadata.config_types</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">DataParallelRoutingPolicy</span><span class="p">,</span>
@@ -399,11 +399,11 @@ html
 </div>
 </section>
 <section id="operational-notes">
-<h2>운영 참고 사항<a class="headerlink" href="#operational-notes" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Operational Notes">운영 참고 사항<a class="headerlink" href="#operational-notes" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p>DP 라우팅은 단일 Furiosa-LLM 프로세스 안에서 이루어집니다. 여러 모델 서버 Pod 사이에 요청을 분산하려면 <a class="reference internal" href="../cloud_native_toolkit/llm_d.html"><span class="doc">llm-d</span></a>를 참고하세요.</p></li>
-<li><p>점수 기반 라우팅은 Prefix Caching을 켰을 때 가장 효과적입니다. NPU 캐시는 <a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a>, 선택적으로 사용하는 호스트 캐시는 <a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층형 Prefix Caching</span></a>에서 설명합니다.</p></li>
-<li><p>데이터 병렬 처리의 배경은 <a class="reference internal" href="model-parallelism.html#modelparallelism"><span class="std std-ref">모델 병렬화(Model Parallelism)</span></a>를 참고하세요.</p></li>
+<li><p data-original-en="DP routing happens inside one Furiosa-LLM process. For routing across multiple model-server pods, see llm-d.">DP 라우팅은 단일 Furiosa-LLM 프로세스 안에서 이루어집니다. 여러 모델 서버 Pod 사이에 요청을 분산하려면 <a class="reference internal" href="../cloud_native_toolkit/llm_d.html"><span class="doc">llm-d</span></a>를 참고하세요.</p></li>
+<li><p data-original-en="Scoring-based routing works best with prefix caching enabled. See Prefix Caching for NPU-resident caching and Hierarchical Prefix Caching for the optional host cache tier.">점수 기반 라우팅은 Prefix Caching을 켰을 때 가장 효과적입니다. NPU 캐시는 <a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a>, 선택적으로 사용하는 호스트 캐시는 <a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층형 Prefix Caching</span></a>에서 설명합니다.</p></li>
+<li><p data-original-en="For background on DP itself, see Model Parallelism.">데이터 병렬 처리의 배경은 <a class="reference internal" href="model-parallelism.html#modelparallelism"><span class="std std-ref">모델 병렬화(Model Parallelism)</span></a>를 참고하세요.</p></li>
 </ul>
 </section>
 </section>

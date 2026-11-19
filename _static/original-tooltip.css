@@ -1,0 +1,17 @@
+#original-prose-tooltip {
+  position: fixed;
+  z-index: 1500;
+  width: max-content;
+  max-width: min(48rem, calc(100vw - 16px));
+  max-height: calc(100vh - 16px);
+  overflow: auto;
+  padding: .65rem .85rem;
+  border: 1px solid #767676;
+  border-radius: .4rem;
+  background: #212529;
+  color: #fff;
+  box-shadow: 0 .2rem .7rem #0004;
+  font-size: .9rem;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}

@@ -61,7 +61,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -305,75 +305,75 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="host-pci-optimization-tuning">
-<span id="hosttuning"></span><h1>호스트 PCI 최적화 튜닝<a class="headerlink" href="#host-pci-optimization-tuning" title="Link to this heading">#</a></h1>
-<p>이 문서는 PCIe/DMA/P2P 성능을 향상시키고 Linux 서버에서 latency 변동을 줄이는 데 일반적으로 사용되는 호스트 레벨 튜닝 단계를 설명합니다.</p>
+<span id="hosttuning"></span><h1 data-original-en="Host PCI Optimization Tuning">호스트 PCI 최적화 튜닝<a class="headerlink" href="#host-pci-optimization-tuning" title="Link to this heading">#</a></h1>
+<p data-original-en="This document describes a set of host-level tuning steps commonly used to improve PCIe/DMA/P2P performance and reduce latency variance on Linux servers.">이 문서는 PCIe/DMA/P2P 성능을 향상시키고 Linux 서버에서 latency 변동을 줄이는 데 일반적으로 사용되는 호스트 레벨 튜닝 단계를 설명합니다.</p>
 <section id="hugepage-configuration">
-<h2>1. 대용량 구성<a class="headerlink" href="#hugepage-configuration" title="Link to this heading">#</a></h2>
-<p>할당 <strong>64K (65536) 용량의 2MB 크기의 큰 페이지</strong>.</p>
-<p>거대한 페이지 (i.e., "HugeTLB" 페이지)는 더 큰 페이지 크기를 사용하여 TLB 압력과 page-table 도보 오버 헤드를 감소시킵니다. 종종 큰 메모리 영역 (e.g., DMA 버퍼, 패킷 버퍼, 큰 핀 할당)를 접촉하는 워크로드의 경우 :</p>
+<h2 data-original-en="1. Hugepage Configuration">1. 대용량 구성<a class="headerlink" href="#hugepage-configuration" title="Link to this heading">#</a></h2>
+<p data-original-en="Allocate 64K (65536) of 2MB hugepages.">할당 <strong>64K (65536) 용량의 2MB 크기의 큰 페이지</strong>.</p>
+<p data-original-en="Hugepages (i.e., “HugeTLB” pages) reduce TLB pressure and page-table walk overhead by using larger page sizes. For workloads that frequently touch large memory regions (e.g., DMA buffers, packet buffers, large pinned allocations), hugepages can:">거대한 페이지 (i.e., "HugeTLB" 페이지)는 더 큰 페이지 크기를 사용하여 TLB 압력과 page-table 도보 오버 헤드를 감소시킵니다. 종종 큰 메모리 영역 (e.g., DMA 버퍼, 패킷 버퍼, 큰 핀 할당)를 접촉하는 워크로드의 경우 :</p>
 <ul class="simple">
-<li><p>CPU 오버헤드를 주소 번역에서 감소 (fewer TLB misses)</p></li>
-<li><p>페이지 관리 오버헤드를 감소시켜 latency 안정성을 향상</p></li>
-<li><p>큰 윤곽선을 위한 파편 문제점을 감소시키십시오 (이전에 할당된 때)</p></li>
+<li><p data-original-en="Reduce CPU overhead from address translation (fewer TLB misses)">CPU 오버헤드를 주소 번역에서 감소 (fewer TLB misses)</p></li>
+<li><p data-original-en="Improve latency stability by reducing page management overhead">페이지 관리 오버헤드를 감소시켜 latency 안정성을 향상</p></li>
+<li><p data-original-en="Reduce fragmentation issues for large contiguous allocations (when allocated early)">큰 윤곽선을 위한 파편 문제점을 감소시키십시오 (이전에 할당된 때)</p></li>
 </ul>
 <section id="one-time-setting">
-<h3>One-time 설정<a class="headerlink" href="#one-time-setting" title="Link to this heading">#</a></h3>
-<p>즉시 적용 (Reboot까지 유효):</p>
+<h3 data-original-en="One-time setting">One-time 설정<a class="headerlink" href="#one-time-setting" title="Link to this heading">#</a></h3>
+<p data-original-en="To apply immediately (effective until reboot):">즉시 적용 (Reboot까지 유효):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="m">65536</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
 </pre></div>
 </div>
 <section id="notes">
-<h4>노트<a class="headerlink" href="#notes" title="Link to this heading">#</a></h4>
+<h4 data-original-en="Notes">노트<a class="headerlink" href="#notes" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p>이것은 2MB HugeTLB 페이지의 수를 조정합니다.</p></li>
-<li><p>KV Cache offloading와 관련된 추가 캐싱 최적화를 사용할 때, 이 번호를 증가하는 것은 할당 된 host-side KV cache 풀의 크기에 따라 핀 DMA 버퍼에 대한 충분한 거 대 한 페이지 가용성을 보장 할 필요가 있을 수 있습니다. 참조 <a class="reference internal" href="../furiosa_llm/hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층적 Prefix Caching</span></a> 구성 및 sizing 지침에 대 한.</p></li>
-<li><p>할당은 실패 할 수 있습니다 (partially 또는 완전히) 메모리가 파편되면; 부팅 후 일찍 적용은 일반적으로 가장 잘 작동합니다.</p></li>
+<li><p data-original-en="This adjusts the number of 2MB HugeTLB pages.">이것은 2MB HugeTLB 페이지의 수를 조정합니다.</p></li>
+<li><p data-original-en="When using additional caching optimizations involving KV Cache offloading, increasing this number may be necessary to ensure sufficient hugepage availability for pinned DMA buffers, depending on the size of the allocated host-side KV cache pool. See Hierarchical Prefix Caching for configuration and sizing guidance.">KV Cache offloading와 관련된 추가 캐싱 최적화를 사용할 때, 이 번호를 증가하는 것은 할당 된 host-side KV cache 풀의 크기에 따라 핀 DMA 버퍼에 대한 충분한 거 대 한 페이지 가용성을 보장 할 필요가 있을 수 있습니다. 참조 <a class="reference internal" href="../furiosa_llm/hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층적 Prefix Caching</span></a> 구성 및 sizing 지침에 대 한.</p></li>
+<li><p data-original-en="The allocation can fail (partially or fully) if memory is fragmented; applying early after boot usually works best.">할당은 실패 할 수 있습니다 (partially 또는 완전히) 메모리가 파편되면; 부팅 후 일찍 적용은 일반적으로 가장 잘 작동합니다.</p></li>
 </ul>
 </section>
 </section>
 <section id="persistent-setting-every-boot">
-<h3>지속적인 설정 (부팅 시마다)<a class="headerlink" href="#persistent-setting-every-boot" title="Link to this heading">#</a></h3>
-<p>sysctl 규칙을 만들기 때문에 부팅에 적용됩니다 :</p>
+<h3 data-original-en="Persistent setting (every boot)">지속적인 설정 (부팅 시마다)<a class="headerlink" href="#persistent-setting-every-boot" title="Link to this heading">#</a></h3>
+<p data-original-en="Create a sysctl rule so it is applied at boot:">sysctl 규칙을 만들기 때문에 부팅에 적용됩니다 :</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/sysctl.d/90-hugepages.conf<span class="w"> </span><span class="s">&lt;&lt;EOF</span>
 <span class="s">vm.nr_hugepages = 65536</span>
 <span class="s">EOF</span>
 </pre></div>
 </div>
-<p>그런 다음 재부팅없이 즉시 적용하십시오.</p>
+<p data-original-en="Then apply it immediately without reboot:">그런 다음 재부팅없이 즉시 적용하십시오.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sysctl<span class="w"> </span>--system
 </pre></div>
 </div>
 </section>
 </section>
 <section id="disable-pci-acs-access-control-services">
-<h2>2. PCI ACS (액세서리 제어 서비스)를 비활성화<a class="headerlink" href="#disable-pci-acs-access-control-services" title="Link to this heading">#</a></h2>
+<h2 data-original-en="2. Disable PCI ACS (Access Control Services)">2. PCI ACS (액세서리 제어 서비스)를 비활성화<a class="headerlink" href="#disable-pci-acs-access-control-services" title="Link to this heading">#</a></h2>
 <section id="when-to-use-this">
-<h3>언제 사용해야 할까요?<a class="headerlink" href="#when-to-use-this" title="Link to this heading">#</a></h3>
-<p>특정 시스템 (e.g 등에서) <strong>NXT RNGD 서버</strong>), 장치는 PCIe 스위치 뒤에 연결됩니다. peer-to-peer (P2P) 자료 경로가 예상되는 경우에,
+<h3 data-original-en="When to use this">언제 사용해야 할까요?<a class="headerlink" href="#when-to-use-this" title="Link to this heading">#</a></h3>
+<p data-original-en="On some systems (e.g., NXT RNGD Server), devices are connected behind a PCIe switch. If peer-to-peer (P2P) data paths are expected, PCI ACS enabled on the upstream switch port can prevent or penalize P2P traffic.">특정 시스템 (e.g 등에서) <strong>NXT RNGD 서버</strong>), 장치는 PCIe 스위치 뒤에 연결됩니다. peer-to-peer (P2P) 자료 경로가 예상되는 경우에,
 <strong>PCI ACS</strong> 상류 스위치 포트에 활성화는 P2P 트래픽을 방지하거나 penalize 할 수 있습니다.</p>
-<p>예를 들어:</p>
+<p data-original-en="Example scenario:">예를 들어:</p>
 <ul class="simple">
-<li><p>장치는 PCIe 스위치, 및 P2P throughput/latency 사정의 밑에 있습니다.</p></li>
+<li><p data-original-en="A device is located under a PCIe switch, and P2P throughput/latency matters.">장치는 PCIe 스위치, 및 P2P throughput/latency 사정의 밑에 있습니다.</p></li>
 </ul>
 </section>
 <section id="why-acs-can-impact-p2p-performance">
-<h3>ACS가 P2P 성능에 미치는 영향<a class="headerlink" href="#why-acs-can-impact-p2p-performance" title="Link to this heading">#</a></h3>
-<p>ACS는 security/isolation 및 topology 교정 시스템에서 security/isolation 및 topology 교정을 개선하는 고립과 라우팅 제어 기능을 제공합니다. 그러나 ACS가 리디렉션을 실행할 때, 전환 직물 내에서 오히려 루트 복잡하게 (근법적 복잡한)을 경로를 강제 할 수 있습니다. 이것은 할 수 있습니다 :</p>
+<h3 data-original-en="Why ACS can impact P2P performance">ACS가 P2P 성능에 미치는 영향<a class="headerlink" href="#why-acs-can-impact-p2p-performance" title="Link to this heading">#</a></h3>
+<p data-original-en="ACS provides isolation and routing control features (e.g., request/completion redirection, upstream forwarding control) that improve security/isolation and topology correctness in complex systems. However, when ACS enforces redirection, it can force transactions to be routed upstream (toward the root complex) rather than staying within the switch fabric. This can:">ACS는 security/isolation 및 topology 교정 시스템에서 security/isolation 및 topology 교정을 개선하는 고립과 라우팅 제어 기능을 제공합니다. 그러나 ACS가 리디렉션을 실행할 때, 전환 직물 내에서 오히려 루트 복잡하게 (근법적 복잡한)을 경로를 강제 할 수 있습니다. 이것은 할 수 있습니다 :</p>
 <ul class="simple">
-<li><p>홉 수/지연 증가</p></li>
-<li><p>효과적인 대역폭 감소</p></li>
-<li><p>업스트림 링크에 대한 경쟁을 추가</p></li>
-<li><p>동일한 스위치의 밑에 endpoints 사이 가장 직접적인 P2P 경로 방지</p></li>
+<li><p data-original-en="Increase hop count / latency">홉 수/지연 증가</p></li>
+<li><p data-original-en="Reduce effective bandwidth">효과적인 대역폭 감소</p></li>
+<li><p data-original-en="Add contention on upstream links">업스트림 링크에 대한 경쟁을 추가</p></li>
+<li><p data-original-en="Prevent the most direct P2P path between endpoints under the same switch">동일한 스위치의 밑에 endpoints 사이 가장 직접적인 P2P 경로 방지</p></li>
 </ul>
-<p>ACS를 비활성화하면 스위치 내에서 더 직접 라우팅을 허용함으로써 P2P 성능을 향상시킬 수 있습니다.</p>
+<p data-original-en="Disabling ACS can therefore improve P2P performance by allowing more direct routing within the switch.">ACS를 비활성화하면 스위치 내에서 더 직접 라우팅을 허용함으로써 P2P 성능을 향상시킬 수 있습니다.</p>
 <div class="admonition warning">
-<p class="admonition-title">경고</p>
-<p>ACS가 엔드포인트 사이의 고립을 감소시키고 multi-tenant / 엄격한 보안 환경에서 허용되지 않을 수 있습니다. 플랫폼과 use-case tolerate가 PCIe 고립을 줄 때만 적용하십시오.</p>
+<p class="admonition-title" data-original-en="Warning">경고</p>
+<p data-original-en="Disabling ACS reduces isolation between endpoints and may not be acceptable in multi-tenant / strict security environments. Apply only when your platform and use-case tolerate reduced PCIe isolation.">ACS가 엔드포인트 사이의 고립을 감소시키고 multi-tenant / 엄격한 보안 환경에서 허용되지 않을 수 있습니다. 플랫폼과 use-case tolerate가 PCIe 고립을 줄 때만 적용하십시오.</p>
 </div>
 </section>
 <section id="supported-server-and-pcie-switch-combinations">
-<h3>지원된 서버 및 PCIe 스위치 조합<a class="headerlink" href="#supported-server-and-pcie-switch-combinations" title="Link to this heading">#</a></h3>
-<p>다음 표 문서는 ACS가 검증되고 지원되는 서버 구성을 공식적으로 지원했습니다.</p>
+<h3 data-original-en="Supported Server and PCIe Switch Combinations">지원된 서버 및 PCIe 스위치 조합<a class="headerlink" href="#supported-server-and-pcie-switch-combinations" title="Link to this heading">#</a></h3>
+<p data-original-en="The following table documents officially supported server configurations where ACS disable is validated and supported.">다음 표 문서는 ACS가 검증되고 지원되는 서버 구성을 공식적으로 지원했습니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 25.0%"/>
@@ -382,28 +382,28 @@ html
 <col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>서버 플랫폼</p></th>
-<th class="head"><p>PCIe 스위치</p></th>
-<th class="head"><p>판매자 / 장치 ID</p></th>
-<th class="head"><p>ACS 컨트롤 오프셋</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Server Platform">서버 플랫폼</p></th>
+<th class="head"><p data-original-en="PCIe Switch">PCIe 스위치</p></th>
+<th class="head"><p data-original-en="Vendor / Device ID">판매자 / 장치 ID</p></th>
+<th class="head"><p data-original-en="ACS Control Offset">ACS 컨트롤 오프셋</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>NXT RNGD 서버 (Supermicro)</p></td>
-<td><p>Broadcom / LSI PEX890xx PCIe Gen 5 스위치 (rev b0)</p></td>
+<tr class="row-even"><td><p data-original-en="NXT RNGD Server (Supermicro)">NXT RNGD 서버 (Supermicro)</p></td>
+<td><p data-original-en="Broadcom / LSI PEX890xx PCIe Gen 5 Switch (rev b0)">Broadcom / LSI PEX890xx PCIe Gen 5 스위치 (rev b0)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0x1000</span></code> / <code class="docutils literal notranslate"><span class="pre">0xc030</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0x176</span></code></p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>위의 구성을 위해 ACS는 비활성화되어 있습니다. <strong>RNGD 장치에 연결된 PCIe 스위치 다운스트림 포트</strong> 스위치 직물 안에 최적의 PCIe P2P 트래픽을 허용하기 위해.</p>
-<p>다음 명령을 실행하십시오:</p>
+<p data-original-en="For the configuration above, ACS is disabled on the PCIe switch downstream port connected to the RNGD device in order to allow optimal PCIe P2P traffic within the switch fabric.">위의 구성을 위해 ACS는 비활성화되어 있습니다. <strong>RNGD 장치에 연결된 PCIe 스위치 다운스트림 포트</strong> 스위치 직물 안에 최적의 PCIe P2P 트래픽을 허용하기 위해.</p>
+<p data-original-en="Run the following command:">다음 명령을 실행하십시오:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>setpci<span class="w"> </span>-s<span class="w"> </span><span class="si">${</span><span class="nv">PARENT_BDF</span><span class="si">}</span><span class="w"> </span><span class="si">${</span><span class="nv">ACS_OFFSET</span><span class="si">}</span>.W<span class="o">=</span>0x0
 </pre></div>
 </div>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">${PARENT_BDF}</span></code> RNGD 장치 (e.g)에 직접 연결된 PCIe 스위치 포트의 BDF입니다., <code class="docutils literal notranslate"><span class="pre">0000:02:03.0</span></code>).</p></li>
+<li><p data-original-en="${PARENT_BDF} is the BDF of the PCIe switch port directly connected to the RNGD device (e.g., 0000:02:03.0)."><code class="docutils literal notranslate"><span class="pre">${PARENT_BDF}</span></code> RNGD 장치 (e.g)에 직접 연결된 PCIe 스위치 포트의 BDF입니다., <code class="docutils literal notranslate"><span class="pre">0000:02:03.0</span></code>).</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lspci<span class="w"> </span>-D<span class="w"> </span>-d<span class="w"> </span>1ed2:<span class="w"> </span>-PP<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-n<span class="w"> </span><span class="m">1</span>
 
@@ -416,28 +416,28 @@ lspci<span class="w"> </span>-D<span class="w"> </span>-s<span class="w"> </span
 </div>
 </section>
 <section id="verify-the-result">
-<h3>결과 확인<a class="headerlink" href="#verify-the-result" title="Link to this heading">#</a></h3>
-<p>실행:</p>
+<h3 data-original-en="Verify the result">결과 확인<a class="headerlink" href="#verify-the-result" title="Link to this heading">#</a></h3>
+<p data-original-en="Run:">실행:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lspci<span class="w"> </span>-vv<span class="w"> </span>-s<span class="w"> </span><span class="si">${</span><span class="nv">PARENT_BDF</span><span class="si">}</span>
 </pre></div>
 </div>
-<p>비활성화 후, 다음과 같은 플래그를 관찰해야합니다:</p>
+<p data-original-en="After disabling, you should observe flags similar to:">비활성화 후, 다음과 같은 플래그를 관찰해야합니다:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Capabilities: [170 v1] Access Control Services
         ACSCap: SrcValid+ TransBlk+ ReqRedir+ CmpltRedir+ UpstreamFwd+ EgressCtrl- DirectTrans+
         ACSCtl: SrcValid- TransBlk- ReqRedir- CmpltRedir- UpstreamFwd- EgressCtrl- DirectTrans-
 </pre></div>
 </div>
-<p>해당 ACS 컨트롤 비트가 명확하게 표시한다.</p>
+<p data-original-en="This indicates that the corresponding ACS control bits are cleared.">해당 ACS 컨트롤 비트가 명확하게 표시한다.</p>
 </section>
 <section id="auto-apply-with-a-udev-rule">
-<h3>Auto-apply udev 규칙과 함께 사용<a class="headerlink" href="#auto-apply-with-a-udev-rule" title="Link to this heading">#</a></h3>
-<p>기기(포트)가 열릴 때 ACS를 자동으로 적용할 수 있는 udev 규칙을 사용할 수 있습니다. 다음 스니펫은 템플릿을 제공합니다. 해당 키(vendor/device, BDF, 또는 driver)를 조정하여 환경의 영향을 받습니다.</p>
-<p>규칙 파일 (예: 규칙 파일 생성) <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-furiosa.rules</span></code>:</p>
+<h3 data-original-en="Auto-apply with a udev rule">Auto-apply udev 규칙과 함께 사용<a class="headerlink" href="#auto-apply-with-a-udev-rule" title="Link to this heading">#</a></h3>
+<p data-original-en="You can use a udev rule to apply the ACS disable automatically when the device (port) is enumerated. The following snippet provides a template. Adjust the matching keys (vendor/device, BDF, or driver) for your environment.">기기(포트)가 열릴 때 ACS를 자동으로 적용할 수 있는 udev 규칙을 사용할 수 있습니다. 다음 스니펫은 템플릿을 제공합니다. 해당 키(vendor/device, BDF, 또는 driver)를 조정하여 환경의 영향을 받습니다.</p>
+<p data-original-en="Create a rules file such as /etc/udev/rules.d/99-furiosa.rules:">규칙 파일 (예: 규칙 파일 생성) <code class="docutils literal notranslate"><span class="pre">/etc/udev/rules.d/99-furiosa.rules</span></code>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span># Disable ACS on a specific upstream PCIe port to improve P2P performance.
 SUBSYSTEM=="rngd_mgmt", ATTR{device_type}=="RNGD", ACTION=="add", ENV{BUSNAME}="$attr{busname}", RUN+="/usr/local/sbin/furiosa-acs-clear"
 </pre></div>
 </div>
-<p>다음과 같은 스크립트 파일을 생성합니다: <code class="docutils literal notranslate"><span class="pre">/usr/local/sbin/furiosa-acs-clear</span></code>:</p>
+<p data-original-en="Create a script file such as /usr/local/sbin/furiosa-acs-clear:">다음과 같은 스크립트 파일을 생성합니다: <code class="docutils literal notranslate"><span class="pre">/usr/local/sbin/furiosa-acs-clear</span></code>:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="ch">#!/usr/bin/env bash</span>
 <span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
 
@@ -503,14 +503,14 @@ SUBSYSTEM=="rngd_mgmt", ATTR{device_type}=="RNGD", ACTION=="add", ENV{BUSNAME}="
 </section>
 </section>
 <section id="tuned-adm-latency-performance-profile">
-<h2>3. tuned-adm: latency-기능 단면도<a class="headerlink" href="#tuned-adm-latency-performance-profile" title="Link to this heading">#</a></h2>
+<h2 data-original-en="3. tuned-adm: latency-performance Profile">3. tuned-adm: latency-기능 단면도<a class="headerlink" href="#tuned-adm-latency-performance-profile" title="Link to this heading">#</a></h2>
 <section id="overview">
-<h3>개요<a class="headerlink" href="#overview" title="Link to this heading">#</a></h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">tuned</span></code> daemon은 사전 정의된 시스템 조정 프로파일을 제공합니다.
+<h3 data-original-en="Overview">개요<a class="headerlink" href="#overview" title="Link to this heading">#</a></h3>
+<p data-original-en="The tuned daemon provides predefined system tuning profiles. The latency-performance profile generally targets lower latency and reduced jitter by adjusting CPU governor, power management, kernel scheduler-related settings, and other system knobs.">The <code class="docutils literal notranslate"><span class="pre">tuned</span></code> daemon은 사전 정의된 시스템 조정 프로파일을 제공합니다.
 <code class="docutils literal notranslate"><span class="pre">latency-performance</span></code> 일반적으로 latency를 낮추고 CPU 지배자, 동력 관리, 커널 scheduler-related 설정 및 기타 시스템 손잡이를 조정하여 지터를 감소시킵니다.</p>
 </section>
 <section id="install-tuned">
-<h3>정렬 설치<a class="headerlink" href="#install-tuned" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Install tuned">정렬 설치<a class="headerlink" href="#install-tuned" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>tuned
 sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>tuned
@@ -518,27 +518,27 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">en
 </div>
 </section>
 <section id="set-the-profile-to-latency-performance">
-<h3>latency-performance에 프로필을 설정<a class="headerlink" href="#set-the-profile-to-latency-performance" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Set the profile to latency-performance">latency-performance에 프로필을 설정<a class="headerlink" href="#set-the-profile-to-latency-performance" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>tuned-adm<span class="w"> </span>profile<span class="w"> </span>latency-performance
 </pre></div>
 </div>
-<p>활성 프로필 확인:</p>
+<p data-original-en="Confirm active profile:">활성 프로필 확인:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>tuned-adm<span class="w"> </span>active
 </pre></div>
 </div>
 </section>
 <section id="expected-effects">
-<h3>예상되는 효과<a class="headerlink" href="#expected-effects" title="Link to this heading">#</a></h3>
-<p>널리 발생하는 결과 (사용 시) <code class="docutils literal notranslate"><span class="pre">latency-performance</span></code> 다음을 포함합니다.</p>
+<h3 data-original-en="Expected effects">예상되는 효과<a class="headerlink" href="#expected-effects" title="Link to this heading">#</a></h3>
+<p data-original-en="Common outcomes when using latency-performance include:">널리 발생하는 결과 (사용 시) <code class="docutils literal notranslate"><span class="pre">latency-performance</span></code> 다음을 포함합니다.</p>
 <ul class="simple">
-<li><p>짐의 밑에 낮은 latency variance (감축한 지터)</p></li>
-<li><p>더 일관된 CPU 주파수 행동 (힘 절약에 호의를 베푸는 성과)</p></li>
-<li><p>공격적인 힘 관리 국가에서 감소된 충격</p></li>
-<li><p>latency 민감하는 PCIe/DMA-driven 작업 부하를 위한 더 나은 꼬리 latency</p></li>
+<li><p data-original-en="Lower latency variance (reduced jitter) under load">짐의 밑에 낮은 latency variance (감축한 지터)</p></li>
+<li><p data-original-en="More consistent CPU frequency behavior (often favoring performance over power saving)">더 일관된 CPU 주파수 행동 (힘 절약에 호의를 베푸는 성과)</p></li>
+<li><p data-original-en="Reduced impact from aggressive power management states">공격적인 힘 관리 국가에서 감소된 충격</p></li>
+<li><p data-original-en="Better tail latency for latency-sensitive PCIe/DMA-driven workloads">latency 민감하는 PCIe/DMA-driven 작업 부하를 위한 더 나은 꼬리 latency</p></li>
 </ul>
 <div class="admonition note">
-<p class="admonition-title">참고</p>
-<p>정확한 변경은 배포 및 조정 버전에 달려 있습니다. 아래에서 조정 된 프로필 내용을 검토 <code class="docutils literal notranslate"><span class="pre">/usr/lib/tuned/latency-performance/</span></code> 적용된 손잡이의 정확한 목록이 필요한 경우.</p>
+<p class="admonition-title" data-original-en="Note">참고</p>
+<p data-original-en="The exact changes depend on distribution and tuned version. Review the tuned profile contents under /usr/lib/tuned/latency-performance/ if you need a precise list of applied knobs.">정확한 변경은 배포 및 조정 버전에 달려 있습니다. 아래에서 조정 된 프로필 내용을 검토 <code class="docutils literal notranslate"><span class="pre">/usr/lib/tuned/latency-performance/</span></code> 적용된 손잡이의 정확한 목록이 필요한 경우.</p>
 </div>
 </section>
 </section>

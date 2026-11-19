@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -297,26 +297,26 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="overlap-scheduling">
-<span id="overlapscheduling"></span><h1>겹치기 기획<a class="headerlink" href="#overlap-scheduling" title="Link to this heading">#</a></h1>
-<p><strong>겹치기 기획</strong> (또한 <em>비동기 스케줄링</em>) NPU는 현재 배치를 실행하는 동안 CPU에 다음 배치를 준비합니다. 이것은 NPU가 스케줄 작업을 기다리고 있으며 출력 token (TPOT) 당 throughput 및 시간을 향상시킬 수 있습니다.</p>
-<p>Tradeoff는 처음 token (TTFT)에 추가 시간입니다: 새로 도착 요청은 이미 준비된 배치에 가입할 수 없습니다. 대부분의 경우, 감소된 TPOT는 TTFT에서 모든 미터 측에 걸쳐 전반적인 개선 된 성능으로 인해 약간 증가한 TTFT를 위해 위로 만듭니다.</p>
-<p>Overlap 스케줄링은 기본적으로 비활성화되며 지원된 text-generation 모델에 사용할 수 있습니다.</p>
+<span id="overlapscheduling"></span><h1 data-original-en="Overlap Scheduling">겹치기 기획<a class="headerlink" href="#overlap-scheduling" title="Link to this heading">#</a></h1>
+<p data-original-en="Overlap scheduling (also known as asynchronous scheduling) prepares the next batch on the CPU while the NPU executes the current batch. This reduces the time the NPU spends waiting for scheduling work and can improve throughput and time per output token (TPOT)."><strong>겹치기 기획</strong> (또한 <em>비동기 스케줄링</em>) NPU는 현재 배치를 실행하는 동안 CPU에 다음 배치를 준비합니다. 이것은 NPU가 스케줄 작업을 기다리고 있으며 출력 token (TPOT) 당 throughput 및 시간을 향상시킬 수 있습니다.</p>
+<p data-original-en="The tradeoff is additional time to first token (TTFT): a newly arriving request cannot join a batch that has already been prepared. In most cases, the decreased TPOT makes up for the slightly increased TTFT, resulting in overall improved performance across all metrics aside from TTFT.">Tradeoff는 처음 token (TTFT)에 추가 시간입니다: 새로 도착 요청은 이미 준비된 배치에 가입할 수 없습니다. 대부분의 경우, 감소된 TPOT는 TTFT에서 모든 미터 측에 걸쳐 전반적인 개선 된 성능으로 인해 약간 증가한 TTFT를 위해 위로 만듭니다.</p>
+<p data-original-en="Overlap scheduling is disabled by default and can be enabled for supported text-generation models.">Overlap 스케줄링은 기본적으로 비활성화되며 지원된 text-generation 모델에 사용할 수 있습니다.</p>
 <section id="usage">
-<h2>사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Usage">사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
 <section id="cli">
 <h3>CLI<a class="headerlink" href="#cli" title="Link to this heading">#</a></h3>
-<p>서버를 시작할 때 overlap 스케줄링을 활성화하십시오:</p>
+<p data-original-en="Enable overlap scheduling when starting the server:">서버를 시작할 때 overlap 스케줄링을 활성화하십시오:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--enable-overlap-scheduling
 </pre></div>
 </div>
-<p>eager scheduling로 돌아 가기, 옵션 또는 명시적으로 비활성화 :</p>
+<p data-original-en="To return to eager scheduling, omit the option or disable it explicitly:">eager scheduling로 돌아 가기, 옵션 또는 명시적으로 비활성화 :</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--no-enable-overlap-scheduling
 </pre></div>
 </div>
 </section>
 <section id="python-api">
 <h3>Python API<a class="headerlink" href="#python-api" title="Link to this heading">#</a></h3>
-<p>오프라인 세대의 경우, 스케줄링 루프를 통해 선택하십시오. <code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code>:</p>
+<p data-original-en="For offline generation, select the scheduling loop through SchedulerConfig:">오프라인 세대의 경우, 스케줄링 루프를 통해 선택하십시오. <code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm.metadata.config_types</span><span class="w"> </span><span class="kn">import</span> <span class="n">SchedulerConfig</span><span class="p">,</span> <span class="n">SchedulingLoop</span>
 
@@ -332,13 +332,13 @@ html
     <span class="p">])</span>
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">SchedulingLoop.EAGER</span></code> 기본적으로 루프를 선택하기 위해.</p>
+<p data-original-en="Use SchedulingLoop.EAGER to select the default loop explicitly.">Use <code class="docutils literal notranslate"><span class="pre">SchedulingLoop.EAGER</span></code> 기본적으로 루프를 선택하기 위해.</p>
 </section>
 </section>
 <section id="how-it-works">
-<h2>어떻게 작동 하는 것 입니까?<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
-<p>기본 설정 <strong>열망</strong> 스케줄링 루프는 이전 배치의 결과를 처리 한 후 각 배치를 준비합니다. 이 순차적 의존도는 자연적이며, 다음 배치는 일반적으로 이전 배치의 지속적인 decode 요청에서 샘플 출력이 필요합니다.</p>
-<p>그리고 <strong>겹치는 것</strong> 스케줄링, Furiosa-LLM는 어떤 활성 요청이 추가적인 decode 단계 또는 추가적인 prompt 청크를 필요로 할지 예측한 다음 요청을 선택하고 KV cache 블록을 할당하고 현재 배치가 NPU에서 실행되는 동안 다음 배치의 I/O 버퍼 및 작업을 준비합니다.</p>
+<h2 data-original-en="How It Works">어떻게 작동 하는 것 입니까?<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
+<p data-original-en="The default eager scheduling loop prepares each batch after processing the previous batch’s results. This sequential dependency is natural, as the next batch usually requires the sampled outputs from the previous batch’s ongoing decode requests.">기본 설정 <strong>열망</strong> 스케줄링 루프는 이전 배치의 결과를 처리 한 후 각 배치를 준비합니다. 이 순차적 의존도는 자연적이며, 다음 배치는 일반적으로 이전 배치의 지속적인 decode 요청에서 샘플 출력이 필요합니다.</p>
+<p data-original-en="With overlap scheduling, Furiosa-LLM anticipates which active requests will need another decode step or another prompt chunk, then selects requests, allocates KV cache blocks, and prepares the next batch’s I/O buffers and actions while the current batch runs on the NPU.">그리고 <strong>겹치는 것</strong> 스케줄링, Furiosa-LLM는 어떤 활성 요청이 추가적인 decode 단계 또는 추가적인 prompt 청크를 필요로 할지 예측한 다음 요청을 선택하고 KV cache 블록을 할당하고 현재 배치가 NPU에서 실행되는 동안 다음 배치의 I/O 버퍼 및 작업을 준비합니다.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Eager scheduling:
 CPU: [prepare A]             [prepare B]             [prepare C]
 NPU:             [execute A]             [execute B]             [execute C]
@@ -348,34 +348,34 @@ CPU: [prepare A] [prepare B] [prepare C]
 NPU:             [execute A] [execute B] [execute C]
 </pre></div>
 </div>
-<p>이 다이어그램은 개념적이다; 결과 처리 및 동기화는 여전히 특정 경우에 시간이 걸릴 수 있습니다. 준비된 decode 배치를 파견하기 전에 Furiosa-LLM는 사전 처리 배치에서 실제 샘플 토큰을 채웁니다. 그것은 token 값을 추측하는 것보다 더 많은 요청 오염을 기대합니다.</p>
-<p>그러나, 오버랩 스케줄링은 요청이 end-of-sequence (EOS) token를 생성하거나 클라이언트가 취소 될 때 추가 오버 헤드를 호출 할 수 있습니다. already-prepared 단계는 여전히 실행 될 수 있지만 출력이 무시됩니다.</p>
+<p data-original-en="This diagram is conceptual; result processing and synchronization may still take time in certain cases. Before dispatching the prepared decode batch, Furiosa-LLM fills in the actual sampled tokens from the preceding batch. It anticipates request continuation, rather than guessing token values.">이 다이어그램은 개념적이다; 결과 처리 및 동기화는 여전히 특정 경우에 시간이 걸릴 수 있습니다. 준비된 decode 배치를 파견하기 전에 Furiosa-LLM는 사전 처리 배치에서 실제 샘플 토큰을 채웁니다. 그것은 token 값을 추측하는 것보다 더 많은 요청 오염을 기대합니다.</p>
+<p data-original-en="However, overlap scheduling may incur additional overhead when a request generates an end-of-sequence (EOS) token or is cancelled by the client. An already-prepared step may still run, even though its output is discarded.">그러나, 오버랩 스케줄링은 요청이 end-of-sequence (EOS) token를 생성하거나 클라이언트가 취소 될 때 추가 오버 헤드를 호출 할 수 있습니다. already-prepared 단계는 여전히 실행 될 수 있지만 출력이 무시됩니다.</p>
 </section>
 <section id="when-to-use-it">
-<h2>언제 사용 해야 합니까?<a class="headerlink" href="#when-to-use-it" title="Link to this heading">#</a></h2>
-<p>Overlap 스케줄링은 NPU 실행 사이의 시간의 의미있는 부분을 위해 CPU 배치 준비 계정이 가장 유용합니다. 지속 된 세대와 많은 decode 침략과 작업 부하는이 오버 헤드를 숨길 수있는 기회를 반복했습니다.</p>
-<p>잠재적인 이점은 다음과 같습니다:</p>
+<h2 data-original-en="When to Use It">언제 사용 해야 합니까?<a class="headerlink" href="#when-to-use-it" title="Link to this heading">#</a></h2>
+<p data-original-en="Overlap scheduling is most useful when CPU batch preparation accounts for a meaningful portion of the time between NPU executions. Workloads with sustained generation and many decode iterations have repeated opportunities to hide this overhead.">Overlap 스케줄링은 NPU 실행 사이의 시간의 의미있는 부분을 위해 CPU 배치 준비 계정이 가장 유용합니다. 지속 된 세대와 많은 decode 침략과 작업 부하는이 오버 헤드를 숨길 수있는 기회를 반복했습니다.</p>
+<p data-original-en="Potential benefits include:">잠재적인 이점은 다음과 같습니다:</p>
 <ul class="simple">
-<li><p><strong>더 높은 throughput</strong>: 일괄 처리 사이의 NPU idle 시간이 적은 경우 초당 출력 토큰의 수를 늘릴 수 있습니다.</p></li>
-<li><p><strong>낮은 TPOT</strong>: scheduling gaps를 축소하면 생성된 토큰 사이에 평균 간격을 단축할 수 있습니다.</p></li>
-<li><p><strong>NPU의 더 나은 활용</strong>: CPU 준비 및 NPU 실행은 동시에 진행할 수 있습니다.</p></li>
+<li><p data-original-en="Higher throughput: less NPU idle time between batches can increase the number of output tokens served per second."><strong>더 높은 throughput</strong>: 일괄 처리 사이의 NPU idle 시간이 적은 경우 초당 출력 토큰의 수를 늘릴 수 있습니다.</p></li>
+<li><p data-original-en="Lower TPOT: reducing scheduling gaps can shorten the average interval between generated tokens."><strong>낮은 TPOT</strong>: scheduling gaps를 축소하면 생성된 토큰 사이에 평균 간격을 단축할 수 있습니다.</p></li>
+<li><p data-original-en="Better NPU utilization: CPU preparation and NPU execution can make progress at the same time."><strong>NPU의 더 나은 활용</strong>: CPU 준비 및 NPU 실행은 동시에 진행할 수 있습니다.</p></li>
 </ul>
-<p>개선은 모델, 일괄 크기, prompt 및 출력 길이, 요청 도착 패턴 및 호스트 성능에 따라 다릅니다. 첫 번째 배치는 여전히 실행하기 전에 준비해야합니다. 짧은 세대는 NPU 계산에 의해 지배되는 몇 가지 기회를 가지고 더 적은 상대적 개선을 볼 수 있습니다. Overlap는 일부 CPU 작업을 숨깁니다. 그것은 그 작업이 더 빠르거나 개별 모델 패스를 만들지 않습니다.</p>
-<p>Overlap 스케줄링은 throughput 및 TPOT가 TTFT에서 증가를 초과 할 때 유용한 최적화가 될 수 있습니다.</p>
+<p data-original-en="The improvement depends on the model, batch sizes, prompt and output lengths, request arrival pattern, and host performance. The first batch still needs to be prepared before it can run. Short generations have fewer opportunities to benefit, and workloads dominated by NPU computation may see a smaller relative improvement. Overlap hides some CPU work; it does not eliminate that work or make an individual model forward pass faster.">개선은 모델, 일괄 크기, prompt 및 출력 길이, 요청 도착 패턴 및 호스트 성능에 따라 다릅니다. 첫 번째 배치는 여전히 실행하기 전에 준비해야합니다. 짧은 세대는 NPU 계산에 의해 지배되는 몇 가지 기회를 가지고 더 적은 상대적 개선을 볼 수 있습니다. Overlap는 일부 CPU 작업을 숨깁니다. 그것은 그 작업이 더 빠르거나 개별 모델 패스를 만들지 않습니다.</p>
+<p data-original-en="Overlap scheduling can be a useful optimization when its throughput and TPOT gains outweigh the increase in TTFT.">Overlap 스케줄링은 throughput 및 TPOT가 TTFT에서 증가를 초과 할 때 유용한 최적화가 될 수 있습니다.</p>
 </section>
 <section id="caveats-and-compatibility">
-<h2>주의사항 및 호환성<a class="headerlink" href="#caveats-and-compatibility" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Caveats and Compatibility">주의사항 및 호환성<a class="headerlink" href="#caveats-and-compatibility" title="Link to this heading">#</a></h2>
 <section id="first-token-latency">
 <h3>First-Token Latency<a class="headerlink" href="#first-token-latency" title="Link to this heading">#</a></h3>
-<p>준비된 배치는 새로 도착 요청 전에 파견됩니다 후속 스케줄 작업에 통합됩니다. 새로운 요청은 prompt가 처리되기 전에 추가 배치를 기다릴 수 있습니다. 이것은 throughput 및 TPOT가 개선 될 때 TTFT를 늘릴 수 있습니다.</p>
-<p>추가 지연은 일괄 실행 시간 및로드에 따라 달라집니다. 그것은 밀리 초 또는 총 요청 latency에 상단 경계의 고정 번호가 아닙니다. 응용 프로그램은 빠른 첫 번째 응답을 우선하거나 엄격한 TTFT 대상을 가지고 있다면 예상 요청 부하에서 루프를 비교하십시오.</p>
+<p data-original-en="A prepared batch is dispatched before newly arriving requests are incorporated into subsequent scheduling work. A new request can therefore wait for an additional batch before its prompt is processed. This can increase TTFT even when throughput and TPOT improve.">준비된 배치는 새로 도착 요청 전에 파견됩니다 후속 스케줄 작업에 통합됩니다. 새로운 요청은 prompt가 처리되기 전에 추가 배치를 기다릴 수 있습니다. 이것은 throughput 및 TPOT가 개선 될 때 TTFT를 늘릴 수 있습니다.</p>
+<p data-original-en="The added delay depends on batch execution time and load; it is not a fixed number of milliseconds or an upper bound on total request latency. If your application prioritizes fast first responses or has a strict TTFT target, compare both loops under the expected request load.">추가 지연은 일괄 실행 시간 및로드에 따라 달라집니다. 그것은 밀리 초 또는 총 요청 latency에 상단 경계의 고정 번호가 아닙니다. 응용 프로그램은 빠른 첫 번째 응답을 우선하거나 엄격한 TTFT 대상을 가지고 있다면 예상 요청 부하에서 루프를 비교하십시오.</p>
 </section>
 <section id="work-after-completion-or-cancellation">
-<h3>완료 후 작업 또는 취소<a class="headerlink" href="#work-after-completion-or-cancellation" title="Link to this heading">#</a></h3>
-<p>스케줄러는 이미 준비하고 요청이 완료되거나 취소되었는지 배우게 될 때 다른 단계를 파견 할 수 있습니다. 그 단계는 NPU compute 및 임시 KV cache 공간을 출력하는 것이 허용되지 않는 경우에도 사용할 수 있습니다. Furiosa-LLM는 in-flight 작업이 완료된 후 추가 쓰기 블록을 해제합니다. 이 오버 헤드는 매우 짧은 출력 또는 빈번한 취소로 작업 부하에 대한 이점을 줄일 수 있습니다.</p>
+<h3 data-original-en="Work After Completion or Cancellation">완료 후 작업 또는 취소<a class="headerlink" href="#work-after-completion-or-cancellation" title="Link to this heading">#</a></h3>
+<p data-original-en="The scheduler may have already prepared and dispatched another step when it learns that a request has finished or been cancelled. That step can consume NPU compute and temporary KV cache space even though its output is discarded. Furiosa-LLM releases the extra write blocks after the in-flight work completes. This overhead can reduce the benefit for workloads with very short outputs or frequent cancellations.">스케줄러는 이미 준비하고 요청이 완료되거나 취소되었는지 배우게 될 때 다른 단계를 파견 할 수 있습니다. 그 단계는 NPU compute 및 임시 KV cache 공간을 출력하는 것이 허용되지 않는 경우에도 사용할 수 있습니다. Furiosa-LLM는 in-flight 작업이 완료된 후 추가 쓰기 블록을 해제합니다. 이 오버 헤드는 매우 짧은 출력 또는 빈번한 취소로 작업 부하에 대한 이점을 줄일 수 있습니다.</p>
 </section>
 <section id="supported-configurations">
-<h3>지원되는 구성<a class="headerlink" href="#supported-configurations" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Supported Configurations">지원되는 구성<a class="headerlink" href="#supported-configurations" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
 <caption><span class="caption-text">현재 호환성</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
@@ -383,60 +383,60 @@ NPU:             [execute A] [execute B] [execute C]
 <col style="width: 65.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>기능 또는 설정</p></th>
-<th class="head"><p>중복 스케줄링 시 동작</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Feature or setting">기능 또는 설정</p></th>
+<th class="head"><p data-original-en="Behavior with overlap scheduling">중복 스케줄링 시 동작</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Text-generation 모델</p></td>
-<td><p>아래 제한에 따라 지원됩니다.</p></td>
+<tr class="row-even"><td><p data-original-en="Text-generation models">Text-generation 모델</p></td>
+<td><p data-original-en="Supported, subject to the restrictions below.">아래 제한에 따라 지원됩니다.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Vision-language 모델</p></td>
-<td><p>지원되지 않음. 엔진 시작은 의도한 요청이 텍스트를 포함했을 때 실패합니다. 다음 주요 릴리스에서 지원될 것입니다.</p></td>
+<tr class="row-odd"><td><p data-original-en="Vision-language models">Vision-language 모델</p></td>
+<td><p data-original-en="Unsupported. Engine startup fails, including when the intended requests contain only text. Will be supported in the next major release.">지원되지 않음. 엔진 시작은 의도한 요청이 텍스트를 포함했을 때 실패합니다. 다음 주요 릴리스에서 지원될 것입니다.</p></td>
 </tr>
-<tr class="row-even"><td><p>풀링 모델 (embedding 및 reranking)</p></td>
-<td><p>지원되지 않은. 엔진 시작은 이러한 모델이 decode 단계가 없기 때문에 실패했습니다.</p></td>
+<tr class="row-even"><td><p data-original-en="Pooling models (embedding and reranking)">풀링 모델 (embedding 및 reranking)</p></td>
+<td><p data-original-en="Unsupported. Engine startup fails because these models have no decode phase.">지원되지 않은. 엔진 시작은 이러한 모델이 decode 단계가 없기 때문에 실패했습니다.</p></td>
 </tr>
-<tr class="row-odd"><td><p>NPU 접두사 캐시 (L1)</p></td>
-<td><p>지원. Overlap 스케줄링은 비활성화가 필요하지 않습니다.
+<tr class="row-odd"><td><p data-original-en="NPU prefix cache (L1)">NPU 접두사 캐시 (L1)</p></td>
+<td><p data-original-en="Supported. Overlap scheduling does not require disabling Prefix Caching.">지원. Overlap 스케줄링은 비활성화가 필요하지 않습니다.
 <a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p>호스트 KV cache (L2)</p></td>
-<td><p>설정된 경우 지원됩니다. 자세한 내용은 <a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층적 Prefix Caching</span></a>.</p></td>
+<tr class="row-even"><td><p data-original-en="Host KV cache (L2)">호스트 KV cache (L2)</p></td>
+<td><p data-original-en="Supported when configured. See Hierarchical Prefix Caching.">설정된 경우 지원됩니다. 자세한 내용은 <a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층적 Prefix Caching</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p>레이어별 L2-to-L1 재로드</p></td>
-<td><p>별도의 실험 재로드 옵션과 호스트 캐시 예산에 지원. 참조 <a class="reference internal" href="hierarchical-prefix-caching.html#layerwisekvreload"><span class="std std-ref">모델 실행을 통한 L2 재로드</span></a>.</p></td>
+<tr class="row-odd"><td><p data-original-en="Layerwise L2-to-L1 reload">레이어별 L2-to-L1 재로드</p></td>
+<td><p data-original-en="Supported with the separate experimental reload option and a host cache budget. See Overlapping L2 Reload with Model Execution.">별도의 실험 재로드 옵션과 호스트 캐시 예산에 지원. 참조 <a class="reference internal" href="hierarchical-prefix-caching.html#layerwisekvreload"><span class="std std-ref">모델 실행을 통한 L2 재로드</span></a>.</p></td>
 </tr>
-<tr class="row-even"><td><p>실험적인 NPU 샘플링</p></td>
-<td><p>호환 모델 및 FXB 지원. 참조 <a class="reference internal" href="performance-optimization.html#npusampling"><span class="std std-ref">실험적인 NPU 샘플링</span></a>.</p></td>
+<tr class="row-even"><td><p data-original-en="Experimental NPU sampling">실험적인 NPU 샘플링</p></td>
+<td><p data-original-en="Supported for compatible models and FXBs. See Experimental NPU Sampling.">호환 모델 및 FXB 지원. 참조 <a class="reference internal" href="performance-optimization.html#npusampling"><span class="std std-ref">실험적인 NPU 샘플링</span></a>.</p></td>
 </tr>
-<tr class="row-odd"><td><p>실험적 추론 디코딩</p></td>
-<td><p>지원되지 않습니다. 즉시 실행 스케줄링을 사용하십시오.</p></td>
+<tr class="row-odd"><td><p data-original-en="Experimental speculative decoding">실험적 추론 디코딩</p></td>
+<td><p data-original-en="Unsupported. Use eager scheduling.">지원되지 않습니다. 즉시 실행 스케줄링을 사용하십시오.</p></td>
 </tr>
-<tr class="row-even"><td><p>원격 KV cache (L3, Mooncake)로 대체됩니다.</p></td>
-<td><p>Overlap 스케줄러가 시작될 때 비활성화됩니다. eager scheduling을 사용하여 작업 부하가 원격 캐시 재사용에 의존합니다.</p></td>
+<tr class="row-even"><td><p data-original-en="Remote KV cache (L3, Mooncake)">원격 KV cache (L3, Mooncake)로 대체됩니다.</p></td>
+<td><p data-original-en="Disabled when the overlap scheduler starts, even if configured. Use eager scheduling if your workload relies on remote cache reuse.">Overlap 스케줄러가 시작될 때 비활성화됩니다. eager scheduling을 사용하여 작업 부하가 원격 캐시 재사용에 의존합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">npu_queue_limit</span></code> / <code class="docutils literal notranslate"><span class="pre">--npu-queue-limit</span></code></p></td>
-<td><p>남아 있어야 합니다. <code class="docutils literal notranslate"><span class="pre">1</span></code>, 기본값. Overlap 스케줄링은 CPU가 더 큰 NPU 실행 큐를 필요로하지 않고 시간이 지남에 대비합니다.</p></td>
+<td><p data-original-en="Must remain 1, the default. Overlap scheduling prepares CPU work ahead of time without requiring a larger NPU execution queue.">남아 있어야 합니다. <code class="docutils literal notranslate"><span class="pre">1</span></code>, 기본값. Overlap 스케줄링은 CPU가 더 큰 NPU 실행 큐를 필요로하지 않고 시간이 지남에 대비합니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>지원되지 않은 모델 또는 디코딩 구성을 위해, 다시 시작
+<p data-original-en="For unsupported model or decoding configurations, restart with --no-enable-overlap-scheduling or SchedulingLoop.EAGER.">지원되지 않은 모델 또는 디코딩 구성을 위해, 다시 시작
 <code class="docutils literal notranslate"><span class="pre">--no-enable-overlap-scheduling</span></code> or <code class="docutils literal notranslate"><span class="pre">SchedulingLoop.EAGER</span></code>.</p>
 </section>
 </section>
 <section id="evaluating-performance">
-<h2>성능 평가<a class="headerlink" href="#evaluating-performance" title="Link to this heading">#</a></h2>
-<p>동일한 모델의 artifact, 장치 구성, concurrency, prompt 및 출력 길이 및 sampling 설정을 사용하여 eager 및 overlap 스케줄링을 비교하십시오. 각 구성을 따뜻하게하고 prefix-cache 조건을 준수하십시오.</p>
-<p>throughput와 latency 둘 다 측정:</p>
+<h2 data-original-en="Evaluating Performance">성능 평가<a class="headerlink" href="#evaluating-performance" title="Link to this heading">#</a></h2>
+<p data-original-en="Compare eager and overlap scheduling using the same model artifact, device configuration, concurrency, prompt and output lengths, and sampling settings. Warm up each configuration and keep prefix-cache conditions comparable.">동일한 모델의 artifact, 장치 구성, concurrency, prompt 및 출력 길이 및 sampling 설정을 사용하여 eager 및 overlap 스케줄링을 비교하십시오. 각 구성을 따뜻하게하고 prefix-cache 조건을 준수하십시오.</p>
+<p data-original-en="Measure both throughput and latency:">throughput와 latency 둘 다 측정:</p>
 <ul class="simple">
-<li><p><strong>초당 출력 토큰 수</strong> 서비스 용량을 평가하는 데 사용됩니다.</p></li>
-<li><p><strong>TPOT 또는 inter-token 지연 시간</strong> 스트리밍 생성 속도를 평가합니다.</p></li>
-<li><p><strong>TTFT, 포함: 꼬리 퍼센트일</strong>, 새로운 요구에 비용을 검사하기 위하여.</p></li>
-<li><p><strong>End-to-end의 요청 지연</strong> 완전한 사용자 경험을 평가하기 위해.</p></li>
+<li><p data-original-en="Output tokens per second to evaluate serving capacity."><strong>초당 출력 토큰 수</strong> 서비스 용량을 평가하는 데 사용됩니다.</p></li>
+<li><p data-original-en="TPOT or inter-token latency to evaluate streaming generation speed."><strong>TPOT 또는 inter-token 지연 시간</strong> 스트리밍 생성 속도를 평가합니다.</p></li>
+<li><p data-original-en="TTFT, including tail percentiles, to check the cost to new requests."><strong>TTFT, 포함: 꼬리 퍼센트일</strong>, 새로운 요구에 비용을 검사하기 위하여.</p></li>
+<li><p data-original-en="End-to-end request latency to assess the complete user experience."><strong>End-to-end의 요청 지연</strong> 완전한 사용자 경험을 평가하기 위해.</p></li>
 </ul>
-<p>짧은 긴 요청과 생산 예상 도착률의 혼합을 포함. throughput 또는 generation-speed 개선이 유용하고 first-token latency가 응용 프로그램의 대상 내에서 남아 프리퍼 오버랩 스케줄링. 서버 로그 <code class="docutils literal notranslate"><span class="pre">Overlap</span> <span class="pre">scheduler</span> <span class="pre">has</span> <span class="pre">started</span></code> 이 루프가 시작될 때, 설정을 확인하는 메시지가 효력을 발생했습니다.</p>
+<p data-original-en="Include the mix of short and long requests and the arrival rates expected in production. Prefer overlap scheduling when the throughput or generation-speed improvement is useful and first-token latency remains within your application’s target. The server logs Overlap scheduler has started when this loop starts; use that message to confirm the setting took effect.">짧은 긴 요청과 생산 예상 도착률의 혼합을 포함. throughput 또는 generation-speed 개선이 유용하고 first-token latency가 응용 프로그램의 대상 내에서 남아 프리퍼 오버랩 스케줄링. 서버 로그 <code class="docutils literal notranslate"><span class="pre">Overlap</span> <span class="pre">scheduler</span> <span class="pre">has</span> <span class="pre">started</span></code> 이 루프가 시작될 때, 설정을 확인하는 메시지가 효력을 발생했습니다.</p>
 </section>
 </section>
 </article>

@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -316,73 +316,73 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="hierarchical-prefix-caching">
-<span id="hierarchicalprefixcaching"></span><h1>계층적 Prefix Caching<a class="headerlink" href="#hierarchical-prefix-caching" title="Link to this heading">#</a></h1>
-<p>계층적 prefix caching 확장 <a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a> host-memory 캐시 계층과 함께. 그것은 Furiosa-LLM를 허용하여 NPU 메모리에 적합 할 수있는 것보다 더 재사용 가능한 KV cache를 보존 할 수 있습니다, 긴 반복 된 접두사 및 NPU KV cache보다 더 큰 작업 세트.</p>
-<p>이 문서는 로컬 two-tier 캐시를 설명합니다:</p>
+<span id="hierarchicalprefixcaching"></span><h1 data-original-en="Hierarchical Prefix Caching">계층적 Prefix Caching<a class="headerlink" href="#hierarchical-prefix-caching" title="Link to this heading">#</a></h1>
+<p data-original-en="Hierarchical prefix caching extends Prefix Caching with a host-memory cache tier. It allows Furiosa-LLM to preserve more reusable KV cache than can fit in NPU memory, which is useful for workloads with long, repeated prefixes and a working set larger than the NPU KV cache.">계층적 prefix caching 확장 <a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a> host-memory 캐시 계층과 함께. 그것은 Furiosa-LLM를 허용하여 NPU 메모리에 적합 할 수있는 것보다 더 재사용 가능한 KV cache를 보존 할 수 있습니다, 긴 반복 된 접두사 및 NPU KV cache보다 더 큰 작업 세트.</p>
+<p data-original-en="This document describes the local two-tier cache:">이 문서는 로컬 two-tier 캐시를 설명합니다:</p>
 <ul class="simple">
-<li><p><strong>NPU 캐시 (L1)</strong> lowest-latency 접두사 재사용을 제공하지만 제한된 용량을 가지고 있으며 활성 요청에 의해 필요합니다.</p></li>
-<li><p><strong>호스트 캐시 (L2)</strong> 시스템 메모리에 추가 용량을 제공합니다. host-resident 접두사는 재사용되기 전에 NPU 메모리로 다시 복사됩니다.</p></li>
+<li><p data-original-en="NPU cache (L1) provides the lowest-latency prefix reuse, but has limited capacity and is also needed by active requests."><strong>NPU 캐시 (L1)</strong> lowest-latency 접두사 재사용을 제공하지만 제한된 용량을 가지고 있으며 활성 요청에 의해 필요합니다.</p></li>
+<li><p data-original-en="Host cache (L2) provides additional capacity in system memory. A matching host-resident prefix is copied back to NPU memory before it is reused."><strong>호스트 캐시 (L2)</strong> 시스템 메모리에 추가 용량을 제공합니다. host-resident 접두사는 재사용되기 전에 NPU 메모리로 다시 복사됩니다.</p></li>
 </ul>
-<p>각 data-parallel 복제는 Furiosa-LLM 프로세스 내에서 독립적 인 NPU 및 호스트 캐시를 소유합니다. 캐시 내용은 서버 프로세스간에 지속적이거나 공유되지 않습니다.</p>
+<p data-original-en="Each data-parallel replica owns an independent NPU and host cache within the Furiosa-LLM process. Cache contents are neither persistent nor shared between server processes.">각 data-parallel 복제는 Furiosa-LLM 프로세스 내에서 독립적 인 NPU 및 호스트 캐시를 소유합니다. 캐시 내용은 서버 프로세스간에 지속적이거나 공유되지 않습니다.</p>
 <div class="admonition warning">
-<p class="admonition-title">경고</p>
-<p>Hierarchical prefix caching는 실험적입니다. 따라서 CLI 옵션은 사용 <code class="docutils literal notranslate"><span class="pre">--experimental-</span></code> 접두사를 유지하고 나타나지 않습니다. <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span>
+<p class="admonition-title" data-original-en="Warning">경고</p>
+<p data-original-en="Hierarchical prefix caching is experimental. Its CLI options therefore use an --experimental- prefix and do not appear in furiosa-llm serve --help. Option names and behavior may change in a future release.">Hierarchical prefix caching는 실험적입니다. 따라서 CLI 옵션은 사용 <code class="docutils literal notranslate"><span class="pre">--experimental-</span></code> 접두사를 유지하고 나타나지 않습니다. <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span>
 <span class="pre">--help</span></code>. 옵션 이름과 행동은 향후 릴리스에서 변경할 수 있습니다.</p>
 </div>
 <section id="when-to-use-it">
-<h2>언제 사용 해야 합니까?<a class="headerlink" href="#when-to-use-it" title="Link to this heading">#</a></h2>
-<p>Hierarchical prefix caching는 뒤에 오는 것 전부가 true인 때 가장 효과적입니다:</p>
+<h2 data-original-en="When to Use It">언제 사용 해야 합니까?<a class="headerlink" href="#when-to-use-it" title="Link to this heading">#</a></h2>
+<p data-original-en="Hierarchical prefix caching is most effective when all of the following are true:">Hierarchical prefix caching는 뒤에 오는 것 전부가 true인 때 가장 효과적입니다:</p>
 <ul class="simple">
-<li><p>반복적으로 긴 사용, token-identical 접두사 요청.</p></li>
-<li><p>재사용 가능한 접두사 작업 세트는 NPU 메모리에 남아있는 너무 크다.</p></li>
-<li><p>evicted 접두사 비용을 호스트 메모리에서 KV cache를 복사하는 것보다 더 많은 비용 절감.</p></li>
-<li><p>호스트는 충분히 무료 메모리와 양방향 host-NPU 대역폭을 구성한 캐시를 가지고 있습니다.</p></li>
+<li><p data-original-en="Requests repeatedly use long, token-identical prefixes.">반복적으로 긴 사용, token-identical 접두사 요청.</p></li>
+<li><p data-original-en="The reusable prefix working set is too large to remain in NPU memory.">재사용 가능한 접두사 작업 세트는 NPU 메모리에 남아있는 너무 크다.</p></li>
+<li><p data-original-en="Recomputing an evicted prefix costs more than copying its KV cache from host memory.">evicted 접두사 비용을 호스트 메모리에서 KV cache를 복사하는 것보다 더 많은 비용 절감.</p></li>
+<li><p data-original-en="The host has enough free memory and bidirectional host-NPU bandwidth for the configured cache.">호스트는 충분히 무료 메모리와 양방향 host-NPU 대역폭을 구성한 캐시를 가지고 있습니다.</p></li>
 </ul>
-<p>일반적인 예제에는 반복된 시스템 프롬프트, multi-turn 대화, RAG 요청이 있으며, 대용량 prompt 템플릿 모음과 함께 문서 접두사 및 응용 프로그램을 재사용합니다.</p>
-<p>그것은 신속하게 접두사, 공유 접두사 짧은, 또는 NPU prefix-cache 용량이 이미 충분하다 때 약간의 혜택을 제공 할 수 있습니다. 호스트 캐시 히트는 일반적으로 NPU 캐시가 KV 데이터가 다시로드되어야하지만 긴 접두사보다 실질적으로 저렴 할 수 있기 때문에 감소합니다. 배포하기 전에 대표 요청 배포 결과를 측정하십시오.</p>
+<p data-original-en="Typical examples include repeated system prompts, multi-turn conversations, RAG requests that reuse document prefixes, and applications with a collection of large prompt templates.">일반적인 예제에는 반복된 시스템 프롬프트, multi-turn 대화, RAG 요청이 있으며, 대용량 prompt 템플릿 모음과 함께 문서 접두사 및 응용 프로그램을 재사용합니다.</p>
+<p data-original-en="It may provide little benefit when prompts rarely share a prefix, shared prefixes are short, or NPU prefix-cache capacity is already sufficient. A host cache hit is normally slower than an NPU cache hit because the KV data must be reloaded, but it can be substantially cheaper than recomputing a long prefix. Measure the result with a representative request distribution before deploying it broadly.">그것은 신속하게 접두사, 공유 접두사 짧은, 또는 NPU prefix-cache 용량이 이미 충분하다 때 약간의 혜택을 제공 할 수 있습니다. 호스트 캐시 히트는 일반적으로 NPU 캐시가 KV 데이터가 다시로드되어야하지만 긴 접두사보다 실질적으로 저렴 할 수 있기 때문에 감소합니다. 배포하기 전에 대표 요청 배포 결과를 측정하십시오.</p>
 </section>
 <section id="how-it-works">
-<h2>어떻게 작동 하는 것 입니까?<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
-<p>Furiosa-LLM는 각각 prompt의 시작부터 token ID에 의해 접두사를 계속합니다. 일치한 접두사는 어떤 경기를 구성하지 않을지도 모르다 곳에 계층화한 조화시키는 hierarchical 캐싱 변화.</p>
-<p>개념적으로, 캐시 된 접두사는 3 주 중 하나에있을 수 있습니다 :</p>
+<h2 data-original-en="How It Works">어떻게 작동 하는 것 입니까?<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
+<p data-original-en="Furiosa-LLM continues to match prefixes by token ID from the beginning of each prompt. Enabling hierarchical caching changes where a matched prefix may reside, not what constitutes a match.">Furiosa-LLM는 각각 prompt의 시작부터 token ID에 의해 접두사를 계속합니다. 일치한 접두사는 어떤 경기를 구성하지 않을지도 모르다 곳에 계층화한 조화시키는 hierarchical 캐싱 변화.</p>
+<p data-original-en="Conceptually, a cached prefix can be in one of three states:">개념적으로, 캐시 된 접두사는 3 주 중 하나에있을 수 있습니다 :</p>
 <ul class="simple">
-<li><p><strong>NPU만</strong>: 즉시 재사용 가능.</p></li>
-<li><p><strong>호스트만</strong>: NPU 메모리 밖에 유지하고 다음 히트를 다시로드했습니다.</p></li>
-<li><p><strong>NPU 및 호스트</strong>: 즉시 재사용 가능, NPU eviction을 생존 할 수있는 호스트 복사.</p></li>
+<li><p data-original-en="NPU only: immediately reusable."><strong>NPU만</strong>: 즉시 재사용 가능.</p></li>
+<li><p data-original-en="Host only: retained outside NPU memory and reloaded on the next hit."><strong>호스트만</strong>: NPU 메모리 밖에 유지하고 다음 히트를 다시로드했습니다.</p></li>
+<li><p data-original-en="NPU and host: immediately reusable, with a host copy that can survive NPU eviction."><strong>NPU 및 호스트</strong>: 즉시 재사용 가능, NPU eviction을 생존 할 수있는 호스트 복사.</p></li>
 </ul>
-<p>새로운 요청의 경우, 스케줄러는 가장 긴 안전한 token-exact 일치를 찾습니다. 그 경기의 시작은 이미 NPU-resident가 될 수 있으며 다음 부분은 host-resident입니다. Furiosa-LLM는 NPU 부분을 재사용하고 호스트 부분을 다시로드하고 나머지는 prompt suffixuffix를 준수합니다.</p>
+<p data-original-en="For a new request, the scheduler finds the longest safe token-exact match. The beginning of that match may already be NPU-resident, while a following portion is host-resident. Furiosa-LLM reuses the NPU portion, reloads the host portion, and computes only the remaining unmatched prompt suffix.">새로운 요청의 경우, 스케줄러는 가장 긴 안전한 token-exact 일치를 찾습니다. 그 경기의 시작은 이미 NPU-resident가 될 수 있으며 다음 부분은 host-resident입니다. Furiosa-LLM는 NPU 부분을 재사용하고 호스트 부분을 다시로드하고 나머지는 prompt suffixuffix를 준수합니다.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>New prompt:       [       matching prefix       ][ new suffix ]
 Cache residency:  [ NPU-resident ][ host-only   ][ not cached ]
 Request action:   [ reuse         ][ reload     ][ compute    ]
 </pre></div>
 </div>
-<p>호스트 및 NPU 용량은 자동으로 관리됩니다. 활성 요청으로 사용 된 항목은 보호됩니다. NPU 메모리 압력에서 비활성 캐시 항목은 NPU 사본을 잃을 수 있습니다. 호스트 메모리에 남아있는 경우 아래 설명 된 유지 정책에 따라 다릅니다. 호스트 메모리 압력에서, 이전 자격 호스트 항목은 더 유용한 캐시 콘텐츠를 위해 방을 만들기 위해 evicted.</p>
+<p data-original-en="Host and NPU capacity are managed automatically. Entries used by active requests are protected. Under NPU memory pressure, inactive cached entries may lose their NPU copy; whether they remain in host memory depends on the retention policy described below. Under host memory pressure, older eligible host entries are evicted to make room for more useful cache content.">호스트 및 NPU 용량은 자동으로 관리됩니다. 활성 요청으로 사용 된 항목은 보호됩니다. NPU 메모리 압력에서 비활성 캐시 항목은 NPU 사본을 잃을 수 있습니다. 호스트 메모리에 남아있는 경우 아래 설명 된 유지 정책에 따라 다릅니다. 호스트 메모리 압력에서, 이전 자격 호스트 항목은 더 유용한 캐시 콘텐츠를 위해 방을 만들기 위해 evicted.</p>
 <section id="host-retention-policies">
-<h3>호스트 보존 정책<a class="headerlink" href="#host-retention-policies" title="Link to this heading">#</a></h3>
-<p>Hierarchical 캐싱은 호스트 사본을 만들 수있는 두 가지 보완 방법을 제공합니다.</p>
+<h3 data-original-en="Host Retention Policies">호스트 보존 정책<a class="headerlink" href="#host-retention-policies" title="Link to this heading">#</a></h3>
+<p data-original-en="Hierarchical caching provides two complementary ways to create a host copy.">Hierarchical 캐싱은 호스트 사본을 만들 수있는 두 가지 보완 방법을 제공합니다.</p>
 <section id="write-through-promotion">
-<h4>Write-through 프로모션<a class="headerlink" href="#write-through-promotion" title="Link to this heading">#</a></h4>
-<p>Write-through 프로모션은 여전히 NPU-resident 인 동안 반복적으로 재사용 된 접두사를 식별합니다. 접두사는 구성 된 히트 임계값을 도달 할 때 Furiosa-LLM는 활성으로 호스트 메모리에 복사합니다. 접두사는 NPU 및 호스트 사본을 모두 가지고 있으므로 나중에 NPU eviction은 eviction-time 전송없이 호스트 복사를 유지할 수 있습니다.</p>
-<p>이것은 기본 정책입니다. 기본 임계 값은 <code class="docutils literal notranslate"><span class="pre">2</span></code>, 그리고 write-back는 무효합니다. 따라서, 수시로 재사용한 접두사는 지그개선 도중 문턱에 도달하지 않은 NPU 전용 접두사에서 보존됩니다. 이것은 주인 교통과 host-cache 오염을 제한하기 때문에 보존적인 출발점입니다.</p>
-<p>초기는 NPU 접두사 캐시가 히트로 계산되지 않습니다. 임계값 <code class="docutils literal notranslate"><span class="pre">1</span></code> 따라서 첫 번째 연속 일치 요청에 접두사를 촉진하고, 기본 임계 값이 있는 동안 <code class="docutils literal notranslate"><span class="pre">2</span></code> 2단계에서 이를 활성화합니다.</p>
-<p>문턱만 인정할 수 있는 문턱을 증가시킨다. 문턱을 설정한다.
+<h4 data-original-en="Write-through promotion">Write-through 프로모션<a class="headerlink" href="#write-through-promotion" title="Link to this heading">#</a></h4>
+<p data-original-en="Write-through promotion identifies repeatedly reused prefixes while they are still NPU-resident. When a prefix reaches the configured hit threshold, Furiosa-LLM proactively copies it to host memory. The prefix then has both NPU and host copies, so a later NPU eviction can retain the host copy without an eviction-time transfer.">Write-through 프로모션은 여전히 NPU-resident 인 동안 반복적으로 재사용 된 접두사를 식별합니다. 접두사는 구성 된 히트 임계값을 도달 할 때 Furiosa-LLM는 활성으로 호스트 메모리에 복사합니다. 접두사는 NPU 및 호스트 사본을 모두 가지고 있으므로 나중에 NPU eviction은 eviction-time 전송없이 호스트 복사를 유지할 수 있습니다.</p>
+<p data-original-en="This is the default policy. The default threshold is 2, and write-back is disabled. Consequently, frequently reused prefixes are preserved in host memory while NPU-only prefixes that have not reached the threshold can be discarded during eviction. This is a conservative starting point because it limits host traffic and host-cache pollution.">이것은 기본 정책입니다. 기본 임계 값은 <code class="docutils literal notranslate"><span class="pre">2</span></code>, 그리고 write-back는 무효합니다. 따라서, 수시로 재사용한 접두사는 지그개선 도중 문턱에 도달하지 않은 NPU 전용 접두사에서 보존됩니다. 이것은 주인 교통과 host-cache 오염을 제한하기 때문에 보존적인 출발점입니다.</p>
+<p data-original-en="The initial write to the NPU prefix cache does not count as a hit. A threshold of 1 therefore promotes a prefix on its first subsequent matching request, while the default threshold of 2 promotes it on the second.">초기는 NPU 접두사 캐시가 히트로 계산되지 않습니다. 임계값 <code class="docutils literal notranslate"><span class="pre">1</span></code> 따라서 첫 번째 연속 일치 요청에 접두사를 촉진하고, 기본 임계 값이 있는 동안 <code class="docutils literal notranslate"><span class="pre">2</span></code> 2단계에서 이를 활성화합니다.</p>
+<p data-original-en="Increase the threshold to admit only hotter prefixes. Set the threshold to 0 to disable write-through promotion.">문턱만 인정할 수 있는 문턱을 증가시킨다. 문턱을 설정한다.
 <code class="docutils literal notranslate"><span class="pre">0</span></code> write-through 프로모션을 비활성화하기 위해.</p>
 <div class="admonition note">
-<p class="admonition-title">참고</p>
-<p>write-through 임계값 지원 <code class="docutils literal notranslate"><span class="pre">0</span></code> immediate-promotion 모드가 계획되어 있습니다. 그 모드에서 Furiosa-LLM는 NPU 접두사 캐쉬에 처음 쓴 호스트 계층에 접두사를 복사합니다. 현재 실험적인 릴리스에서, <code class="docutils literal notranslate"><span class="pre">0</span></code> write-through 프로모션을 비활성화; 그것은 즉각적인 호스트 복사를 요청하지 않습니다.</p>
+<p class="admonition-title" data-original-en="Note">참고</p>
+<p data-original-en="Support for a write-through threshold of 0 as an immediate-promotion mode is planned. In that mode, Furiosa-LLM will copy a prefix to the host tier when it is first written to the NPU prefix cache. In the current experimental release, 0 disables write-through promotion; it does not request an immediate host copy.">write-through 임계값 지원 <code class="docutils literal notranslate"><span class="pre">0</span></code> immediate-promotion 모드가 계획되어 있습니다. 그 모드에서 Furiosa-LLM는 NPU 접두사 캐쉬에 처음 쓴 호스트 계층에 접두사를 복사합니다. 현재 실험적인 릴리스에서, <code class="docutils literal notranslate"><span class="pre">0</span></code> write-through 프로모션을 비활성화; 그것은 즉각적인 호스트 복사를 요청하지 않습니다.</p>
 </div>
 </section>
 <section id="write-back-on-npu-eviction">
-<h4>Write-back가 NPU에서 발생한 이탈<a class="headerlink" href="#write-back-on-npu-eviction" title="Link to this heading">#</a></h4>
-<p>write-back가 활성화되면 Furiosa-LLM는 NPU 메모리 압력이 부풀릴 때 NPU 전용 캐쉬드 프리픽을 호스트 메모리에 복사하려고 시도합니다. 이것은 write-through 임계값에 도달하지 않은 접두사를 포함하여 접두사의 더 넓은 세트를 보존합니다.</p>
-<p>Write-back는 큰 또는 더 적은 예상할 수 있는 일 세트를 위한 재사용을 개량할 수 있습니다, 그러나 또한 NPU-to-host 트래픽을 증가시키고 결코 다시 사용되지 않는 접두사로 주인 캐시를 채울 수 있습니다. NPU eviction 후에 재사용할 수 있는 것은 일반 적이고 벤치 마크는 추가 이동이 비유하다는 것을 보여줍니다.</p>
-<p>Write-through 프로모션은 write-back가 임계값이 설정되지 않는 한 활성화되면 활성화됩니다. <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
+<h4 data-original-en="Write-back on NPU eviction">Write-back가 NPU에서 발생한 이탈<a class="headerlink" href="#write-back-on-npu-eviction" title="Link to this heading">#</a></h4>
+<p data-original-en="When write-back is enabled, Furiosa-LLM attempts to copy an NPU-only cached prefix to host memory when NPU memory pressure evicts it. This preserves a broader set of prefixes, including prefixes that did not reach the write-through threshold.">write-back가 활성화되면 Furiosa-LLM는 NPU 메모리 압력이 부풀릴 때 NPU 전용 캐쉬드 프리픽을 호스트 메모리에 복사하려고 시도합니다. 이것은 write-through 임계값에 도달하지 않은 접두사를 포함하여 접두사의 더 넓은 세트를 보존합니다.</p>
+<p data-original-en="Write-back can improve reuse for a large or less predictable working set, but it also increases NPU-to-host traffic and can fill the host cache with prefixes that are never used again. Enable it when reuse after NPU eviction is common and benchmarks show that the additional transfers are worthwhile.">Write-back는 큰 또는 더 적은 예상할 수 있는 일 세트를 위한 재사용을 개량할 수 있습니다, 그러나 또한 NPU-to-host 트래픽을 증가시키고 결코 다시 사용되지 않는 접두사로 주인 캐시를 채울 수 있습니다. NPU eviction 후에 재사용할 수 있는 것은 일반 적이고 벤치 마크는 추가 이동이 비유하다는 것을 보여줍니다.</p>
+<p data-original-en="Write-through promotion remains active when write-back is enabled unless its threshold is set to 0.">Write-through 프로모션은 write-back가 임계값이 설정되지 않는 한 활성화되면 활성화됩니다. <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p>
 </section>
 </section>
 </section>
 <section id="configuration">
-<h2>구성<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
-<p>Hierarchical prefix caching는 기본적으로 비활성화됩니다. 2개의 긍정적인 host-capacity 옵션 중 하나를 공급하면 됩니다.</p>
+<h2 data-original-en="Configuration">구성<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h2>
+<p data-original-en="Hierarchical prefix caching is disabled by default. Supplying one of the two positive host-capacity options enables it.">Hierarchical prefix caching는 기본적으로 비활성화됩니다. 2개의 긍정적인 host-capacity 옵션 중 하나를 공급하면 됩니다.</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
 <caption><span class="caption-text">CLI 옵션</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
@@ -391,76 +391,76 @@ Request action:   [ reuse         ][ reload     ][ compute    ]
 <col style="width: 50.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>선택 사항</p></th>
-<th class="head"><p>기본 설정</p></th>
-<th class="head"><p>설명</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Option">선택 사항</p></th>
+<th class="head"><p data-original-en="Default">기본 설정</p></th>
+<th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--experimental-kv-offload-host-memory-gb</span> <span class="pre">FLOAT</span></code></p></td>
-<td><p>장애인</p></td>
-<td><p>GiB의 process-wide 호스트 KV cache 예산과 계층 캐싱을 가능하게합니다. 예산은 스케줄러 인스턴스 중 분할되며 하이브리드주의 모델의 캐시 유형입니다.</p></td>
+<td><p data-original-en="Disabled">장애인</p></td>
+<td><p data-original-en="Enables hierarchical caching with a process-wide host KV cache budget in GiB. The budget is divided among scheduler instances and, for hybrid attention models, their cache types.">GiB의 process-wide 호스트 KV cache 예산과 계층 캐싱을 가능하게합니다. 예산은 스케줄러 인스턴스 중 분할되며 하이브리드주의 모델의 캐시 유형입니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--experimental-kv-offload-host-memory-ratio</span> <span class="pre">FLOAT</span></code></p></td>
-<td><p>장애인</p></td>
-<td><p>각 스케줄러 및 캐시 타입의 호스트 용량과 조화를 이루는 것은 NPU KV 블록 카운트의 비율로 크기가 다릅니다. 예를 들어,
+<td><p data-original-en="Disabled">장애인</p></td>
+<td><p data-original-en="Enables hierarchical caching with host capacity for each scheduler and cache type sized as a ratio of its NPU KV block count. For example, 0.5 requests half as many host blocks as NPU blocks.">각 스케줄러 및 캐시 타입의 호스트 용량과 조화를 이루는 것은 NPU KV 블록 카운트의 비율로 크기가 다릅니다. 예를 들어,
 <code class="docutils literal notranslate"><span class="pre">0.5</span></code> NPU 블록으로 많은 호스트 블록으로 절반을 요청합니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--experimental-kv-offload-write-through-threshold</span> <span class="pre">INTEGER</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
-<td><p>최소 prefix-cache는 write-through 프로모션에 대한 카운트를 히트. <code class="docutils literal notranslate"><span class="pre">0</span></code>
+<td><p data-original-en="Minimum prefix-cache hit count for write-through promotion. 0 disables promotion. Negative values are invalid.">최소 prefix-cache는 write-through 프로모션에 대한 카운트를 히트. <code class="docutils literal notranslate"><span class="pre">0</span></code>
 프로모션을 비활성화합니다. 부정적 값은 유효하지 않습니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--experimental-kv-offload-write-back</span></code></p></td>
-<td><p>장애인</p></td>
-<td><p>NPU-only는 NPU eviction가 발생하면 호스트 메모리에서 prefixes를 캐시했습니다.</p></td>
+<td><p data-original-en="Disabled">장애인</p></td>
+<td><p data-original-en="Preserves NPU-only cached prefixes in host memory when NPU eviction occurs, subject to host capacity.">NPU-only는 NPU eviction가 발생하면 호스트 메모리에서 prefixes를 캐시했습니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--experimental-kv-offload-overlap-l2-reload</span></code></p></td>
-<td><p>장애인</p></td>
-<td><p>Overlaps layerwise L2-to-L1 모델 실행과 전송. host-capacity 옵션과의 필요 <code class="docutils literal notranslate"><span class="pre">--npu-queue-limit</span> <span class="pre">1</span></code>; 참조 <a class="reference internal" href="#layerwisekvreload"><span class="std std-ref">모델 실행을 통한 L2 재로드</span></a>.</p></td>
+<td><p data-original-en="Disabled">장애인</p></td>
+<td><p data-original-en="Overlaps layerwise L2-to-L1 transfers with model execution. Requires a host-capacity option and --npu-queue-limit 1; see Overlapping L2 Reload with Model Execution.">Overlaps layerwise L2-to-L1 모델 실행과 전송. host-capacity 옵션과의 필요 <code class="docutils literal notranslate"><span class="pre">--npu-queue-limit</span> <span class="pre">1</span></code>; 참조 <a class="reference internal" href="#layerwisekvreload"><span class="std std-ref">모델 실행을 통한 L2 재로드</span></a>.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p>두 host-capacity 옵션은 상호 전용입니다. host-memory 비율
+<p data-original-en="The two host-capacity options are mutually exclusive. A host-memory ratio of 0 leaves hierarchical caching disabled; a negative ratio is invalid. The GiB value must be positive and large enough to hold at least one usable KV cache block after the process budget is divided.">두 host-capacity 옵션은 상호 전용입니다. host-memory 비율
 <code class="docutils literal notranslate"><span class="pre">0</span></code> 무술 캐싱을 해제; 부정적인 비율은 유효하지 않습니다. GiB 값은 공정 예산이 나뉘어 후 적어도 하나의 쓸모 KV 캐시 블록을 보유하는 충분한 긍정적이고 큰이어야한다.</p>
 <section id="choosing-a-host-capacity">
-<h3>호스트 용량 선택<a class="headerlink" href="#choosing-a-host-capacity" title="Link to this heading">#</a></h3>
-<p>대부분의 배포를 위해 GiB 옵션을 선호하기 때문에 프로세스의 호스트 KV cache 할당에 대한 예측 가능한 상단 경계를 설정하기 때문에:</p>
+<h3 data-original-en="Choosing a Host Capacity">호스트 용량 선택<a class="headerlink" href="#choosing-a-host-capacity" title="Link to this heading">#</a></h3>
+<p data-original-en="For most deployments, prefer the GiB option because it establishes a predictable upper bound for the process’s host KV cache allocation:">대부분의 배포를 위해 GiB 옵션을 선호하기 때문에 프로세스의 호스트 KV cache 할당에 대한 예측 가능한 상단 경계를 설정하기 때문에:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-gb<span class="w"> </span><span class="m">16</span>
 </pre></div>
 </div>
-<p>예산은 Furiosa-LLM 프로세스 전체에 적용됩니다. 데이터 병렬화로 인해 data-parallel 스케줄러 인스턴스 중 분할됩니다. hybrid-attention 모델의 경우, 각 인스턴스 공유는 global-attention와 sliding-window 캐시 사이에 NPU KV 메모리 발자국으로 나뉩니다. 용량은 전체 블록으로 할당되므로 실제 할당량은 약간 작을 수 있습니다.</p>
-<p>비율 선택권은 주인 수용량이 모형의 NPU KV cache로 가늠자해야 할 때 편리합니다:</p>
+<p data-original-en="The budget applies to the entire Furiosa-LLM process. With data parallelism it is divided among data-parallel scheduler instances. For a hybrid-attention model, each instance’s share is further divided between global-attention and sliding-window cache according to their NPU KV memory footprints. Capacity is allocated in whole blocks, so the actual allocation can be slightly smaller than the requested limit.">예산은 Furiosa-LLM 프로세스 전체에 적용됩니다. 데이터 병렬화로 인해 data-parallel 스케줄러 인스턴스 중 분할됩니다. hybrid-attention 모델의 경우, 각 인스턴스 공유는 global-attention와 sliding-window 캐시 사이에 NPU KV 메모리 발자국으로 나뉩니다. 용량은 전체 블록으로 할당되므로 실제 할당량은 약간 작을 수 있습니다.</p>
+<p data-original-en="The ratio option is convenient when host capacity should scale with the model’s NPU KV cache:">비율 선택권은 주인 수용량이 모형의 NPU KV cache로 가늠자해야 할 때 편리합니다:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-ratio<span class="w"> </span><span class="m">0</span>.5
 </pre></div>
 </div>
-<p>비율은 각 스케줄러 인스턴스에 독립적으로 적용됩니다. 따라서 총 공정 host-memory 사용량이 증가합니다. <code class="docutils literal notranslate"><span class="pre">data_parallel_size</span></code>.
+<p data-original-en="The ratio is applied independently to every scheduler instance. Therefore, total process host-memory use grows with data_parallel_size. A ratio of 1.0 requests approximately one host KV block for every NPU KV block in each cache type; it is not a process-wide memory limit.">비율은 각 스케줄러 인스턴스에 독립적으로 적용됩니다. 따라서 총 공정 host-memory 사용량이 증가합니다. <code class="docutils literal notranslate"><span class="pre">data_parallel_size</span></code>.
 <code class="docutils literal notranslate"><span class="pre">1.0</span></code> 각 캐시 유형에 있는 각 NPU KV 구획을 위한 대략 1개의 주인 KV 구획을 요구하십시오; 그것은 process-wide 기억 한계가 아닙니다.</p>
-<p>구성 예산은 호스트 KV cache 풀, 모델 무게, runtime 상태, 요청 데이터 또는 기타 프로세스 메모리가 아닌 호스트 KV cache 풀을 다룹니다. 그 구성 요소와 운영 체제에 대한 충분한 물리적 메모리를 남겨두십시오.</p>
+<p data-original-en="The configured budget covers the host KV cache pools, not the model weights, runtime state, request data, or other process memory. Leave sufficient physical memory for those components and for the operating system.">구성 예산은 호스트 KV cache 풀, 모델 무게, runtime 상태, 요청 데이터 또는 기타 프로세스 메모리가 아닌 호스트 KV cache 풀을 다룹니다. 그 구성 요소와 운영 체제에 대한 충분한 물리적 메모리를 남겨두십시오.</p>
 </section>
 <section id="cli-examples">
-<h3>CLI 예제<a class="headerlink" href="#cli-examples" title="Link to this heading">#</a></h3>
-<p>기본 프로모션 임계값과 eviction-time write-back를 사용하여 반복된 결과를 수신하는 예비 고정:</p>
+<h3 data-original-en="CLI Examples">CLI 예제<a class="headerlink" href="#cli-examples" title="Link to this heading">#</a></h3>
+<p data-original-en="Preserve prefixes that receive repeated hits, using the default promotion threshold and no eviction-time write-back:">기본 프로모션 임계값과 eviction-time write-back를 사용하여 반복된 결과를 수신하는 예비 고정:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-gb<span class="w"> </span><span class="m">16</span>
 </pre></div>
 </div>
-<p>NPU-only 캐시 항목을 작성하여 더 넓은 작업 설정을 보존하십시오.</p>
+<p data-original-en="Preserve a wider working set by writing NPU-only cache entries to host during eviction:">NPU-only 캐시 항목을 작성하여 더 넓은 작업 설정을 보존하십시오.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-gb<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-write-back
 </pre></div>
 </div>
-<p>적어도 4 개의 캐시를 수신 한 유일한 접두사에 대한:</p>
+<p data-original-en="Admit only prefixes that have received at least four cache hits:">적어도 4 개의 캐시를 수신 한 유일한 접두사에 대한:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-ratio<span class="w"> </span><span class="m">0</span>.5<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-write-through-threshold<span class="w"> </span><span class="m">4</span>
 </pre></div>
 </div>
-<p>첫 번째 캐시 히트 및 콜드 보존기 NPU-only 항목 후 접두사를 홍보하십시오.</p>
+<p data-original-en="Promote prefixes after their first cache hit and preserve colder NPU-only entries during eviction:">첫 번째 캐시 히트 및 콜드 보존기 NPU-only 항목 후 접두사를 홍보하십시오.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-gb<span class="w"> </span><span class="m">32</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-write-through-threshold<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="se">\</span>
@@ -470,7 +470,7 @@ Request action:   [ reuse         ][ reload     ][ compute    ]
 </section>
 <section id="python-api">
 <h3>Python API<a class="headerlink" href="#python-api" title="Link to this heading">#</a></h3>
-<p>오프라인 Python API는 동일한 동작을 통해 노출합니다. <code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code>. 다음 예제는 16 GiB process-wide 호스트 예산과 기본 hot-prefix 프로모션 정책을 사용합니다.</p>
+<p data-original-en="The offline Python API exposes the same behavior through SchedulerConfig. The following example uses a 16 GiB process-wide host budget and the default hot-prefix promotion policy:">오프라인 Python API는 동일한 동작을 통해 노출합니다. <code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code>. 다음 예제는 16 GiB process-wide 호스트 예산과 기본 hot-prefix 프로모션 정책을 사용합니다.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm.metadata.config_types</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">KVOffloadConfig</span><span class="p">,</span>
@@ -500,7 +500,7 @@ Request action:   [ reuse         ][ reload     ][ compute    ]
     <span class="p">)</span>
 </pre></div>
 </div>
-<p>NPU KV 용량과 관련된 호스트 계층을 크기로 설정
+<p data-original-en="To size the host tier relative to NPU KV capacity, set host_memory_ratio instead of host_memory_bytes:">NPU KV 용량과 관련된 호스트 계층을 크기로 설정
 <code class="docutils literal notranslate"><span class="pre">host_memory_ratio</span></code> 그 대신 <code class="docutils literal notranslate"><span class="pre">host_memory_bytes</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">kv_offload_config</span> <span class="o">=</span> <span class="n">KVOffloadConfig</span><span class="p">(</span>
     <span class="n">enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -510,108 +510,108 @@ Request action:   [ reuse         ][ reload     ][ compute    ]
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>둘 다 설정하지 마세요 <code class="docutils literal notranslate"><span class="pre">host_memory_bytes</span></code> 그리고 긍정적인
+<p data-original-en="Do not set both host_memory_bytes and a positive host_memory_ratio. In the Python API, enabled=True must be set explicitly; setting a capacity field alone does not enable offloading. Use write_through_threshold=None to disable write-through promotion in a direct KVOffloadConfig. The CLI uses 0 for the same purpose.">둘 다 설정하지 마세요 <code class="docutils literal notranslate"><span class="pre">host_memory_bytes</span></code> 그리고 긍정적인
 <code class="docutils literal notranslate"><span class="pre">host_memory_ratio</span></code>. Python API <code class="docutils literal notranslate"><span class="pre">enabled=True</span></code> 명시적으로 설정해야합니다; 혼자 용량 필드를 설정하면 offloading를 활성화하지 않습니다. 사용
 <code class="docutils literal notranslate"><span class="pre">write_through_threshold=None</span></code> 직접 write-through 프로모션을 비활성화 <code class="docutils literal notranslate"><span class="pre">KVOffloadConfig</span></code>. CLI의 사용 <code class="docutils literal notranslate"><span class="pre">0</span></code> 와 동일한 목적으로 사용.</p>
 </section>
 </section>
 <section id="overlapping-l2-reload-with-model-execution">
-<span id="layerwisekvreload"></span><h2>모델 실행을 통한 L2 재로드<a class="headerlink" href="#overlapping-l2-reload-with-model-execution" title="Link to this heading">#</a></h2>
-<p>기본적으로 runtime는 모델을 실행하기 전에 host-to-NPU KV 재로드를 완료합니다. 실험적인 layerwise 재로드 경로는 KV 데이터가 이미 사용할 수 있는 레이어의 실행을 가진 나중에 레이어에 대한 오버랩 전송을 할 수 있습니다.</p>
+<span id="layerwisekvreload"></span><h2 data-original-en="Overlapping L2 Reload with Model Execution">모델 실행을 통한 L2 재로드<a class="headerlink" href="#overlapping-l2-reload-with-model-execution" title="Link to this heading">#</a></h2>
+<p data-original-en="By default, the runtime completes a host-to-NPU KV reload before executing the model. The experimental layerwise reload path can overlap transfers for later layers with execution of layers whose KV data is already available:">기본적으로 runtime는 모델을 실행하기 전에 host-to-NPU KV 재로드를 완료합니다. 실험적인 layerwise 재로드 경로는 KV 데이터가 이미 사용할 수 있는 레이어의 실행을 가진 나중에 레이어에 대한 오버랩 전송을 할 수 있습니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-host-memory-gb<span class="w"> </span><span class="m">16</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--experimental-kv-offload-overlap-l2-reload
 </pre></div>
 </div>
-<p>이 옵션은 기본적으로 비활성화되며 긍정적 인 L2 용량을 필요로합니다.
+<p data-original-en="This option is disabled by default and requires a positive L2 capacity and npu_queue_limit=1 (the default). It works with eager scheduling and with supported overlap scheduling configurations. It cannot be combined with speculative decoding or PD disaggregation. It applies to local L2-to-L1 reloads, not Mooncake L3 prefetch.">이 옵션은 기본적으로 비활성화되며 긍정적 인 L2 용량을 필요로합니다.
 <code class="docutils literal notranslate"><span class="pre">npu_queue_limit=1</span></code> (기본값). 그것은 eager 스케줄링과 지원 <a class="reference internal" href="overlap-scheduling.html#overlapscheduling"><span class="std std-ref">겹치는 스케줄</span></a> 윤곽. 그것은 speculative 해독 또는 PD 탈중앙도 결합될 수 없습니다. 그것은 L2-to-L1 재부하에, Mooncake L3 prefetch 아닙니다 적용합니다.</p>
-<p>Python API 모델의 경우, 다음 설정을 적용합니다. <code class="docutils literal notranslate"><span class="pre">overlap_l2_reload=True</span></code> in <code class="docutils literal notranslate"><span class="pre">KVOffloadConfig</span></code>
+<p data-original-en="For the Python API, set overlap_l2_reload=True in KVOffloadConfig alongside enabled=True and a host capacity. Benchmark the option with representative cache misses and context lengths; benefits depend on how much transfer time can overlap model execution.">Python API 모델의 경우, 다음 설정을 적용합니다. <code class="docutils literal notranslate"><span class="pre">overlap_l2_reload=True</span></code> in <code class="docutils literal notranslate"><span class="pre">KVOffloadConfig</span></code>
 옆으로 <code class="docutils literal notranslate"><span class="pre">enabled=True</span></code> 그리고 호스트 용량. 대표 캐시 놓기 및 컨텍스트 길이 옵션 벤치 마크; 혜택은 얼마나 많은 전송 시간이 오버랩 모델 실행 할 수 있는지에 따라 달라집니다.</p>
 </section>
 <section id="feature-interactions-and-limitations">
-<h2>특징 상호 작용 및 한계<a class="headerlink" href="#feature-interactions-and-limitations" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Feature Interactions and Limitations">특징 상호 작용 및 한계<a class="headerlink" href="#feature-interactions-and-limitations" title="Link to this heading">#</a></h2>
 <section id="prefix-caching">
 <h3>Prefix caching<a class="headerlink" href="#prefix-caching" title="Link to this heading">#</a></h3>
-<p>Hierarchical 캐싱은 정규적인 prefix caching를 요구합니다. Prefix caching는 기본적으로 활성화됩니다, 그래서 추가 선택권은 일반적으로 필요합니다. host-capacity 선택권을 가진 결합하지 마십시오 <code class="docutils literal notranslate"><span class="pre">--no-enable-prefix-caching</span></code>; 서버는 그 구성에서 계층 캐싱을 초기화 할 수 없습니다.</p>
+<p data-original-en="Hierarchical caching requires ordinary prefix caching. Prefix caching is enabled by default, so no additional option is normally necessary. Do not combine a host-capacity option with --no-enable-prefix-caching; the server cannot initialize hierarchical caching in that configuration.">Hierarchical 캐싱은 정규적인 prefix caching를 요구합니다. Prefix caching는 기본적으로 활성화됩니다, 그래서 추가 선택권은 일반적으로 필요합니다. host-capacity 선택권을 가진 결합하지 마십시오 <code class="docutils literal notranslate"><span class="pre">--no-enable-prefix-caching</span></code>; 서버는 그 구성에서 계층 캐싱을 초기화 할 수 없습니다.</p>
 </section>
 <section id="data-parallelism">
-<h3>데이터 병렬성<a class="headerlink" href="#data-parallelism" title="Link to this heading">#</a></h3>
-<p>각 data-parallel 복제에는 자체 NPU 및 호스트 접두사 캐시가 있습니다. 캐시 항목은 복제 사이에 복사되지 않습니다. process-wide GiB 예산은 복제 중 나뉩니다. ratio-based 용량은 각 복제에 적용되며 복제로 총 호스트 할당이 추가됩니다.</p>
-<p>Cache-aware 라우팅은 이미 캐시 항목을 소유 한 복제로 관련 프롬프트를 다시 전송하여 재사용을 향상시킬 수 있습니다. 참조 <a class="reference internal" href="data-parallel-routing.html#dataparallelrouting"><span class="std std-ref">Data-Parallel 라우팅</span></a>
+<h3 data-original-en="Data parallelism">데이터 병렬성<a class="headerlink" href="#data-parallelism" title="Link to this heading">#</a></h3>
+<p data-original-en="Each data-parallel replica has its own NPU and host prefix cache. Cache entries are not copied between replicas. A process-wide GiB budget is divided among the replicas, while a ratio-based capacity is applied to each replica and therefore increases total host allocation as replicas are added.">각 data-parallel 복제에는 자체 NPU 및 호스트 접두사 캐시가 있습니다. 캐시 항목은 복제 사이에 복사되지 않습니다. process-wide GiB 예산은 복제 중 나뉩니다. ratio-based 용량은 각 복제에 적용되며 복제로 총 호스트 할당이 추가됩니다.</p>
+<p data-original-en="Cache-aware routing can improve reuse by sending related prompts back to the replica that already owns their cache entries. See Data-Parallel Routing and consider the locality scoring profile for workloads dominated by large shared prefixes.">Cache-aware 라우팅은 이미 캐시 항목을 소유 한 복제로 관련 프롬프트를 다시 전송하여 재사용을 향상시킬 수 있습니다. 참조 <a class="reference internal" href="data-parallel-routing.html#dataparallelrouting"><span class="std std-ref">Data-Parallel 라우팅</span></a>
 그리고 <code class="docutils literal notranslate"><span class="pre">locality</span></code> 큰 공유 접두사에 의해 지배되는 workloads를 위한 득점 단면도.</p>
 </section>
 <section id="hybrid-attention">
-<h3>하이브리드 관심<a class="headerlink" href="#hybrid-attention" title="Link to this heading">#</a></h3>
-<p>Hierarchical 캐싱은 글로벌 관심과 sliding-window주의를 결합하는 모델을 지원합니다. Furiosa-LLM는 캐시 유형 모두에 대한 호스트 용량을 할당하고 필요한 sliding-window 국가가 유효하다는 접두사 만 다시로드합니다. 따라서 안전하게 재사용 가능한 접두사는 token 경기보다 단축 될 수 있습니다. 참조 <a class="reference internal" href="prefix-caching.html#prefixcachinghybridattentionmodels"><span class="std std-ref">하이브리드 어텐션 모델</span></a> 의미론적 정보와 <a class="reference internal" href="hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a> 기본 메모리 모델에 대한.</p>
+<h3 data-original-en="Hybrid attention">하이브리드 관심<a class="headerlink" href="#hybrid-attention" title="Link to this heading">#</a></h3>
+<p data-original-en="Hierarchical caching supports models that combine global attention and sliding-window attention. Furiosa-LLM allocates host capacity for both cache types and reloads only a prefix for which the required sliding-window state is valid. Consequently, the safely reusable prefix can be shorter than the raw token match. See Hybrid Attention Models for the matching semantics and Hybrid KV Cache Management for the underlying memory model.">Hierarchical 캐싱은 글로벌 관심과 sliding-window주의를 결합하는 모델을 지원합니다. Furiosa-LLM는 캐시 유형 모두에 대한 호스트 용량을 할당하고 필요한 sliding-window 국가가 유효하다는 접두사 만 다시로드합니다. 따라서 안전하게 재사용 가능한 접두사는 token 경기보다 단축 될 수 있습니다. 참조 <a class="reference internal" href="prefix-caching.html#prefixcachinghybridattentionmodels"><span class="std std-ref">하이브리드 어텐션 모델</span></a> 의미론적 정보와 <a class="reference internal" href="hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a> 기본 메모리 모델에 대한.</p>
 </section>
 <section id="other-limitations">
-<h3>다른 제한<a class="headerlink" href="#other-limitations" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Other limitations">다른 제한<a class="headerlink" href="#other-limitations" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>결정적인 해독은 hierarchical KV offloading와 결합될 수 없습니다.</p></li>
-<li><p>접두사 재사용은 token-exact입니다. Whitespace, punctuation, chat-template 변경, 또는 Tokenizer 변경은 재사용을 방지할 수 있습니다.</p></li>
-<li><p>호스트 캐시 내용이 프로세스 종료시 손실되며 다른 서버 프로세스와 공유되지 않습니다.</p></li>
-<li><p>호스트 캐시는 용량을 증가, NPU 용량이 아닙니다. host-resident 접두사는 여전히 NPU 블록 전에 NPU 블록이 필요합니다.</p></li>
+<li><p data-original-en="Speculative decoding cannot be combined with hierarchical KV offloading.">결정적인 해독은 hierarchical KV offloading와 결합될 수 없습니다.</p></li>
+<li><p data-original-en="Prefix reuse is token-exact. Whitespace, punctuation, chat-template changes, or tokenizer changes can prevent reuse.">접두사 재사용은 token-exact입니다. Whitespace, punctuation, chat-template 변경, 또는 Tokenizer 변경은 재사용을 방지할 수 있습니다.</p></li>
+<li><p data-original-en="Host cache contents are lost when the process exits and are not shared with another server process.">호스트 캐시 내용이 프로세스 종료시 손실되며 다른 서버 프로세스와 공유되지 않습니다.</p></li>
+<li><p data-original-en="The host cache increases capacity, not NPU capacity. A host-resident prefix still needs NPU blocks before inference can continue.">호스트 캐시는 용량을 증가, NPU 용량이 아닙니다. host-resident 접두사는 여전히 NPU 블록 전에 NPU 블록이 필요합니다.</p></li>
 </ul>
 </section>
 </section>
 <section id="host-preparation">
-<h2>호스트 준비<a class="headerlink" href="#host-preparation" title="Link to this heading">#</a></h2>
-<p>호스트 KV cache 풀은 엔진이 시작될 때 할당됩니다. 요청된 풀이 할당될 수 없거나 결과 프로세스 공유가 너무 작을 경우 엔진 시작이 실패합니다.</p>
-<p>Linux에서 호스트 KV cache에 대한 충분한 거대한 페이지를 예약하십시오. Furiosa-LLM는 예약 된 거대한 페이지 풀이 충분할 때 일반 4 KiB 페이지로 돌아갈 수 있지만 throughput로 전송을 줄일 수 있습니다. 서버는 충분한 예약을 감지 할 때 필요한 거대 카운트를 포함하는 경고를 방출합니다. 참조 <a class="reference internal" href="../device_management/host_tuning.html#hosttuning"><span class="std std-ref">호스트 PCI 최적화 튜닝</span></a> 시스템 구성 지침에 대한.</p>
+<h2 data-original-en="Host Preparation">호스트 준비<a class="headerlink" href="#host-preparation" title="Link to this heading">#</a></h2>
+<p data-original-en="Host KV cache pools are allocated when the engine starts. Engine startup fails if the requested pool cannot be allocated or if the resulting process share is too small to provide usable global-attention capacity.">호스트 KV cache 풀은 엔진이 시작될 때 할당됩니다. 요청된 풀이 할당될 수 없거나 결과 프로세스 공유가 너무 작을 경우 엔진 시작이 실패합니다.</p>
+<p data-original-en="On Linux, reserve enough hugepages for the host KV cache. Furiosa-LLM can fall back to regular 4 KiB pages when the reserved hugepage pool is insufficient, but this can reduce transfer throughput. The server emits a warning that includes the required hugepage count when it detects insufficient reservation. See Host PCI Optimization Tuning for system configuration instructions.">Linux에서 호스트 KV cache에 대한 충분한 거대한 페이지를 예약하십시오. Furiosa-LLM는 예약 된 거대한 페이지 풀이 충분할 때 일반 4 KiB 페이지로 돌아갈 수 있지만 throughput로 전송을 줄일 수 있습니다. 서버는 충분한 예약을 감지 할 때 필요한 거대 카운트를 포함하는 경고를 방출합니다. 참조 <a class="reference internal" href="../device_management/host_tuning.html#hosttuning"><span class="std std-ref">호스트 PCI 최적화 튜닝</span></a> 시스템 구성 지침에 대한.</p>
 </section>
 <section id="monitoring-and-tuning">
-<h2>모니터링 및 튜닝<a class="headerlink" href="#monitoring-and-tuning" title="Link to this heading">#</a></h2>
-<p>이 <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/metrics</span></code> [설명]
+<h2 data-original-en="Monitoring and Tuning">모니터링 및 튜닝<a class="headerlink" href="#monitoring-and-tuning" title="Link to this heading">#</a></h2>
+<p data-original-en="Use the GET /metrics endpoint described in Monitoring the OpenAI-Compatible Server and server logs to compare the following before and after enabling hierarchical caching:">이 <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/metrics</span></code> [설명]
 <a class="reference internal" href="furiosa-llm-serve.html#monitoringopenaicompatibleserver"><span class="std std-ref">OpenAI-Compatible Server 모니터링</span></a> 서버는 다음을 비교하고 계층 캐싱을 활성화 한 후:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">furiosa_llm_prefix_cache_hits</span></code>: 누적 캐시된 토큰을 재사용합니다.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">furiosa_llm_prefix_cache_queries</span></code>: 접두사 일치에 고려되는 누적 prompt 토큰.</p></li>
-<li><p>처음 token (TTFT)에 시간, 특히 충분한 캐시 churn 후에 NPU 캐시 용량을 초과하는.</p></li>
-<li><p>호스트 메모리 소비, NPU 활용, 요청 큐잉, 그리고 예상되는 동시성 하에서 latency.</p></li>
+<li><p data-original-en="furiosa_llm_prefix_cache_hits: cumulative cached tokens reused."><code class="docutils literal notranslate"><span class="pre">furiosa_llm_prefix_cache_hits</span></code>: 누적 캐시된 토큰을 재사용합니다.</p></li>
+<li><p data-original-en="furiosa_llm_prefix_cache_queries: cumulative prompt tokens considered for prefix matching."><code class="docutils literal notranslate"><span class="pre">furiosa_llm_prefix_cache_queries</span></code>: 접두사 일치에 고려되는 누적 prompt 토큰.</p></li>
+<li><p data-original-en="Time to first token (TTFT), especially after enough cache churn to exceed NPU cache capacity.">처음 token (TTFT)에 시간, 특히 충분한 캐시 churn 후에 NPU 캐시 용량을 초과하는.</p></li>
+<li><p data-original-en="Host memory consumption, NPU utilization, request queueing, and end-to-end latency under the expected concurrency.">호스트 메모리 소비, NPU 활용, 요청 큐잉, 그리고 예상되는 동시성 하에서 latency.</p></li>
 </ul>
-<p>prefix-cache 카운터는 NPU-resident와 host-resident를 결합합니다; 그들은 현재 캐시 계층을 식별하지 않습니다. 더 높은 결합된 히트률 따라서 호스트 오프로드가 latency 향상을 증명하지 않습니다. 따뜻한 steady-state에 TTFT 및 throughput를 비교하여 NPU 캐시 비션을 강제로 NPU.</p>
+<p data-original-en="The prefix-cache counters combine NPU-resident and host-resident hits; they do not currently identify the cache tier. A higher combined hit rate therefore does not by itself prove that host offload improved latency. Compare TTFT and throughput on a warm, steady-state workload that forces NPU cache eviction.">prefix-cache 카운터는 NPU-resident와 host-resident를 결합합니다; 그들은 현재 캐시 계층을 식별하지 않습니다. 더 높은 결합된 히트률 따라서 호스트 오프로드가 latency 향상을 증명하지 않습니다. 따뜻한 steady-state에 TTFT 및 throughput를 비교하여 NPU 캐시 비션을 강제로 NPU.</p>
 <div class="admonition note">
-<p class="admonition-title">참고</p>
-<p>Host-와 NPU-specific 메트릭은 다른 워크로드 특성에 대한 문제 해결 및 튜닝 계층 캐싱을 쉽게 만들 계획입니다.</p>
+<p class="admonition-title" data-original-en="Note">참고</p>
+<p data-original-en="Host- and NPU-specific metrics are planned to make troubleshooting and tuning hierarchical caching for different workload characteristics easier.">Host-와 NPU-specific 메트릭은 다른 워크로드 특성에 대한 문제 해결 및 튜닝 계층 캐싱을 쉽게 만들 계획입니다.</p>
 </div>
-<p>실용적인 튜닝 순서는 다음과 같습니다.</p>
+<p data-original-en="A practical tuning sequence is:">실용적인 튜닝 순서는 다음과 같습니다.</p>
 <ol class="arabic simple">
-<li><p>바인딩 된 GiB 예산으로 시작, 기본 임계 값 <code class="docutils literal notranslate"><span class="pre">2</span></code>, 그리고
+<li><p data-original-en="Start with a bounded GiB budget, the default threshold of 2, and write-back disabled.">바인딩 된 GiB 예산으로 시작, 기본 임계 값 <code class="docutils literal notranslate"><span class="pre">2</span></code>, 그리고
 write-back 기능이 비활성화되었습니다.</p></li>
-<li><p>workload가 긴 접두사를 반복하고 캐시 재사용이 NPU-cache churn 후 개선되었는지 확인하십시오.</p></li>
-<li><p>소중한 접두사가 여전히 잃어버린 경우 호스트 예산을 증가시키고 호스트는 충분한 메모리를 가지고 있습니다.</p></li>
-<li><p>one-off 접두사는 너무 많은 호스트 용량 또는 전송 대역폭을 소비하면 프로모션 임계값을 올릴 수 있습니다.</p></li>
-<li><p>write-through 프로모션에 충분히 뜨거운되기 전에 유용한 접두사가 evicted 경우에 write-back를 시험하십시오.</p></li>
-<li><p>생산 concurrency에서 테스트, 전송 contention 및 캐시 residency 패턴 부하와 변화.</p></li>
+<li><p data-original-en="Confirm that the workload has repeated long prefixes and that cache reuse improves after NPU-cache churn.">workload가 긴 접두사를 반복하고 캐시 재사용이 NPU-cache churn 후 개선되었는지 확인하십시오.</p></li>
+<li><p data-original-en="Increase the host budget if valuable prefixes are still lost and the host has sufficient memory.">소중한 접두사가 여전히 잃어버린 경우 호스트 예산을 증가시키고 호스트는 충분한 메모리를 가지고 있습니다.</p></li>
+<li><p data-original-en="Raise the promotion threshold if one-off prefixes consume too much host capacity or transfer bandwidth.">one-off 접두사는 너무 많은 호스트 용량 또는 전송 대역폭을 소비하면 프로모션 임계값을 올릴 수 있습니다.</p></li>
+<li><p data-original-en="Test write-back if useful prefixes are evicted before they become hot enough for write-through promotion.">write-through 프로모션에 충분히 뜨거운되기 전에 유용한 접두사가 evicted 경우에 write-back를 시험하십시오.</p></li>
+<li><p data-original-en="Retest at production concurrency, because transfer contention and cache residency patterns change with load.">생산 concurrency에서 테스트, 전송 contention 및 캐시 residency 패턴 부하와 변화.</p></li>
 </ol>
 </section>
 <section id="troubleshooting">
-<h2>문제 해결<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Troubleshooting">문제 해결<a class="headerlink" href="#troubleshooting" title="Link to this heading">#</a></h2>
 <section id="server-fails-to-start">
-<h3>서버가 시작되지 않았음을 나타냅니다.<a class="headerlink" href="#server-fails-to-start" title="Link to this heading">#</a></h3>
-<p>정확히 하나의 긍정적인 host-capacity 옵션 설정 확인, prefix caching 활성화, 구성 프로세스 예산 data-parallel 부서 후 충분히 크다, 충분한 호스트 메모리를 사용할 수 있습니다. 비율에 대 한, 더 큰 가치를 사용 <code class="docutils literal notranslate"><span class="pre">0</span></code>. write-through 임계값을 위해, 사용 <code class="docutils literal notranslate"><span class="pre">0</span></code> 또는 양의 정수.</p>
+<h3 data-original-en="Server fails to start">서버가 시작되지 않았음을 나타냅니다.<a class="headerlink" href="#server-fails-to-start" title="Link to this heading">#</a></h3>
+<p data-original-en="Check that exactly one positive host-capacity option is set, prefix caching is enabled, the configured process budget is large enough after data-parallel division, and sufficient host memory is available. For a ratio, use a value greater than 0. For a write-through threshold, use 0 or a positive integer.">정확히 하나의 긍정적인 host-capacity 옵션 설정 확인, prefix caching 활성화, 구성 프로세스 예산 data-parallel 부서 후 충분히 크다, 충분한 호스트 메모리를 사용할 수 있습니다. 비율에 대 한, 더 큰 가치를 사용 <code class="docutils literal notranslate"><span class="pre">0</span></code>. write-through 임계값을 위해, 사용 <code class="docutils literal notranslate"><span class="pre">0</span></code> 또는 양의 정수.</p>
 </section>
 <section id="high-hit-rate-but-limited-latency-improvement">
-<h3>높은 명중율 그러나 제한된 latency 개선<a class="headerlink" href="#high-hit-rate-but-limited-latency-improvement" title="Link to this heading">#</a></h3>
-<p>게시 된 히트 레이트는 NPU와 호스트가 표시됩니다. 호스트는 재로드 비용 및 short-prefix 재로드를 포함하면 비용이 상쇄에 충분한 계산을 저장할 수 없습니다. long-prefix 요청을 별도로 비교하고 host-memory 또는 DMA 대역폭 콘텐츠에 대한 확인을 비교하십시오.</p>
+<h3 data-original-en="High hit rate but limited latency improvement">높은 명중율 그러나 제한된 latency 개선<a class="headerlink" href="#high-hit-rate-but-limited-latency-improvement" title="Link to this heading">#</a></h3>
+<p data-original-en="The published hit rate combines NPU and host hits. Host hits include reload cost, and short-prefix reloads may not save enough computation to offset that cost. Compare long-prefix requests separately and check for host-memory or DMA bandwidth contention.">게시 된 히트 레이트는 NPU와 호스트가 표시됩니다. 호스트는 재로드 비용 및 short-prefix 재로드를 포함하면 비용이 상쇄에 충분한 계산을 저장할 수 없습니다. long-prefix 요청을 별도로 비교하고 host-memory 또는 DMA 대역폭 콘텐츠에 대한 확인을 비교하십시오.</p>
 </section>
 <section id="low-hit-rate">
-<h3>낮은 타격률<a class="headerlink" href="#low-hit-rate" title="Link to this heading">#</a></h3>
-<p>완전히 렌더링 된 프롬프트는 채팅 템플릿과 시스템 메시지를 포함하여 처음부터 token-identical입니다. 데이터 병렬로 인하여 cache-aware 라우팅을 사용하여 동일한 복제로 반품하십시오. 또한 워크로드가 캐시를 따뜻하게하고 호스트 예산이 재사용 가능한 작업 세트에 충분히 크다는 것을 확인합니다.</p>
+<h3 data-original-en="Low hit rate">낮은 타격률<a class="headerlink" href="#low-hit-rate" title="Link to this heading">#</a></h3>
+<p data-original-en="Verify that the fully rendered prompts are token-identical at the beginning, including their chat templates and system messages. With data parallelism, use cache-aware routing so related requests return to the same replica. Also confirm that the workload has warmed the cache and that the host budget is large enough for its reusable working set.">완전히 렌더링 된 프롬프트는 채팅 템플릿과 시스템 메시지를 포함하여 처음부터 token-identical입니다. 데이터 병렬로 인하여 cache-aware 라우팅을 사용하여 동일한 복제로 반품하십시오. 또한 워크로드가 캐시를 따뜻하게하고 호스트 예산이 재사용 가능한 작업 세트에 충분히 크다는 것을 확인합니다.</p>
 </section>
 <section id="host-memory-grows-more-than-expected">
-<h3>호스트 메모리는 예상보다 더 많은 성장<a class="headerlink" href="#host-memory-grows-more-than-expected" title="Link to this heading">#</a></h3>
-<p>process-wide가 아닌 스케줄러의 비율 옵션이 있습니다. 총 할당량은 data-parallel 복제로 성장하며 각 주의 유형의 캐시 요구 사항을 포함합니다. process-wide 경계가 요구될 때 GiB 옵션을 사용하여 Furiosa-LLM의 나머지는 호스트 메모리를 소비합니다.</p>
+<h3 data-original-en="Host memory grows more than expected">호스트 메모리는 예상보다 더 많은 성장<a class="headerlink" href="#host-memory-grows-more-than-expected" title="Link to this heading">#</a></h3>
+<p data-original-en="The ratio option is per scheduler, not process-wide. Total allocation grows with data-parallel replicas and includes the cache requirements of each attention type. Use the GiB option when a process-wide bound is required, and remember that the rest of Furiosa-LLM also consumes host memory.">process-wide가 아닌 스케줄러의 비율 옵션이 있습니다. 총 할당량은 data-parallel 복제로 성장하며 각 주의 유형의 캐시 요구 사항을 포함합니다. process-wide 경계가 요구될 때 GiB 옵션을 사용하여 Furiosa-LLM의 나머지는 호스트 메모리를 소비합니다.</p>
 </section>
 </section>
 <section id="related-topics">
-<h2>관련 주제<a class="headerlink" href="#related-topics" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Related Topics">관련 주제<a class="headerlink" href="#related-topics" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a> token-exact 접두사 매칭 및 NPU-resident 캐시를 설명합니다.</p></li>
-<li><p><a class="reference internal" href="hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a> hybrid-attention 모델의 캐시 레이아웃을 설명합니다.</p></li>
-<li><p><a class="reference internal" href="data-parallel-routing.html#dataparallelrouting"><span class="std std-ref">Data-Parallel 라우팅</span></a> 요청 여정이 data-parallel 복제를 통해 캐시 현지화에 영향을 미치는지 설명합니다.</p></li>
-<li><p><a class="reference internal" href="../device_management/host_tuning.html#hosttuning"><span class="std std-ref">호스트 PCI 최적화 튜닝</span></a> 거대한 페이지와 host-transfer 튜닝을 다룹니다.</p></li>
-<li><p><a class="reference internal" href="furiosa-llm-serve.html#monitoringopenaicompatibleserver"><span class="std std-ref">OpenAI-Compatible Server 모니터링</span></a> 서버 메트릭 엔드포인트를 설명합니다.</p></li>
+<li><p data-original-en="Prefix Caching describes token-exact prefix matching and the NPU-resident cache."><a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a> token-exact 접두사 매칭 및 NPU-resident 캐시를 설명합니다.</p></li>
+<li><p data-original-en="Hybrid KV Cache Management explains the cache layout for hybrid-attention models."><a class="reference internal" href="hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a> hybrid-attention 모델의 캐시 레이아웃을 설명합니다.</p></li>
+<li><p data-original-en="Data-Parallel Routing explains how request routing affects cache locality across data-parallel replicas."><a class="reference internal" href="data-parallel-routing.html#dataparallelrouting"><span class="std std-ref">Data-Parallel 라우팅</span></a> 요청 여정이 data-parallel 복제를 통해 캐시 현지화에 영향을 미치는지 설명합니다.</p></li>
+<li><p data-original-en="Host PCI Optimization Tuning covers hugepage and host-transfer tuning."><a class="reference internal" href="../device_management/host_tuning.html#hosttuning"><span class="std std-ref">호스트 PCI 최적화 튜닝</span></a> 거대한 페이지와 host-transfer 튜닝을 다룹니다.</p></li>
+<li><p data-original-en="Monitoring the OpenAI-Compatible Server describes the server metrics endpoint."><a class="reference internal" href="furiosa-llm-serve.html#monitoringopenaicompatibleserver"><span class="std std-ref">OpenAI-Compatible Server 모니터링</span></a> 서버 메트릭 엔드포인트를 설명합니다.</p></li>
 </ul>
 </section>
 </section>

@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -304,37 +304,37 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="furiosa-sdk-release-2026-2">
-<span id="release2026-2-0"></span><h1>Furiosa SDK 릴리즈 2026.2<a class="headerlink" href="#furiosa-sdk-release-2026-2" title="Link to this heading">#</a></h1>
-<p>우리는의 출시를 발표하게 행복합니다. <strong>Furiosa SDK 2026.2</strong>.</p>
-<p>2026.1에 배치된 기초에 건물, 이 방출은 생산 배치를 더 빠르게 만들기에 집중하고, 형성하게 쉬운, 그리고 더 쉬운 확장합니다. 우리는 개량한 서빙 성과가 있습니다 <strong>Qwen3</strong> and <strong>엑소네4</strong>, artifact에서 bucket-tuning 행사의 대부분 제거 <strong>preset-based 구성</strong>독립적인 <strong>데이터 병렬 (DP) 라우터</strong> a <strong>prefix-aware</strong> 변종, 활성화
+<span id="release2026-2-0"></span><h1 data-original-en="Furiosa SDK Release 2026.2">Furiosa SDK 릴리즈 2026.2<a class="headerlink" href="#furiosa-sdk-release-2026-2" title="Link to this heading">#</a></h1>
+<p data-original-en="We are happy to announce the release of Furiosa SDK 2026.2.">우리는의 출시를 발표하게 행복합니다. <strong>Furiosa SDK 2026.2</strong>.</p>
+<p data-original-en="Building on the foundation laid in 2026.1, this release focuses on making production deployments faster, easier to configure, and easier to scale out. We have improved serving performance for Qwen3 and Exaone4, removed most of the bucket-tuning ceremony from artifact builds via preset-based configuration, introduced an independent Data Parallel (DP) Router with a prefix-aware variant, enabled prefix caching by default, and shipped the first phase of the Response API (/v1/responses).">2026.1에 배치된 기초에 건물, 이 방출은 생산 배치를 더 빠르게 만들기에 집중하고, 형성하게 쉬운, 그리고 더 쉬운 확장합니다. 우리는 개량한 서빙 성과가 있습니다 <strong>Qwen3</strong> and <strong>엑소네4</strong>, artifact에서 bucket-tuning 행사의 대부분 제거 <strong>preset-based 구성</strong>독립적인 <strong>데이터 병렬 (DP) 라우터</strong> a <strong>prefix-aware</strong> 변종, 활성화
 <strong>기본값: prefix caching</strong>, 및 첫 번째 단계의 배송 <strong>응답 API
 (/v1/responses)</strong>.</p>
-<p>2026.1에서 업그레이드하는 경우, 또한 읽으십시오
+<p data-original-en="If you are upgrading from 2026.1, please also read the 🚨 Breaking Changes &amp; Deprecations section and the Upgrading FuriosaAI’s Software.">2026.1에서 업그레이드하는 경우, 또한 읽으십시오
 <a class="reference internal" href="#release2026-2-0-breakingchanges"><span class="std std-ref">🚨 주요 변경 사항 및 폐기</span></a> 부문 및 <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a>.</p>
 <section id="highlights">
-<h2>주요 내용<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Highlights">주요 내용<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <section id="qwen3-and-exaone4-performance-improvements">
-<h3>Qwen3 및 Exaone4 성능 개선<a class="headerlink" href="#qwen3-and-exaone4-performance-improvements" title="Link to this heading">#</a></h3>
-<p>RNGD에 가장 자주 배치 된 모델 가족 중 두 가지는 throughput 등급에서 per-request latencies와 함께이 릴리스에서 의미있는 throughput 개선을 볼 수 있습니다.
+<h3 data-original-en="Qwen3 and Exaone4 Performance Improvements">Qwen3 및 Exaone4 성능 개선<a class="headerlink" href="#qwen3-and-exaone4-performance-improvements" title="Link to this heading">#</a></h3>
+<p data-original-en="Two of the most frequently deployed model families on RNGD see meaningful throughput improvements in this release, with per-request latencies held at 2026.1 levels. Qwen3 artifacts ship with expanded prefill, decode, and append buckets (including a 64k append bucket for Qwen3-32B-FP8) so more of the real-world request distribution hits well-tuned kernels, and Exaone4 gains more high-batch and append buckets along with Hybrid KV Cache Management, which splits KV memory into separate global-attention and sliding-window pools and reclaims sliding-window blocks as soon as they fall outside the active window — reducing memory waste and lifting effective concurrency on long-context workloads.">RNGD에 가장 자주 배치 된 모델 가족 중 두 가지는 throughput 등급에서 per-request latencies와 함께이 릴리스에서 의미있는 throughput 개선을 볼 수 있습니다.
 <strong>Qwen3</strong> prefill, decode 및 부트 버킷 (Qwen3-32B-FP8에 대한 64k 부트 버킷 포함)를 확장하여 real-world 요청 배포가 well-tuned 커널을 표시하고 <strong>엑소네4</strong> 더 많은 high-batch와 함께 부드킷을 얻을 <a class="reference internal" href="../furiosa_llm/hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a>global-attention 및 sliding-window 풀과 sliding-window 블록을 별도로 분리하는 KV 메모리를 분할하는 KV 메모리는 활성 창 밖에 떨어지기 때문에 long-context 워크로드에서 메모리 낭비 및 리프팅 효과적인 통화를 줄입니다.</p>
-<p>입력 길이, 출력 길이 및 concurrency, tokens/second throughput에 의해 개선된의 청소를 건너 <strong>평균적으로 2026.1에서 74.9%</strong>, 상승하여 <strong>84.8%</strong> low-concurrency (64 아래 통화)에서 TTFT 및 TPOT는 2026.1 기본 라인과 함께 라인에 남아 있습니다.</p>
+<p data-original-en="Across a sweep of input length, output length, and concurrency, tokens/second throughput improved by 74.9% on average over 2026.1, rising to 84.8% in the low-concurrency regime (concurrency below 64), while TTFT and TPOT remain in line with the 2026.1 baseline.">입력 길이, 출력 길이 및 concurrency, tokens/second throughput에 의해 개선된의 청소를 건너 <strong>평균적으로 2026.1에서 74.9%</strong>, 상승하여 <strong>84.8%</strong> low-concurrency (64 아래 통화)에서 TTFT 및 TPOT는 2026.1 기본 라인과 함께 라인에 남아 있습니다.</p>
 </section>
 <section id="per-model-bucket-presets">
-<h3>Per-Model 버킷 프리셋<a class="headerlink" href="#per-model-bucket-presets" title="Link to this heading">#</a></h3>
-<p>좋은 양동이 구성 - prefill, decode의 세트, 그리고 부동이 크기에 대한 artifact가 컴파일된다 - 제공 성능을위한 highest-leverage 손잡이 중 하나이며, 또한 손으로 조정하는 가장 어려운 중 하나입니다. 2026.2에서,
+<h3 data-original-en="Per-Model Bucket Presets">Per-Model 버킷 프리셋<a class="headerlink" href="#per-model-bucket-presets" title="Link to this heading">#</a></h3>
+<p data-original-en="Good bucket configuration — the set of prefill, decode, and append bucket sizes an artifact is compiled for — is one of the highest-leverage knobs for serving performance, and also one of the hardest to tune by hand. In 2026.2, ArtifactBuilder absorbs that complexity: every supported model ships with per-model bucket presets, tuned by the Furiosa team to match each model’s architecture and cover its full maximum context, and applied automatically at build time.">좋은 양동이 구성 - prefill, decode의 세트, 그리고 부동이 크기에 대한 artifact가 컴파일된다 - 제공 성능을위한 highest-leverage 손잡이 중 하나이며, 또한 손으로 조정하는 가장 어려운 중 하나입니다. 2026.2에서,
 <code class="docutils literal notranslate"><span class="pre">ArtifactBuilder</span></code> 그 복잡성을 흡수: 모든 지원 모델 배와 함께
 <strong>per-model 템플릿 설정</strong>, Furiosa 팀에 의해 조정 각 모델의 아키텍처에 일치 하 고 전체 최대 컨텍스트를 커버 하 고 빌드 시간에 자동으로 적용.</p>
-<p>설계 목표는 간단합니다: <strong>기본 빌드는 일반적인 서빙 작업 부하에 가장 적합한 것을 생성해야합니다.</strong>사용자를 요구하지 않고 모든 양동이에 대한 이유 :</p>
+<p data-original-en="The design goal is simple — the default build should produce the best artifact for typical serving workloads, without requiring the user to reason about bucketization at all:">설계 목표는 간단합니다: <strong>기본 빌드는 일반적인 서빙 작업 부하에 가장 적합한 것을 생성해야합니다.</strong>사용자를 요구하지 않고 모든 양동이에 대한 이유 :</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Build an artifact for Qwen3-32B-FP8 and write it to ./Qwen3-32B-FP8</span>
 furiosa-llm<span class="w"> </span>build<span class="w"> </span>Qwen/Qwen3-32B-FP8<span class="w"> </span>-tp<span class="w"> </span><span class="m">8</span><span class="w"> </span>./Qwen3-32B-FP8
 </pre></div>
 </div>
-<p>Explicit 양동이 인수는 여전히 지원되고 선행을 취합니다. 따라서 workload- 특정 조정은 필요한 사용자에게 사용할 수 있습니다.</p>
+<p data-original-en="Explicit bucket arguments are still supported and take precedence, so workload- specific tuning remains available for users who need it.">Explicit 양동이 인수는 여전히 지원되고 선행을 취합니다. 따라서 workload- 특정 조정은 필요한 사용자에게 사용할 수 있습니다.</p>
 </section>
 <section id="data-parallel-router-with-prefix-aware-routing">
-<h3>Prefix-Aware Routing를 가진 자료 평행한 대패<a class="headerlink" href="#data-parallel-router-with-prefix-aware-routing" title="Link to this heading">#</a></h3>
-<p>2026.2는 first-class를 소개합니다. <strong>데이터 병렬 (DP) 라우터</strong> 수평으로 확장 된 배포를 위해. 라우터는 프런트 엔드의 앞에 앉아서 모든 engine-local 스케줄링이 발생하기 전에 DP 복제에 각 요청을 파견, 그래서 클라이언트는 단일 항목 포인트를 참조하면서 각 복제는 독립적으로 자신의 스케줄러를 실행합니다.</p>
-<p>두 가지 라우팅 정책이 있습니다. <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> 복제를 통해 균등하게 요청을 배포합니다. <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> 토큰화 된 접두사를 검사하고 이미 접두사 캐시 항목과 일치하는 복제를 선호한다 - 긴 시스템 프롬프트 또는 RAG 시스템과 같은 공유 주요 토큰과 같은 워크로드에 중요한, 해군 round-robin 사기꾼이 복제를 통해 공유 접두사를 공유하고 캐시 지방을 파괴한다. 정책은 통해 선택됩니다 <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> prefix caching이 활성화된 경우, <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> 다른 경우:</p>
+<h3 data-original-en="Data Parallel Router with Prefix-Aware Routing">Prefix-Aware Routing를 가진 자료 평행한 대패<a class="headerlink" href="#data-parallel-router-with-prefix-aware-routing" title="Link to this heading">#</a></h3>
+<p data-original-en="2026.2 introduces a first-class Data Parallel (DP) Router for horizontally scaled deployments. The router sits in front of the frontend and dispatches each request to a DP replica before any engine-local scheduling happens, so clients see a single entry point while each replica runs its own scheduler independently.">2026.2는 first-class를 소개합니다. <strong>데이터 병렬 (DP) 라우터</strong> 수평으로 확장 된 배포를 위해. 라우터는 프런트 엔드의 앞에 앉아서 모든 engine-local 스케줄링이 발생하기 전에 DP 복제에 각 요청을 파견, 그래서 클라이언트는 단일 항목 포인트를 참조하면서 각 복제는 독립적으로 자신의 스케줄러를 실행합니다.</p>
+<p data-original-en="Two routing policies are available. round_robin distributes requests evenly across replicas; prefix_aware inspects the tokenized prefix and prefers the replica that already holds matching prefix cache entries — important for workloads with shared leading tokens, such as chatbots with long system prompts or RAG systems, where naive round-robin scatters shared prefixes across replicas and destroys cache locality. The policy is selected via --data-parallel-routing-policy, and defaults to prefix_aware when prefix caching is enabled and round_robin otherwise:">두 가지 라우팅 정책이 있습니다. <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> 복제를 통해 균등하게 요청을 배포합니다. <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> 토큰화 된 접두사를 검사하고 이미 접두사 캐시 항목과 일치하는 복제를 선호한다 - 긴 시스템 프롬프트 또는 RAG 시스템과 같은 공유 주요 토큰과 같은 워크로드에 중요한, 해군 round-robin 사기꾼이 복제를 통해 공유 접두사를 공유하고 캐시 지방을 파괴한다. 정책은 통해 선택됩니다 <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">prefix_aware</span></code> prefix caching이 활성화된 경우, <code class="docutils literal notranslate"><span class="pre">round_robin</span></code> 다른 경우:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Explicitly use prefix-aware routing</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--data-parallel-size<span class="w"> </span>&lt;N&gt;<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--data-parallel-routing-policy<span class="w"> </span>&lt;policy&gt;
@@ -342,25 +342,25 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 </div>
 </section>
 <section id="prefix-caching-is-now-on-by-default">
-<h3>Prefix Caching는 기본적으로 활성화됨<a class="headerlink" href="#prefix-caching-is-now-on-by-default" title="Link to this heading">#</a></h3>
-<p>Prefix caching는 opt-in 플래그 뒤에 2026.1에서 소개되었습니다. 생산 사용 및 여러 교정 및 성능 개선의 출시 후, 지금입니다
+<h3 data-original-en="Prefix Caching Is Now On by Default">Prefix Caching는 기본적으로 활성화됨<a class="headerlink" href="#prefix-caching-is-now-on-by-default" title="Link to this heading">#</a></h3>
+<p data-original-en="Prefix caching was introduced in 2026.1 behind an opt-in flag. After a release of production use and several correctness and performance improvements, it is now enabled by default in 2026.2. You no longer need any flag to benefit from it.">Prefix caching는 opt-in 플래그 뒤에 2026.1에서 소개되었습니다. 생산 사용 및 여러 교정 및 성능 개선의 출시 후, 지금입니다
 <strong>기본 설정으로 설정</strong> 2026.2에서. 더 이상 어떤 플래그를 필요로하지 않습니다.</p>
-<p>기본 플립 외에도 여러 가지 정제를 착륙했습니다.</p>
+<p data-original-en="Alongside the default flip, we landed several refinements:">기본 플립 외에도 여러 가지 정제를 착륙했습니다.</p>
 <ul class="simple">
-<li><p><strong>프리픽스 캐시 히트 지연</strong> in-flight 접두사와 일치하기에 대한 간단한 방어 요청으로 캐시 히트 레이트를 극대화합니다. 대신 신선한 prefill로 킥링합니다.</p></li>
-<li><p><strong>Prefix caching는 디코딩 출력에 적용됩니다.</strong> 뿐만 아니라 multi-turn 대화는 계속적인 측에 조차 캐시에서 이익을 얻습니다.</p></li>
+<li><p data-original-en="Prefix cache hit deferral maximizes the cache hit rate by briefly deferring requests that are about to match an in-flight prefix, instead of kicking them off to a fresh prefill."><strong>프리픽스 캐시 히트 지연</strong> in-flight 접두사와 일치하기에 대한 간단한 방어 요청으로 캐시 히트 레이트를 극대화합니다. 대신 신선한 prefill로 킥링합니다.</p></li>
+<li><p data-original-en="Prefix caching is applied to decoded outputs as well, so multi-turn conversations benefit from the cache even on the continuation side."><strong>Prefix caching는 디코딩 출력에 적용됩니다.</strong> 뿐만 아니라 multi-turn 대화는 계속적인 측에 조차 캐시에서 이익을 얻습니다.</p></li>
 </ul>
-<p>특정 배포를 위해 prefix caching를 비활성화해야 하는 경우 — 예를 들어, 요청을 통해 미리 설정할 수 있는 워크로드 또는 벤치마킹 실행을 위해 cache-hit 가변이 측정을 중단할 경우 — 패스 <code class="docutils literal notranslate"><span class="pre">--no-enable-prefix-caching</span></code>:</p>
+<p data-original-en="If you need to disable prefix caching for a specific deployment — for example, for workloads that rarely share prefixes across requests, or for benchmarking runs where cache-hit variance would distort the measurements — pass --no-enable-prefix-caching:">특정 배포를 위해 prefix caching를 비활성화해야 하는 경우 — 예를 들어, 요청을 통해 미리 설정할 수 있는 워크로드 또는 벤치마킹 실행을 위해 cache-hit 가변이 측정을 중단할 경우 — 패스 <code class="docutils literal notranslate"><span class="pre">--no-enable-prefix-caching</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--no-enable-prefix-caching
 </pre></div>
 </div>
 </section>
 <section id="response-api-phase-1">
-<h3>응답 API (단계 1)<a class="headerlink" href="#response-api-phase-1" title="Link to this heading">#</a></h3>
-<p>2026.2는 초기 지원 기능을 추가합니다. <a class="reference external" href="https://developers.openai.com/api/reference/responses/overview">응답 API</a> at
+<h3 data-original-en="Response API (Phase 1)">응답 API (단계 1)<a class="headerlink" href="#response-api-phase-1" title="Link to this heading">#</a></h3>
+<p data-original-en="2026.2 adds initial support for the Response API at /v1/responses. The Response API is OpenAI’s newer, more expressive alternative to Chat Completions, and this release covers enough of the surface area to be useful for straightforward request/response flows.">2026.2는 초기 지원 기능을 추가합니다. <a class="reference external" href="https://developers.openai.com/api/reference/responses/overview">응답 API</a> at
 <code class="docutils literal notranslate"><span class="pre">/v1/responses</span></code>. 응답 API는 OpenAI의 더 새로운, 채팅 완료에 더 표현적인 대안이고, 이 방출은 똑바른 request/response 교류를 위해 유용한 표면 지역의 충분히 커버합니다.</p>
-<p>이것은 표기되어 있습니다 <strong>단계 1</strong> 의도적으로: endpoint는 요청을 받아들이고 well-formed 응답을 생성하지만, 고급 행동의 수는 여전히 구출됩니다.</p>
-<p>OpenAI Python 클라이언트를 사용하는 최소 예:</p>
+<p data-original-en="This is labeled Phase 1 intentionally: the endpoint accepts requests and produces well-formed responses, but a number of advanced behaviors are still being rolled out.">이것은 표기되어 있습니다 <strong>단계 1</strong> 의도적으로: endpoint는 요청을 받아들이고 well-formed 응답을 생성하지만, 고급 행동의 수는 여전히 구출됩니다.</p>
+<p data-original-en="A minimal example using the OpenAI Python client:">OpenAI Python 클라이언트를 사용하는 최소 예:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"http://localhost:8000/v1"</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">"EMPTY"</span><span class="p">)</span>
@@ -372,147 +372,147 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">output_text</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>전체 엔드포인트 목록의 경우 지원되는 매개 변수, multi-turn 대화를 통해
+<p data-original-en="For the full endpoint list, supported parameters, multi-turn conversations via previous_response_id, streaming, tool calling, and structured output, see Responses API.">전체 엔드포인트 목록의 경우 지원되는 매개 변수, multi-turn 대화를 통해
 <code class="docutils literal notranslate"><span class="pre">previous_response_id</span></code>, 스트리밍, 도구 호출, 및 구조 출력, 참조
 <a class="reference internal" href="../furiosa_llm/responses-api.html#responsesapi"><span class="std std-ref">답변 API</span></a>.</p>
 <hr class="docutils"/>
-<p>이 릴리스의 변경의 전체 목록은 아래의 모든 변경 섹션에서 요약됩니다.</p>
+<p data-original-en="The complete list of changes in this release is summarized in the All Changes section below.">이 릴리스의 변경의 전체 목록은 아래의 모든 변경 섹션에서 요약됩니다.</p>
 </section>
 </section>
 <section id="all-changes">
-<span id="release2026-2-0-allchanges"></span><h2>모든 변화<a class="headerlink" href="#all-changes" title="Link to this heading">#</a></h2>
+<span id="release2026-2-0-allchanges"></span><h2 data-original-en="All Changes">모든 변화<a class="headerlink" href="#all-changes" title="Link to this heading">#</a></h2>
 <section id="major-features-improvements">
-<h3>주요 기능 및 개선 사항<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Major Features &amp; Improvements">주요 기능 및 개선 사항<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>데이터 병렬 (DP) 라우터</strong></p>
+<li><p data-original-en="Data Parallel (DP) Router"><strong>데이터 병렬 (DP) 라우터</strong></p>
 <ul>
-<li><p>독립적으로 DP 복제를 통해 요청을 일정하는 전용 DP 라우터를 도입하여 inference 노동자의 수평 scale-out를 사용하여 fine-grained 제어를 요청 배포합니다.</p></li>
-<li><p><strong>Prefix-aware 라우팅</strong> multi-tenant 배포에서 multi-tenant 캐시 히트 레이트를 극대화하는 프리픽스 캐시 항목에 대한 공유 접두사 요청을 전달합니다.</p></li>
-<li><p>DP 라우터는 engine-local 스케줄링 전에 결정이 발생하기 때문에 frontend의 앞에 배치됩니다. cross-replica 콘텐츠 감소.</p></li>
+<li><p data-original-en="Introduced a dedicated DP router that schedules requests across DP replicas independently, enabling horizontal scale-out of inference workers with fine-grained control over request distribution.">독립적으로 DP 복제를 통해 요청을 일정하는 전용 DP 라우터를 도입하여 inference 노동자의 수평 scale-out를 사용하여 fine-grained 제어를 요청 배포합니다.</p></li>
+<li><p data-original-en="Prefix-aware routing dispatches requests with shared prefixes to replicas that already hold matching prefix cache entries, maximizing cross-request cache hit rate in multi-tenant deployments."><strong>Prefix-aware 라우팅</strong> multi-tenant 배포에서 multi-tenant 캐시 히트 레이트를 극대화하는 프리픽스 캐시 항목에 대한 공유 접두사 요청을 전달합니다.</p></li>
+<li><p data-original-en="The DP router is placed in front of the frontend so that routing decisions happen before any engine-local scheduling, reducing cross-replica contention.">DP 라우터는 engine-local 스케줄링 전에 결정이 발생하기 때문에 frontend의 앞에 배치됩니다. cross-replica 콘텐츠 감소.</p></li>
 </ul>
 </li>
-<li><p><strong>Prefix Caching는 기본적으로 활성화됩니다.</strong></p>
+<li><p data-original-en="Prefix Caching Enabled by Default"><strong>Prefix Caching는 기본적으로 활성화됩니다.</strong></p>
 <ul>
-<li><p>Prefix caching는 이제 모든 배포에 기본적으로 활성화되어 Time-To-First-Token (TTFT)를 박스에서 제공합니다.</p></li>
-<li><p>추가적인 개선 사항으로는 <strong>프리픽스 캐시 히트 지연</strong> prefix caching를 적용하여 출력을 디코딩하고, 하이브리드주의 모델의 안전한 접두사 캐시 삽입을 위한 보조 블록 길이 평형을 보장합니다.</p></li>
+<li><p data-original-en="Prefix caching is now enabled by default for all deployments, delivering lower Time-To-First-Token (TTFT) out of the box.">Prefix caching는 이제 모든 배포에 기본적으로 활성화되어 Time-To-First-Token (TTFT)를 박스에서 제공합니다.</p></li>
+<li><p data-original-en="Additional refinements include prefix cache hit deferral to maximize cache hit rate, applying prefix caching to decoded outputs, and guaranteeing auxiliary block length equivalence for safe prefix cache insertion in hybrid attention models.">추가적인 개선 사항으로는 <strong>프리픽스 캐시 히트 지연</strong> prefix caching를 적용하여 출력을 디코딩하고, 하이브리드주의 모델의 안전한 접두사 캐시 삽입을 위한 보조 블록 길이 평형을 보장합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>응답 API와 OpenAI 호환 API</strong></p>
+<li><p data-original-en="Response API and OpenAI-compatible API"><strong>응답 API와 OpenAI 호환 API</strong></p>
 <ul>
-<li><p><strong>응답 API (/v1/responses)</strong>: 응답 API에 대한 지원이 추가되며, 현명한 상호 작용을 가능하게 합니다.</p></li>
-<li><p><strong>토큰화 / 역토큰화 API</strong>: 추가 <code class="docutils literal notranslate"><span class="pre">/tokenize</span></code> and <code class="docutils literal notranslate"><span class="pre">/detokenize</span></code> server-side 토큰화 및 탈 토큰화를위한 엔드 포인트.</p></li>
-<li><p><strong>``dimensions`` 매개변수를 사용하여 임베딩 생성</strong>: 특정 embedding 차원을 요청하는 지원 <code class="docutils literal notranslate"><span class="pre">dimensions</span></code> 현장</p></li>
+<li><p data-original-en="Response API (/v1/responses): Added support for the Response API, enabling stateful interactions."><strong>응답 API (/v1/responses)</strong>: 응답 API에 대한 지원이 추가되며, 현명한 상호 작용을 가능하게 합니다.</p></li>
+<li><p data-original-en="Tokenize / Detokenize API: Added /tokenize and /detokenize endpoints for server-side tokenization and detokenization."><strong>토큰화 / 역토큰화 API</strong>: 추가 <code class="docutils literal notranslate"><span class="pre">/tokenize</span></code> and <code class="docutils literal notranslate"><span class="pre">/detokenize</span></code> server-side 토큰화 및 탈 토큰화를위한 엔드 포인트.</p></li>
+<li><p data-original-en="Embeddings ``dimensions`` parameter: Support for requesting a specific embedding dimensionality via the dimensions field."><strong>``dimensions`` 매개변수를 사용하여 임베딩 생성</strong>: 특정 embedding 차원을 요청하는 지원 <code class="docutils literal notranslate"><span class="pre">dimensions</span></code> 현장</p></li>
 </ul>
 </li>
-<li><p><strong>더 넓은 플랫폼 지원</strong></p>
+<li><p data-original-en="Broader Platform Support"><strong>더 넓은 플랫폼 지원</strong></p>
 <ul>
-<li><p><strong>ARM64 호스트 (AArch64)</strong>: Furiosa SDK는 이제 ARM64-based 서버에서 실행되며 호스트 runtime에서 AArch64 SIMD 지원으로 2026.1에서 도입된 벡터화 최적화는 x86-64에서 x86-64에 적용됩니다.</p></li>
-<li><p><strong>Red Hat Enterprise Linux (RHEL)</strong>: RPM 패키지는 Debian/Ubuntu를 RHEL-based 배포에 Debian/Ubuntu를 넘어 first-class OS 지원을 확장하고 있습니다.</p></li>
+<li><p data-original-en="ARM64 hosts (AArch64): The Furiosa SDK now runs on ARM64-based servers, with AArch64 SIMD support in the host runtime so the vectorized optimizations introduced in 2026.1 apply on ARM just as they do on x86-64."><strong>ARM64 호스트 (AArch64)</strong>: Furiosa SDK는 이제 ARM64-based 서버에서 실행되며 호스트 runtime에서 AArch64 SIMD 지원으로 2026.1에서 도입된 벡터화 최적화는 x86-64에서 x86-64에 적용됩니다.</p></li>
+<li><p data-original-en="Red Hat Enterprise Linux (RHEL): RPM packages are now published, extending first-class OS support beyond Debian/Ubuntu to RHEL-based distributions."><strong>Red Hat Enterprise Linux (RHEL)</strong>: RPM 패키지는 Debian/Ubuntu를 RHEL-based 배포에 Debian/Ubuntu를 넘어 first-class OS 지원을 확장하고 있습니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="performance-efficiency-improvements">
-<h3>성과 &amp; 효율성 개선<a class="headerlink" href="#performance-efficiency-improvements" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Performance &amp; Efficiency Improvements">성과 &amp; 효율성 개선<a class="headerlink" href="#performance-efficiency-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Model-specific 최적화</strong>:</p>
+<li><p data-original-en="Model-specific optimizations:"><strong>Model-specific 최적화</strong>:</p>
 <ul>
-<li><p>확장 및 re-tuned prefill, decode 및 부드킷을위한 <strong>Qwen3</strong> and
+<li><p data-original-en="Expanded and re-tuned prefill, decode, and append buckets for Qwen3 and Exaone4 so more of the real-world request distribution hits well-tuned kernels, combined with compiler optimized for lower-batch buckets.">확장 및 re-tuned prefill, decode 및 부드킷을위한 <strong>Qwen3</strong> and
 <strong>엑소네4</strong> real-world 요청 배포는 well-tuned 커널을 보았으므로 compiler와 lower-batch 버킷에 최적화되어 있습니다.</p></li>
 </ul>
 </li>
-<li><p><strong>최적화된 로짓 복사 I/O</strong>:</p>
+<li><p data-original-en="Optimized logit copy I/O:"><strong>최적화된 로짓 복사 I/O</strong>:</p>
 <ul>
-<li><p>: 샘플러가 실제로 소비하는 슬라이스만 복사하여 sampling 모델 출력 로딩의 메모리 병목 현상을 줄였습니다. 이를 통해 각 decode 단계마다 호스트-장치 전송 볼륨이 줄었습니다.</p></li>
+<li><p data-original-en="Reduced the memory bottleneck in loading model outputs for sampling by copying only the slice actually consumed by the sampler, cutting host-device transfer volume per decode step.">: 샘플러가 실제로 소비하는 슬라이스만 복사하여 sampling 모델 출력 로딩의 메모리 병목 현상을 줄였습니다. 이를 통해 각 decode 단계마다 호스트-장치 전송 볼륨이 줄었습니다.</p></li>
 </ul>
 </li>
-<li><p><strong>스케줄러 최적화</strong>:</p>
+<li><p data-original-en="Scheduler optimizations:"><strong>스케줄러 최적화</strong>:</p>
 <ul>
-<li><p><strong>프리픽스 캐시 히트 지연</strong> in-flight 접두사와 일치하기에 대한 간단한 deferring 요청에 의해 cross-request 캐시 히트 레이트를 극대화합니다.</p></li>
-<li><p>추가적인 최적화는 <strong>prefix-aware DP 라우터</strong> 매우 긴 공유 접두사를 위해 빠른 여정 결정을 유지하십시오.</p></li>
+<li><p data-original-en="Prefix cache hit deferral maximizes cross-request cache hit rate by briefly deferring requests that are about to match an in-flight prefix."><strong>프리픽스 캐시 히트 지연</strong> in-flight 접두사와 일치하기에 대한 간단한 deferring 요청에 의해 cross-request 캐시 히트 레이트를 극대화합니다.</p></li>
+<li><p data-original-en="Further optimization of the prefix-aware DP router keeps the routing decision fast even for very long shared prefixes.">추가적인 최적화는 <strong>prefix-aware DP 라우터</strong> 매우 긴 공유 접두사를 위해 빠른 여정 결정을 유지하십시오.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="api-usability-improvements">
-<h3>API 및 사용성 개선<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h3>
+<h3 data-original-en="API &amp; Usability Improvements">API 및 사용성 개선<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>서비스 옵션</strong>:</p>
+<li><p data-original-en="Serving Options:"><strong>서비스 옵션</strong>:</p>
 <ul>
-<li><p>추가 <code class="docutils literal notranslate"><span class="pre">--served-model-name</span></code> OpenAI 호환 API (aliasing 또는 drop-in 교체에 적합)를 통해 노출 된 모델 ID를 사용자 정의 할 수 있습니다.</p></li>
-<li><p>추가 <code class="docutils literal notranslate"><span class="pre">--chat-template-content-format</span></code> multi-part 채팅 콘텐츠 렌더링에 대한 인수.</p></li>
+<li><p data-original-en="Added --served-model-name option to customize the model ID exposed via the OpenAI-compatible API (useful for aliasing or drop-in replacements).">추가 <code class="docutils literal notranslate"><span class="pre">--served-model-name</span></code> OpenAI 호환 API (aliasing 또는 drop-in 교체에 적합)를 통해 노출 된 모델 ID를 사용자 정의 할 수 있습니다.</p></li>
+<li><p data-original-en="Added --chat-template-content-format argument for multi-part chat content rendering.">추가 <code class="docutils literal notranslate"><span class="pre">--chat-template-content-format</span></code> multi-part 채팅 콘텐츠 렌더링에 대한 인수.</p></li>
 </ul>
 </li>
-<li><p><strong>Sampling 기본값</strong>:</p>
+<li><p data-original-en="Sampling Defaults:"><strong>Sampling 기본값</strong>:</p>
 <ul>
-<li><p>기본 sampling 매개 변수는 이제 모델의 소스가 될 수 있습니다
+<li><p data-original-en="Default sampling parameters can now be sourced from the model’s generation_config.json, aligning server behavior with the model’s recommended defaults.">기본 sampling 매개 변수는 이제 모델의 소스가 될 수 있습니다
 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code>, 모델의 권장된 기본값으로 서버 동작을 정렬합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>사용법 및 관찰</strong>:</p>
+<li><p data-original-en="Usage &amp; Observability:"><strong>사용법 및 관찰</strong>:</p>
 <ul>
-<li><p>사용 응답에 추가됨 <strong>cached_tokens</strong> 그리고 prompt/completion token 세부사항.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sampling_done</span></code> 미터는 지금 per-device 고장을 위한 장치 ID를 포함합니다.</p></li>
+<li><p data-original-en="Usage response is augmented with cached_tokens and prompt/completion token details.">사용 응답에 추가됨 <strong>cached_tokens</strong> 그리고 prompt/completion token 세부사항.</p></li>
+<li><p data-original-en="sampling_done metric now includes the device ID for per-device breakdown."><code class="docutils literal notranslate"><span class="pre">sampling_done</span></code> 미터는 지금 per-device 고장을 위한 장치 ID를 포함합니다.</p></li>
 </ul>
 </li>
 <li><p><strong>CLI</strong>:</p>
 <ul>
-<li><p>New <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">version</span></code> subcommand는 설치된 SDK 버전을 보고합니다.</p></li>
+<li><p data-original-en="New furiosa-llm version subcommand reports the installed SDK version.">New <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">version</span></code> subcommand는 설치된 SDK 버전을 보고합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>채팅 완료 API</strong>:</p>
+<li><p data-original-en="Chat Completion API:"><strong>채팅 완료 API</strong>:</p>
 <ul>
-<li><p>token 길이는 최대 사용 가능한 KV 블록에 대해 검증되며 빈 캐시에도 적합 할 수없는 요청을 방지합니다.</p></li>
+<li><p data-original-en="Request token length is validated against the maximum available KV blocks, preventing requests that cannot fit even in an empty cache.">token 길이는 최대 사용 가능한 KV 블록에 대해 검증되며 빈 캐시에도 적합 할 수없는 요청을 방지합니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 </section>
 <section id="breaking-changes-deprecations">
-<span id="release2026-2-0-breakingchanges"></span><h2>🚨 주요 변경 사항 및 폐기<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
+<span id="release2026-2-0-breakingchanges"></span><h2 data-original-en="🚨 Breaking Changes &amp; Deprecations">🚨 주요 변경 사항 및 폐기<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>–prefill-chunk-size 제거</strong>:</p>
+<li><p data-original-en="–prefill-chunk-size Removed:"><strong>–prefill-chunk-size 제거</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> CLI 옵션이 제거되었습니다. Prefill chunking은 이제 스케줄러에 의해 내부적으로 관리됩니다.</p></li>
-<li><p><strong>이주</strong>: 제거 <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> 시작 스크립트에서; 교체가 필요하지 않습니다.</p></li>
+<li><p data-original-en="The --prefill-chunk-size CLI option has been removed. Prefill chunking is now managed internally by the scheduler.">The <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> CLI 옵션이 제거되었습니다. Prefill chunking은 이제 스케줄러에 의해 내부적으로 관리됩니다.</p></li>
+<li><p data-original-en="Migration: Remove --prefill-chunk-size from your launch scripts; no replacement is required."><strong>이주</strong>: 제거 <code class="docutils literal notranslate"><span class="pre">--prefill-chunk-size</span></code> 시작 스크립트에서; 교체가 필요하지 않습니다.</p></li>
 </ul>
 </li>
-<li><p><strong>PyTorch 2.10로 업그레이드</strong>:</p>
+<li><p data-original-en="PyTorch Upgrade to 2.10:"><strong>PyTorch 2.10로 업그레이드</strong>:</p>
 <ul>
-<li><p>PyTorch는 2.7에서 2.10에 융해한 종속성입니다.</p></li>
-<li><p><strong>이주</strong>: 환경을 보장하는 것은 PyTorch 2.10.x를 지원합니다.</p></li>
+<li><p data-original-en="PyTorch dependency bumped from 2.7 to 2.10.">PyTorch는 2.7에서 2.10에 융해한 종속성입니다.</p></li>
+<li><p data-original-en="Migration: Ensure your environment supports PyTorch 2.10.x."><strong>이주</strong>: 환경을 보장하는 것은 PyTorch 2.10.x를 지원합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>reasoning_content (더 이상 사용되지 않음)</strong>:</p>
+<li><p data-original-en="reasoning_content Deprecated:"><strong>reasoning_content (더 이상 사용되지 않음)</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code> 채팅 완료 응답의 필드는 이름
+<li><p data-original-en="The reasoning_content field in chat completions responses is being renamed to reasoning for consistency with upstream conventions. Both fields are populated in 2026.2, so existing clients continue to work unchanged; reasoning_content will remain available for at least one more release cycle before removal.">The <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code> 채팅 완료 응답의 필드는 이름
 <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 업스트림 컨벤션과의 일관성을 위해. 두 필드는 2026.2에서 대중화됩니다, 그래서 기존 클라이언트는 변경되지 않는 작업을 계속; <code class="docutils literal notranslate"><span class="pre">reasoning_content</span></code>
 제거하기 전에 적어도 하나의 더 많은 릴리스 사이클 동안 사용할 수 있습니다.</p></li>
-<li><p><strong>이주</strong>: 클라이언트 코드를 업데이트하여 읽도록 <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 제거 작업 전에 해당
+<li><p data-original-en="Migration: Update client code to read the reasoning field before the removal lands."><strong>이주</strong>: 클라이언트 코드를 업데이트하여 읽도록 <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 제거 작업 전에 해당
 필드를 설정합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>guided_decoding는 structured_output로 이름을 변경했습니다</strong>:</p>
+<li><p data-original-en="guided_decoding Renamed to structured_output:"><strong>guided_decoding는 structured_output로 이름을 변경했습니다</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">guided_decoding</span></code> 해당 파라미터 그룹의 이름이 변경되었습니다. <code class="docutils literal notranslate"><span class="pre">structured_output</span></code>.</p></li>
-<li><p><strong>이주</strong>: 모든 요청 페이로드 또는 SDK 통화를 업데이트하십시오.
+<li><p data-original-en="The guided_decoding parameter group has been renamed to structured_output.">The <code class="docutils literal notranslate"><span class="pre">guided_decoding</span></code> 해당 파라미터 그룹의 이름이 변경되었습니다. <code class="docutils literal notranslate"><span class="pre">structured_output</span></code>.</p></li>
+<li><p data-original-en="Migration: Update any request payloads or SDK calls that reference guided_decoding."><strong>이주</strong>: 모든 요청 페이로드 또는 SDK 통화를 업데이트하십시오.
 <code class="docutils literal notranslate"><span class="pre">guided_decoding</span></code>.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="released-components">
-<h2>📦 출시된 구성 요소<a class="headerlink" href="#released-components" title="Link to this heading">#</a></h2>
+<h2 data-original-en="📦 Released Components">📦 출시된 구성 요소<a class="headerlink" href="#released-components" title="Link to this heading">#</a></h2>
 <section id="python-packages">
-<h3>Python 패키지<a class="headerlink" href="#python-packages" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Python packages">Python 패키지<a class="headerlink" href="#python-packages" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 80.0%"/>
 <col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
-<th class="head"><p>버전</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Package name">패키지 이름</p></th>
+<th class="head"><p data-original-en="Version">버전</p></th>
 </tr>
 </thead>
 <tbody>
@@ -522,7 +522,7 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 <tr class="row-odd"><td><p>furiosa-llm</p></td>
 <td><p>2026.2.0</p></td>
 </tr>
-<tr class="row-even"><td><p>furiosa -불</p></td>
+<tr class="row-even"><td><p data-original-en="furiosa-torch">furiosa -불</p></td>
 <td><p>2026.2.0</p></td>
 </tr>
 </tbody>
@@ -530,15 +530,15 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 </div>
 </section>
 <section id="apt-packages">
-<h3>APT 패키지<a class="headerlink" href="#apt-packages" title="Link to this heading">#</a></h3>
+<h3 data-original-en="APT packages">APT 패키지<a class="headerlink" href="#apt-packages" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 80.0%"/>
 <col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
-<th class="head"><p>버전</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Package name">패키지 이름</p></th>
+<th class="head"><p data-original-en="Version">버전</p></th>
 </tr>
 </thead>
 <tbody>
@@ -559,14 +559,14 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 </div>
 </section>
 <section id="docker-images">
-<h3>Docker 이미지<a class="headerlink" href="#docker-images" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Docker images">Docker 이미지<a class="headerlink" href="#docker-images" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 80.0%"/>
 <col style="width: 20.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>이미지</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Image">이미지</p></th>
 <th class="head"><p>Tag</p></th>
 </tr>
 </thead>

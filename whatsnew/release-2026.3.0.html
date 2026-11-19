@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -312,51 +312,51 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="furiosa-sdk-release-2026-3-0">
-<span id="release2026-3-0"></span><h1>Furiosa SDK 릴리스 2026.3.0<a class="headerlink" href="#furiosa-sdk-release-2026-3-0" title="Link to this heading">#</a></h1>
-<p>우리는의 출시를 발표하게 행복합니다. <strong>Furiosa SDK 2026.3</strong>.</p>
-<p>이번 릴리스는 다음 사항에 중점을 두고 있습니다 <strong>모델 커버링</strong>. 그것의 핵심은의 소개입니다
+<span id="release2026-3-0"></span><h1 data-original-en="Furiosa SDK Release 2026.3.0">Furiosa SDK 릴리스 2026.3.0<a class="headerlink" href="#furiosa-sdk-release-2026-3-0" title="Link to this heading">#</a></h1>
+<p data-original-en="We are happy to announce the release of Furiosa SDK 2026.3.">우리는의 출시를 발표하게 행복합니다. <strong>Furiosa SDK 2026.3</strong>.</p>
+<p data-original-en="This release is centered on model coverage. At its core is the introduction of the TCL (Tensor Contraction Language) kernel framework and the furiosa-kernels package, together with the FXB (Furiosa Executable Bundle) packaging format, which make enabling and distributing a new model architecture dramatically faster. On that foundation, 2026.3 adds first-class multimodal (vision-language) serving with Qwen3-VL, brings up several new large MoE models (gpt-oss, Solar-Open, K-EXAONE, Qwen3 MoE), introduces an overlap scheduler that runs one batch ahead to keep the NPU continuously fed, and generalizes the Data Parallel router into a scoring-based policy.">이번 릴리스는 다음 사항에 중점을 두고 있습니다 <strong>모델 커버링</strong>. 그것의 핵심은의 소개입니다
 <strong>TCL (텐서 수축 언어)</strong> 커널 프레임워크 및 <strong>furiosa-핵</strong>
 패키지, 그리고 <strong>FXB (Furiosa 실행 파일 묶음)</strong> 새로운 모델 아키텍처를 활성화하고 배포하는 패키지 형식은 극적으로 빠르게. 그 기초에 2026.3는 first-class를 추가 <strong>다중 모드 (vision-language)</strong> 함께 봉사
 <strong>Qwen3-VL</strong>, 몇몇 새로운 큰 MoE 모형을 가져옵니다 (gpt-oss, Solar-Open, K-EXAONE, Qwen3 MoE), 소개합니다 <strong>겹치는 스케줄러</strong> NPU를 지속적으로 퓨팅하고, Data Parallel Router를 일반화하기 위해 앞서 하나의 배치를 실행합니다. <strong>scoring-based</strong> 정책입니다.</p>
-<p>2026.2에서 업그레이드하는 경우, 또한 읽으십시오
+<p data-original-en="If you are upgrading from 2026.2, please also read the 🚨 Breaking Changes &amp; Deprecations section and the Upgrading FuriosaAI’s Software.">2026.2에서 업그레이드하는 경우, 또한 읽으십시오
 <a class="reference internal" href="#release2026-3-0-breakingchanges"><span class="std std-ref">🚨 주요 변경 사항 및 폐기</span></a> 부문 및 <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a>.</p>
 <section id="highlights">
-<h2>주요 내용<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Highlights">주요 내용<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <section id="tcl-kernel-framework-and-furiosa-kernels">
-<h3>TCL 커널 프레임 워크와 furiosa 커널<a class="headerlink" href="#tcl-kernel-framework-and-furiosa-kernels" title="Link to this heading">#</a></h3>
-<p>2026.3의 정의 변화는 <strong>TCL (텐서 수축 언어)</strong> 커널 프레임 워크. 모델을 추가하는 이유를 보려면 훨씬 빨리, 그것은 우리가 하나를 설명하는 데 사용하는 방법을 살펴 봅니다.</p>
-<p>이전 경로는 PyTorch 모델에서 시작, TorchDynamo와 Torch ATen ops의 FX 그래프로 추적. 이것은 빠르게 실행 모델을 얻기 위해 효과적이었지만 모델의 의도를 희석 : ATen을 통해 캡처는 fine-grained primitives로 그래프를 해독합니다. An <code class="docutils literal notranslate"><span class="pre">aten.mm</span></code>, 예를 들어, 타일링이 되고, 그 다음 요소적으로 곱하기, 그 다음  ⁇ 을 줄이고 compiler는 더 이상  ⁇ matmul ⁇ 를 보지 않고 그것을 최적화하기 전에 re-recognize을해야합니다. 그리고 축의 의미학과 오프 경계는 동일한 방식으로 흐리게됩니다. 마찬가지로 중요한 것은 모델링 단계가 compiler의 목표에 대한 RNGD의 필요성을 부착하기 위해 몇 가지 좋은 장소를 남겼습니다. 의도된 텐서 병렬화 (TP) 전략과 같은. compiler는 본질적으로 의미의 상당 부분이 이미 평평화 된 후 최적화되었습니다.</p>
-<p><strong>TCL</strong> 모델 의미와 구조를 보존하기 위해 설계되었습니다. 커널 저자가 high-level를 작성하는 데 설명 된 Python eDSL입니다. <code class="docutils literal notranslate"><span class="pre">@tcl.kernel</span></code>-장식된
+<h3 data-original-en="TCL Kernel Framework and furiosa-kernels">TCL 커널 프레임 워크와 furiosa 커널<a class="headerlink" href="#tcl-kernel-framework-and-furiosa-kernels" title="Link to this heading">#</a></h3>
+<p data-original-en="The defining change in 2026.3 is the TCL (Tensor Contraction Language) kernel framework. To see why adding a model got so much faster, it helps to look at how we used to describe one.">2026.3의 정의 변화는 <strong>TCL (텐서 수축 언어)</strong> 커널 프레임 워크. 모델을 추가하는 이유를 보려면 훨씬 빨리, 그것은 우리가 하나를 설명하는 데 사용하는 방법을 살펴 봅니다.</p>
+<p data-original-en="The previous path started from a PyTorch model, traced with TorchDynamo into an FX graph of Torch ATen ops. This was effective for getting a model running quickly, but it diluted the model’s intent: capturing through ATen decomposes the graph into fine-grained primitives. An aten.mm, for example, becomes a tiling, then an elementwise multiply, then a reduce — so the compiler no longer sees a “matmul” and has to re-recognize one before it can optimize it, and axis semantics and op boundaries blur in the same way. Just as importantly, the modeling stage left few good places to attach the hints a compiler needs for an RNGD target, such as the intended tensor parallelism (TP) strategy. The compiler was essentially optimizing after much of the meaning had already been flattened away.">이전 경로는 PyTorch 모델에서 시작, TorchDynamo와 Torch ATen ops의 FX 그래프로 추적. 이것은 빠르게 실행 모델을 얻기 위해 효과적이었지만 모델의 의도를 희석 : ATen을 통해 캡처는 fine-grained primitives로 그래프를 해독합니다. An <code class="docutils literal notranslate"><span class="pre">aten.mm</span></code>, 예를 들어, 타일링이 되고, 그 다음 요소적으로 곱하기, 그 다음  ⁇ 을 줄이고 compiler는 더 이상  ⁇ matmul ⁇ 를 보지 않고 그것을 최적화하기 전에 re-recognize을해야합니다. 그리고 축의 의미학과 오프 경계는 동일한 방식으로 흐리게됩니다. 마찬가지로 중요한 것은 모델링 단계가 compiler의 목표에 대한 RNGD의 필요성을 부착하기 위해 몇 가지 좋은 장소를 남겼습니다. 의도된 텐서 병렬화 (TP) 전략과 같은. compiler는 본질적으로 의미의 상당 부분이 이미 평평화 된 후 최적화되었습니다.</p>
+<p data-original-en="TCL was designed to preserve that model meaning and structure. It is a declarative Python eDSL in which a kernel author writes a high-level, @tcl.kernel-decorated function that says what to compute and leaves how to run it — tiling, scheduling, fusion, hardware mapping — to the compiler. Its key idea is to treat the tensor contraction operations that DNN models intrinsically rely on as first-class primitives, so a model is described directly in terms of those contractions, with its structure intact. This matches RNGD’s underlying TCP (Tensor Contraction Processor) architecture, whose compiler is built around the same primitive — and a TCL kernel is then compiled down to the executable binaries (EDFs) that run on it."><strong>TCL</strong> 모델 의미와 구조를 보존하기 위해 설계되었습니다. 커널 저자가 high-level를 작성하는 데 설명 된 Python eDSL입니다. <code class="docutils literal notranslate"><span class="pre">@tcl.kernel</span></code>-장식된
 함수를 사용하여 <em>무엇을</em> 계산하고 결과를 반환 <em>how</em> 그것을 실행하기 위해 - tiling, scheduling, fusion, 하드웨어 매핑 - compiler에. 그것의 중요한 아이디어는 대우하는 것입니다 <strong>전압 수축</strong> DNN 모델이 first-class primitives로 본질적으로 의존하는 작업이므로, 모델은 그 구조의 intact와 함께 이러한 수축의 관점에서 직접 설명됩니다. 이 일치 RNGD의 언더 라이닝 <strong>텐서 수축 프로세서 (TCP)</strong> compiler가 같은 원시적 주변을 건설하고 TCL 커널은 실행 가능한 바이너리 (EDF)로 컴파일됩니다.</p>
-<p>이러한 설계는 다음과 같은 세 가지 방식으로 유용합니다:</p>
+<p data-original-en="That design pays off in three ways:">이러한 설계는 다음과 같은 세 가지 방식으로 유용합니다:</p>
 <ul class="simple">
-<li><p><strong>직관적이고 compiler 친화적인 설정입니다.</strong> 저자는 스레드 레이아웃 또는 동기화보다 오히려 계산의 의미를 표현하고, TCL이 컴파일되기 때문에 도구 체인은 여러 커널을 일시 중지하고 단일 단위로 컴파일 할 수 있습니다.</p></li>
-<li><p><strong>모듈화 및 재사용 가능.</strong> RMSNorm, 선형 또는 MLP와 같은 Kernels는 많은 모델 공유를 구축하기 때문에 새로운 아키텍처를 활성화하고 기존 블록을 구성하고 진짜로 새로운 것을 추가합니다.</p></li>
-<li><p><strong>RNGD의 원산자</strong> 패딩, 샤딩, 방송 및 multi-chip 공동은 compiler가 정정과 최적화에 대해 설명 할 수있는 언어 및 유형 수준에서 표현됩니다.</p></li>
+<li><p data-original-en="Intuitive and compiler-friendly. Authors express the computation’s meaning rather than thread layouts or synchronization, and because TCL is built to be compiled, the toolchain can fuse multiple kernels and compile them as a single unit."><strong>직관적이고 compiler 친화적인 설정입니다.</strong> 저자는 스레드 레이아웃 또는 동기화보다 오히려 계산의 의미를 표현하고, TCL이 컴파일되기 때문에 도구 체인은 여러 커널을 일시 중지하고 단일 단위로 컴파일 할 수 있습니다.</p></li>
+<li><p data-original-en="Modular and reusable. Kernels like RMSNorm, Linear, or MLP become building blocks that many models share, so enabling a new architecture is mostly composing existing blocks and adding only what is genuinely new."><strong>모듈화 및 재사용 가능.</strong> RMSNorm, 선형 또는 MLP와 같은 Kernels는 많은 모델 공유를 구축하기 때문에 새로운 아키텍처를 활성화하고 기존 블록을 구성하고 진짜로 새로운 것을 추가합니다.</p></li>
+<li><p data-original-en="Native to RNGD. Padding, sharding, broadcast, and multi-chip collectives are expressed at the language and type level, where the compiler can reason about their correctness and optimization together."><strong>RNGD의 원산자</strong> 패딩, 샤딩, 방송 및 multi-chip 공동은 compiler가 정정과 최적화에 대해 설명 할 수있는 언어 및 유형 수준에서 표현됩니다.</p></li>
 </ul>
-<p>Upshot은 이제 모델 번호가 아닌 재사용 가능한 블록의 수와 스케일을 설정하는 것입니다. <strong>furiosa-핵</strong> 패키지는 콘크리트 결과입니다 - 가족 Furiosa-LLM 지원 - 가족 Furiosa-LLM 지원 - 그리고이 릴리스의 새로운 모델의 폭이 직접 따라 달라집니다. 이 라이브러리가 성장함에 따라, 우리는 미래의 릴리스에서 새로운 모델을 신속하게 가져갈 것으로 기대합니다.</p>
+<p data-original-en="The upshot is that enablement now scales with the number of reusable blocks, not the number of models. The furiosa-kernels package is the concrete result — a collection of TCL kernels (attention, MoE, vision encoder, and architecture-specific blocks) covering the families Furiosa-LLM supports — and the breadth of new models in this release follows directly from it. As this library grows, we expect to keep bringing up new models quickly in future releases.">Upshot은 이제 모델 번호가 아닌 재사용 가능한 블록의 수와 스케일을 설정하는 것입니다. <strong>furiosa-핵</strong> 패키지는 콘크리트 결과입니다 - 가족 Furiosa-LLM 지원 - 가족 Furiosa-LLM 지원 - 그리고이 릴리스의 새로운 모델의 폭이 직접 따라 달라집니다. 이 라이브러리가 성장함에 따라, 우리는 미래의 릴리스에서 새로운 모델을 신속하게 가져갈 것으로 기대합니다.</p>
 </section>
 <section id="new-model-families">
-<h3>새로운 모범 가정<a class="headerlink" href="#new-model-families" title="Link to this heading">#</a></h3>
-<p>TCL 프레임 워크에 구축, 2026.3는 RNGD에 새로운 모델의 넓은 세트를 제공, 여러 대형 Mixture-of-Experts (MoE) 아키텍처를 포함:</p>
+<h3 data-original-en="New Model Families">새로운 모범 가정<a class="headerlink" href="#new-model-families" title="Link to this heading">#</a></h3>
+<p data-original-en="Building on the TCL framework, 2026.3 brings up a broad set of new models on RNGD, including several large Mixture-of-Experts (MoE) architectures:">TCL 프레임 워크에 구축, 2026.3는 RNGD에 새로운 모델의 넓은 세트를 제공, 여러 대형 Mixture-of-Experts (MoE) 아키텍처를 포함:</p>
 <ul class="simple">
-<li><p><strong>Qwen3-VL</strong> (e.g. Qwen3-VL-32B) — 첫 번째 <strong>vision-language</strong> RNGD의 가족 : 비전 인코더와 결합 된 조밀한 변압기 (see) <em>멀티모달 서비스 및 Qwen3-VL</em>
+<li><p data-original-en="Qwen3-VL (e.g. Qwen3-VL-32B) — the first vision-language family on RNGD: a dense transformer paired with a vision encoder (see Multimodal Serving and Qwen3-VL below)."><strong>Qwen3-VL</strong> (e.g. Qwen3-VL-32B) — 첫 번째 <strong>vision-language</strong> RNGD의 가족 : 비전 인코더와 결합 된 조밀한 변압기 (see) <em>멀티모달 서비스 및 Qwen3-VL</em>
 아래와 같다).</p></li>
-<li><p><strong>gpt-oss</strong> (e.g. gpt-oss-120b) - MoE 가족 <strong>MXFP4</strong>-양자화된
+<li><p data-original-en="gpt-oss (e.g. gpt-oss-120b) — MoE family with MXFP4-quantized expert weights."><strong>gpt-oss</strong> (e.g. gpt-oss-120b) - MoE 가족 <strong>MXFP4</strong>-양자화된
 전문가용 가중치를 사용합니다.</p></li>
-<li><p><strong>Solar-Open</strong> (e.g. Solar-Open-100B) - 모이 가족, <strong>NVFP4</strong>- 16-bit 활성화와 KV cache (NVFP4A16)를 가진 양화된 무게.</p></li>
-<li><p><strong>Qwen3 MoE</strong> (e.g. Qwen3-30B-A3B) - MoE 가족 <strong>동적으로 FP8 활성화
+<li><p data-original-en="Solar-Open (e.g. Solar-Open-100B) — MoE family, NVFP4-quantized weights with 16-bit activations and KV cache (NVFP4A16)."><strong>Solar-Open</strong> (e.g. Solar-Open-100B) - 모이 가족, <strong>NVFP4</strong>- 16-bit 활성화와 KV cache (NVFP4A16)를 가진 양화된 무게.</p></li>
+<li><p data-original-en="Qwen3 MoE (e.g. Qwen3-30B-A3B) — MoE family with dynamic FP8 activation quantization at runtime; Instruct, Thinking, and Coder variants."><strong>Qwen3 MoE</strong> (e.g. Qwen3-30B-A3B) - MoE 가족 <strong>동적으로 FP8 활성화
 quantization</strong> runtime; Instruct, Thinking 및 Coder 변형.</p></li>
-<li><p><strong>K-EXAONE</strong> (e.g. K-EXAONE-236B-A23B) - 다국어 MoE 제품군을 사용하여 <strong>하이브리드 sliding-window + 글로벌 관심</strong> 제도는 NVFP4A16입니다.</p></li>
+<li><p data-original-en="K-EXAONE (e.g. K-EXAONE-236B-A23B) — multilingual MoE family using a hybrid sliding-window + global attention scheme; NVFP4A16."><strong>K-EXAONE</strong> (e.g. K-EXAONE-236B-A23B) - 다국어 MoE 제품군을 사용하여 <strong>하이브리드 sliding-window + 글로벌 관심</strong> 제도는 NVFP4A16입니다.</p></li>
 </ul>
-<p>각각 FXB를 발송하므로 Hugging Face 저장소에서 직접 제공 할 수 있습니다. 정확한 저장소 ID 및 서빙 명령에 대한 per-model 카드를 참조하십시오.</p>
+<p data-original-en="Each ships an FXB so it can be served directly from its Hugging Face repository; see the per-model cards for the exact repository IDs and serving commands.">각각 FXB를 발송하므로 Hugging Face 저장소에서 직접 제공 할 수 있습니다. 정확한 저장소 ID 및 서빙 명령에 대한 per-model 카드를 참조하십시오.</p>
 </section>
 <section id="fxb-furiosa-executable-bundle">
-<h3>FXB: Furiosa 실행 파일 묶음<a class="headerlink" href="#fxb-furiosa-executable-bundle" title="Link to this heading">#</a></h3>
-<p>2026.3는 다음을 소개합니다 <strong>Furiosa 실행 가능한 묶음 (FXB)</strong>, Furiosa-LLM의 공유 가능한 compiled-artifact 체재. An <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일은 단일 아카이브로,
+<h3 data-original-en="FXB: Furiosa Executable Bundle">FXB: Furiosa 실행 파일 묶음<a class="headerlink" href="#fxb-furiosa-executable-bundle" title="Link to this heading">#</a></h3>
+<p data-original-en="2026.3 introduces the Furiosa Executable Bundle (FXB), Furiosa-LLM’s shareable compiled-artifact format. An .fxb file is a single archive holding a manifest.json together with the compiled kernels (edfs/) needed to run a model on the NPU. Once a model is compiled into an .fxb, you can serve it without recompiling, copy it to another machine, or publish it to the Hugging Face Hub for others to reuse.">2026.3는 다음을 소개합니다 <strong>Furiosa 실행 가능한 묶음 (FXB)</strong>, Furiosa-LLM의 공유 가능한 compiled-artifact 체재. An <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일은 단일 아카이브로,
 <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> 컴파일된 커널과 함께 (<code class="docutils literal notranslate"><span class="pre">edfs/</span></code>) NPU에 모델을 실행하는 데 필요한. 모델이 컴파일되면 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code>, 당신은 recompiling 없이 그것을 봉사할 수 있습니다, 다른 기계에 그것을 복사하고, 또는 다른 사람을 위한 Hugging Face 허브에 그것을 재사용하기 위하여 간행하십시오.</p>
-<p>FXB의 정의 속성은 <strong>아키텍처 지문</strong>. 나타날은 모델 아키텍처와 컴파일된 커널을 결정하는 구성 필드를 기록합니다 (숨겨진 크기, 머리 수, 구급차 크기, quantization 등), 그래서 단일 번들은 가로 건너 뛰기 <em>any</em> 같은 지문을 공유하는 Hugging Face 모델 - 단지 하나에서 구축되지 않았습니다. 이 연습에서 당신은 자신의 저장소 선박이 아니다 모델에 봉사 할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code>  ⁇  포함 <strong>fine-tuned 또는 weight-updated 변종</strong> 지원 모델의 - 로컬 캐시에서 호환 번들을 재사용하여, 모든 변종을 위해 재 컴파일 대신.</p>
-<p>헌신적인 <code class="docutils literal notranslate"><span class="pre">fxb</span></code> 명령은 전체 수명주기를 관리합니다. 건물, 다운로드, 캐싱, 호환성 검사 및 검사. 예를 들어, 봉사 <code class="docutils literal notranslate"><span class="pre">Qwen/Qwen3-8B-FP8</span></code> (그들의 묶음이 없습니다) 출판물, fingerprint-compatible를 재사용
+<p data-original-en="The defining property of an FXB is its architecture fingerprint. The manifest records the model architecture and the configuration fields that determine the compiled kernels (hidden size, head counts, vocabulary size, quantization, and so on), so a single bundle is reusable across any Hugging Face model that shares the same fingerprint — not just the one it was built from. In practice this means you can serve a model whose own repository ships no .fxb — including fine-tuned or weight-updated variants of a supported model — by reusing a compatible bundle from your local cache, instead of recompiling for every variant.">FXB의 정의 속성은 <strong>아키텍처 지문</strong>. 나타날은 모델 아키텍처와 컴파일된 커널을 결정하는 구성 필드를 기록합니다 (숨겨진 크기, 머리 수, 구급차 크기, quantization 등), 그래서 단일 번들은 가로 건너 뛰기 <em>any</em> 같은 지문을 공유하는 Hugging Face 모델 - 단지 하나에서 구축되지 않았습니다. 이 연습에서 당신은 자신의 저장소 선박이 아니다 모델에 봉사 할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code>  ⁇  포함 <strong>fine-tuned 또는 weight-updated 변종</strong> 지원 모델의 - 로컬 캐시에서 호환 번들을 재사용하여, 모든 변종을 위해 재 컴파일 대신.</p>
+<p data-original-en="A dedicated fxb command manages the full lifecycle — building, downloading, caching, compatibility checking, and inspection. For example, to serve Qwen/Qwen3-8B-FP8 (which ships no bundle of its own) by reusing the published, fingerprint-compatible furiosa-ai/Qwen3-8B-FP8 bundle:">헌신적인 <code class="docutils literal notranslate"><span class="pre">fxb</span></code> 명령은 전체 수명주기를 관리합니다. 건물, 다운로드, 캐싱, 호환성 검사 및 검사. 예를 들어, 봉사 <code class="docutils literal notranslate"><span class="pre">Qwen/Qwen3-8B-FP8</span></code> (그들의 묶음이 없습니다) 출판물, fingerprint-compatible를 재사용
 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-8B-FP8</span></code> 묶음:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download a published FXB bundle into the local cache</span>
 fxb<span class="w"> </span>download<span class="w"> </span>furiosa-ai/Qwen3-8B-FP8
@@ -368,18 +368,18 @@ fxb<span class="w"> </span>check<span class="w"> </span>Qwen/Qwen3-8B-FP8
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-8B-FP8
 </pre></div>
 </div>
-<p>서빙 시간 Furiosa-LLM는 순서에 있는 뭉치를 해결합니다: 명시된 <code class="docutils literal notranslate"><span class="pre">--fxb</span></code> 경로
+<p data-original-en="At serving time Furiosa-LLM resolves the bundle in order: an explicit --fxb path, an .fxb shipped inside the model repository, then the local cache. FuriosaAI publishes pre-compiled bundles for popular models on the Hugging Face Hub.">서빙 시간 Furiosa-LLM는 순서에 있는 뭉치를 해결합니다: 명시된 <code class="docutils literal notranslate"><span class="pre">--fxb</span></code> 경로
 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 모형 저장소 안쪽에 발송해, 그 후에 국부적으로 시렁. FuriosaAI는 대중적인 모형을 위한 pre-compiled 뭉치를 출판합니다
 <a class="reference external" href="https://huggingface.co/furiosa-ai">Hugging Face 허브</a>.</p>
-<p>fingerprint-based 호환성 일치는 입니다 <strong>실험적</strong>; 지문 분야의 정확한 세트는 미래 방출에서 변화할지도 모릅니다, 그래서 일치를 가진 확인합니다 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code>
+<p data-original-en="The fingerprint-based compatibility matching is experimental; the exact set of fingerprint fields may change in future releases, so verify a match with fxb check before relying on a cached bundle for a different model. See Furiosa Executable Bundles (FXB) for the bundle format, the compatibility-matching rules, and the full fxb command reference.">fingerprint-based 호환성 일치는 입니다 <strong>실험적</strong>; 지문 분야의 정확한 세트는 미래 방출에서 변화할지도 모릅니다, 그래서 일치를 가진 확인합니다 <code class="docutils literal notranslate"><span class="pre">fxb</span> <span class="pre">check</span></code>
 다른 모델에 대 한 캐시 번에 의존 하기 전에. 참조 <a class="reference internal" href="../furiosa_llm/fxb.html#fxb"><span class="std std-ref">C Furiosa 실행 파일 묶음 (FXB)</span></a> 번들 형식의 경우 compatibility-matching 규칙 및 전체 <code class="docutils literal notranslate"><span class="pre">fxb</span></code> 명령 참조.</p>
 </section>
 <section id="multimodal-serving-and-qwen3-vl">
-<h3>멀티모달 서비스 및 Qwen3-VL<a class="headerlink" href="#multimodal-serving-and-qwen3-vl" title="Link to this heading">#</a></h3>
-<p>2026.3는 소개합니다 <strong>vision-language (다중) 서빙</strong> RNGD <strong>Qwen3-VL-32B</strong>
+<h3 data-original-en="Multimodal Serving and Qwen3-VL">멀티모달 서비스 및 Qwen3-VL<a class="headerlink" href="#multimodal-serving-and-qwen3-vl" title="Link to this heading">#</a></h3>
+<p data-original-en="2026.3 introduces vision-language (multimodal) serving on RNGD, with Qwen3-VL-32B as the first supported model. Image-and-text requests are served through the standard OpenAI-compatible Chat Completions API using image_url content parts.">2026.3는 소개합니다 <strong>vision-language (다중) 서빙</strong> RNGD <strong>Qwen3-VL-32B</strong>
 첫 번째 지원 모델로. Image-and-text 요청은 표준 OpenAI 호환 채팅 완료 API를 통해 제공됩니다. <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 내용의 부품</p>
-<p>다중 모드 서비스는 여전히 <strong>실험적</strong> 이 릴리스에서: 스케줄링 및 batching 멀티모드 요청의 변경은 여전히 최적화되고, 다음 릴리스에 대한 추가 개선 계획.</p>
-<p>OpenAI Python 클라이언트를 사용하는 최소 예:</p>
+<p data-original-en="Multimodal serving is still experimental in this release: the scheduling and batching of multimodal requests are still being optimized, with further improvements planned for the next release.">다중 모드 서비스는 여전히 <strong>실험적</strong> 이 릴리스에서: 스케줄링 및 batching 멀티모드 요청의 변경은 여전히 최적화되고, 다음 릴리스에 대한 추가 개선 계획.</p>
+<p data-original-en="A minimal example using the OpenAI Python client:">OpenAI Python 클라이언트를 사용하는 최소 예:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="n">client</span> <span class="o">=</span> <span class="n">OpenAI</span><span class="p">(</span><span class="n">base_url</span><span class="o">=</span><span class="s2">"http://localhost:8000/v1"</span><span class="p">,</span> <span class="n">api_key</span><span class="o">=</span><span class="s2">"EMPTY"</span><span class="p">)</span>
@@ -398,20 +398,20 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-8B-FP
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>re-sending 및 re-preprocessing를 피하기 위해 요청에 따라 동일한 이미지, 다중 입력은 안정된 태그가 될 수 있습니다. <strong>UUID</strong> server-side 프로세서 캐시에서 재사용되며, 사이즈를 통해 <code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span></code>보시다시피 <a class="reference internal" href="../furiosa_llm/vision-language.html#visionlanguagemodels"><span class="std std-ref">Vision-Language 모델과 함께 구성됩니다.</span></a> 지원되는 모형, 요구 체재 및 재사용 semantics를 위해.</p>
+<p data-original-en="To avoid re-sending and re-preprocessing the same image across requests, multimodal inputs can be tagged with a stable UUID and reused from a server-side processor cache, sized via --mm-processor-cache-gb. See Vision-Language Models for the supported models, request format, and reuse semantics.">re-sending 및 re-preprocessing를 피하기 위해 요청에 따라 동일한 이미지, 다중 입력은 안정된 태그가 될 수 있습니다. <strong>UUID</strong> server-side 프로세서 캐시에서 재사용되며, 사이즈를 통해 <code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span></code>보시다시피 <a class="reference internal" href="../furiosa_llm/vision-language.html#visionlanguagemodels"><span class="std std-ref">Vision-Language 모델과 함께 구성됩니다.</span></a> 지원되는 모형, 요구 체재 및 재사용 semantics를 위해.</p>
 </section>
 <section id="overlap-scheduling-toward-zero-overhead-batching">
-<h3>오버랩 스케줄링: 앞으로 Zero-Overhead Batching<a class="headerlink" href="#overlap-scheduling-toward-zero-overhead-batching" title="Link to this heading">#</a></h3>
-<p>앞으로 패스 사이, inference 엔진은 host-side 작업에 실제 CPU 시간을 소비 — 배치 스케줄링, KV-block 할당 및 레이덱 캐시에 대한 접두사. 그 작업이 실행될 때 <em>중</em> NPU는 전달합니다, NPU는 준비될 다음 배치를 기다리고, 짧은 decode 단계에 이 CPU 오버 헤드는 각 반복의 뜻깊은 분수일 수 있습니다.</p>
-<p>2026.3은 <strong>겹치는 스케줄러</strong> 이 공간을 비우는 방법 <strong>한 배트가 앞으로</strong>: NPU는 현재 배치를 실행하면서 스케줄러는 다음의 모든 메타데이터를 준비합니다. host-side 스케줄링 비용은 NPU와 중복됩니다. NPU를 지속적으로 공급하는 NPU를 유지하고 있습니다. throughput-지향적 인 작업 부하를 위해 전체적으로 전반적인 결과를 향상시킵니다. <strong>throughput 및 출력 당 시간 token (TPOT)</strong>, 작의 비용에, 안으로 경계를 두는 증가 <strong>TTFT</strong>.</p>
-<p>이 기능은 여전히 <strong>실험적</strong>, so it is <strong>기본으로 종료</strong> 및 스케줄링 루프는 다음과 같습니다. <strong>열망</strong>; 우리는 그것을 안정화 한 번 기본을 만들 계획. 과도한 스케줄러를 사용:</p>
+<h3 data-original-en="Overlap Scheduling: Toward Zero-Overhead Batching">오버랩 스케줄링: 앞으로 Zero-Overhead Batching<a class="headerlink" href="#overlap-scheduling-toward-zero-overhead-batching" title="Link to this heading">#</a></h3>
+<p data-original-en="Between forward passes, an inference engine spends real CPU time on host-side work — batch scheduling, KV-block allocation, and prefix matching against the radix cache. When that work runs between NPU forward passes, the NPU sits idle waiting for the next batch to be prepared, and on short decode steps this CPU overhead can become a significant fraction of each iteration.">앞으로 패스 사이, inference 엔진은 host-side 작업에 실제 CPU 시간을 소비 — 배치 스케줄링, KV-block 할당 및 레이덱 캐시에 대한 접두사. 그 작업이 실행될 때 <em>중</em> NPU는 전달합니다, NPU는 준비될 다음 배치를 기다리고, 짧은 decode 단계에 이 CPU 오버 헤드는 각 반복의 뜻깊은 분수일 수 있습니다.</p>
+<p data-original-en="2026.3 adds an overlap scheduler that removes this stall by running one batch ahead: while the NPU executes the current batch, the scheduler concurrently prepares all the metadata for the next one. The host-side scheduling cost is overlapped with NPU compute instead of serialized in front of it, keeping the NPU continuously fed. For throughput-oriented workloads this improves overall throughput and time per output token (TPOT), at the cost of a small, bounded increase in TTFT.">2026.3은 <strong>겹치는 스케줄러</strong> 이 공간을 비우는 방법 <strong>한 배트가 앞으로</strong>: NPU는 현재 배치를 실행하면서 스케줄러는 다음의 모든 메타데이터를 준비합니다. host-side 스케줄링 비용은 NPU와 중복됩니다. NPU를 지속적으로 공급하는 NPU를 유지하고 있습니다. throughput-지향적 인 작업 부하를 위해 전체적으로 전반적인 결과를 향상시킵니다. <strong>throughput 및 출력 당 시간 token (TPOT)</strong>, 작의 비용에, 안으로 경계를 두는 증가 <strong>TTFT</strong>.</p>
+<p data-original-en="This feature is still experimental, so it is off by default and the scheduling loop remains eager; we plan to make it the default once it stabilizes. Enable the overlap scheduler explicitly:">이 기능은 여전히 <strong>실험적</strong>, so it is <strong>기본으로 종료</strong> 및 스케줄링 루프는 다음과 같습니다. <strong>열망</strong>; 우리는 그것을 안정화 한 번 기본을 만들 계획. 과도한 스케줄러를 사용:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--enable-overlap-scheduling
 </pre></div>
 </div>
 </section>
 <section id="scoring-based-data-parallel-routing">
-<h3>Scoring-Based 데이터 병렬 라우팅<a class="headerlink" href="#scoring-based-data-parallel-routing" title="Link to this heading">#</a></h3>
-<p>prefix-aware 데이터 병렬 (DP) 라우터는 2026.2에서 2026.3로 진화 <strong>scoring-based</strong> 복제를 선택할 때 두 개의 신호를 균형시키는 정책 :
+<h3 data-original-en="Scoring-Based Data Parallel Routing">Scoring-Based 데이터 병렬 라우팅<a class="headerlink" href="#scoring-based-data-parallel-routing" title="Link to this heading">#</a></h3>
+<p data-original-en="The prefix-aware Data Parallel (DP) router introduced in 2026.2 evolves in 2026.3 into a scoring-based policy that balances two signals when picking a replica: prefix locality (preferring a replica that already holds matching prefix cache entries) and token-footprint load (preferring a less-loaded replica). The relative weight of the two is selected through a scoring profile.">prefix-aware 데이터 병렬 (DP) 라우터는 2026.2에서 2026.3로 진화 <strong>scoring-based</strong> 복제를 선택할 때 두 개의 신호를 균형시키는 정책 :
 <strong>프롬프트 접두사 일치율(Prefix locality)</strong>과 <strong>토큰 부하(token footprint load)</strong>를 함께 고려합니다. 점수 프로파일로 두 지표의 상대 가중치를 조정합니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scoring-based routing (default), balanced profile (default)</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--data-parallel-size<span class="w"> </span>&lt;N&gt;
@@ -422,186 +422,186 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<sp
 <span class="w">    </span>--data-parallel-scoring-profile<span class="w"> </span>locality
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code> 받아들이는 <code class="docutils literal notranslate"><span class="pre">scoring</span></code> (전기적으로) 또는 <code class="docutils literal notranslate"><span class="pre">round-robin</span></code>;
+<p data-original-en="--data-parallel-routing-policy accepts scoring (default) or round-robin; --data-parallel-scoring-profile accepts balanced (default), locality, or load. See Data-Parallel Routing for details."><code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code> 받아들이는 <code class="docutils literal notranslate"><span class="pre">scoring</span></code> (전기적으로) 또는 <code class="docutils literal notranslate"><span class="pre">round-robin</span></code>;
 <code class="docutils literal notranslate"><span class="pre">--data-parallel-scoring-profile</span></code> 받아들이는 <code class="docutils literal notranslate"><span class="pre">balanced</span></code> (전기적으로) <code class="docutils literal notranslate"><span class="pre">locality</span></code>, or
 <code class="docutils literal notranslate"><span class="pre">load</span></code>보시다시피 <a class="reference internal" href="../furiosa_llm/data-parallel-routing.html#dataparallelrouting"><span class="std std-ref">Data-Parallel 라우팅</span></a> 세부사항을 알려주세요.</p>
 <hr class="docutils"/>
-<p>이 릴리스의 변경의 전체 목록은 아래의 모든 변경 섹션에서 요약됩니다.</p>
+<p data-original-en="The complete list of changes in this release is summarized in the All Changes section below.">이 릴리스의 변경의 전체 목록은 아래의 모든 변경 섹션에서 요약됩니다.</p>
 </section>
 </section>
 <section id="all-changes">
-<span id="release2026-3-0-allchanges"></span><h2>모든 변화<a class="headerlink" href="#all-changes" title="Link to this heading">#</a></h2>
+<span id="release2026-3-0-allchanges"></span><h2 data-original-en="All Changes">모든 변화<a class="headerlink" href="#all-changes" title="Link to this heading">#</a></h2>
 <section id="furiosa-llm">
 <h3>Furiosa-LLM<a class="headerlink" href="#furiosa-llm" title="Link to this heading">#</a></h3>
 <section id="major-features-improvements">
-<h4>주요 기능 및 개선 사항<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h4>
+<h4 data-original-en="Major Features &amp; Improvements">주요 기능 및 개선 사항<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p><strong>TCL 커널 프레임 워크와 furiosa 커널</strong></p>
+<li><p data-original-en="TCL Kernel Framework and furiosa-kernels"><strong>TCL 커널 프레임 워크와 furiosa 커널</strong></p>
 <ul>
-<li><p>도입 <strong>TCL (텐서 수축 언어)</strong> eDSL 및 <strong>furiosa-핵</strong>
+<li><p data-original-en="Introduced the TCL (Tensor Contraction Language) eDSL and the furiosa-kernels kernel collection as the primary path for model enablement.">도입 <strong>TCL (텐서 수축 언어)</strong> eDSL 및 <strong>furiosa-핵</strong>
 모델 활성화를 위한 1차 경로로 커널 컬렉션.</p></li>
-<li><p>추가 <strong>Mixture-of-Experts (MoE)</strong> 커널(expert routing and gated expert compute), 이 릴리스에서 새로운 MoE 모델을 활성화 (gpt-oss, Solar-Open, K-EXAONE, Qwen3 MoE).</p></li>
-<li><p>추가 <strong>sliding-window 주의</strong> 전체 관심과 함께 커널, 그래서 로컬 및 글로벌 관심 interleave 모델 (K-EXAONE 및 gpt-oss와 같은) 효율적으로 실행.</p></li>
-<li><p>추가 <strong>vision-encoder</strong> 원자핵과 <strong>멀티모탈 로터리 위치 embeddings (mRoPE)</strong>
+<li><p data-original-en="Added Mixture-of-Experts (MoE) kernels (expert routing and gated expert compute), which enable the new MoE models in this release (gpt-oss, Solar-Open, K-EXAONE, Qwen3 MoE).">추가 <strong>Mixture-of-Experts (MoE)</strong> 커널(expert routing and gated expert compute), 이 릴리스에서 새로운 MoE 모델을 활성화 (gpt-oss, Solar-Open, K-EXAONE, Qwen3 MoE).</p></li>
+<li><p data-original-en="Added sliding-window attention kernels alongside full attention, so models that interleave local and global attention (such as K-EXAONE and gpt-oss) run efficiently.">추가 <strong>sliding-window 주의</strong> 전체 관심과 함께 커널, 그래서 로컬 및 글로벌 관심 interleave 모델 (K-EXAONE 및 gpt-oss와 같은) 효율적으로 실행.</p></li>
+<li><p data-original-en="Added vision-encoder kernels and multimodal rotary position embeddings (mRoPE) for the Qwen3-VL vision-language path.">추가 <strong>vision-encoder</strong> 원자핵과 <strong>멀티모탈 로터리 위치 embeddings (mRoPE)</strong>
 Qwen3-VL vision-language 경로에 대한.</p></li>
 </ul>
 </li>
-<li><p><strong>FXB (Furiosa 실행 파일 묶음)</strong></p>
+<li><p data-original-en="FXB (Furiosa Executable Bundle)"><strong>FXB (Furiosa 실행 파일 묶음)</strong></p>
 <ul>
-<li><p>새로운 공유 가능, compiled-artifact 형식 번들링 <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> 및 컴파일된 커널 (<code class="docutils literal notranslate"><span class="pre">edfs/</span></code>) 를 단일으로 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일.</p></li>
-<li><p><strong>Architecture-fingerprint 호환성</strong> (예 : 번들은 fine-tuned 또는 weight-updated 변형을 포함하여 동일한 지문을 공유하는 Hugging Face 모델의 모든 Hugging Face 모델에 재사용 할 수 있습니다. 따라서 저장소가없는 모델 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> recompiling 없이 호환되는 캐시된 뭉치에서 봉사될 수 있습니다.</p></li>
-<li><p>New <code class="docutils literal notranslate"><span class="pre">fxb</span></code> 전체 라이프사이클에 대한 명령: <code class="docutils literal notranslate"><span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">download</span></code>, <code class="docutils literal notranslate"><span class="pre">add</span></code>,
+<li><p data-original-en="New shareable, compiled-artifact format bundling a manifest.json and the compiled kernels (edfs/) into a single .fxb file.">새로운 공유 가능, compiled-artifact 형식 번들링 <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> 및 컴파일된 커널 (<code class="docutils literal notranslate"><span class="pre">edfs/</span></code>) 를 단일으로 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 파일.</p></li>
+<li><p data-original-en="Architecture-fingerprint compatibility (experimental): a bundle is reusable across any Hugging Face model sharing the same fingerprint — including fine-tuned or weight-updated variants — so a model whose repository ships no .fxb can be served from a compatible cached bundle without recompiling."><strong>Architecture-fingerprint 호환성</strong> (예 : 번들은 fine-tuned 또는 weight-updated 변형을 포함하여 동일한 지문을 공유하는 Hugging Face 모델의 모든 Hugging Face 모델에 재사용 할 수 있습니다. 따라서 저장소가없는 모델 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> recompiling 없이 호환되는 캐시된 뭉치에서 봉사될 수 있습니다.</p></li>
+<li><p data-original-en="New fxb command for the full lifecycle: build, download, add, check, cache ls/rm, show, and inspect.">New <code class="docutils literal notranslate"><span class="pre">fxb</span></code> 전체 라이프사이클에 대한 명령: <code class="docutils literal notranslate"><span class="pre">build</span></code>, <code class="docutils literal notranslate"><span class="pre">download</span></code>, <code class="docutils literal notranslate"><span class="pre">add</span></code>,
 <code class="docutils literal notranslate"><span class="pre">check</span></code>, <code class="docutils literal notranslate"><span class="pre">cache</span> <span class="pre">ls/rm</span></code>, <code class="docutils literal notranslate"><span class="pre">show</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">inspect</span></code>.</p></li>
-<li><p>서빙은 순서에 있는 뭉치를 해결합니다: 명시하십시오 <code class="docutils literal notranslate"><span class="pre">--fxb</span></code> 경로 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 모형 저장소 안쪽에, 그 후에 국부적으로 시렁 ( 지문과 FuriosaIR 개정에 의해 일치하십시오).</p></li>
-<li><p>Pipeline-parallelism (<code class="docutils literal notranslate"><span class="pre">-pp</span></code>) 선택권은 FXB 근거한 발전기에 전파됩니다.</p></li>
+<li><p data-original-en="Serving resolves a bundle in order: explicit --fxb path, an .fxb inside the model repository, then the local cache (matched by fingerprint and FuriosaIR revision).">서빙은 순서에 있는 뭉치를 해결합니다: 명시하십시오 <code class="docutils literal notranslate"><span class="pre">--fxb</span></code> 경로 <code class="docutils literal notranslate"><span class="pre">.fxb</span></code> 모형 저장소 안쪽에, 그 후에 국부적으로 시렁 ( 지문과 FuriosaIR 개정에 의해 일치하십시오).</p></li>
+<li><p data-original-en="Pipeline-parallelism (-pp) options are propagated to FXB-based generators.">Pipeline-parallelism (<code class="docutils literal notranslate"><span class="pre">-pp</span></code>) 선택권은 FXB 근거한 발전기에 전파됩니다.</p></li>
 </ul>
 </li>
-<li><p><strong>모델 지원</strong></p>
+<li><p data-original-en="Model Support"><strong>모델 지원</strong></p>
 <ul>
-<li><p><a class="reference internal" href="../furiosa_llm/models/qwen3-vl.html#furiosa-llm-model-qwen3-vl"><span class="std std-ref">Qwen3-VL</span></a> — 첫 번째 vision-language 아키텍처; 비전 인코더와 결합 된 조밀한 변압기, OpenAI 호환 API에 제공.</p>
+<li><p data-original-en="Qwen3-VL — first vision-language architecture; dense transformer paired with a vision encoder, served over the OpenAI-compatible API."><a class="reference internal" href="../furiosa_llm/models/qwen3-vl.html#furiosa-llm-model-qwen3-vl"><span class="std std-ref">Qwen3-VL</span></a> — 첫 번째 vision-language 아키텍처; 비전 인코더와 결합 된 조밀한 변압기, OpenAI 호환 API에 제공.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">Qwen3-VL-32B-Instruct</span></code></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="../furiosa_llm/models/gpt-oss.html#furiosa-llm-model-gpt-oss"><span class="std std-ref">gpt-oss</span></a> — MXFP4-quantized 전문가와 구성 가능한 이유 노력과 함께 MoE 아키텍처.</p>
+<li><p data-original-en="gpt-oss — MoE architecture with MXFP4-quantized experts and configurable reasoning effort."><a class="reference internal" href="../furiosa_llm/models/gpt-oss.html#furiosa-llm-model-gpt-oss"><span class="std std-ref">gpt-oss</span></a> — MXFP4-quantized 전문가와 구성 가능한 이유 노력과 함께 MoE 아키텍처.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">gpt-oss-20b</span></code>, <code class="docutils literal notranslate"><span class="pre">gpt-oss-120b</span></code></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="../furiosa_llm/models/solar-open.html#furiosa-llm-model-solar-open"><span class="std std-ref">Solar-Open</span></a> — NVFP4A16 MoE 아키텍처.</p>
+<li><p data-original-en="Solar-Open — NVFP4A16 MoE architecture."><a class="reference internal" href="../furiosa_llm/models/solar-open.html#furiosa-llm-model-solar-open"><span class="std std-ref">Solar-Open</span></a> — NVFP4A16 MoE 아키텍처.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">Solar-Open-100B-NVFP4A16</span></code></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="../furiosa_llm/models/qwen3.html#furiosa-llm-model-qwen3"><span class="std std-ref">Qwen3 밀집</span></a> - 정적 FP8 무게 및 동적 FP8 활성화 quantization와 함께 조밀한 변압기 아키텍처.</p>
+<li><p data-original-en="Qwen3 Dense — dense transformer architecture with static FP8 weights and dynamic FP8 activation quantization."><a class="reference internal" href="../furiosa_llm/models/qwen3.html#furiosa-llm-model-qwen3"><span class="std std-ref">Qwen3 밀집</span></a> - 정적 FP8 무게 및 동적 FP8 활성화 quantization와 함께 조밀한 변압기 아키텍처.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">Qwen3-4B-FP8</span></code>, <code class="docutils literal notranslate"><span class="pre">Qwen3-8B-FP8</span></code></p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="../furiosa_llm/models/qwen3-moe.html#furiosa-llm-model-qwen3-moe"><span class="std std-ref">Qwen3 MoE</span></a> - 정적 FP8 무게 및 동적 FP8 활성화 quantization와 MoE 아키텍처.</p>
+<li><p data-original-en="Qwen3 MoE — MoE architecture with static FP8 weights and dynamic FP8 activation quantization."><a class="reference internal" href="../furiosa_llm/models/qwen3-moe.html#furiosa-llm-model-qwen3-moe"><span class="std std-ref">Qwen3 MoE</span></a> - 정적 FP8 무게 및 동적 FP8 활성화 quantization와 MoE 아키텍처.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">Qwen3-30B-A3B-FP8</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Qwen3-30B-A3B-Instruct-2507-FP8</span></code> (설명)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Qwen3-30B-A3B-Thinking-2507-FP8</span></code> (생각)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">Qwen3-Coder-30B-A3B-Instruct-FP8</span></code> (코더)</p></li>
+<li><p data-original-en="Qwen3-30B-A3B-Instruct-2507-FP8 (Instruct)"><code class="docutils literal notranslate"><span class="pre">Qwen3-30B-A3B-Instruct-2507-FP8</span></code> (설명)</p></li>
+<li><p data-original-en="Qwen3-30B-A3B-Thinking-2507-FP8 (Thinking)"><code class="docutils literal notranslate"><span class="pre">Qwen3-30B-A3B-Thinking-2507-FP8</span></code> (생각)</p></li>
+<li><p data-original-en="Qwen3-Coder-30B-A3B-Instruct-FP8 (Coder)"><code class="docutils literal notranslate"><span class="pre">Qwen3-Coder-30B-A3B-Instruct-FP8</span></code> (코더)</p></li>
 </ul>
 </li>
-<li><p><a class="reference internal" href="../furiosa_llm/models/k-exaone.html#furiosa-llm-model-k-exaone"><span class="std std-ref">K-EXAONE</span></a> - 하이브리드 sliding-window + 글로벌 관심과 다국어 MoE 아키텍처.</p>
+<li><p data-original-en="K-EXAONE — multilingual MoE architecture with hybrid sliding-window + global attention."><a class="reference internal" href="../furiosa_llm/models/k-exaone.html#furiosa-llm-model-k-exaone"><span class="std std-ref">K-EXAONE</span></a> - 하이브리드 sliding-window + 글로벌 관심과 다국어 MoE 아키텍처.</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">K-EXAONE-236B-A23B-NVFP4A16</span></code></p></li>
 </ul>
 </li>
-<li><p>Solar-Open에 대한 패서저를 호출하고 이유를 추가하십시오.</p></li>
+<li><p data-original-en="Add tool calling and reasoning parser for Solar-Open.">Solar-Open에 대한 패서저를 호출하고 이유를 추가하십시오.</p></li>
 </ul>
 </li>
-<li><p><strong>멀티모달 인프라</strong> (실험)</p>
+<li><p data-original-en="Multimodal Infrastructure (experimental)"><strong>멀티모달 인프라</strong> (실험)</p>
 <ul>
-<li><p><strong>Vision-encoder runtime</strong> NPU에 대한 비전 인코더를 실행하고 새로운 text-token 시퀀스로 삽입 된 결과 이미지를 신관 <code class="docutils literal notranslate"><span class="pre">generate_mm</span></code>
+<li><p data-original-en="Vision-encoder runtime runs the vision encoder on the NPU and fuses the resulting image embeddings into the text-token sequence, exposed through a new generate_mm generator API."><strong>Vision-encoder runtime</strong> NPU에 대한 비전 인코더를 실행하고 새로운 text-token 시퀀스로 삽입 된 결과 이미지를 신관 <code class="docutils literal notranslate"><span class="pre">generate_mm</span></code>
 발전기 API.</p></li>
-<li><p><strong>End-to-end OpenAI 호환용 서빙</strong> 다음을 통한 image-and-text 요청의 <code class="docutils literal notranslate"><span class="pre">image_url</span></code>
+<li><p data-original-en="End-to-end OpenAI-compatible serving of image-and-text requests via image_url content parts (remote, base64, or local-file URLs), with per-request guardrails such as --image-limit-per-prompt and --allowed-media-domains."><strong>End-to-end OpenAI 호환용 서빙</strong> 다음을 통한 image-and-text 요청의 <code class="docutils literal notranslate"><span class="pre">image_url</span></code>
 per-request 난간과 같은 per-request 난간과 더불어 내용 부속 (레모드, base64, 또는 local-file URL),
 <code class="docutils literal notranslate"><span class="pre">--image-limit-per-prompt</span></code> and <code class="docutils literal notranslate"><span class="pre">--allowed-media-domains</span></code>.</p></li>
-<li><p><strong>UUID 기반 다중 모달 데이터 재사용</strong> server-side 프로세서 캐시를 통해<code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span></code>: 안정적인 이미지를 태그한 이미지 <code class="docutils literal notranslate"><span class="pre">uuid</span></code> follow-up 요청에 한 번 사전 처리하고 재사용됩니다.</p></li>
+<li><p data-original-en="UUID-based multimodal data reuse via a server-side processor cache (--mm-processor-cache-gb): an image tagged with a stable uuid is preprocessed once and reused on follow-up requests."><strong>UUID 기반 다중 모달 데이터 재사용</strong> server-side 프로세서 캐시를 통해<code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span></code>: 안정적인 이미지를 태그한 이미지 <code class="docutils literal notranslate"><span class="pre">uuid</span></code> follow-up 요청에 한 번 사전 처리하고 재사용됩니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="engine-core">
-<h4>엔진 코어<a class="headerlink" href="#engine-core" title="Link to this heading">#</a></h4>
+<h4 data-original-en="Engine Core">엔진 코어<a class="headerlink" href="#engine-core" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p><strong>겹치는 스케줄링</strong> (experimental; 기본값으로 꺼짐, 를 통해 활성화
+<li><p data-original-en="Overlap scheduler (experimental; off by default, enable via --enable-overlap-scheduling) runs one batch ahead so host-side scheduling overhead is overlapped with NPU compute, improving throughput and TPOT at a small, bounded TTFT cost."><strong>겹치는 스케줄링</strong> (experimental; 기본값으로 꺼짐, 를 통해 활성화
 <code class="docutils literal notranslate"><span class="pre">--enable-overlap-scheduling</span></code>)는 host-side 스케줄링 오버 헤드가 NPU compute로 overlapped, 작은에 throughput와 TPOT를 개량하고, TTFT 비용을 경계를 두는 1개의 배치를 실행합니다.</p></li>
-<li><p><strong>Scoring-based DP 경로 설정</strong> data-parallel 복제를 통해 사전 설정 로컬 및 token-footprint 부하를 균형 잡힌다.</p></li>
-<li><p><strong>KV cache 개선 사항</strong> (이 릴리스에서 가장 큰 기반 재 공장) :</p>
+<li><p data-original-en="Scoring-based DP routing balances prefix locality and token-footprint load across data-parallel replicas, configurable through routing profiles."><strong>Scoring-based DP 경로 설정</strong> data-parallel 복제를 통해 사전 설정 로컬 및 token-footprint 부하를 균형 잡힌다.</p></li>
+<li><p data-original-en="KV cache improvements (largely foundational refactors in this release):"><strong>KV cache 개선 사항</strong> (이 릴리스에서 가장 큰 기반 재 공장) :</p>
 <ul>
-<li><p><strong>통일된 래딕스 캐시</strong> global-only와 sliding-window prefix-cache 나무를 하나으로 통합하여 per-component의 트리 토폴로지를 분리하여 새로운 캐시 구성 요소 유형이 더 이상 자신의 나무가 필요 없습니다. follow-up 최적화는 long-context (~128K-token) TTFT 회귀를 복구합니다.</p></li>
-<li><p><strong>KV cache 및 offloading 인프라</strong> (groundwork): 계층화 된 block-placement 모델 (NPU, 호스트, 또는 dual-resident) 및 전용 NPU↔host DMA 오케스트라, offloading KV 블록에 대한 기반을 놓는 NPU 메모리를 미래 릴리스에서.</p></li>
-<li><p><strong>더욱 강력한 NPU 메모리 할당</strong>: shared-DRAM 버퍼 풀은 이제 유휴 버퍼를 다시 인용하고 I/O-buffer 스페이스는 파편 슬랙으로 예약되어 있습니다. 오버랩 스케줄링 (e.g. gpt-oss-120b long-context)에서 큰 모델에 out-of-memory 오류를 수정합니다.</p></li>
+<li><p data-original-en="Unified Radix Cache consolidates the global-only and sliding-window prefix-cache trees into one, separating tree topology from per-component payloads so new cache component types no longer need a tree of their own. A follow-up optimization also recovers a long-context (~128K-token) TTFT regression."><strong>통일된 래딕스 캐시</strong> global-only와 sliding-window prefix-cache 나무를 하나으로 통합하여 per-component의 트리 토폴로지를 분리하여 새로운 캐시 구성 요소 유형이 더 이상 자신의 나무가 필요 없습니다. follow-up 최적화는 long-context (~128K-token) TTFT 회귀를 복구합니다.</p></li>
+<li><p data-original-en="KV cache offloading infrastructure (groundwork): a tiered block-placement model (NPU, host, or dual-resident) and a dedicated NPU↔host DMA orchestrator, laying the foundation for offloading KV blocks beyond NPU memory in a future release."><strong>KV cache 및 offloading 인프라</strong> (groundwork): 계층화 된 block-placement 모델 (NPU, 호스트, 또는 dual-resident) 및 전용 NPU↔host DMA 오케스트라, offloading KV 블록에 대한 기반을 놓는 NPU 메모리를 미래 릴리스에서.</p></li>
+<li><p data-original-en="More robust NPU memory budgeting: the shared-DRAM buffer pool now reclaims idle buffers, and I/O-buffer space is reserved with fragmentation slack — fixing out-of-memory failures on large models under overlap scheduling (e.g. gpt-oss-120b long-context)."><strong>더욱 강력한 NPU 메모리 할당</strong>: shared-DRAM 버퍼 풀은 이제 유휴 버퍼를 다시 인용하고 I/O-buffer 스페이스는 파편 슬랙으로 예약되어 있습니다. 오버랩 스케줄링 (e.g. gpt-oss-120b long-context)에서 큰 모델에 out-of-memory 오류를 수정합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>더 빠른 모델 로딩</strong> 비동기, 병렬화된 Hugging Face 다운로드를 통해, 과다한 무게 파일을 건너뛰기 <code class="docutils literal notranslate"><span class="pre">snapshot_download</span></code>.</p></li>
+<li><p data-original-en="Faster model loading via asynchronous, parallelized Hugging Face downloads, and by skipping redundant weight files in snapshot_download."><strong>더 빠른 모델 로딩</strong> 비동기, 병렬화된 Hugging Face 다운로드를 통해, 과다한 무게 파일을 건너뛰기 <code class="docutils literal notranslate"><span class="pre">snapshot_download</span></code>.</p></li>
 </ul>
 </section>
 <section id="api-usability-improvements">
-<h4>API 및 사용성 개선<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h4>
+<h4 data-original-en="API &amp; Usability Improvements">API 및 사용성 개선<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h4>
 <ul class="simple">
-<li><p><strong>서비스 옵션</strong>:</p>
+<li><p data-original-en="Serving Options:"><strong>서비스 옵션</strong>:</p>
 <ul>
-<li><p>추가 <code class="docutils literal notranslate"><span class="pre">--default-chat-template-kwargs</span></code> server-wide chat-template 디폴트를 설정하려면 (모든 요청으로 계산; request-level 값은 우선순위)를 가져옵니다.</p></li>
-<li><p>추가 <code class="docutils literal notranslate"><span class="pre">--enable-overlap-scheduling</span></code>, <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>, 그리고
+<li><p data-original-en="Added --default-chat-template-kwargs to set server-wide chat-template defaults (merged into every request; request-level values take precedence).">추가 <code class="docutils literal notranslate"><span class="pre">--default-chat-template-kwargs</span></code> server-wide chat-template 디폴트를 설정하려면 (모든 요청으로 계산; request-level 값은 우선순위)를 가져옵니다.</p></li>
+<li><p data-original-en="Added --enable-overlap-scheduling, --data-parallel-routing-policy, and --data-parallel-scoring-profile.">추가 <code class="docutils literal notranslate"><span class="pre">--enable-overlap-scheduling</span></code>, <code class="docutils literal notranslate"><span class="pre">--data-parallel-routing-policy</span></code>, 그리고
 <code class="docutils literal notranslate"><span class="pre">--data-parallel-scoring-profile</span></code>.</p></li>
 </ul>
 </li>
-<li><p><strong>Sampling 기본값</strong>:</p>
+<li><p data-original-en="Sampling Defaults:"><strong>Sampling 기본값</strong>:</p>
 <ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">eos_token_id</span></code> 모델에서 가져온 값 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 이제 모두에 대한 기본 스톱 토큰으로 적용됩니다. <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> and <code class="docutils literal notranslate"><span class="pre">LLM</span></code>.</p></li>
+<li><p data-original-en="eos_token_id values from the model’s generation_config.json are now applied as default stop tokens for both furiosa-llm serve and LLM."><code class="docutils literal notranslate"><span class="pre">eos_token_id</span></code> 모델에서 가져온 값 <code class="docutils literal notranslate"><span class="pre">generation_config.json</span></code> 이제 모두에 대한 기본 스톱 토큰으로 적용됩니다. <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> and <code class="docutils literal notranslate"><span class="pre">LLM</span></code>.</p></li>
 </ul>
 </li>
-<li><p><strong>풀링 / 임베딩 / 로그 확률</strong>:</p>
+<li><p data-original-en="Pooling / Embedding / Logprob:"><strong>풀링 / 임베딩 / 로그 확률</strong>:</p>
 <ul>
-<li><p>확장 풀링, embedding 및 log-probability 지원 <code class="docutils literal notranslate"><span class="pre">flm</span></code> 인터페이스,
+<li><p data-original-en="Expanded pooling, embedding, and log-probability support in the flm interface, and fixed prompt_logprobs accumulation.">확장 풀링, embedding 및 log-probability 지원 <code class="docutils literal notranslate"><span class="pre">flm</span></code> 인터페이스,
 그리고 고정 <code class="docutils literal notranslate"><span class="pre">prompt_logprobs</span></code> 축적</p></li>
 </ul>
 </li>
-<li><p><strong>구조화된 출력</strong>:</p>
+<li><p data-original-en="Structured Output:"><strong>구조화된 출력</strong>:</p>
 <ul>
-<li><p>부딪혔다 <strong>xgrammar에서 0.4.0</strong>.</p></li>
-<li><p>이름과 필요한 tool-calling 경로 이제 설정 <code class="docutils literal notranslate"><span class="pre">additionalProperties:</span> <span class="pre">False</span></code> 생성 된 JSON 스키마에 도구 스키마에서 정의되지 않은 필드를 거부합니다.</p></li>
+<li><p data-original-en="Bumped xgrammar to 0.4.0.">부딪혔다 <strong>xgrammar에서 0.4.0</strong>.</p></li>
+<li><p data-original-en="The named and required tool-calling paths now set additionalProperties: False on the generated JSON schema, rejecting fields not defined in the tool schema.">이름과 필요한 tool-calling 경로 이제 설정 <code class="docutils literal notranslate"><span class="pre">additionalProperties:</span> <span class="pre">False</span></code> 생성 된 JSON 스키마에 도구 스키마에서 정의되지 않은 필드를 거부합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>: 관리/디버깅 API</strong>:</p>
+<li><p data-original-en="Admin / Debugging APIs:"><strong>: 관리/디버깅 API</strong>:</p>
 <ul>
-<li><p>추가된 A <strong>사전 캐시 재설정</strong> 최종점 (<code class="docutils literal notranslate"><span class="pre">/reset_prefix_cache</span></code>테스트 및 벤치마킹을 위한 dev mode에서 유효한.</p></li>
-<li><p>추가된 A <strong>라우 모델</strong> 벌레잡기를 위한 scheduler-bypassing API.</p></li>
+<li><p data-original-en="Added a prefix cache reset endpoint (/reset_prefix_cache, available in dev mode) for testing and benchmarking.">추가된 A <strong>사전 캐시 재설정</strong> 최종점 (<code class="docutils literal notranslate"><span class="pre">/reset_prefix_cache</span></code>테스트 및 벤치마킹을 위한 dev mode에서 유효한.</p></li>
+<li><p data-original-en="Added a RawModel scheduler-bypassing API for debugging.">추가된 A <strong>라우 모델</strong> 벌레잡기를 위한 scheduler-bypassing API.</p></li>
 </ul>
 </li>
-<li><p><strong>신뢰성</strong>:</p>
+<li><p data-original-en="Reliability:"><strong>신뢰성</strong>:</p>
 <ul>
-<li><p><strong>부드러운 DP 종료</strong> data-parallel 배포의 깨끗한 차단을 위해.</p></li>
+<li><p data-original-en="Graceful DP termination for clean shutdown of data-parallel deployments."><strong>부드러운 DP 종료</strong> data-parallel 배포의 깨끗한 차단을 위해.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 </section>
 <section id="platform-packaging">
-<h3>플랫폼 및 포장<a class="headerlink" href="#platform-packaging" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Platform &amp; Packaging">플랫폼 및 포장<a class="headerlink" href="#platform-packaging" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Python 3.14 지원</strong>: 지원되는 Python 버전은 다음과 같습니다 <strong>3.10–3.14</strong>PyTorch 2.10 지원 모체를 추적하는 ,.</p></li>
-<li><p><strong>더 넓은 arm64 (aarch64) 지원</strong>: 원본 Python 패키지
+<li><p data-original-en="Python 3.14 support: supported Python versions are now 3.10–3.14, tracking the PyTorch 2.10 support matrix."><strong>Python 3.14 지원</strong>: 지원되는 Python 버전은 다음과 같습니다 <strong>3.10–3.14</strong>PyTorch 2.10 지원 모체를 추적하는 ,.</p></li>
+<li><p data-original-en="Broader arm64 (aarch64) support: the native Python packages (furiosa-native-llm, furiosa-tcc) now ship aarch64 wheels alongside x86_64, the firmware tooling ships an arm64 package, and the cloud-native component images are multi-architecture (linux/amd64 and linux/arm64). See Released Components for the per-package breakdown."><strong>더 넓은 arm64 (aarch64) 지원</strong>: 원본 Python 패키지
 (<code class="docutils literal notranslate"><span class="pre">furiosa-native-llm</span></code>, <code class="docutils literal notranslate"><span class="pre">furiosa-tcc</span></code>) 이제 배 <code class="docutils literal notranslate"><span class="pre">aarch64</span></code> 바퀴가 옆
 <code class="docutils literal notranslate"><span class="pre">x86_64</span></code>모델의 firmware 공구는 다음을 제공합니다. <code class="docutils literal notranslate"><span class="pre">arm64</span></code> 패키지 및 cloud-native 구성 요소 이미지는 multi-architecture (<code class="docutils literal notranslate"><span class="pre">linux/amd64</span></code> and <code class="docutils literal notranslate"><span class="pre">linux/arm64</span></code>) 참조하십시오.
 <em>방출 된 구성요소</em> per-package 분해에 대한 정보.</p></li>
-<li><p><strong>Rocky Linux 10 지원</strong>: driver 및 firmware는 이제 패키지 <strong>로키 Linux 10</strong> as <code class="docutils literal notranslate"><span class="pre">.el10</span></code> RPM (Debian 빌드 외에도), cloud-native 구성 요소 이미지는 Red Hat OpenShift-certified (see)입니다. <em>Cloud-Native 구성 요소</em>).</p></li>
+<li><p data-original-en="Rocky Linux 10 support: the driver and firmware are now packaged for Rocky Linux 10 as .el10 RPMs (in addition to the Debian builds), and the cloud-native component images are Red Hat OpenShift–certified (see Cloud-Native Components)."><strong>Rocky Linux 10 지원</strong>: driver 및 firmware는 이제 패키지 <strong>로키 Linux 10</strong> as <code class="docutils literal notranslate"><span class="pre">.el10</span></code> RPM (Debian 빌드 외에도), cloud-native 구성 요소 이미지는 Red Hat OpenShift-certified (see)입니다. <em>Cloud-Native 구성 요소</em>).</p></li>
 </ul>
 </section>
 <section id="driver-firmware">
 <h3>Driver &amp; Firmware<a class="headerlink" href="#driver-firmware" title="Link to this heading">#</a></h3>
-<p>RNGD <strong>driver</strong> and <strong>firmware</strong> 모두 <strong>2026.3.0</strong>.</p>
+<p data-original-en="The RNGD driver and firmware are both updated to 2026.3.0.">RNGD <strong>driver</strong> and <strong>firmware</strong> 모두 <strong>2026.3.0</strong>.</p>
 <ul class="simple">
 <li><p><strong>Firmware</strong>:</p>
 <ul>
-<li><p>추가 지원 <strong>보드 개정 08</strong>.</p></li>
-<li><p>추가된 <strong>SMBus 기본 슬레이브 주소</strong> 옵션 및 구성 가능한 <strong>전력 관리 IC (PMIC)
+<li><p data-original-en="Added support for board revision 08.">추가 지원 <strong>보드 개정 08</strong>.</p></li>
+<li><p data-original-en="Added an SMBus default slave address option and a configurable PMIC over-temperature protection threshold for board management.">추가된 <strong>SMBus 기본 슬레이브 주소</strong> 옵션 및 구성 가능한 <strong>전력 관리 IC (PMIC)
 over-temperature 보호</strong> – 보드 관리용 임계값</p></li>
-<li><p><strong>로키 Linux 10</strong> 이제 지원됩니다 (패키지는 다음과 같이 배송됩니다: <code class="docutils literal notranslate"><span class="pre">.el10</span></code> 데비안 빌드와 함께 RPM을 지원합니다.</p></li>
-<li><p>버그 수정 및 일반 system-stability 개선.</p></li>
+<li><p data-original-en="Rocky Linux 10 is now supported (packages ship as .el10 RPMs alongside the Debian builds)."><strong>로키 Linux 10</strong> 이제 지원됩니다 (패키지는 다음과 같이 배송됩니다: <code class="docutils literal notranslate"><span class="pre">.el10</span></code> 데비안 빌드와 함께 RPM을 지원합니다.</p></li>
+<li><p data-original-en="Bug fixes and general system-stability improvements.">버그 수정 및 일반 system-stability 개선.</p></li>
 </ul>
 </li>
 <li><p><strong>Driver</strong>:</p>
 <ul>
-<li><p><strong>Firmware 업데이트는 이제 명시된 단계입니다.</strong> firmware 이미지 패키지를 설치하면 더 이상 장치를 자동으로 깜박입니다. 실행 <code class="docutils literal notranslate"><span class="pre">fw_updater</span></code> 새로운 firmware를 적용한 후 명시적으로.</p></li>
-<li><p>버그 수정 및 일반 system-stability 개선.</p></li>
+<li><p data-original-en="Firmware update is now an explicit step. Installing the firmware image package no longer flashes the device automatically; run fw_updater explicitly afterward to apply the new firmware."><strong>Firmware 업데이트는 이제 명시된 단계입니다.</strong> firmware 이미지 패키지를 설치하면 더 이상 장치를 자동으로 깜박입니다. 실행 <code class="docutils literal notranslate"><span class="pre">fw_updater</span></code> 새로운 firmware를 적용한 후 명시적으로.</p></li>
+<li><p data-original-en="Bug fixes and general system-stability improvements.">버그 수정 및 일반 system-stability 개선.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="cloud-native-components">
-<h3>Cloud-Native 구성 요소<a class="headerlink" href="#cloud-native-components" title="Link to this heading">#</a></h3>
-<p>cloud-native 구성 요소는 2026.3의 version-bumped가 아니라 컨테이너 이미지는 더 넓은 플랫폼 지원을 얻었다 :</p>
+<h3 data-original-en="Cloud-Native Components">Cloud-Native 구성 요소<a class="headerlink" href="#cloud-native-components" title="Link to this heading">#</a></h3>
+<p data-original-en="The cloud-native components are not version-bumped in 2026.3, but their container images gained broader platform support:">cloud-native 구성 요소는 2026.3의 version-bumped가 아니라 컨테이너 이미지는 더 넓은 플랫폼 지원을 얻었다 :</p>
 <ul class="simple">
-<li><p><strong>: Red Hat 인증.</strong> cloud-native 구성 요소 이미지는 Red Hat의 OpenShift preflight 인증 및 보안 검사를 통과했으며 이제는 출판되었습니다.
+<li><p data-original-en="Red Hat certification. The cloud-native component images have passed Red Hat’s OpenShift preflight certification and security scans, and are now published in the Red Hat Ecosystem Catalog as Red Hat UBI–based images."><strong>: Red Hat 인증.</strong> cloud-native 구성 요소 이미지는 Red Hat의 OpenShift preflight 인증 및 보안 검사를 통과했으며 이제는 출판되었습니다.
 <a class="reference external" href="https://catalog.redhat.com/en/search?q=furiosa">Red Hat 생태계 카탈로그</a> Red Hat UBI 기반 이미지</p></li>
-<li><p><strong>Multi-architecture 이미지.</strong> 구성 요소 이미지는 이제 모두 배송됩니다. <code class="docutils literal notranslate"><span class="pre">linux/amd64</span></code> and
+<li><p data-original-en="Multi-architecture images. Component images now ship for both linux/amd64 and linux/arm64: furiosa-feature-discovery, furiosa-device-plugin, furiosa-dra-driver, furiosa-metrics-exporter, and furiosa-npu-operator (from 2026.1.1), and furiosa-system-manager (from 2026.2.0)."><strong>Multi-architecture 이미지.</strong> 구성 요소 이미지는 이제 모두 배송됩니다. <code class="docutils literal notranslate"><span class="pre">linux/amd64</span></code> and
 <code class="docutils literal notranslate"><span class="pre">linux/arm64</span></code>: <code class="docutils literal notranslate"><span class="pre">furiosa-feature-discovery</span></code>, <code class="docutils literal notranslate"><span class="pre">furiosa-device-plugin</span></code>,
 <code class="docutils literal notranslate"><span class="pre">furiosa-dra-driver</span></code>, <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">furiosa-npu-operator</span></code> (
 <code class="docutils literal notranslate"><span class="pre">2026.1.1</span></code>), 그리고 <code class="docutils literal notranslate"><span class="pre">furiosa-system-manager</span></code> ( <code class="docutils literal notranslate"><span class="pre">2026.2.0</span></code>).</p></li>
@@ -609,20 +609,20 @@ over-temperature 보호</strong> – 보드 관리용 임계값</p></li>
 </section>
 </section>
 <section id="breaking-changes-deprecations">
-<span id="release2026-3-0-breakingchanges"></span><h2>🚨 주요 변경 사항 및 폐기<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
+<span id="release2026-3-0-breakingchanges"></span><h2 data-original-en="🚨 Breaking Changes &amp; Deprecations">🚨 주요 변경 사항 및 폐기<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><strong>/metrics는 GET-only</strong>:</p>
+<li><p data-original-en="/metrics is GET-only:"><strong>/metrics는 GET-only</strong>:</p>
 <ul>
-<li><p>The <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> 엔드포인트는 이제 <strong>GET 요청만</strong>이전에는 <code class="docutils literal notranslate"><span class="pre">POST</span></code>
+<li><p data-original-en="The /metrics endpoint now accepts GET requests only. Previously a POST to /metrics also returned 200; it now returns 405 Method Not Allowed.">The <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> 엔드포인트는 이제 <strong>GET 요청만</strong>이전에는 <code class="docutils literal notranslate"><span class="pre">POST</span></code>
 to <code class="docutils literal notranslate"><span class="pre">/metrics</span></code> 또한 반환 <code class="docutils literal notranslate"><span class="pre">200</span></code>; 이제 반환 <code class="docutils literal notranslate"><span class="pre">405</span> <span class="pre">Method</span> <span class="pre">Not</span> <span class="pre">Allowed</span></code>.</p></li>
-<li><p><strong>이주</strong>: 모니터링 스크랩 또는 건강 검사 쿼리를 보장합니다. <code class="docutils literal notranslate"><span class="pre">/metrics</span></code>
+<li><p data-original-en="Migration: Ensure any monitoring scrapers or health checks query /metrics with GET."><strong>이주</strong>: 모니터링 스크랩 또는 건강 검사 쿼리를 보장합니다. <code class="docutils literal notranslate"><span class="pre">/metrics</span></code>
 과 <code class="docutils literal notranslate"><span class="pre">GET</span></code>.</p></li>
 </ul>
 </li>
-<li><p><strong>Firmware 업그레이드는 이제 수동 단계입니다.</strong>:</p>
+<li><p data-original-en="Firmware upgrade is now a manual step:"><strong>Firmware 업그레이드는 이제 수동 단계입니다.</strong>:</p>
 <ul>
-<li><p>2026.3 전에 firmware 업데이트자는 firmware 이미지 패키지가 설치되었을 때 자동으로 랭크됩니다. 2026.3로 시작하여 이미지 패키지를 더 이상 트리거하지 마십시오. 업데이트자가 설치 한 후 직접 실행해야합니다.</p></li>
-<li><p><strong>이주</strong>다음으로: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span></code> firmware 도구 및 이미지 패키지의 실행
+<li><p data-original-en="Before 2026.3, the firmware updater ran automatically when the firmware image package was installed. Starting with 2026.3, installing the image package no longer triggers the update — you must run the updater yourself after installing it.">2026.3 전에 firmware 업데이트자는 firmware 이미지 패키지가 설치되었을 때 자동으로 랭크됩니다. 2026.3로 시작하여 이미지 패키지를 더 이상 트리거하지 마십시오. 업데이트자가 설치 한 후 직접 실행해야합니다.</p></li>
+<li><p data-original-en="Migration: After apt install of the firmware tool and image packages, run sudo furiosa_rngd_updater_all to upgrade all RNGD devices (or furiosa_rngd_updater -b &lt;BDF&gt; -f &lt;firmware image&gt; for a specific device), then perform a cold reboot. See the Upgrading FuriosaAI’s Software for the full procedure."><strong>이주</strong>다음으로: <code class="docutils literal notranslate"><span class="pre">apt</span> <span class="pre">install</span></code> firmware 도구 및 이미지 패키지의 실행
 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">furiosa_rngd_updater_all</span></code> 모든 RNGD 장치를 업그레이드하는 것 (또는
 <code class="docutils literal notranslate"><span class="pre">furiosa_rngd_updater</span> <span class="pre">-b</span> <span class="pre">&lt;BDF&gt;</span> <span class="pre">-f</span> <span class="pre">&lt;firmware</span> <span class="pre">image&gt;</span></code> 특정 장치에 대한), 다음 감기 재부팅을 수행합니다. 참조 <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a> 전체 절차를 참조하십시오.</p></li>
 </ul>
@@ -630,9 +630,9 @@ to <code class="docutils literal notranslate"><span class="pre">/metrics</span><
 </ul>
 </section>
 <section id="released-components">
-<h2>📦 출시된 구성 요소<a class="headerlink" href="#released-components" title="Link to this heading">#</a></h2>
+<h2 data-original-en="📦 Released Components">📦 출시된 구성 요소<a class="headerlink" href="#released-components" title="Link to this heading">#</a></h2>
 <section id="python-packages">
-<h3>Python 패키지<a class="headerlink" href="#python-packages" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Python packages">Python 패키지<a class="headerlink" href="#python-packages" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 50.0%"/>
@@ -640,9 +640,9 @@ to <code class="docutils literal notranslate"><span class="pre">/metrics</span><
 <col style="width: 37.5%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
-<th class="head"><p>버전</p></th>
-<th class="head"><p>지원되는 아키텍처</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Package name">패키지 이름</p></th>
+<th class="head"><p data-original-en="Version">버전</p></th>
+<th class="head"><p data-original-en="Supported architectures">지원되는 아키텍처</p></th>
 </tr>
 </thead>
 <tbody>
@@ -652,17 +652,17 @@ to <code class="docutils literal notranslate"><span class="pre">/metrics</span><
 </tr>
 <tr class="row-odd"><td><p>furiosa-llm</p></td>
 <td><p>2026.3.0</p></td>
-<td><p>순수 Python (<code class="docutils literal notranslate"><span class="pre">any</span></code>)</p></td>
+<td><p data-original-en="pure Python (any)">순수 Python (<code class="docutils literal notranslate"><span class="pre">any</span></code>)</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa-tcc</p></td>
 <td><p>2026.3.0</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, <code class="docutils literal notranslate"><span class="pre">aarch64</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>furiosa 모델</p></td>
+<tr class="row-odd"><td><p data-original-en="furiosa-models">furiosa 모델</p></td>
 <td><p>2026.2.0</p></td>
-<td><p>순수 Python (<code class="docutils literal notranslate"><span class="pre">any</span></code>)</p></td>
+<td><p data-original-en="pure Python (any)">순수 Python (<code class="docutils literal notranslate"><span class="pre">any</span></code>)</p></td>
 </tr>
-<tr class="row-even"><td><p>furiosa -불</p></td>
+<tr class="row-even"><td><p data-original-en="furiosa-torch">furiosa -불</p></td>
 <td><p>2026.2.0</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">x86_64</span></code>, <code class="docutils literal notranslate"><span class="pre">aarch64</span></code></p></td>
 </tr>
@@ -671,7 +671,7 @@ to <code class="docutils literal notranslate"><span class="pre">/metrics</span><
 </div>
 </section>
 <section id="apt-packages">
-<h3>APT 패키지<a class="headerlink" href="#apt-packages" title="Link to this heading">#</a></h3>
+<h3 data-original-en="APT packages">APT 패키지<a class="headerlink" href="#apt-packages" title="Link to this heading">#</a></h3>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 50.0%"/>
@@ -679,9 +679,9 @@ to <code class="docutils literal notranslate"><span class="pre">/metrics</span><
 <col style="width: 37.5%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
-<th class="head"><p>버전</p></th>
-<th class="head"><p>지원되는 아키텍처</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Package name">패키지 이름</p></th>
+<th class="head"><p data-original-en="Version">버전</p></th>
+<th class="head"><p data-original-en="Supported architectures">지원되는 아키텍처</p></th>
 </tr>
 </thead>
 <tbody>
@@ -718,8 +718,8 @@ to <code class="docutils literal notranslate"><span class="pre">/metrics</span><
 </div>
 </section>
 <section id="yum-packages">
-<h3>YUM 패키지<a class="headerlink" href="#yum-packages" title="Link to this heading">#</a></h3>
-<p>2026.3의 새로운 : driver 및 firmware 패키지도 게시됩니다. <code class="docutils literal notranslate"><span class="pre">.el10</span></code>
+<h3 data-original-en="YUM packages">YUM 패키지<a class="headerlink" href="#yum-packages" title="Link to this heading">#</a></h3>
+<p data-original-en="New in 2026.3: the driver and firmware packages are also published as .el10 RPMs for Rocky Linux 10 / RHEL.">2026.3의 새로운 : driver 및 firmware 패키지도 게시됩니다. <code class="docutils literal notranslate"><span class="pre">.el10</span></code>
 Rocky Linux 10 / RHEL용 RPM.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
@@ -728,9 +728,9 @@ Rocky Linux 10 / RHEL용 RPM.</p>
 <col style="width: 37.5%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>패키지 이름</p></th>
-<th class="head"><p>버전</p></th>
-<th class="head"><p>지원되는 아키텍처</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Package name">패키지 이름</p></th>
+<th class="head"><p data-original-en="Version">버전</p></th>
+<th class="head"><p data-original-en="Supported architectures">지원되는 아키텍처</p></th>
 </tr>
 </thead>
 <tbody>
@@ -767,8 +767,8 @@ Rocky Linux 10 / RHEL용 RPM.</p>
 </div>
 </section>
 <section id="docker-images">
-<h3>Docker 이미지<a class="headerlink" href="#docker-images" title="Link to this heading">#</a></h3>
-<p>ZXQ1ZXQ에 대해 각 Docker 벡터를 생성합니다. ZXQ2ZXQ 모델에만 적용됩니다.</p>
+<h3 data-original-en="Docker images">Docker 이미지<a class="headerlink" href="#docker-images" title="Link to this heading">#</a></h3>
+<p data-original-en="The cloud-native component images on Docker Hub are now multi-architecture and Red Hat OpenShift–certified.">ZXQ1ZXQ에 대해 각 Docker 벡터를 생성합니다. ZXQ2ZXQ 모델에만 적용됩니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 50.0%"/>
@@ -776,9 +776,9 @@ Rocky Linux 10 / RHEL용 RPM.</p>
 <col style="width: 37.5%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>이미지</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Image">이미지</p></th>
 <th class="head"><p>Tag</p></th>
-<th class="head"><p>지원되는 아키텍처</p></th>
+<th class="head"><p data-original-en="Supported architectures">지원되는 아키텍처</p></th>
 </tr>
 </thead>
 <tbody>
@@ -798,7 +798,7 @@ Rocky Linux 10 / RHEL용 RPM.</p>
 <td><p>2026.1.1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">linux/amd64</span></code>, <code class="docutils literal notranslate"><span class="pre">linux/arm64</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>furiosaai/furiosa-npu-운영자</p></td>
+<tr class="row-even"><td><p data-original-en="furiosaai/furiosa-npu-operator">furiosaai/furiosa-npu-운영자</p></td>
 <td><p>2026.1.1</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">linux/amd64</span></code>, <code class="docutils literal notranslate"><span class="pre">linux/arm64</span></code></p></td>
 </tr>
@@ -809,7 +809,7 @@ Rocky Linux 10 / RHEL용 RPM.</p>
 </tbody>
 </table>
 </div>
-<p>Red Hat UBI 기반 이미지는 OpenShift preflight를 통해 인증되었습니다. <code class="docutils literal notranslate"><span class="pre">quay.io</span></code>:</p>
+<p data-original-en="The Red Hat UBI–based images certified through the OpenShift preflight are published on quay.io:">Red Hat UBI 기반 이미지는 OpenShift preflight를 통해 인증되었습니다. <code class="docutils literal notranslate"><span class="pre">quay.io</span></code>:</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 50.0%"/>
@@ -817,9 +817,9 @@ Rocky Linux 10 / RHEL용 RPM.</p>
 <col style="width: 37.5%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>이미지</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Image">이미지</p></th>
 <th class="head"><p>Tag</p></th>
-<th class="head"><p>지원되는 아키텍처</p></th>
+<th class="head"><p data-original-en="Supported architectures">지원되는 아키텍처</p></th>
 </tr>
 </thead>
 <tbody>

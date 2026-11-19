@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -296,52 +296,52 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="poolingparams-class">
-<span id="poolingparams"></span><h1> ⁇ 링파램스 클래스<a class="headerlink" href="#poolingparams-class" title="Link to this heading">#</a></h1>
+<span id="poolingparams"></span><h1 data-original-en="PoolingParams class"> ⁇ 링파램스 클래스<a class="headerlink" href="#poolingparams-class" title="Link to this heading">#</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="furiosa_llm.PoolingParams">
+<dt class="sig sig-object py" data-original-en="class furiosa_llm.PoolingParams(truncate_prompt_tokens: int | None = None, dimensions: int | None = None, normalize: bool | None = True, task: Literal['embed', 'classify', 'score', 'token_embed', 'token_classify', 'plugin'] | None = None)[source]" id="furiosa_llm.PoolingParams">
 <em class="property"><span class="pre">클래스</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">furiosa_llm</span></span><span class="sig-name descname"><span class="pre">수영장</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">truncate_prompt_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">크기는</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">정상화</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">과제</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">말 그대로</span><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">"부착"</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">"분류"</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'점점'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">"token_embed"</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">"token_classify"</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'플러그인'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/furiosa_llm/sampling_params.html#PoolingParams"><span class="viewcode-link"><span class="pre">[원]</span></span></a><a class="headerlink" href="#furiosa_llm.PoolingParams" title="Link to this definition">#</a></dt>
-<dd><p>기본: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>API 모델 Pooling에 사용되는 매개변수.</p>
+<dd><p data-original-en="Bases: object">기본: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p data-original-en="API parameters for pooling models.">API 모델 Pooling에 사용되는 매개변수.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="furiosa_llm.PoolingParams.truncate_prompt_tokens">
 <span class="sig-name descname"><span class="pre">truncate_prompt_tokens</span></span><a class="headerlink" href="#furiosa_llm.PoolingParams.truncate_prompt_tokens" title="Link to this definition">#</a></dt>
-<dd><p>prompt truncation을 제어합니다. 모델의 기본 truncation 크기를 사용하려면 -1로 설정하십시오. 마지막 k 토큰 (왼쪽 truncation) 만 유지하려면 k로 설정하십시오. None로 설정하여 truncation을 비활성화하십시오.</p>
+<dd><p data-original-en="Controls prompt truncation. Set to -1 to use the model’s default truncation size. Set to k to keep only the last k tokens (left truncation). Set to None to disable truncation.">prompt truncation을 제어합니다. 모델의 기본 truncation 크기를 사용하려면 -1로 설정하십시오. 마지막 k 토큰 (왼쪽 truncation) 만 유지하려면 k로 설정하십시오. None로 설정하여 truncation을 비활성화하십시오.</p>
 </dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="furiosa_llm.PoolingParams.dimensions">
+<dt class="sig sig-object py" data-original-en="dimensions" id="furiosa_llm.PoolingParams.dimensions">
 <span class="sig-name descname"><span class="pre">크기는</span></span><a class="headerlink" href="#furiosa_llm.PoolingParams.dimensions" title="Link to this definition">#</a></dt>
-<dd><p>출력 embedding에 대한 치수의 수. 설정된 경우 embedding를 첫 번째 N 차원 (Matryoshka Representation Learning)에 truncates합니다. 긍정적 인 정수이어야합니다.</p>
+<dd><p data-original-en="Number of dimensions for the output embedding. If set, truncates the embedding to the first N dimensions (Matryoshka Representation Learning). Must be a positive integer.">출력 embedding에 대한 치수의 수. 설정된 경우 embedding를 첫 번째 N 차원 (Matryoshka Representation Learning)에 truncates합니다. 긍정적 인 정수이어야합니다.</p>
 </dd></dl>
 <dl class="py attribute">
-<dt class="sig sig-object py" id="furiosa_llm.PoolingParams.normalize">
+<dt class="sig sig-object py" data-original-en="normalize" id="furiosa_llm.PoolingParams.normalize">
 <span class="sig-name descname"><span class="pre">정상화</span></span><a class="headerlink" href="#furiosa_llm.PoolingParams.normalize" title="Link to this definition">#</a></dt>
-<dd><p>embeddings 출력을 정상화하는 것. embedding 작업에서만 지원됩니다.</p>
+<dd><p data-original-en="Whether to normalize the embeddings outputs. Only supported for embedding tasks.">embeddings 출력을 정상화하는 것. embedding 작업에서만 지원됩니다.</p>
 </dd></dl>
 </dd></dl>
 <section id="parameters">
-<h2>매개 변수<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Parameters">매개 변수<a class="headerlink" href="#parameters" title="Link to this heading">#</a></h2>
 <section id="task">
-<h3>과제<a class="headerlink" href="#task" title="Link to this heading">#</a></h3>
-<p><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">PoolingTask</span></code> (문자 그대로: "embed", "score")</p>
-<p>풀링 작업 유형을 지정합니다:</p>
+<h3 data-original-en="task">과제<a class="headerlink" href="#task" title="Link to this heading">#</a></h3>
+<p data-original-en="Type: PoolingTask (Literal[“embed”, “score”])"><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">PoolingTask</span></code> (문자 그대로: "embed", "score")</p>
+<p data-original-en="Specifies the pooling task type:">풀링 작업 유형을 지정합니다:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">"embed"</span></code>: embedding 세대 작업을 위해. 모델 출력 dense 벡터 표현.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">"score"</span></code>: 유사성 득점 작업. 모델 출력 scalar 유사성 점수.</p></li>
+<li><p data-original-en='"embed": For embedding generation tasks. The model outputs dense vector representations.'><code class="docutils literal notranslate"><span class="pre">"embed"</span></code>: embedding 세대 작업을 위해. 모델 출력 dense 벡터 표현.</p></li>
+<li><p data-original-en='"score": For similarity scoring tasks. The model outputs scalar similarity scores.'><code class="docutils literal notranslate"><span class="pre">"score"</span></code>: 유사성 득점 작업. 모델 출력 scalar 유사성 점수.</p></li>
 </ul>
-<p>이 매개 변수는 일반적으로 모델의 메타 데이터에서 인페이지만 필요할 때 명시적으로 설정할 수 있습니다.</p>
+<p data-original-en="This parameter is usually inferred from the model’s metadata, but can be explicitly set when needed.">이 매개 변수는 일반적으로 모델의 메타 데이터에서 인페이지만 필요할 때 명시적으로 설정할 수 있습니다.</p>
 </section>
 <section id="normalize">
-<h3>정상화<a class="headerlink" href="#normalize" title="Link to this heading">#</a></h3>
-<p><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
-<p><strong>기본:</strong> <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
-<p>L2 정상화를 사용하여 embedding 출력을 정상화하는 것. embedding 작업에만 적용 가능 (<code class="docutils literal notranslate"><span class="pre">task="embed"</span></code>).</p>
-<p>언제 <code class="docutils literal notranslate"><span class="pre">True</span></code>, embedding 벡터는 단위 길이에 정상화됩니다, 이는을 위해 유용합니다:</p>
+<h3 data-original-en="normalize">정상화<a class="headerlink" href="#normalize" title="Link to this heading">#</a></h3>
+<p data-original-en="Type: bool"><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">bool</span></code></p>
+<p data-original-en="Default: True"><strong>기본:</strong> <code class="docutils literal notranslate"><span class="pre">True</span></code></p>
+<p data-original-en='Whether to normalize the embedding outputs using L2 normalization. Only applicable for embedding tasks (task="embed").'>L2 정상화를 사용하여 embedding 출력을 정상화하는 것. embedding 작업에만 적용 가능 (<code class="docutils literal notranslate"><span class="pre">task="embed"</span></code>).</p>
+<p data-original-en="When True, the embedding vectors are normalized to unit length, which is useful for:">언제 <code class="docutils literal notranslate"><span class="pre">True</span></code>, embedding 벡터는 단위 길이에 정상화됩니다, 이는을 위해 유용합니다:</p>
 <ul class="simple">
-<li><p>코사인 유사성 계산을 제공합니다.</p></li>
-<li><p>벡터 크기 차이의 영향 감소</p></li>
-<li><p>downstream 작업에 대한 표준화 embedding</p></li>
+<li><p data-original-en="Cosine similarity computations">코사인 유사성 계산을 제공합니다.</p></li>
+<li><p data-original-en="Reducing the impact of vector magnitude differences">벡터 크기 차이의 영향 감소</p></li>
+<li><p data-original-en="Standardizing embeddings for downstream tasks">downstream 작업에 대한 표준화 embedding</p></li>
 </ul>
-<p><strong>예를 들어:</strong></p>
+<p data-original-en="Example:"><strong>예를 들어:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">PoolingParams</span>
 
 <span class="k">with</span> <span class="n">LLM</span><span class="p">(</span><span class="s2">"furiosa-ai/Qwen3-Embedding-0.6B"</span><span class="p">)</span> <span class="k">as</span> <span class="n">llm</span><span class="p">:</span>
@@ -359,17 +359,17 @@ html
 </section>
 <section id="truncate-prompt-tokens">
 <h3>truncate_prompt_tokens<a class="headerlink" href="#truncate-prompt-tokens" title="Link to this heading">#</a></h3>
-<p><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span></code></p>
-<p><strong>기본:</strong> <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-<p>입력 prompt를 truncate에 토큰의 최대 수입니다. 입력이 길이를 초과하면 제한 내에서 적합하도록 truncated 것입니다.</p>
-<p>언제 <code class="docutils literal notranslate"><span class="pre">None</span></code>, truncation는 적용되지 않으며, 입력은 모형의 최대 순서 길이까지 가공됩니다.</p>
-<p>특히 다음과 같은 경우에 유용합니다:</p>
+<p data-original-en="Type: int | None"><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span></code></p>
+<p data-original-en="Default: None"><strong>기본:</strong> <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<p data-original-en="The maximum number of tokens to truncate the input prompt to. If the input exceeds this length, it will be truncated to fit within the limit.">입력 prompt를 truncate에 토큰의 최대 수입니다. 입력이 길이를 초과하면 제한 내에서 적합하도록 truncated 것입니다.</p>
+<p data-original-en="When None, no truncation is applied, and the input is processed up to the model’s maximum sequence length.">언제 <code class="docutils literal notranslate"><span class="pre">None</span></code>, truncation는 적용되지 않으며, 입력은 모형의 최대 순서 길이까지 가공됩니다.</p>
+<p data-original-en="This is particularly useful for:">특히 다음과 같은 경우에 유용합니다:</p>
 <ul class="simple">
-<li><p>일괄 처리에 variable-length 입력 처리</p></li>
-<li><p>모델 제약 내에서 입력 적합</p></li>
-<li><p>긴 문서에 대한 Computational 비용</p></li>
+<li><p data-original-en="Handling variable-length inputs in batch processing">일괄 처리에 variable-length 입력 처리</p></li>
+<li><p data-original-en="Ensuring inputs fit within model constraints">모델 제약 내에서 입력 적합</p></li>
+<li><p data-original-en="Controlling computational costs for long documents">긴 문서에 대한 Computational 비용</p></li>
 </ul>
-<p><strong>예를 들어:</strong></p>
+<p data-original-en="Example:"><strong>예를 들어:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PoolingParams</span>
 
 <span class="c1"># Truncate to 512 tokens</span>
@@ -378,19 +378,19 @@ html
 </div>
 </section>
 <section id="dimensions">
-<h3>크기는<a class="headerlink" href="#dimensions" title="Link to this heading">#</a></h3>
-<p><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span></code></p>
-<p><strong>기본:</strong> <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
-<p>embedding 출력의 치수를 잽니다.</p>
-<p>언제 <code class="docutils literal notranslate"><span class="pre">None</span></code>, 모형에서 가득 차있는 embedding 차원은 돌려보냅니다.</p>
-<p>이 매개변수는 다음과 같은 경우에 유용합니다:</p>
+<h3 data-original-en="dimensions">크기는<a class="headerlink" href="#dimensions" title="Link to this heading">#</a></h3>
+<p data-original-en="Type: int | None"><strong>종류:</strong> <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span></code></p>
+<p data-original-en="Default: None"><strong>기본:</strong> <code class="docutils literal notranslate"><span class="pre">None</span></code></p>
+<p data-original-en="Reduces the dimensionality of the embedding output to the specified number of dimensions.">embedding 출력의 치수를 잽니다.</p>
+<p data-original-en="When None, the full embedding dimension from the model is returned.">언제 <code class="docutils literal notranslate"><span class="pre">None</span></code>, 모형에서 가득 차있는 embedding 차원은 돌려보냅니다.</p>
+<p data-original-en="This parameter is useful for:">이 매개변수는 다음과 같은 경우에 유용합니다:</p>
 <ul class="simple">
-<li><p>저장 공간 요구 사항 감소</p></li>
-<li><p>downstream 유사성 계산 가속화</p></li>
-<li><p>다른 시스템과의 호환성을 위한 embedding 차원 일치</p></li>
+<li><p data-original-en="Reducing storage requirements">저장 공간 요구 사항 감소</p></li>
+<li><p data-original-en="Speeding up downstream similarity computations">downstream 유사성 계산 가속화</p></li>
+<li><p data-original-en="Matching embedding dimensions for compatibility with other systems">다른 시스템과의 호환성을 위한 embedding 차원 일치</p></li>
 </ul>
-<p><strong>참고:</strong> 모든 모델 지원 치수 감소. 이 매개 변수를 사용하기 전에 모델의 기능을 확인하십시오.</p>
-<p><strong>예를 들어:</strong></p>
+<p data-original-en="Note: Not all models support dimension reduction. Check your model’s capabilities before using this parameter."><strong>참고:</strong> 모든 모델 지원 치수 감소. 이 매개 변수를 사용하기 전에 모델의 기능을 확인하십시오.</p>
+<p data-original-en="Example:"><strong>예를 들어:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">PoolingParams</span>
 
 <span class="c1"># Reduce to 256 dimensions</span>

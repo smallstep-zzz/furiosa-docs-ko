@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -291,26 +291,26 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="llama-3-3">
-<span id="furiosa-llm-model-llama-3-3"></span><h1>라마 3.3<a class="headerlink" href="#llama-3-3" title="Link to this heading">#</a></h1>
-<p><a class="reference external" href="https://huggingface.co/meta-llama">라마 3.3</a> Meta의 instruction-tuned, auto-regressive dense 변압기는 다국어 대화, 다음, 그리고 공구 사용법을 위해, 다량 큰 모형과 더불어 질 경쟁으로 낙관된 입니다.</p>
-<p>Furiosa-LLM는 Llama 3.3를 실행 <strong>FP8</strong> RedHatAI FP8 동적 레시피를 사용하여
+<span id="furiosa-llm-model-llama-3-3"></span><h1 data-original-en="Llama 3.3">라마 3.3<a class="headerlink" href="#llama-3-3" title="Link to this heading">#</a></h1>
+<p data-original-en="Llama 3.3 is Meta’s instruction-tuned, auto-regressive dense transformer optimized for multilingual dialogue, instruction following, and tool usage, with quality competitive with much larger models."><a class="reference external" href="https://huggingface.co/meta-llama">라마 3.3</a> Meta의 instruction-tuned, auto-regressive dense 변압기는 다국어 대화, 다음, 그리고 공구 사용법을 위해, 다량 큰 모형과 더불어 질 경쟁으로 낙관된 입니다.</p>
+<p data-original-en="Furiosa-LLM runs Llama 3.3 in FP8 using the RedHatAI FP8-dynamic recipe (static FP8 weights with dynamic FP8 activation quantization). FuriosaAI publishes a pre-compiled build under the furiosa-ai organization on the Hugging Face Hub, shipping a Furiosa Executable Bundle (FXB) for running it on FuriosaAI RNGD with Furiosa-LLM. The same weights also run on other frameworks (such as vLLM, SGLang, and Transformers); for usage with those, see the upstream model card linked below.">Furiosa-LLM는 Llama 3.3를 실행 <strong>FP8</strong> RedHatAI FP8 동적 레시피를 사용하여
 (정적 FP8 가중치와 동적 FP8 활성화 quantization). FuriosaAI는 다음을 게시합니다.
 <a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> 구성 요소가 Hugging Face 허브에 연결됨</a>, Furiosa 실행 가능한 번들 (FXB)를 배송하여 실행
 <a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> Furiosa-LLM로. 동일한 무게는 또한 다른 기구 (vLLM, SGLang 및 변압기와 같은); 그와 함께 사용을 위해, 아래에 연결되는 상류 모형 카드를 보십시오.</p>
-<p>더 작은 8B 모델의 경우, 다음을 참조하세요. <a class="reference internal" href="llama-3.1.html"><span class="doc">라마 3.1</span></a>.</p>
+<p data-original-en="For the smaller 8B model see Llama 3.1.">더 작은 8B 모델의 경우, 다음을 참조하세요. <a class="reference internal" href="llama-3.1.html"><span class="doc">라마 3.1</span></a>.</p>
 <section id="available-models">
-<h2>사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Available Models">사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>모델</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Model">모델</p></th>
 <th class="head"><p>Quantization</p></th>
-<th class="head"><p>RNGD 카드</p></th>
-<th class="head"><p>노트</p></th>
+<th class="head"><p data-original-en="RNGD cards">RNGD 카드</p></th>
+<th class="head"><p data-original-en="Notes">노트</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Llama-3.3-70B-Instruct-FP8-dynamic"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.3-70B-Instruct-FP8-dynamic</span></code></a></p></td>
-<td><p>FP8 (동동)</p></td>
+<td><p data-original-en="FP8 (dynamic)">FP8 (동동)</p></td>
 <td><p>4</p></td>
 <td><p>70B instruction-tuned</p></td>
 </tr>
@@ -318,29 +318,29 @@ html
 </table>
 </div>
 <ul class="simple">
-<li><p><strong>건축:</strong> Llama 3.3 (거밀) <code class="docutils literal notranslate"><span class="pre">LlamaForCausalLM</span></code></p></li>
-<li><p><strong>입력 / 출력:</strong> 텍스트 / 텍스트</p></li>
-<li><p><strong>Quantization:</strong> 선형 (Transformer 구획) 무게는 quantized 입니다 <strong>FP8</strong> (정적) 및 활성화에 사용 <strong>동적 FP8 quantization</strong> runtime (per-token, 오프라인 보정 없이)에서.</p></li>
+<li><p data-original-en="Architecture: Llama 3.3 (dense), LlamaForCausalLM"><strong>건축:</strong> Llama 3.3 (거밀) <code class="docutils literal notranslate"><span class="pre">LlamaForCausalLM</span></code></p></li>
+<li><p data-original-en="Input / Output: Text / Text"><strong>입력 / 출력:</strong> 텍스트 / 텍스트</p></li>
+<li><p data-original-en="Quantization: The linear (Transformer block) weights are quantized to FP8 (static), and activations use dynamic FP8 quantization at runtime (per-token, without offline calibration)."><strong>Quantization:</strong> 선형 (Transformer 구획) 무게는 quantized 입니다 <strong>FP8</strong> (정적) 및 활성화에 사용 <strong>동적 FP8 quantization</strong> runtime (per-token, 오프라인 보정 없이)에서.</p></li>
 </ul>
 </section>
 <section id="usage">
-<h2>사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p>Furiosa-LLM를 사용하여이 모델을 실행하려면 아래 예제 명령을 따르십시오
+<h2 data-original-en="Usage">사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p data-original-en="To run this model with Furiosa-LLM, follow the example commands below after installing Furiosa-LLM and its prerequisites.">Furiosa-LLM를 사용하여이 모델을 실행하려면 아래 예제 명령을 따르십시오
 <a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>.</p>
 <section id="launch-the-server">
-<h3>서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
-<p>모델을 봉사하는 가장 간단한 방법은 다음과 같습니다.</p>
+<h3 data-original-en="Launch the server">서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
+<p data-original-en="The simplest way to serve the model is:">모델을 봉사하는 가장 간단한 방법은 다음과 같습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Launch the server, listening on port 8000 by default</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Llama-3.3-70B-Instruct-FP8-dynamic
 </pre></div>
 </div>
-<p>또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">llama3_json</span></code> tool-call 파서 (Llama 3 시리즈에 의해 사용되는 파서):</p>
+<p data-original-en="To also enable tool (function) calling, add the llama3_json tool-call parser (the parser used by the Llama 3 series):">또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">llama3_json</span></code> tool-call 파서 (Llama 3 시리즈에 의해 사용되는 파서):</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Llama-3.3-70B-Instruct-FP8-dynamic<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--enable-auto-tool-choice<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--tool-call-parser<span class="w"> </span>llama3_json
 </pre></div>
 </div>
-<p>서버가 준비되면 다음을 볼 수 있습니다.</p>
+<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음을 볼 수 있습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>INFO:<span class="w">     </span>Started<span class="w"> </span>server<span class="w"> </span>process<span class="w"> </span><span class="o">[</span><span class="m">27507</span><span class="o">]</span>
 INFO:<span class="w">     </span>Waiting<span class="w"> </span><span class="k">for</span><span class="w"> </span>application<span class="w"> </span>startup.
 INFO:<span class="w">     </span>Application<span class="w"> </span>startup<span class="w"> </span>complete.
@@ -349,8 +349,8 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </section>
 <section id="basic-usage">
-<h3>기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
-<p>서버는 OpenAI 호환 API를 노출합니다. 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>:</p>
+<h3 data-original-en="Basic Usage">기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="The server exposes an OpenAI-compatible API. You can send a request with curl:">서버는 OpenAI 호환 API를 노출합니다. 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -362,8 +362,8 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </section>
 <section id="advanced-usage">
-<h3>발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
-<p><strong>도구 호출.</strong> 서버를 [구체적인 정보 삽입]을 사용하여 시작할 때
+<h3 data-original-en="Advanced Usage">발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="Tool calling. With the server launched using --enable-auto-tool-choice --tool-call-parser llama3_json (see Launch the server), pass tools in the request and let the model decide when to call them. See the Tool Calling guide for a complete client example and details on tool-choice options."><strong>도구 호출.</strong> 서버를 [구체적인 정보 삽입]을 사용하여 시작할 때
 <code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span> <span class="pre">--tool-call-parser</span> <span class="pre">llama3_json</span></code> ( 참조)
 <a class="reference internal" href="#launch-the-server">서버를 시작하세요</a>), 통과 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 요청에서 모델을 결정할 때 호출합니다. 참조
 <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출 가이드</a>
@@ -371,11 +371,11 @@ tool-choice 옵션에 대한 완벽한 클라이언트 예 및 세부 사항.</p
 </section>
 </section>
 <section id="learn-more">
-<h2>더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Learn more">더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
-<li><p>전류 모델 카드: <a class="reference external" href="https://huggingface.co/RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic">RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic</a></p></li>
+<li><p data-original-en="Tool Calling — parsers, tool-choice options, and more examples"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
+<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference and serving options"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
+<li><p data-original-en="Upstream model card: RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic">전류 모델 카드: <a class="reference external" href="https://huggingface.co/RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic">RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic</a></p></li>
 </ul>
 </section>
 </section>

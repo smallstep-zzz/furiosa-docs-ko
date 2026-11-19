@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -293,49 +293,49 @@ html
 <article class="bd-article">
 <section id="gpt-oss">
 <span id="furiosa-llm-model-gpt-oss"></span><h1>GPT-OSS<a class="headerlink" href="#gpt-oss" title="Link to this heading">#</a></h1>
-<p><a class="reference external" href="https://huggingface.co/openai">GPT-OSS</a> OpenAI의 open-weight 이유 모델의 가족입니다. 그들은 auto-regressive입니다 <strong>Mixture-of-Experts (MoE)</strong>
+<p data-original-en="GPT-OSS is OpenAI’s family of open-weight reasoning models. They are auto-regressive Mixture-of-Experts (MoE) transformers that emit responses in the harmony response format, separating the model’s chain-of-thought reasoning from its final answer and carrying native support for tool calling and configurable reasoning effort."><a class="reference external" href="https://huggingface.co/openai">GPT-OSS</a> OpenAI의 open-weight 이유 모델의 가족입니다. 그들은 auto-regressive입니다 <strong>Mixture-of-Experts (MoE)</strong>
 변압기는 응답을 방출
 <a class="reference external" href="https://github.com/openai/harmony">harmony 응답 형식</a>모델의 chain-of-thought를 분리하여 최종 응답과 툴 호출 및 구성 가능한 소싱 노력에 대한 기본 지원을 수행하십시오.</p>
-<p>Furiosa-LLM는 GPT-OSS에서 실행되며 <strong>MXFP4</strong> (MoE 전문가 중량은 상류 GPT-OSS 릴리스의 MXFP4 형식을 사용; 관심, 라우터 및 embeddings 더 높은 정밀도에 체류). FuriosaAI는 pre-compiled 빌드를 출판
+<p data-original-en="Furiosa-LLM runs GPT-OSS in MXFP4 (the MoE expert weights use the MXFP4 format of the upstream GPT-OSS release; attention, router, and embeddings stay in higher precision). FuriosaAI publishes pre-compiled builds under the furiosa-ai organization on the Hugging Face Hub, each shipping a Furiosa Executable Bundle (FXB) for running it on FuriosaAI RNGD with Furiosa-LLM. The same upstream weights also run on other frameworks (such as vLLM, SGLang, and Transformers); for usage with those, see the upstream model cards linked below.">Furiosa-LLM는 GPT-OSS에서 실행되며 <strong>MXFP4</strong> (MoE 전문가 중량은 상류 GPT-OSS 릴리스의 MXFP4 형식을 사용; 관심, 라우터 및 embeddings 더 높은 정밀도에 체류). FuriosaAI는 pre-compiled 빌드를 출판
 <a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> 구성 요소가 Hugging Face 허브에 연결됨</a>, 각 발송 Furiosa 실행 가능한 번들 (FXB)에 그것을 달리기를 위해
 <a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> Furiosa-LLM로. 동일한 상류 무게는 또한 다른 기구 (vLLM, SGLang 및 변압기와 같은); 그와 함께 사용을 위해, 아래에 연결되는 상류 모형 카드를 보십시오.</p>
 <section id="available-models">
-<h2>사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Available Models">사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>모델</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Model">모델</p></th>
 <th class="head"><p>Quantization</p></th>
-<th class="head"><p>RNGD 카드</p></th>
-<th class="head"><p>노트</p></th>
+<th class="head"><p data-original-en="RNGD cards">RNGD 카드</p></th>
+<th class="head"><p data-original-en="Notes">노트</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/gpt-oss-20b"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/gpt-oss-20b</span></code></a></p></td>
 <td><p>MXFP4</p></td>
 <td><p>1</p></td>
-<td><p>더 낮은 latency, 지역/특별한 사용</p></td>
+<td><p data-original-en="Lower latency, local / specialized use">더 낮은 latency, 지역/특별한 사용</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/gpt-oss-120b"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/gpt-oss-120b</span></code></a></p></td>
 <td><p>MXFP4</p></td>
 <td><p>4</p></td>
-<td><p>생산, general-purpose, 높은 이유</p></td>
+<td><p data-original-en="Production, general-purpose, high reasoning">생산, general-purpose, 높은 이유</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <ul class="simple">
-<li><p><strong>건축:</strong> GPT-OSS (Mixture-of-Experts), <code class="docutils literal notranslate"><span class="pre">GptOssForCausalLM</span></code></p></li>
-<li><p><strong>입력 / 출력:</strong> 텍스트 / 텍스트</p></li>
-<li><p><strong>Quantization:</strong> MoE 전문가 중량은 양산됩니다. <strong>MXFP4</strong>, upstream GPT-OSS 릴리스에 의해 사용되는 형식. 나머지 구성 요소 (attention, router, embeddings) 높은 정밀도에 남아.</p></li>
+<li><p data-original-en="Architecture: GPT-OSS (Mixture-of-Experts), GptOssForCausalLM"><strong>건축:</strong> GPT-OSS (Mixture-of-Experts), <code class="docutils literal notranslate"><span class="pre">GptOssForCausalLM</span></code></p></li>
+<li><p data-original-en="Input / Output: Text / Text"><strong>입력 / 출력:</strong> 텍스트 / 텍스트</p></li>
+<li><p data-original-en="Quantization: The MoE expert weights are quantized to MXFP4, the format used by the upstream GPT-OSS release. The remaining components (attention, router, and embeddings) stay in higher precision."><strong>Quantization:</strong> MoE 전문가 중량은 양산됩니다. <strong>MXFP4</strong>, upstream GPT-OSS 릴리스에 의해 사용되는 형식. 나머지 구성 요소 (attention, router, embeddings) 높은 정밀도에 남아.</p></li>
 </ul>
 </section>
 <section id="usage">
-<h2>사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p>Furiosa-LLM와 함께 이 모델을 실행하려면, 다음의 예제 명령을 따르십시오.
+<h2 data-original-en="Usage">사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p data-original-en="To run these models with Furiosa-LLM, follow the example commands below after installing Furiosa-LLM and its prerequisites.">Furiosa-LLM와 함께 이 모델을 실행하려면, 다음의 예제 명령을 따르십시오.
 <a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>.</p>
 <section id="launch-the-server">
-<h3>서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
-<p>모델들을 통과시키세요 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자. Reasoning은 상자에서 작동합니다 (합성 체재는 auto-detected입니다), 그래서 아니오 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span></code> flag가 필요합니다. 이유 내용이 별도의 필드에 반환됩니다 (see
+<h3 data-original-en="Launch the server">서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
+<p data-original-en="Pass the model’s furiosa-ai/&lt;repo&gt; identifier. Reasoning works out of the box (the harmony format is auto-detected), so no --reasoning-parser flag is needed; the reasoning content is returned in a separate field (see Basic Usage below):">모델들을 통과시키세요 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자. Reasoning은 상자에서 작동합니다 (합성 체재는 auto-detected입니다), 그래서 아니오 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span></code> flag가 필요합니다. 이유 내용이 별도의 필드에 반환됩니다 (see
 <a class="reference internal" href="#basic-usage">기본 사용</a> 아래):</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># gpt-oss-20b — single RNGD card</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/gpt-oss-20b
@@ -345,13 +345,13 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/gpt-o
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/gpt-oss-120b
 </pre></div>
 </div>
-<p>또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">openai</span></code> tool-call 파서:</p>
+<p data-original-en="To also enable tool (function) calling, add the openai tool-call parser:">또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">openai</span></code> tool-call 파서:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/gpt-oss-120b<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--enable-auto-tool-choice<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--tool-call-parser<span class="w"> </span>openai
 </pre></div>
 </div>
-<p>서버가 준비되면 다음을 볼 수 있습니다.</p>
+<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음을 볼 수 있습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>INFO:<span class="w">     </span>Started<span class="w"> </span>server<span class="w"> </span>process<span class="w"> </span><span class="o">[</span><span class="m">27507</span><span class="o">]</span>
 INFO:<span class="w">     </span>Waiting<span class="w"> </span><span class="k">for</span><span class="w"> </span>application<span class="w"> </span>startup.
 INFO:<span class="w">     </span>Application<span class="w"> </span>startup<span class="w"> </span>complete.
@@ -360,8 +360,8 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </section>
 <section id="basic-usage">
-<h3>기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
-<p>서버는 OpenAI 호환 API를 노출합니다. 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>
+<h3 data-original-en="Basic Usage">기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="The server exposes an OpenAI-compatible API. You can send a request with curl (replace the model id with the variant you launched):">서버는 OpenAI 호환 API를 노출합니다. 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>
 (당신은 시작된 변종으로 모델 ID를 배치):</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
@@ -372,10 +372,10 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
 </pre></div>
 </div>
-<p>GPT-OSS 모델은 최종 응답에서 별도로 소감을 반환합니다.</p>
+<p data-original-en="GPT-OSS models return their reasoning separately from the final answer:">GPT-OSS 모델은 최종 응답에서 별도로 소감을 반환합니다.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">response.choices[].message.reasoning</span></code> (non-streaming)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">response.choices[].delta.reasoning</span></code> [ 스트리밍 ]</p></li>
+<li><p data-original-en="response.choices[].delta.reasoning (streaming)"><code class="docutils literal notranslate"><span class="pre">response.choices[].delta.reasoning</span></code> [ 스트리밍 ]</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
@@ -391,15 +391,15 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </pre></div>
 </div>
 <blockquote>
-<div><p><strong>참고:</strong> The <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 필드는 OpenAI API 사양의 일부가 아니지만 다양한 컨벤션 OpenAI
+<div><p data-original-en="Note: The reasoning field is not part of the OpenAI API specification but is a widely followed convention OpenAI recommends (also used by the OpenAI Agents SDK, vLLM, and others). It appears only in responses that contain reasoning content; accessing it otherwise raises an AttributeError."><strong>참고:</strong> The <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 필드는 OpenAI API 사양의 일부가 아니지만 다양한 컨벤션 OpenAI
 <a class="reference external" href="https://developers.openai.com/cookbook/articles/gpt-oss/verifying-implementations#chat-completions">추천합니다</a>
 (또한 OpenAI Agents SDK, vLLM 및 기타)에 의해 사용됩니다. 그것은 단지 응답에서만 내용이 포함; 접근 그렇지 않으면 올리기
 <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>.</p>
 </div></blockquote>
 </section>
 <section id="advanced-usage">
-<h3>발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
-<p><strong>추론 노력.</strong> 모델은 왜 많은 노력이 어떻게 소비하는지 제어 할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">reasoning_effort</span></code> 파라미터 (<code class="docutils literal notranslate"><span class="pre">"low"</span></code>, <code class="docutils literal notranslate"><span class="pre">"medium"</span></code>, or <code class="docutils literal notranslate"><span class="pre">"high"</span></code>):</p>
+<h3 data-original-en="Advanced Usage">발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
+<p data-original-en='Reasoning effort. You can control how much effort the model spends reasoning with the reasoning_effort parameter ("low", "medium", or "high"):'><strong>추론 노력.</strong> 모델은 왜 많은 노력이 어떻게 소비하는지 제어 할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">reasoning_effort</span></code> 파라미터 (<code class="docutils literal notranslate"><span class="pre">"low"</span></code>, <code class="docutils literal notranslate"><span class="pre">"medium"</span></code>, or <code class="docutils literal notranslate"><span class="pre">"high"</span></code>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Request high reasoning effort</span>
 <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">chat</span><span class="o">.</span><span class="n">completions</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
     <span class="n">model</span><span class="o">=</span><span class="s2">"furiosa-ai/gpt-oss-120b"</span><span class="p">,</span>
@@ -409,28 +409,28 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>도구 호출.</strong> 그 중 <a class="reference internal" href="#launch-the-server">서버 예제</a>,
+<p data-original-en='Tool calling. In the server example, --enable-auto-tool-choice enables automatic tool selection and --tool-call-parser openai selects the GPT-OSS tool-call parser. Supply function definitions in tools and use tool_choice="auto" to let the model decide when to call them.'><strong>도구 호출.</strong> 그 중 <a class="reference internal" href="#launch-the-server">서버 예제</a>,
 <code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span></code> 자동 공구 선택 및 활성화
 <code class="docutils literal notranslate"><span class="pre">--tool-call-parser</span> <span class="pre">openai</span></code> GPT-OSS tool-call 파서 선택. 공급 기능 정의 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 그리고 사용 <code class="docutils literal notranslate"><span class="pre">tool_choice="auto"</span></code> 모델을 결정할 때 호출합니다.</p>
-<p>See <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html#tool-choice-options">도구 선택 옵션</a>
+<p data-original-en="See Tool Choice Options for other selection modes, streaming support, and a complete client example.">See <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html#tool-choice-options">도구 선택 옵션</a>
 다른 선택 모드, 스트리밍 지원 및 전체 클라이언트 예제.</p>
 </section>
 </section>
 <section id="limitations">
-<span id="furiosa-llm-model-gpt-oss-limitations"></span><h2>제한<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
-<p>Furiosa-LLM에서, GPT-OSS Chat Completions는 요청이 어떤 용도를 사용할 때 이유를 반환하지 않습니다:</p>
+<span id="furiosa-llm-model-gpt-oss-limitations"></span><h2 data-original-en="Limitations">제한<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<p data-original-en="In Furiosa-LLM, GPT-OSS Chat Completions do not return reasoning when the request uses any of the following:">Furiosa-LLM에서, GPT-OSS Chat Completions는 요청이 어떤 용도를 사용할 때 이유를 반환하지 않습니다:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tool_choice="required"</span></code> 또는 이름 지정된 함수의 선택.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">structured_outputs</span></code> sampling 매개 변수에 명시적으로 설정.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">response_format</span></code> 과 <code class="docutils literal notranslate"><span class="pre">type="json_object"</span></code> or <code class="docutils literal notranslate"><span class="pre">type="json_schema"</span></code>.</p></li>
+<li><p data-original-en='tool_choice="required" or a named function choice.'><code class="docutils literal notranslate"><span class="pre">tool_choice="required"</span></code> 또는 이름 지정된 함수의 선택.</p></li>
+<li><p data-original-en="structured_outputs explicitly set in the sampling parameters."><code class="docutils literal notranslate"><span class="pre">structured_outputs</span></code> sampling 매개 변수에 명시적으로 설정.</p></li>
+<li><p data-original-en='response_format with type="json_object" or type="json_schema".'><code class="docutils literal notranslate"><span class="pre">response_format</span></code> 과 <code class="docutils literal notranslate"><span class="pre">type="json_object"</span></code> or <code class="docutils literal notranslate"><span class="pre">type="json_schema"</span></code>.</p></li>
 </ul>
 </section>
 <section id="learn-more">
-<h2>더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Learn more">더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
-<li><p><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
-<li><p>상류 모델 카드: <a class="reference external" href="https://huggingface.co/openai/gpt-oss-20b">openai/gpt-oss-20b</a>, <a class="reference external" href="https://huggingface.co/openai/gpt-oss-120b">openai/gpt-oss-120b</a></p></li>
+<li><p data-original-en="Tool Calling — parsers, tool-choice options, and more examples"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
+<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference and serving options"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
+<li><p data-original-en="Upstream model cards: openai/gpt-oss-20b, openai/gpt-oss-120b">상류 모델 카드: <a class="reference external" href="https://huggingface.co/openai/gpt-oss-20b">openai/gpt-oss-20b</a>, <a class="reference external" href="https://huggingface.co/openai/gpt-oss-120b">openai/gpt-oss-120b</a></p></li>
 </ul>
 </section>
 </section>

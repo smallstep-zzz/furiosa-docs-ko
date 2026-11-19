@@ -62,7 +62,7 @@ html
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="en" name="docsearch:language"/>
 <meta content="2026.4.1" name="docsearch:version"/>
-</head>
+<link data-original-tooltip-asset="" href="../../_static/original-tooltip.css?v=1" rel="stylesheet"/><script data-original-tooltip-asset="" defer="" src="../../_static/original-tooltip.js?v=1"></script></head>
 <body data-bs-root-margin="0px 0px -60%" data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-default-mode="" data-offset="180">
 <div class="skip-link d-print-none" id="pst-skip-link"><a href="#main-content">주요 내용으로 이동</a></div>
 <div id="pst-scroll-pixel-helper"></div>
@@ -292,48 +292,48 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="installing-furiosa-dra-driver">
-<h1>Furiosa DRA Driver 설치<a class="headerlink" href="#installing-furiosa-dra-driver" title="Link to this heading">#</a></h1>
+<h1 data-original-en="Installing Furiosa DRA Driver">Furiosa DRA Driver 설치<a class="headerlink" href="#installing-furiosa-dra-driver" title="Link to this heading">#</a></h1>
 <div class="admonition note">
-<p class="admonition-title">참고</p>
-<p>Furiosa DRA Driver는 알파 단계에 있으며, 그 특징은 실험적이며 향후 릴리스에서 변경할 수 있습니다.</p>
-<p>사용자는 driver가 완전히 안정되거나 feature-complete가 될 수 없다는 것을 인식하고 생산 환경에서 배포 할 때주의를 기울여야합니다.</p>
+<p class="admonition-title" data-original-en="Note">참고</p>
+<p data-original-en="Furiosa DRA Driver is in alpha stage, which means its features are experimental and may change in future releases.">Furiosa DRA Driver는 알파 단계에 있으며, 그 특징은 실험적이며 향후 릴리스에서 변경할 수 있습니다.</p>
+<p data-original-en="Users should be aware that the driver may not be fully stable or feature-complete, and they should exercise caution when deploying it in production environments.">사용자는 driver가 완전히 안정되거나 feature-complete가 될 수 없다는 것을 인식하고 생산 환경에서 배포 할 때주의를 기울여야합니다.</p>
 </div>
 <section id="furiosa-dra-driver">
 <h2>Furiosa DRA Driver<a class="headerlink" href="#furiosa-dra-driver" title="Link to this heading">#</a></h2>
-<p>Furiosa DRA Driver는 구현합니다
+<p data-original-en="The Furiosa DRA Driver implements the Kubernetes DRA interface for FuriosaAI NPU devices, and its features are as follows:">Furiosa DRA Driver는 구현합니다
 <a class="reference external" href="https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/">Kubernetes DRA</a> FuriosaAI NPU 장치를 위한 공용영역, 그리고 그것의 특징은 다음과 같이 입니다:</p>
 <ul class="simple">
-<li><p>FuriosaAI NPU 기기를 발견하고 DRA 리소스로 Kubernetes 클러스터에 등록하십시오.</p></li>
-<li><p>장치의 건강을 추적하고 Kubernetes 클러스터에보고.</p></li>
-<li><p>Furiosa NPU 장치의 상단에 AI 워크로드를 실행하십시오.</p></li>
+<li><p data-original-en="Discovering the FuriosaAI NPU devices and registering to a Kubernetes cluster as DRA resources.">FuriosaAI NPU 기기를 발견하고 DRA 리소스로 Kubernetes 클러스터에 등록하십시오.</p></li>
+<li><p data-original-en="Tracking the health of the devices and reporting to a Kubernetes cluster.">장치의 건강을 추적하고 Kubernetes 클러스터에보고.</p></li>
+<li><p data-original-en="Running AI workload on the top of the Furiosa NPU devices within a Kubernetes cluster.">Furiosa NPU 장치의 상단에 AI 워크로드를 실행하십시오.</p></li>
 </ul>
 </section>
 <section id="prerequisites">
-<h2>전제 조건<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
-<p>Furiosa DRA Driver는 다음과 같은 필수품을 요구합니다:</p>
+<h2 data-original-en="Prerequisites">전제 조건<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p data-original-en="The Furiosa DRA Driver requires the following prerequisites:">Furiosa DRA Driver는 다음과 같은 필수품을 요구합니다:</p>
 <ul class="simple">
-<li><p>Kubernetes <strong>1.34+</strong> 필요해요.</p>
+<li><p data-original-en="Kubernetes 1.34+ is required.">Kubernetes <strong>1.34+</strong> 필요해요.</p>
 <ul>
-<li><p>이 경우, <a class="reference external" href="https://github.com/cncf-tags/container-device-interface">CDI</a>
+<li><p data-original-en="In this case, CDI must be enabled on each node.">이 경우, <a class="reference external" href="https://github.com/cncf-tags/container-device-interface">CDI</a>
 각 노드에서 활성화해야 합니다.</p></li>
-<li><p>시작으로 <a class="reference external" href="https://containerd.io/">컨테이너</a> <strong>2.0</strong>, CDI는 기본적으로 활성화됩니다.</p></li>
+<li><p data-original-en="Starting from containerd 2.0, CDI is enabled by default.">시작으로 <a class="reference external" href="https://containerd.io/">컨테이너</a> <strong>2.0</strong>, CDI는 기본적으로 활성화됩니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="deploying-furiosa-dra-driver-with-helm">
-<h2>Helm와 Furiosa DRA Driver 배포<a class="headerlink" href="#deploying-furiosa-dra-driver-with-helm" title="Link to this heading">#</a></h2>
-<p>Furiosa DRA Driver Helm 차트는 사용할 수 있습니다
+<h2 data-original-en="Deploying Furiosa DRA Driver with Helm">Helm와 Furiosa DRA Driver 배포<a class="headerlink" href="#deploying-furiosa-dra-driver-with-helm" title="Link to this heading">#</a></h2>
+<p data-original-en="The Furiosa DRA Driver Helm chart is available at furiosa-ai/helm-charts.">Furiosa DRA Driver Helm 차트는 사용할 수 있습니다
 <a class="github reference external" href="https://github.com/furiosa-ai/helm-charts">furiosa-ai/helm-charts</a>.</p>
-<p>설치를 구성하려면 수정할 수 있습니다.
+<p data-original-en="To configure deployment as you need, you can modify charts/furiosa-dra-driver/values.yaml.">설치를 구성하려면 수정할 수 있습니다.
 <code class="docutils literal notranslate"><span class="pre">charts/furiosa-dra-driver/values.yaml</span></code>.</p>
-<p>다음 명령을 실행하여 Furiosa DRA Driver를 배포할 수 있습니다.</p>
+<p data-original-en="You can deploy the Furiosa DRA Driver by running the following commands:">다음 명령을 실행하여 Furiosa DRA Driver를 배포할 수 있습니다.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>furiosa<span class="w"> </span>https://furiosa-ai.github.io/helm-charts
 helm<span class="w"> </span>repo<span class="w"> </span>update
 helm<span class="w"> </span>install<span class="w"> </span>furiosa-dra-driver<span class="w"> </span>furiosa/furiosa-dra-driver<span class="w"> </span>-n<span class="w"> </span>furiosa-system
 </pre></div>
 </div>
-<p>DRA Driver가 성공적으로 배포되면 다음 명령을 실행하여 등록 된 FuriosaAI NPU 리소스를 볼 수 있습니다.</p>
+<p data-original-en="When DRA Driver is successfully deployed, you can see the registered FuriosaAI NPU resources by running the following command:">DRA Driver가 성공적으로 배포되면 다음 명령을 실행하여 등록 된 FuriosaAI NPU 리소스를 볼 수 있습니다.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>get<span class="w"> </span>resourceslices
 </pre></div>
 </div>
@@ -406,11 +406,11 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-dra-driver<sp
 </div>
 </section>
 <section id="available-attributes">
-<h2>사용 가능한 속성<a class="headerlink" href="#available-attributes" title="Link to this heading">#</a></h2>
-<p>아래 테이블 목록은 FuriosaAI NPU 장치에 대한 속성을 사용할 수 있습니다.</p>
-<p>연결해야 합니다 <code class="docutils literal notranslate"><span class="pre">npu.furiosa.ai</span></code> 각 속성 키의 앞에에서 사용할 때 <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code>.</p>
+<h2 data-original-en="Available attributes">사용 가능한 속성<a class="headerlink" href="#available-attributes" title="Link to this heading">#</a></h2>
+<p data-original-en="Below table lists available attributes for FuriosaAI NPU devices.">아래 테이블 목록은 FuriosaAI NPU 장치에 대한 속성을 사용할 수 있습니다.</p>
+<p data-original-en="You need to attach npu.furiosa.ai at the front of each attribute key when you use them in ResourceClaimTemplate.">연결해야 합니다 <code class="docutils literal notranslate"><span class="pre">npu.furiosa.ai</span></code> 각 속성 키의 앞에에서 사용할 때 <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code>.</p>
 <ul class="simple">
-<li><p>예외는 다음과 같습니다. <code class="docutils literal notranslate"><span class="pre">resource.kubernetes.io/pcieRoot</span></code> and <code class="docutils literal notranslate"><span class="pre">resource.kubernetes.io/pciBusID</span></code>Kubernetes에 의해 정의된 표준 특성인 .</p></li>
+<li><p data-original-en="The only exceptions are resource.kubernetes.io/pcieRoot and resource.kubernetes.io/pciBusID, which are standard attributes defined by Kubernetes.">예외는 다음과 같습니다. <code class="docutils literal notranslate"><span class="pre">resource.kubernetes.io/pcieRoot</span></code> and <code class="docutils literal notranslate"><span class="pre">resource.kubernetes.io/pciBusID</span></code>Kubernetes에 의해 정의된 표준 특성인 .</p></li>
 </ul>
 <div class="pst-scrollable-table-container"><table class="table table-center">
 <colgroup>
@@ -419,50 +419,50 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-dra-driver<sp
 <col style="width: 47.3%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p>속성</p></th>
-<th class="head"><p>종류</p></th>
-<th class="head"><p>설명</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Attribute">속성</p></th>
+<th class="head"><p data-original-en="Type">종류</p></th>
+<th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">index</span></code></p></td>
 <td><p>int</p></td>
-<td><p>NPU 장치의 인덱스</p></td>
+<td><p data-original-en="The index of the NPU device">NPU 장치의 인덱스</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">uuid</span></code></p></td>
-<td><p>문자열</p></td>
-<td><p>UUID 장치의 NPU 장치</p></td>
+<td><p data-original-en="string">문자열</p></td>
+<td><p data-original-en="The UUID of the NPU device">UUID 장치의 NPU 장치</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">arch</span></code></p></td>
-<td><p>문자열</p></td>
-<td><p>NPU 장치의 아키텍처</p></td>
+<td><p data-original-en="string">문자열</p></td>
+<td><p data-original-en="The architecture of the NPU device">NPU 장치의 아키텍처</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">driverVersion</span></code></p></td>
-<td><p>문자열</p></td>
-<td><p>semver에서 대표되는 driver 버전</p></td>
+<td><p data-original-en="string">문자열</p></td>
+<td><p data-original-en="The driver version represented in semver">semver에서 대표되는 driver 버전</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">numaNode</span></code></p></td>
 <td><p>int</p></td>
-<td><p>NPU 장치가에 속한 NUMA 노드 값</p></td>
+<td><p data-original-en="The NUMA node value that NPU device belongs to">NPU 장치가에 속한 NUMA 노드 값</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">resource.kubernetes.io/pciBusID</span></code></p></td>
-<td><p>문자열</p></td>
-<td><p>NPU 장치의 PCIe 버스 ID</p></td>
+<td><p data-original-en="string">문자열</p></td>
+<td><p data-original-en="The PCIe bus ID of the NPU device">NPU 장치의 PCIe 버스 ID</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">resource.kubernetes.io/pcieRoot</span></code></p></td>
-<td><p>문자열</p></td>
-<td><p>NPU 장치의 pcieRoot 값</p></td>
+<td><p data-original-en="string">문자열</p></td>
+<td><p data-original-en="The pcieRoot value of the NPU device">NPU 장치의 pcieRoot 값</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
 <section id="example-usage">
-<h2>예제 사용<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Example Usage">예제 사용<a class="headerlink" href="#example-usage" title="Link to this heading">#</a></h2>
 <section id="request-single-npu">
-<h3>단일 요청 NPU<a class="headerlink" href="#request-single-npu" title="Link to this heading">#</a></h3>
-<p>아래 예제는 Pod spec에서 단일 FuriosaAI NPU를 요청하는 방법을 보여줍니다. <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code>.</p>
-<p>먼저, <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code> 단일 NPU 장치에 대한 요청을 정의합니다. 그런 다음 NPU 리소스를 주장하기 위해 템플릿을 참조하는 파드를 만듭니다.</p>
+<h3 data-original-en="Request single NPU">단일 요청 NPU<a class="headerlink" href="#request-single-npu" title="Link to this heading">#</a></h3>
+<p data-original-en="Below example shows how to request single FuriosaAI NPU in a Pod spec with ResourceClaimTemplate.">아래 예제는 Pod spec에서 단일 FuriosaAI NPU를 요청하는 방법을 보여줍니다. <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code>.</p>
+<p data-original-en="First, create a ResourceClaimTemplate that defines a request for a single NPU device. Then, create a Pod that references the template to claim the NPU resource.">먼저, <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code> 단일 NPU 장치에 대한 요청을 정의합니다. 그런 다음 NPU 리소스를 주장하기 위해 템플릿을 참조하는 파드를 만듭니다.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ResourceClaimTemplate</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -512,9 +512,9 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-dra-driver<sp
 </div>
 </section>
 <section id="request-quad-npu-on-same-numa-node">
-<h3>동일 NUMA 노드에서 NPU 4개를 요청합니다.<a class="headerlink" href="#request-quad-npu-on-same-numa-node" title="Link to this heading">#</a></h3>
-<p>이전 예와 마찬가지로, 예를 들어, Pod spec에서 동일한 NUMA 노드에 위치한 4 FuriosaAI NPU를 요청하는 방법을 보여줍니다.</p>
-<p>먼저, <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code> 같은 NUMA 노드에서 4 FuriosaAI NPU에 대한 요청을 정의합니다. 그런 다음 NPU 리소스를 주장하는 템플릿을 참조하는 파드를 만듭니다.</p>
+<h3 data-original-en="Request quad NPU on same NUMA node">동일 NUMA 노드에서 NPU 4개를 요청합니다.<a class="headerlink" href="#request-quad-npu-on-same-numa-node" title="Link to this heading">#</a></h3>
+<p data-original-en="Similar to the previous example, below example shows how to request four FuriosaAI NPUs that are located on the same NUMA node in a Pod spec.">이전 예와 마찬가지로, 예를 들어, Pod spec에서 동일한 NUMA 노드에 위치한 4 FuriosaAI NPU를 요청하는 방법을 보여줍니다.</p>
+<p data-original-en="First, create a ResourceClaimTemplate that defines a request for four FuriosaAI NPUs on the same NUMA node. Then, create a Pod that references the template to claim the NPU resource.">먼저, <code class="docutils literal notranslate"><span class="pre">ResourceClaimTemplate</span></code> 같은 NUMA 노드에서 4 FuriosaAI NPU에 대한 요청을 정의합니다. 그런 다음 NPU 리소스를 주장하는 템플릿을 참조하는 파드를 만듭니다.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">resource.k8s.io/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ResourceClaimTemplate</span>
 <span class="nt">metadata</span><span class="p">:</span>

@@ -113,7 +113,7 @@ html
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../overview/rngd.html">FuriosaAI RNGD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview/software_stack.html">FuriosaAI의 소프트웨어 스택</a></li>
-<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">무슨 일이야?</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">What’s New</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="release-2026.4.0.html">Furiosa SDK 해제 2026.4.0</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Furiosa SDK 릴리스 2026.3.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="release-2026.2.0.html">Furiosa SDK 릴리즈 2026.2</a></li>
@@ -123,7 +123,7 @@ html
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../overview/roadmap.html">로드맵</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">시작 해</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Get Started</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../get_started/prerequisites.html">사전 설치</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../get_started/furiosa_llm.html">Furiosa-LLM를 사용한 빠른 시작</a></li>
@@ -327,7 +327,7 @@ html
 <p>2026.3의 정의 변화는 <strong>TCL (텐서 수축 언어)</strong> 커널 프레임 워크. 모델을 추가하는 이유를 보려면 훨씬 빨리, 그것은 우리가 하나를 설명하는 데 사용하는 방법을 살펴 봅니다.</p>
 <p>이전 경로는 PyTorch 모델에서 시작, TorchDynamo와 Torch ATen ops의 FX 그래프로 추적. 이것은 빠르게 실행 모델을 얻기 위해 효과적이었지만 모델의 의도를 희석 : ATen을 통해 캡처는 fine-grained primitives로 그래프를 해독합니다. An <code class="docutils literal notranslate"><span class="pre">aten.mm</span></code>, 예를 들어, 타일링이 되고, 그 다음 요소적으로 곱하기, 그 다음  ⁇ 을 줄이고 compiler는 더 이상  ⁇ matmul ⁇ 를 보지 않고 그것을 최적화하기 전에 re-recognize을해야합니다. 그리고 축의 의미학과 오프 경계는 동일한 방식으로 흐리게됩니다. 마찬가지로 중요한 것은 모델링 단계가 compiler의 목표에 대한 RNGD의 필요성을 부착하기 위해 몇 가지 좋은 장소를 남겼습니다. 의도된 텐서 병렬화 (TP) 전략과 같은. compiler는 본질적으로 의미의 상당 부분이 이미 평평화 된 후 최적화되었습니다.</p>
 <p><strong>TCL</strong> 모델 의미와 구조를 보존하기 위해 설계되었습니다. 커널 저자가 high-level를 작성하는 데 설명 된 Python eDSL입니다. <code class="docutils literal notranslate"><span class="pre">@tcl.kernel</span></code>-장식된
-함수를 사용하여 <em>무슨 일이야?</em> 계산하고 결과를 반환 <em>how</em> 그것을 실행하기 위해 - tiling, scheduling, fusion, 하드웨어 매핑 - compiler에. 그것의 중요한 아이디어는 대우하는 것입니다 <strong>전압 수축</strong> DNN 모델이 first-class primitives로 본질적으로 의존하는 작업이므로, 모델은 그 구조의 intact와 함께 이러한 수축의 관점에서 직접 설명됩니다. 이 일치 RNGD의 언더 라이닝 <strong>텐서 수축 프로세서 (TCP)</strong> compiler가 같은 원시적 주변을 건설하고 TCL 커널은 실행 가능한 바이너리 (EDF)로 컴파일됩니다.</p>
+함수를 사용하여 <em>무엇을</em> 계산하고 결과를 반환 <em>how</em> 그것을 실행하기 위해 - tiling, scheduling, fusion, 하드웨어 매핑 - compiler에. 그것의 중요한 아이디어는 대우하는 것입니다 <strong>전압 수축</strong> DNN 모델이 first-class primitives로 본질적으로 의존하는 작업이므로, 모델은 그 구조의 intact와 함께 이러한 수축의 관점에서 직접 설명됩니다. 이 일치 RNGD의 언더 라이닝 <strong>텐서 수축 프로세서 (TCP)</strong> compiler가 같은 원시적 주변을 건설하고 TCL 커널은 실행 가능한 바이너리 (EDF)로 컴파일됩니다.</p>
 <p>이러한 설계는 다음과 같은 세 가지 방식으로 유용합니다:</p>
 <ul class="simple">
 <li><p><strong>직관적이고 compiler 친화적인 설정입니다.</strong> 저자는 스레드 레이아웃 또는 동기화보다 오히려 계산의 의미를 표현하고, TCL이 컴파일되기 때문에 도구 체인은 여러 커널을 일시 중지하고 단일 단위로 컴파일 할 수 있습니다.</p></li>
@@ -412,7 +412,7 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-8B-FP
 <section id="scoring-based-data-parallel-routing">
 <h3>Scoring-Based 데이터 병렬 라우팅<a class="headerlink" href="#scoring-based-data-parallel-routing" title="Link to this heading">#</a></h3>
 <p>prefix-aware 데이터 병렬 (DP) 라우터는 2026.2에서 2026.3로 진화 <strong>scoring-based</strong> 복제를 선택할 때 두 개의 신호를 균형시키는 정책 :
-<strong>전두환 지역</strong> (이전에는 접두사 캐시 항목과 일치하는 복제를 제외) <strong>token 발자국 부하</strong> (less-loaded 복제). 2의 상대 중량은 득점을 통해 선정됩니다. <strong>프로파일</strong>.</p>
+<strong>프롬프트 접두사 일치율(Prefix locality)</strong>과 <strong>토큰 부하(token footprint load)</strong>를 함께 고려합니다. 점수 프로파일로 두 지표의 상대 가중치를 조정합니다.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Scoring-based routing (default), balanced profile (default)</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>&lt;model&gt;<span class="w"> </span>--data-parallel-size<span class="w"> </span>&lt;N&gt;
 

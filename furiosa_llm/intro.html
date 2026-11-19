@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/intro';</script>
@@ -285,48 +285,48 @@ html
 <article class="bd-article">
 <section id="furiosa-llm">
 <span id="furiosallm"></span><h1>Furiosa-LLM<a class="headerlink" href="#furiosa-llm" title="Link to this heading">#</a></h1>
-<p data-original-en="Furiosa-LLM is a high-performance inference engine for large language models (LLMs) and multi-modal (vision-language) models. Furiosa-LLM offers state-of-the-art serving efficiency and optimizations. Key features of Furiosa-LLM include:">Furiosa-LLM은 대규모 언어 모델(LLM)과 멀티모달(Vision-Language) 모델을 위한 고성능 추론 엔진입니다. 효율적인 서빙과 다양한 최적화 기능을 제공합니다. 주요 기능은 다음과 같습니다.</p>
+<p data-original-en="Furiosa-LLM is a high-performance inference engine for large language models (LLMs) and multi-modal (vision-language) models. Furiosa-LLM offers state-of-the-art serving efficiency and optimizations. Key features of Furiosa-LLM include:">Furiosa-LLM은 대규모 언어 모델(LLM) 및 멀티모달(시각-언어) 모델에 대한 고성능 추론 엔진입니다. Furiosa-LLM은 최첨단 서비스 효율성과 최적화를 제공합니다. Furiosa-LLM의 주요 기능은 다음과 같습니다:</p>
 <ul class="simple">
-<li><p data-original-en="vLLM-compatible API (LLM, LLMEngine, AsyncLLMEngine API)">vLLM 호환 API (LLM, LLMEngine, AsyncLLMEngine API)</p></li>
-<li><p data-original-en="Text and multi-modal (vision-language) serving">텍스트 및 멀티모달(Vision-Language) 서빙</p></li>
-<li><p data-original-en="Generative and pooling model support (embedding, reranking, classification)">생성 및 pooling 모델 지원 (embedding, reranking, classification)</p></li>
-<li><p data-original-en="Efficient KV cache management with PagedAttention">PagedAttention을 이용한 효율적인 KV Cache 관리</p></li>
-<li><p data-original-en="Radix-tree prefix caching for reuse of shared prompt prefixes">공통 프롬프트 접두부를 재사용하는 Radix-tree Prefix Caching</p></li>
-<li><p data-original-en="Hierarchical prefix caching (HiCache) with KV cache offloading to host memory (experimental)">KV Cache를 호스트 메모리로 offloading하는 Hierarchical Prefix Caching (HiCache) (<strong>실험적 기능</strong>)</p></li>
-<li><p data-original-en="Hybrid KV cache for models that mix sliding-window and global attention">Sliding-window attention과 global attention을 혼합한 모델을 위한 Hybrid KV Cache</p></li>
-<li><p data-original-en="Continuous batching of incoming requests">들어오는 요청에 대한 Continuous Batching</p></li>
-<li><p data-original-en="Overlap scheduling of CPU batch preparation and NPU execution (experimental)">CPU 배치 준비와 NPU 실행을 겹치는 Overlap Scheduling (<strong>실험적 기능</strong>)</p></li>
-<li><p>Quantization: INT4, INT8, BF16, FP8, MXFP4, NVFP4</p></li>
-<li><p data-original-en="Support for data, tensor, and pipeline parallelism across multiple NPUs">여러 NPU에 걸친 data, tensor, pipeline parallelism 지원</p></li>
-<li><p data-original-en="OpenAI-compatible API server with Chat Completions and Responses APIs">Chat Completions 및 Responses API를 제공하는 OpenAI 호환 API 서버</p></li>
-<li><p data-original-en="Various decoding algorithms: greedy search, top-k/top-p, and speculative decoding (planned)">다양한 decoding 알고리즘: greedy search, top-k/top-p, speculative decoding (예정)</p></li>
-<li><p data-original-en="Tool calling and reasoning parser support">Tool calling 및 reasoning parser 지원</p></li>
-<li><p data-original-en="Structured output generation (choice, regex, json schema, grammar)">Structured output 생성 (choice, regex, JSON schema, grammar)</p></li>
-<li><p data-original-en="Chunked prefill with mixed prefill/decode batching">Prefill과 decode를 혼합 배치하는 Chunked Prefill</p></li>
-<li><p data-original-en="Prometheus metrics endpoint for serving observability">서빙 상태 관찰을 위한 Prometheus metrics endpoint</p></li>
-<li><p data-original-en="Integration with Hugging Face models and hub support">Hugging Face 모델 연동 및 Hub 지원</p></li>
+<li><p data-original-en="vLLM-compatible API (LLM, LLMEngine, AsyncLLMEngine API)">vLLM과 호환되는 API (LLM, LLMEngine, AsyncLLMEngine API)</p></li>
+<li><p data-original-en="Text and multi-modal (vision-language) serving">텍스트 및 멀티모달 (시각-언어) 서비스</p></li>
+<li><p data-original-en="Generative and pooling model support (embedding, reranking, classification)">생성 및 풀링 모델 지원 (임베딩, 재랭킹, 분류)</p></li>
+<li><p data-original-en="Efficient KV cache management with PagedAttention">PagedAttention을 사용한 효율적인 KV 캐시 관리</p></li>
+<li><p data-original-en="Radix-tree prefix caching for reuse of shared prompt prefixes">공유 프롬프트 접두사 재사용을 위한 Radix-트리 접두사 캐싱</p></li>
+<li><p data-original-en="Hierarchical prefix caching (HiCache) with KV cache offloading to host memory (experimental)">KV 캐시를 호스트 메모리로 오프로드하는 계층적 접두사 캐싱 (HiCache) (실험적)</p></li>
+<li><p data-original-en="Hybrid KV cache for models that mix sliding-window and global attention">슬라이딩 윈도우 및 글로벌 어텐션 혼합 모델을 위한 하이브리드 KV 캐시</p></li>
+<li><p data-original-en="Continuous batching of incoming requests">지속적인 요청 배치</p></li>
+<li><p data-original-en="Overlap scheduling of CPU batch preparation and NPU execution (experimental)">CPU 배치 준비 및 NPU 실행의 중첩 스케줄링 (실험적)</p></li>
+<li><p data-original-en="Quantization: INT4, INT8, BF16, FP8, MXFP4, and NVFP4">양자화: INT4, INT8, BF16, FP8, MXFP4, NVFP4</p></li>
+<li><p data-original-en="Support for data, tensor, and pipeline parallelism across multiple NPUs">여러 NPU를 통한 데이터, 텐서 및 파이프라인 병렬 처리 지원</p></li>
+<li><p data-original-en="OpenAI-compatible API server with Chat Completions and Responses APIs">OpenAI와 호환되는 API 서버 (Chat Completions 및 Responses API 지원)</p></li>
+<li><p data-original-en="Various decoding algorithms: greedy search, top-k/top-p, and speculative decoding (planned)">다양한 디코딩 알고리즘: 탐욕적 검색, top-k/top-p, 예측 디코딩 (예정)</p></li>
+<li><p data-original-en="Tool calling and reasoning parser support">도구 호출 및 추론 파서 지원</p></li>
+<li><p data-original-en="Structured output generation (choice, regex, json schema, grammar)">구조화된 출력 생성 (선택, 정규 표현식, JSON 스키마, 문법)</p></li>
+<li><p data-original-en="Chunked prefill with mixed prefill/decode batching">혼합된 프리필/디코딩 배치로 분할된 프리필</p></li>
+<li><p data-original-en="Prometheus metrics endpoint for serving observability">관측성을 위한 Prometheus 메트릭 엔드포인트</p></li>
+<li><p data-original-en="Integration with Hugging Face models and hub support">Hugging Face 모델 및 허브와의 통합 지원</p></li>
 </ul>
 <section id="documentation">
-<h2 data-original-en="Documentation">문서<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Documentation">설명서<a class="headerlink" href="#documentation" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p data-original-en="Quick Start with Furiosa-LLM: A quick start guide to Furiosa-LLM"><a class="reference internal" href="../get_started/furiosa_llm.html#gettingstartedfuriosallm"><span class="std std-ref">Furiosa-LLM를 사용한 빠른 시작</span></a>: Furiosa-LLM 빠른 시작 가이드</p></li>
-<li><p data-original-en="Furiosa-LLM Models: Model cards for the pre-compiled models published by FuriosaAI"><a class="reference internal" href="supported_models.html#supportedmodels"><span class="std std-ref">Furiosa-LLM 모델</span></a>: FuriosaAI가 공개한 사전 컴파일 모델의 모델 카드</p></li>
-<li><p data-original-en="OpenAI-Compatible Server: Details about the OpenAI-compatible server and its features"><a class="reference internal" href="furiosa-llm-serve.html#openaiserver"><span class="std std-ref">OpenAI 호환 서버</span></a>: OpenAI 호환 서버와 기능에 관한 상세 정보</p></li>
-<li><p data-original-en="Responses API: Guide to the OpenResponses-compatible Responses API"><a class="reference internal" href="responses-api.html#responsesapi"><span class="std std-ref">답변 API</span></a>: OpenResponses 호환 Responses API 가이드</p></li>
-<li><p data-original-en="Tool Calling: Guide to tool calling with parsers and choice options"><a class="reference internal" href="toolcalling.html#toolcalling"><span class="std std-ref">도구 호출</span></a>: Parser와 선택 옵션을 사용하는 tool calling 가이드</p></li>
-<li><p data-original-en="Structured Output: Guide to structured output generation"><a class="reference internal" href="structured-output.html#structuredoutput"><span class="std std-ref">구조화된 출력</span></a>: Structured output 생성 가이드</p></li>
-<li><p data-original-en="Vision-Language Models: Guide to serving Vision-Language models with image inputs"><a class="reference internal" href="vision-language.html#visionlanguagemodels"><span class="std std-ref">Vision-Language 모델과 함께 구성됩니다.</span></a>: 이미지 입력을 사용하는 Vision-Language 모델 서빙 가이드</p></li>
-<li><p data-original-en="Performance Optimization: Guide to tuning throughput, latency, and cache reuse"><a class="reference internal" href="performance-optimization.html#performanceoptimization"><span class="std std-ref">성능 최적화</span></a>: 처리량, 지연 시간 및 cache 재사용 조정 가이드</p></li>
+<li><p data-original-en="Quick Start with Furiosa-LLM: A quick start guide to Furiosa-LLM"><a class="reference internal" href="../get_started/furiosa_llm.html#gettingstartedfuriosallm">Furiosa-LLM를 사용한 빠른 시작</a>: Furiosa-LLM 빠른 시작 가이드</p></li>
+<li><p data-original-en="Furiosa-LLM Models: Model cards for the pre-compiled models published by FuriosaAI"><a class="reference internal" href="supported_models.html#supportedmodels">Furiosa-LLM 모델</a>: FuriosaAI에서 미리 구축된 모델에 대한 모델 카드</p></li>
+<li><p data-original-en="OpenAI-Compatible Server: Details about the OpenAI-compatible server and its features"><a class="reference internal" href="furiosa-llm-serve.html#openaiserver">OpenAI 호환 서버</a>: OpenAI 호환 서버 및 기능에 대한 정보</p></li>
+<li><p data-original-en="Responses API: Guide to the OpenResponses-compatible Responses API"><a class="reference internal" href="responses-api.html#responsesapi"><span class="std std-ref">Responses API</span></a>: OpenResponses 호환 Responses API에 대한 가이드</p></li>
+<li><p data-original-en="Tool Calling: Guide to tool calling with parsers and choice options"><a class="reference internal" href="toolcalling.html#toolcalling">도구 호출</a>: 파서 및 선택 옵션과 함께 도구 호출에 대한 가이드</p></li>
+<li><p data-original-en="Structured Output: Guide to structured output generation"><a class="reference internal" href="structured-output.html#structuredoutput">구조화된 출력</a>: 구조화된 출력 생성에 대한 가이드</p></li>
+<li><p data-original-en="Vision-Language Models: Guide to serving Vision-Language models with image inputs"><a class="reference internal" href="vision-language.html#visionlanguagemodels">비전-언어 모델</a>: 이미지 입력과 함께 비전-언어 모델을 제공하는 방법에 대한 가이드</p></li>
+<li><p data-original-en="Performance Optimization: Guide to tuning throughput, latency, and cache reuse"><a class="reference internal" href="performance-optimization.html#performanceoptimization">성능 최적화</a>: 처리량, 지연 시간 및 캐시 재사용을 조정하는 방법 (성능 향상을 위한 튜닝 가이드)</p></li>
 <li><p data-original-en="Prefix Caching: Guide to prefix caching for improved performance"><a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a>: 성능 향상을 위한 Prefix Caching 가이드</p></li>
-<li><p data-original-en="Hierarchical Prefix Caching: Guide to extending prefix caching with host memory"><a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층적 Prefix Caching</span></a>: 호스트 메모리로 Prefix Caching을 확장하는 가이드</p></li>
-<li><p data-original-en="Hybrid KV Cache Management: Understanding hybrid KV cache management"><a class="reference internal" href="hybrid-kv-cache.html#hybridkvcache"><span class="std std-ref">하이브리드 KV Cache 관리</span></a>: Hybrid KV Cache 관리 설명</p></li>
-<li><p data-original-en="Data-Parallel Routing: Understanding scoring-based data-parallel routing"><a class="reference internal" href="data-parallel-routing.html#dataparallelrouting"><span class="std std-ref">Data-Parallel 라우팅</span></a>: 점수 기반 Data-Parallel Routing 설명</p></li>
-<li><p data-original-en="Furiosa Executable Bundles (FXB): Model lifecycle, building, caching, and serving with FXB"><a class="reference internal" href="fxb.html#fxb"><span class="std std-ref">C Furiosa 실행 파일 묶음 (FXB)</span></a>: FXB를 이용한 모델 수명 주기, 빌드, 캐싱 및 서빙</p></li>
-<li><p data-original-en="Model Parallelism: A guide to model parallelism in Furiosa-LLM"><a class="reference internal" href="model-parallelism.html#modelparallelism"><span class="std std-ref">모형 평행성</span></a>: Furiosa-LLM의 모델 병렬화 가이드</p></li>
-<li><p data-original-en="API Reference: Python API reference for Furiosa-LLM"><a class="reference internal" href="reference.html#furiosallmreference"><span class="std std-ref">API 참조</span></a>: Furiosa-LLM Python API 참조</p></li>
-<li><p data-original-en="Examples: Examples of using Furiosa-LLM"><a class="reference internal" href="examples.html#furiosallmexamples"><span class="std std-ref">예제</span></a>: Furiosa-LLM 사용 예제</p></li>
-<li><p data-original-en="Deploying Furiosa-LLM on Kubernetes: A guide to deploying Furiosa-LLM on Kubernetes"><a class="reference internal" href="k8s_deployment.html#k8sfuriosallmdeployment"><span class="std std-ref">Furiosa-LLM를 Kubernetes에 배포</span></a>: Kubernetes에 Furiosa-LLM을 배포하는 가이드</p></li>
-<li><p data-original-en="Using Mooncake with Furiosa-LLM: A guide to deploying Mooncake on Kubernetes"><a class="reference internal" href="mooncake_deployment.html#k8smooncakedeployment"><span class="std std-ref">Mooncake를 Furiosa-LLM와 함께 사용하는 것을 지원</span></a>: Kubernetes에 Mooncake를 배포하는 가이드</p></li>
+<li><p data-original-en="Hierarchical Prefix Caching: Guide to extending prefix caching with host memory"><a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching">계층적 프리픽스 캐싱</a>: 호스트 메모리를 사용하여 프리픽스 캐싱 확장 방법 (계층적 프리픽스 캐싱 가이드)</p></li>
+<li><p data-original-en="Hybrid KV Cache Management: Understanding hybrid KV cache management"><a class="reference internal" href="hybrid-kv-cache.html#hybridkvcache">하이브리드 KV 캐시 관리</a>: 하이브리드 KV 캐시 관리 이해 (하이브리드 KV 캐시 관리 이해)</p></li>
+<li><p data-original-en="Data-Parallel Routing: Understanding scoring-based data-parallel routing"><a class="reference internal" href="data-parallel-routing.html#dataparallelrouting">데이터 병렬 라우팅</a>: 점수 기반 데이터 병렬 라우팅 이해 (데이터 병렬 라우팅 이해)</p></li>
+<li><p data-original-en="Furiosa Executable Bundles (FXB): Model lifecycle, building, caching, and serving with FXB"><a class="reference internal" href="fxb.html#fxb">C Furiosa 실행 파일 묶음 (FXB)</a>: FXB를 이용한 모델 수명 주기, 빌드, 캐싱 및 서빙</p></li>
+<li><p data-original-en="Model Parallelism: A guide to model parallelism in Furiosa-LLM"><a class="reference internal" href="model-parallelism.html#modelparallelism">모델 병렬 처리</a>: Furiosa-LLM에서 모델 병렬 처리에 대한 가이드</p></li>
+<li><p data-original-en="API Reference: Python API reference for Furiosa-LLM"><a class="reference internal" href="reference.html#furiosallmreference">API 참조</a>: Furiosa-LLM용 Python API 참조</p></li>
+<li><p data-original-en="Examples: Examples of using Furiosa-LLM"><a class="reference internal" href="examples.html#furiosallmexamples">예제</a>: Furiosa-LLM 사용 예제</p></li>
+<li><p data-original-en="Deploying Furiosa-LLM on Kubernetes: A guide to deploying Furiosa-LLM on Kubernetes"><a class="reference internal" href="k8s_deployment.html#k8sfuriosallmdeployment">Kubernetes에 Furiosa-LLM 배포</a>: Kubernetes에 Furiosa-LLM 배포에 대한 가이드</p></li>
+<li><p data-original-en="Using Mooncake with Furiosa-LLM: A guide to deploying Mooncake on Kubernetes"><a class="reference internal" href="mooncake_deployment.html#k8smooncakedeployment">Mooncake와 Furiosa-LLM 함께 사용</a>: Kubernetes에 Mooncake 배포에 대한 가이드</p></li>
 </ul>
 </section>
 </section>

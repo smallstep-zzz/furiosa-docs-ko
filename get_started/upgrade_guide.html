@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'get_started/upgrade_guide';</script>
@@ -286,27 +286,26 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="upgrading-furiosaai-s-software">
-<span id="upgradeguide"></span><h1 data-original-en="Upgrading FuriosaAI’s Software">FuriosaAI 소프트웨어 업그레이드<a class="headerlink" href="#upgrading-furiosaai-s-software" title="Link to this heading">#</a></h1>
+<span id="upgradeguide"></span><h1 data-original-en="Upgrading FuriosaAI’s Software">FuriosaAI의 소프트웨어 업그레이드<a class="headerlink" href="#upgrading-furiosaai-s-software" title="Link to this heading">#</a></h1>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="Furiosa SDK 2026.4 requires the 2026.4.0 RNGD driver. Upgrade furiosa-driver-rngd before running Furiosa-LLM 2026.4. Using a 2026.3.x driver may cause unexpected issues. Also review the CLI and Python configuration migration table in 🚨 Breaking Changes &amp; Deprecations.">Furiosa SDK 2026.4는 다음을 필요로 합니다. <strong>2026.4.0 RNGD driver</strong>- 업그레이드
-<code class="docutils literal notranslate"><span class="pre">furiosa-driver-rngd</span></code> Furiosa-LLM 2026.4를 실행하기 전에. 2026.3.x driver를 사용하여 예상치 못한 문제를 일으킬 수 있습니다. 또한 CLI 및 Python 구성 마이그레이션 테이블을 검토합니다. <a class="reference internal" href="../whatsnew/release-2026.4.0.html#release2026-4-0-breakingchanges"><span class="std std-ref">🚨 주요 변경 사항 및 폐기</span></a>.</p>
+<p data-original-en="Furiosa SDK 2026.4 requires the 2026.4.0 RNGD driver. Upgrade furiosa-driver-rngd before running Furiosa-LLM 2026.4. Using a 2026.3.x driver may cause unexpected issues. Also review the CLI and Python configuration migration table in 🚨 Breaking Changes &amp; Deprecations.">Furiosa SDK 2026.4는 2026.4.0 RNGD 드라이버를 필요로 합니다. Furiosa-LLM 2026.4를 실행하기 전에 <code class="docutils literal notranslate"><span class="pre">furiosa-driver-rngd</span></code>를 업그레이드하십시오. 2026.3.x 드라이버를 사용하면 예기치 않은 문제가 발생할 수 있습니다. 또한, <a class="reference internal" href="../whatsnew/release-2026.4.0.html#release2026-4-0-breakingchanges"><span class="std std-ref">🚨 Breaking Changes &amp; Deprecations</span></a>에서 CLI 및 Python 구성 마이그레이션 테이블을 확인하십시오.</p>
 </div>
-<p data-original-en="The high-level upgrade workflow is as follows:">high-level 업그레이드 워크플로우는 다음과 같습니다:</p>
+<p data-original-en="The high-level upgrade workflow is as follows:">고수준 업그레이드 워크플로우는 다음과 같습니다:</p>
 <ol class="arabic simple">
-<li><p data-original-en="Upgrade the driver package.">driver 패키지 업그레이드.</p></li>
-<li><p data-original-en="Upgrade the firmware tool and image if a new version is available.">firmware 도구 및 이미지를 새 버전이 사용할 수 있는지 업그레이드하십시오.</p></li>
-<li><p data-original-en="Perform a cold reboot of the system to apply the changes if the device firmware is upgraded.">장치 firmware가 업그레이드된 경우 시스템의 냉 재부팅을 수행하십시오.</p></li>
-<li><p data-original-en="Run the furiosa-smi info CLI tool to confirm the new driver and firmware versions in all devices.">실행 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span> <span class="pre">info</span></code> CLI 도구는 모든 장치에서 새로운 driver 및 firmware 버전을 확인합니다.</p></li>
-<li><p data-original-en="Upgrade Furiosa-LLM if necessary.">필요한 경우 Furiosa-LLM를 업그레이드하십시오.</p></li>
+<li><p data-original-en="Upgrade the driver package.">드라이버 패키지를 업그레이드합니다.</p></li>
+<li><p data-original-en="Upgrade the firmware tool and image if a new version is available.">새로운 버전이 있는 경우, 펌웨어 도구 및 이미지를 업그레이드합니다. (펌웨어 도구 및 이미지)</p></li>
+<li><p data-original-en="Perform a cold reboot of the system to apply the changes if the device firmware is upgraded.">장치 펌웨어를 업그레이드한 경우, 시스템을 재부팅하여 변경 사항을 적용합니다.</p></li>
+<li><p data-original-en="Run the furiosa-smi info CLI tool to confirm the new driver and firmware versions in all devices."><code class="docutils literal notranslate"><span class="pre">furiosa-smi</span> <span class="pre">info</span></code> CLI 도구를 실행하여 모든 장치에서 새 드라이버 및 펌웨어 버전을 확인합니다.</p></li>
+<li><p data-original-en="Upgrade Furiosa-LLM if necessary.">필요한 경우 Furiosa-LLM을 업그레이드합니다.</p></li>
 </ol>
 <div class="admonition warning">
 <p class="admonition-title" data-original-en="Warning">경고</p>
-<p data-original-en="Make sure to stop all running applications using NPUs before upgrading the SDK. Otherwise, the new driver kernel module won’t be loaded. In that case, you will need to reboot the system to load the new driver kernel module.">SDK를 업그레이드하기 전에 NPU를 사용하여 모든 실행 응용 프로그램을 중지해야합니다. 그렇지 않으면 새로운 driver 커널 모듈이로드되지 않습니다. 그 경우 새로운 driver 커널 모듈을로드하기 위해 시스템을 재부팅해야합니다.</p>
+<p data-original-en="Make sure to stop all running applications using NPUs before upgrading the SDK. Otherwise, the new driver kernel module won’t be loaded. In that case, you will need to reboot the system to load the new driver kernel module.">SDK 업그레이드 전에 NPUs에서 실행 중인 모든 애플리케이션을 중지해야 합니다. 그렇지 않으면 새로운 드라이버 커널 모듈이 로드되지 않습니다. 이 경우 새로운 드라이버 커널 모듈을 로드하려면 시스템을 재부팅해야 합니다. (NPUs에서 실행 중인 모든 애플리케이션을 중지)</p>
 </div>
 <section id="upgrading-the-driver-firmware-and-furiosa-smi">
-<h2 data-original-en="Upgrading the Driver, Firmware, and furiosa-smi">Driver, Firmware 및 furiosa-smi 업그레이드<a class="headerlink" href="#upgrading-the-driver-firmware-and-furiosa-smi" title="Link to this heading">#</a></h2>
-<p data-original-en="Please follow the steps below to upgrade the Furiosa software stack:">Furiosa 소프트웨어 스택을 업그레이드하려면 아래 단계를 따르십시오.</p>
+<h2 data-original-en="Upgrading the Driver, Firmware, and furiosa-smi">드라이버, 펌웨어 및 furiosa-smi 업그레이드<a class="headerlink" href="#upgrading-the-driver-firmware-and-furiosa-smi" title="Link to this heading">#</a></h2>
+<p data-original-en="Please follow the steps below to upgrade the Furiosa software stack:">Furiosa 소프트웨어 스택을 업그레이드하는 방법은 다음과 같습니다:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="apt" for="sd-tab-item-0">
@@ -330,7 +329,7 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-<p data-original-en="Usually, major releases of the Furiosa SDK include a firmware upgrade. Before upgrading the firmware, install the firmware updater and firmware image packages:" id="upgradingdevicefirmware">Furiosa SDK의 주요 출시는 firmware 업그레이드를 포함합니다. firmware 업그레이드 전에 firmware 업데이트기와 firmware 이미지 패키지를 설치하십시오:</p>
+<p data-original-en="Usually, major releases of the Furiosa SDK include a firmware upgrade. Before upgrading the firmware, install the firmware updater and firmware image packages:" id="upgradingdevicefirmware">일반적으로 Furiosa SDK의 주요 릴리스에는 펌웨어 업그레이드가 포함됩니다. 펌웨어를 업그레이드하기 전에 펌웨어 업데이트 및 펌웨어 이미지 패키지를 설치해야 합니다:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="apt" for="sd-tab-item-3">
@@ -354,11 +353,11 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 </div>
 </div>
 </div>
-<p data-original-en="To upgrade the firmware on all RNGD devices, run:">모든 RNGD 장치에서 firmware를 업그레이드하려면 다음을 실행하십시오.</p>
+<p data-original-en="To upgrade the firmware on all RNGD devices, run:">모든 RNGD 장치에서 펌웨어를 업그레이드하려면 다음 명령을 실행합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>furiosa_rngd_updater_all
 </pre></div>
 </div>
-<p data-original-en="Alternatively, you can upgrade the firmware on a specific RNGD by specifying its BDF and the firmware image:">대안으로, 당신은 BDF와 firmware 이미지를 지정하여 특정 RNGD에 firmware를 업그레이드 할 수 있습니다 :</p>
+<p data-original-en="Alternatively, you can upgrade the firmware on a specific RNGD by specifying its BDF and the firmware image:">또는 특정 RNGD의 BDF 및 펌웨어 이미지를 지정하여 펌웨어를 업그레이드할 수도 있습니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>furiosa_rngd_updater<span class="w"> </span>-b<span class="w"> </span>&lt;BDF&gt;<span class="w"> </span>-f<span class="w"> </span>&lt;firmware<span class="w"> </span>image&gt;
 <span class="c1"># Example:</span>
 <span class="c1"># sudo furiosa_rngd_updater -b 0000:43:00.0 -f /usr/lib/firmware/furiosa-rngd/rngd_fw_v2026.3.0.bin</span>
@@ -366,13 +365,13 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 </div>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="Before the 2026.3 release, the firmware updater was executed automatically when the firmware image package was installed. Starting with the 2026.3 release, you must run the firmware updater manually after installing the firmware image package.">2026.3 릴리스 전에 firmware 업데이트자는 firmware 이미지 패키지가 설치되었을 때 자동으로 실행되었습니다. 2026.3 릴리스로 시작하면 firmware 업데이트기를 수동으로 실행해야합니다.</p>
+<p data-original-en="Before the 2026.3 release, the firmware updater was executed automatically when the firmware image package was installed. Starting with the 2026.3 release, you must run the firmware updater manually after installing the firmware image package.">2026.3 릴리스 이전에는 펌웨어 이미지를 설치하면 펌웨어 업데이트 프로그램이 자동으로 실행되었습니다. 2026.3 릴리스부터는 펌웨어 이미지를 설치한 후 펌웨어 업데이트 프로그램을 수동으로 실행해야 합니다.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="Please remember to cold reboot the system after the firmware upgrade process is completed. If the firmware upgrade process is interrupted, the device may become unusable. In this case, please contact FuriosaAI support for assistance.">firmware 업그레이드 프로세스가 완료된 후 시스템을 재부팅하는 것을 기억하십시오. firmware 업그레이드 프로세스가 중단되면 장치가 무효화 될 수 있습니다. 이 경우 지원에 FuriosaAI 지원에 문의하십시오.</p>
+<p data-original-en="Please remember to cold reboot the system after the firmware upgrade process is completed. If the firmware upgrade process is interrupted, the device may become unusable. In this case, please contact FuriosaAI support for assistance.">펌웨어 업그레이드 프로세스가 완료된 후에는 반드시 시스템을 재부팅하십시오. 펌웨어 업그레이드 프로세스가 중단되면 장치가 사용할 수 없게 될 수 있습니다. 이 경우 FuriosaAI 지원팀에 문의하여 도움을 받으십시오.</p>
 </div>
-<p data-original-en="To check if the new driver and firmware were installed successfully in all devices, run the following command:">새로운 driver 및 firmware가 모든 장치에서 성공적으로 설치되었으면 다음 명령을 실행하십시오.</p>
+<p data-original-en="To check if the new driver and firmware were installed successfully in all devices, run the following command:">모든 장치에 새로운 드라이버와 펌웨어가 성공적으로 설치되었는지 확인하려면 다음 명령을 실행하십시오:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>furiosa-smi<span class="w"> </span>info
 +------+--------+-------------------+---------+-------+--------------+
 <span class="p">|</span><span class="w"> </span>Arch<span class="w"> </span><span class="p">|</span><span class="w"> </span>Device<span class="w"> </span><span class="p">|</span><span class="w"> </span>Firmware<span class="w">          </span><span class="p">|</span><span class="w"> </span>Temp.<span class="w">   </span><span class="p">|</span><span class="w"> </span>Power<span class="w"> </span><span class="p">|</span><span class="w"> </span>PCI-BDF<span class="w">      </span><span class="p">|</span>
@@ -390,19 +389,19 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 </section>
 <section id="upgrading-furiosa-llm">
 <h2 data-original-en="Upgrading Furiosa-LLM">Furiosa-LLM 업그레이드<a class="headerlink" href="#upgrading-furiosa-llm" title="Link to this heading">#</a></h2>
-<p data-original-en="To upgrade Furiosa-LLM, use uv pip:">Furiosa-LLM를 업그레이드하려면 다음을 사용하십시오: <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">pip</span></code>:</p>
+<p data-original-en="To upgrade Furiosa-LLM, use uv pip:">Furiosa-LLM을 업그레이드하려면 <code class="docutils literal notranslate"><span class="pre">uv</span> <span class="pre">pip</span></code>를 사용하십시오:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>--torch-backend<span class="o">=</span>auto<span class="w"> </span>furiosa-llm
 </pre></div>
 </div>
 </section>
 <section id="migrating-the-furiosa-smi-python-package">
 <span id="furiosasmipythonmigration"></span><h2 data-original-en="Migrating the Furiosa SMI Python Package">Furiosa SMI Python 패키지 마이그레이션<a class="headerlink" href="#migrating-the-furiosa-smi-python-package" title="Link to this heading">#</a></h2>
-<p data-original-en="When upgrading from Furiosa SDK 2026.3.0 or earlier to 2026.4.0, follow this guide if your Python application uses furiosa-smi-py and you are migrating it to furiosa-smi.">갱신 시 <strong>Furiosa SDK 2026.3.0 또는 2026.4.0 이전</strong>, 당신의 Python 신청 용도가 사용하는 경우에 이 가이드를 따르십시오 <code class="docutils literal notranslate"><span class="pre">furiosa-smi-py</span></code> 을 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code>.</p>
-<p data-original-en="Replace furiosa-smi-py with furiosa-smi in your application’s Python dependencies, then install the new package:">대체 <code class="docutils literal notranslate"><span class="pre">furiosa-smi-py</span></code> 과 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code> 애플리케이션의 Python 의존성에서 새로운 패키지를 설치하십시오.</p>
+<p data-original-en="When upgrading from Furiosa SDK 2026.3.0 or earlier to 2026.4.0, follow this guide if your Python application uses furiosa-smi-py and you are migrating it to furiosa-smi.">Furiosa SDK 2026.3.0 또는 이전 버전에서 2026.4.0으로 업그레이드하는 경우, Python 애플리케이션에서 <code class="docutils literal notranslate"><span class="pre">furiosa-smi-py</span></code>를 사용하고, 이를 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code>로 마이그레이션하는 경우, 다음 가이드를 따르십시오.</p>
+<p data-original-en="Replace furiosa-smi-py with furiosa-smi in your application’s Python dependencies, then install the new package:">애플리케이션의 Python 의존성에서 <code class="docutils literal notranslate"><span class="pre">furiosa-smi-py</span></code>를 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code>로 대체한 후, 새 패키지를 설치합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>furiosa-smi
 </pre></div>
 </div>
-<p data-original-en="The packages have separate import names, so installing furiosa-smi does not update existing furiosa_smi_py imports. Update your imports and API calls as follows:">패키지는 별도의 수입 이름을 가지고 있으므로 설치 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code> 기존 데이터를 업데이트하지 않습니다. <code class="docutils literal notranslate"><span class="pre">furiosa_smi_py</span></code> imports. imports 및 API 호출을 다음과 같이 업데이트하십시오:</p>
+<p data-original-en="The packages have separate import names, so installing furiosa-smi does not update existing furiosa_smi_py imports. Update your imports and API calls as follows:">패키지는 별도의 import 이름을 가지므로, <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code>를 설치하면 기존 <code class="docutils literal notranslate"><span class="pre">furiosa_smi_py</span></code> import가 업데이트되지 않습니다. 다음 방법으로 import 및 API 호출을 업데이트하십시오:</p>
 <div class="pst-scrollable-table-container"><table class="table" id="id1">
 <caption><span class="caption-text">Python API 변경</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
@@ -419,21 +418,21 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 <td><p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">furiosa_smi</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">furiosa_smi_py.init()</span></code></p></td>
-<td><p data-original-en="Remove the call; explicit initialization is no longer required.">호출을 제거; 명시된 초기화는 더 이상 필요하지 않습니다.</p></td>
+<td><p data-original-en="Remove the call; explicit initialization is no longer required.">해당 호출을 제거합니다. 명시적인 초기화는 더 이상 필요하지 않습니다. (Remove this call; explicit initialization is no longer required.)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">device.device_info().name()</span></code></p></td>
-<td><p data-original-en="device.device_name() returns a name such as npu0."><code class="docutils literal notranslate"><span class="pre">device.device_name()</span></code> 다음과 같은 이름을 반환합니다 <code class="docutils literal notranslate"><span class="pre">npu0</span></code>.</p></td>
+<td><p data-original-en="device.device_name() returns a name such as npu0."><code class="docutils literal notranslate"><span class="pre">device.device_name()</span></code>는 "<code class="docutils literal notranslate"><span class="pre">npu0</span></code>"와 같은 이름을 반환합니다. (device.device_name() returns a name such as npu0.)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">device.device_info().uuid()</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">device.uuid()</span></code></p></td>
+<td><p data-original-en="device.uuid()">장치의 고유 ID를 반환합니다. (<code class="docutils literal notranslate"><span class="pre">device.uuid()</span></code>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">device.device_info().firmware_version()</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">device.firmware_version()</span></code></p></td>
+<tr class="row-even"><td><p data-original-en="device.device_info().firmware_version()">장치의 정보에서 펌웨어 버전을 반환합니다. (<code class="docutils literal notranslate"><span class="pre">device.device_info().firmware_version()</span></code>)</p></td>
+<td><p data-original-en="device.firmware_version()">장치의 펌웨어 버전을 반환합니다. (<code class="docutils literal notranslate"><span class="pre">device.firmware_version()</span></code>)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">device.device_info().serial()</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">device.serial()</span></code></p></td>
+<tr class="row-odd"><td><p data-original-en="device.device_info().serial()">장치의 정보에서 시리얼 번호를 반환합니다. (<code class="docutils literal notranslate"><span class="pre">device.device_info().serial()</span></code>)</p></td>
+<td><p data-original-en="device.serial()">장치의 시리얼 번호를 반환합니다. (<code class="docutils literal notranslate"><span class="pre">device.serial()</span></code>)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">device.device_info().numa_node()</span></code></p></td>
+<tr class="row-even"><td><p data-original-en="device.device_info().numa_node()">장치의 정보에서 NUMA 노드를 반환합니다. (<code class="docutils literal notranslate"><span class="pre">device.device_info().numa_node()</span></code>)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">device.numa_node()</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">device.core_status().pe_status()</span></code></p></td>
@@ -442,8 +441,8 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 </tbody>
 </table>
 </div>
-<p data-original-en="The following examples query the same device information and list available cores before and after migration.">다음 예제는 이전 이후 동일한 장치 정보 및 목록 사용 가능한 코어를 쿼리합니다.</p>
-<p data-original-en="Before: furiosa-smi-py"><strong>이전:</strong> <code class="docutils literal notranslate"><span class="pre">furiosa-smi-py</span></code></p>
+<p data-original-en="The following examples query the same device information and list available cores before and after migration.">다음 예제는 동일한 장치 정보를 쿼리하고, 마이그레이션 전후에 사용 가능한 코어를 나열합니다.</p>
+<p data-original-en="Before: furiosa-smi-py">이전: <code class="docutils literal notranslate"><span class="pre">furiosa-smi-py</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">furiosa_smi_py</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smi</span>
 
 <span class="n">smi</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
@@ -456,7 +455,7 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
             <span class="nb">print</span><span class="p">(</span><span class="s2">"Available core:"</span><span class="p">,</span> <span class="n">pe_status</span><span class="o">.</span><span class="n">core</span><span class="p">())</span>
 </pre></div>
 </div>
-<p data-original-en="After: furiosa-smi"><strong>다음으로:</strong> <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code></p>
+<p data-original-en="After: furiosa-smi">이후: <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">furiosa_smi</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">smi</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"Driver:"</span><span class="p">,</span> <span class="n">smi</span><span class="o">.</span><span class="n">driver_info</span><span class="p">())</span>
@@ -467,9 +466,7 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
             <span class="nb">print</span><span class="p">(</span><span class="s2">"Available core:"</span><span class="p">,</span> <span class="n">core</span><span class="p">)</span>
 </pre></div>
 </div>
-<p data-original-en="core_status() now returns a dictionary mapping core indices to CoreStatus values. Compare these values with ==, as shown above; is compares Python object identity and should not be used here."><code class="docutils literal notranslate"><span class="pre">core_status()</span></code> 이제 사전 매핑 코어 인덱스를 반환
-<code class="docutils literal notranslate"><span class="pre">CoreStatus</span></code> 값과 <code class="docutils literal notranslate"><span class="pre">==</span></code>, 위와 같이
-<code class="docutils literal notranslate"><span class="pre">is</span></code> Python 객체 정체성을 비교하고 여기에 사용되지 않아야합니다.</p>
+<p data-original-en="core_status() now returns a dictionary mapping core indices to CoreStatus values. Compare these values with ==, as shown above; is compares Python object identity and should not be used here."><code class="docutils literal notranslate"><span class="pre">core_status()</span></code> 이제 사전 매핑 코어 인덱스를 반환 <code class="docutils literal notranslate"><span class="pre">CoreStatus</span></code> 값과 <code class="docutils literal notranslate"><span class="pre">==</span></code>, 위와 같이 <code class="docutils literal notranslate"><span class="pre">is</span></code> Python 객체 정체성을 비교하고 여기에 사용되지 않아야합니다.</p>
 </section>
 </section>
 </article>

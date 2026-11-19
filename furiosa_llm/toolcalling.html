@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/toolcalling';</script>
@@ -288,37 +288,36 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="tool-calling">
-<span id="toolcalling"></span><h1 data-original-en="Tool Calling">도구 호출<a class="headerlink" href="#tool-calling" title="Link to this heading">#</a></h1>
-<p data-original-en="Tool calling (also known as function calling) enables models to interact with external tools and APIs. Furiosa-LLM supports tool calling for models trained with this capability.">도구 호출 (일컬어 함수 호출) 모델은 외부 도구와 API와 상호 작용할 수 있습니다. Furiosa-LLM는 이 기능으로 훈련 된 모델에 대한 도구 통화를 지원합니다.</p>
+<span id="toolcalling"></span><h1 data-original-en="Tool Calling">도구 호출 (Tool Calling)<a class="headerlink" href="#tool-calling" title="Link to this heading">#</a></h1>
+<p data-original-en="Tool calling (also known as function calling) enables models to interact with external tools and APIs. Furiosa-LLM supports tool calling for models trained with this capability.">도구 호출 (또는 함수 호출) 기능은 모델이 외부 도구 및 API와 상호 작용할 수 있도록 합니다. Furiosa-LLM은 이러한 기능을 갖춘 모델에 대한 도구 호출을 지원합니다.</p>
 <section id="tool-calling-parsers">
-<h2 data-original-en="Tool Calling Parsers">도구 호출 파서<a class="headerlink" href="#tool-calling-parsers" title="Link to this heading">#</a></h2>
-<p data-original-en="The system converts model outputs into the OpenAI response format through a designated parser implementation. Tool calling parsers are model-dependent, as different models use different formats for tool calls.">시스템은 지정된 파서 구현을 통해 OpenAI 응답 형식으로 모델 출력을 변환합니다. 파서를 호출하는 도구는 model-dependent이며, 다른 모델은 도구 통화에 대한 다른 형식을 사용합니다.</p>
-<p data-original-en="Currently, Furiosa-LLM supports the following tool calling parsers:">현재 Furiosa-LLM는 다음과 같은 도구가 파서스를 호출합니다.</p>
+<h2 data-original-en="Tool Calling Parsers">도구 호출 파서 (Tool Calling Parsers)<a class="headerlink" href="#tool-calling-parsers" title="Link to this heading">#</a></h2>
+<p data-original-en="The system converts model outputs into the OpenAI response format through a designated parser implementation. Tool calling parsers are model-dependent, as different models use different formats for tool calls.">시스템은 지정된 파서 구현을 통해 모델의 출력을 OpenAI 응답 형식으로 변환합니다. 도구 호출 파서는 모델에 따라 다르며, 각 모델은 서로 다른 형식으로 도구 호출을 사용합니다.</p>
+<p data-original-en="Currently, Furiosa-LLM supports the following tool calling parsers:">현재 Furiosa-LLM은 다음 도구 호출 파서를 지원합니다:</p>
 <ul class="simple">
-<li><p data-original-en="hermes: For models using the Hermes tool calling format (e.g., EXAONE-4.0, Qwen3 series). Note that Qwen3-Coder is an exception within the Qwen3 series; use qwen3_xml for it."><code class="docutils literal notranslate"><span class="pre">hermes</span></code>: 헤르메스 도구 호출 형식 (e.g., EXAONE-4.0, Qwen3 시리즈)를 사용하여 모델. Qwen3-Coder는 Qwen3 시리즈 내에서 예외입니다. 사용 <code class="docutils literal notranslate"><span class="pre">qwen3_xml</span></code> 그 때문에</p></li>
-<li><p data-original-en="llama3_json: For Llama series models (e.g., Llama 3.1, Llama 3.2)"><code class="docutils literal notranslate"><span class="pre">llama3_json</span></code>: Llama 시리즈 모델 용 (e.g., Llama 3.1, Llama 3.2)</p></li>
-<li><p data-original-en="openai: For models using the OpenAI tool calling format (e.g., gpt-oss-20b, gpt-oss-120b)"><code class="docutils literal notranslate"><span class="pre">openai</span></code>: OpenAI 툴을 사용하여 모델의 경우 형식을 호출 (e.g., gpt-oss-20b, gpt-oss-120b)</p></li>
-<li><p data-original-en="gemma4: For Gemma 4 models"><code class="docutils literal notranslate"><span class="pre">gemma4</span></code>: Gemma 4 모델에 대해</p></li>
-<li><p data-original-en="qwen3_xml (alias qwen3_coder): For Qwen3-Coder models, whose chat template asks for an XML call format (&lt;tool_call&gt;&lt;function=...&gt;&lt;parameter=...&gt;) instead of the Hermes JSON."><code class="docutils literal notranslate"><span class="pre">qwen3_xml</span></code> (명칭) <code class="docutils literal notranslate"><span class="pre">qwen3_coder</span></code>): Qwen3-Coder 모형을 위해, 그의 채팅 템플렛은 XML 외침 체재를 요구합니다 (<code class="docutils literal notranslate"><span class="pre">&lt;tool_call&gt;&lt;function=...&gt;&lt;parameter=...&gt;</span></code>) 대신 Hermes JSON를 사용하는 경우.</p></li>
+<li><p data-original-en="hermes: For models using the Hermes tool calling format (e.g., EXAONE-4.0, Qwen3 series). Note that Qwen3-Coder is an exception within the Qwen3 series; use qwen3_xml for it."><code class="docutils literal notranslate"><span class="pre">hermes</span></code>: Hermes 도구 호출 형식을 사용하는 모델 (예: EXAONE-4.0, Qwen3 시리즈)에 사용됩니다. 참고로, Qwen3-Coder는 Qwen3 시리즈 내에서 예외적인 경우이며, <code class="docutils literal notranslate"><span class="pre">qwen3_xml</span></code>을 사용해야 합니다.</p></li>
+<li><p data-original-en="llama3_json: For Llama series models (e.g., Llama 3.1, Llama 3.2)"><code class="docutils literal notranslate"><span class="pre">llama3_json</span></code>: Llama 시리즈 모델 (예: Llama 3.1, Llama 3.2)에 사용됩니다.</p></li>
+<li><p data-original-en="openai: For models using the OpenAI tool calling format (e.g., gpt-oss-20b, gpt-oss-120b)"><code class="docutils literal notranslate"><span class="pre">openai</span></code>: OpenAI 도구 호출 형식을 사용하는 모델 (예: gpt-oss-20b, gpt-oss-120b)에 사용됩니다.</p></li>
+<li><p data-original-en="gemma4: For Gemma 4 models"><code class="docutils literal notranslate"><span class="pre">gemma4</span></code>: Gemma 4 모델에 사용됩니다.</p></li>
+<li><p data-original-en="qwen3_xml (alias qwen3_coder): For Qwen3-Coder models, whose chat template asks for an XML call format (&lt;tool_call&gt;&lt;function=...&gt;&lt;parameter=...&gt;) instead of the Hermes JSON."><code class="docutils literal notranslate"><span class="pre">qwen3_xml</span></code> (별칭: <code class="docutils literal notranslate"><span class="pre">qwen3_coder</span></code>): Qwen3-Coder 모델에 사용됩니다. 이 모델은 Hermes JSON 대신 (<code class="docutils literal notranslate"><span class="pre">&lt;tool_call&gt;&lt;function=...&gt;&lt;parameter=...&gt;</span></code>) 형식의 XML 호출 형식을 사용하는 챗 템플릿을 사용합니다.</p></li>
 </ul>
-<p data-original-en="For automatic tool calling, start the server with --enable-auto-tool-choice and select the appropriate parser using --tool-call-parser.">자동 도구 호출을 위해, 서버를 시작 <code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span></code>
-그리고 적절한 파서 선택 <code class="docutils literal notranslate"><span class="pre">--tool-call-parser</span></code>.</p>
+<p data-original-en="For automatic tool calling, start the server with --enable-auto-tool-choice and select the appropriate parser using --tool-call-parser.">자동 도구 호출을 위해, 서버를 <code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span></code> 옵션으로 시작하고 적절한 파서를 <code class="docutils literal notranslate"><span class="pre">--tool-call-parser</span></code> 옵션으로 선택합니다.</p>
 </section>
 <section id="tool-choice-options">
 <h2 data-original-en="Tool Choice Options">도구 선택 옵션<a class="headerlink" href="#tool-choice-options" title="Link to this heading">#</a></h2>
-<p data-original-en="The tool_choice parameter controls how the model selects tools to call. Furiosa-LLM supports the following options:">The <code class="docutils literal notranslate"><span class="pre">tool_choice</span></code> 매개 변수는 모델이 호출하는 도구를 선택하는 방법을 제어합니다. Furiosa-LLM는 다음과 같은 옵션을 지원합니다.</p>
+<p data-original-en="The tool_choice parameter controls how the model selects tools to call. Furiosa-LLM supports the following options:"><code class="docutils literal notranslate"><span class="pre">tool_choice</span></code> 매개변수는 모델이 어떤 도구를 호출할지 제어합니다. Furiosa-LLM은 다음 옵션을 지원합니다:</p>
 <ul class="simple">
-<li><p data-original-en="auto (default when tools are supplied): The model decides whether to call a tool or respond directly based on the conversation context."><code class="docutils literal notranslate"><span class="pre">auto</span></code> (기본 도구가 공급될 때): 모델은 도구로 호출하거나 대화 상황에 따라 직접 응답할 것인지 결정합니다.</p></li>
-<li><p data-original-en="none (default when no tools are supplied): Disables tool calling for the request."><code class="docutils literal notranslate"><span class="pre">none</span></code> (기본 도구가 공급되지 않을 때): 요청을 호출하는 도구가 비활성화됩니다.</p></li>
-<li><p data-original-en="required: Forces the model to call at least one tool. The model cannot respond without making a tool call."><code class="docutils literal notranslate"><span class="pre">required</span></code>: 적어도 하나의 도구를 호출하는 모델을 강제합니다. 이 모델은 도구 호출없이 응답 할 수 없습니다.</p></li>
+<li><p data-original-en="auto (default when tools are supplied): The model decides whether to call a tool or respond directly based on the conversation context."><code class="docutils literal notranslate"><span class="pre">auto</span></code> (도구가 제공된 경우 기본값): 모델은 대화 컨텍스트를 기반으로 도구를 호출할지 또는 직접 응답할지 결정합니다.</p></li>
+<li><p data-original-en="none (default when no tools are supplied): Disables tool calling for the request."><code class="docutils literal notranslate"><span class="pre">none</span></code> (도구가 제공되지 않은 경우 기본값): 요청에 대한 도구 호출을 비활성화합니다.</p></li>
+<li><p data-original-en="required: Forces the model to call at least one tool. The model cannot respond without making a tool call."><code class="docutils literal notranslate"><span class="pre">required</span></code>: 모델이 최소한 하나의 도구를 호출하도록 강제합니다. 모델은 도구 호출 없이 응답할 수 없습니다.</p></li>
 <li><p data-original-en='{"type": "function", "function": {"name": "&lt;function_name&gt;"}}: Forces the model to call a specific named function.'><code class="docutils literal notranslate"><span class="pre">{"type":</span> <span class="pre">"function",</span> <span class="pre">"function":</span> <span class="pre">{"name":</span> <span class="pre">"&lt;function_name&gt;"}}</span></code>: 특정 이름 함수를 호출하는 모델을 강제합니다.</p></li>
 </ul>
-<p data-original-en="These options apply to both streaming and non-streaming Chat Completions requests for models that support tool calling.">이 옵션은 스트리밍 및 non-streaming Chat Completions 요청을 모두 적용하여 툴 호출을 지원하는 모델입니다.</p>
+<p data-original-en="These options apply to both streaming and non-streaming Chat Completions requests for models that support tool calling.">이러한 옵션은 도구 호출을 지원하는 모델의 스트리밍 및 비스트리밍 Chat Completions 요청 모두에 적용됩니다.</p>
 <p data-original-en="Supply a non-empty tools list for required or a named function choice. For these choices, the server constrains generation to the tool’s JSON schema and returns the result as tool_calls.">non-empty를 공급 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 목록 <code class="docutils literal notranslate"><span class="pre">required</span></code> 또는 이름 함수 선택. 이러한 선택의 경우, 도구의 JSON 스키마에 서버 제약 생성 및 결과 반환 <code class="docutils literal notranslate"><span class="pre">tool_calls</span></code>.</p>
-<p data-original-en='With tool_choice="none", tool definitions are omitted from the prompt and tool calls are suppressed in the response.'>그리고 <code class="docutils literal notranslate"><span class="pre">tool_choice="none"</span></code>, 도구 정의는 prompt 및 도구 호출에서 부유 한 응답에 억제됩니다.</p>
+<p data-original-en='With tool_choice="none", tool definitions are omitted from the prompt and tool calls are suppressed in the response.'><code class="docutils literal notranslate"><span class="pre">tool_choice="none"</span></code>인 경우, 도구 정의는 프롬프트에서 제외되고 응답에서 도구 호출이 억제됩니다.</p>
 <p data-original-en="For more details on the tool calling specification, refer to the OpenAI Chat API documentation.">더 자세한 내용은 도구 호출 사양에 대한, 참조 <a class="reference external" href="https://platform.openai.com/docs/api-reference/chat/create#chat-create-tool_choice">OpenAI 채팅 API 문서를 참조</a>.</p>
 <section id="online-example-with-named-function-calling">
-<h3 data-original-en="Online Example with Named Function Calling">Named Function Calling을 사용한 온라인 예<a class="headerlink" href="#online-example-with-named-function-calling" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Online Example with Named Function Calling">이름 지정된 함수 호출을 사용하는 온라인 예제<a class="headerlink" href="#online-example-with-named-function-calling" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">Named Function Calling을 사용한 온라인 예</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>

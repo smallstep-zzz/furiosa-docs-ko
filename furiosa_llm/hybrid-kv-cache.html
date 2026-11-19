@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/hybrid-kv-cache';</script>
@@ -292,65 +292,63 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="hybrid-kv-cache-management">
-<span id="hybridkvcache"></span><h1 data-original-en="Hybrid KV Cache Management">하이브리드 KV Cache 관리<a class="headerlink" href="#hybrid-kv-cache-management" title="Link to this heading">#</a></h1>
-<p data-original-en="Hybrid KV cache management is an internal optimization for models that mix global attention and sliding-window attention layers. Instead of treating all layers as if they had the same memory behavior, Furiosa-LLM manages them with separate KV cache pools and coordinated allocation logic.">하이브리드 KV cache 관리는 글로벌 관심과 sliding-window주의 레이어를 혼합하는 모델에 대한 내부 최적화입니다. 같은 메모리 동작을 가지고있는 경우 모든 레이어를 치료하는 대신 Furiosa-LLM는 별도의 KV cache 풀 및 조정 할당 논리와 함께 관리합니다.</p>
-<p data-original-en="This feature is applied automatically when the model uses hybrid attention; no extra user configuration is required.">이 기능은 모형이 잡종 주의를 사용할 때 자동적으로 적용됩니다; 여분 사용자 윤곽은 요구되지 않습니다.</p>
+<span id="hybridkvcache"></span><h1 data-original-en="Hybrid KV Cache Management">하이브리드 KV 캐시 관리<a class="headerlink" href="#hybrid-kv-cache-management" title="Link to this heading">#</a></h1>
+<p data-original-en="Hybrid KV cache management is an internal optimization for models that mix global attention and sliding-window attention layers. Instead of treating all layers as if they had the same memory behavior, Furiosa-LLM manages them with separate KV cache pools and coordinated allocation logic.">하이브리드 KV 캐시 관리는 글로벌 어텐션과 슬라이딩 윈도우 어텐션 레이어가 혼합된 모델에 대한 내부 최적화입니다. Furiosa-LLM은 모든 레이어를 동일한 메모리 동작으로 처리하는 대신, 별도의 KV 캐시 풀과 조정된 할당 로직을 사용하여 관리합니다. (Hybrid KV cache management is an internal optimization for models that mix global attention and sliding-window attention layers.)</p>
+<p data-original-en="This feature is applied automatically when the model uses hybrid attention; no extra user configuration is required.">이 기능은 하이브리드 어텐션을 사용하는 모델에서 자동으로 적용되며, 추가적인 사용자 구성은 필요하지 않습니다. (This feature is applied automatically when the model uses hybrid attention; no extra user configuration is required.)</p>
 <section id="overview">
 <h2 data-original-en="Overview">개요<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
-<p data-original-en="In hybrid models, global-attention layers and sliding-window layers have different cache growth patterns:">하이브리드 모델에서 global-attention 레이어와 sliding-window 레이어는 다른 캐시 성장 패턴이 있습니다.</p>
+<p data-original-en="In hybrid models, global-attention layers and sliding-window layers have different cache growth patterns:">하이브리드 모델에서, 글로벌 어텐션 레이어와 슬라이딩 윈도우 레이어는 서로 다른 캐시 성장 패턴을 가집니다:</p>
 <ul class="simple">
-<li><p data-original-en="Global attention grows with full sequence length"><strong>세계적 관심</strong> 전체 시퀀스 길이에 따라 증가합니다.</p></li>
-<li><p data-original-en="Sliding-window attention is bounded by the window size"><strong>Sliding-window 어텐션</strong> 크기는 윈도우 크기에 의해 제한됩니다</p></li>
+<li><p data-original-en="Global attention grows with full sequence length">글로벌 어텐션은 전체 시퀀스 길이만큼 성장합니다. (Global attention grows with full sequence length)</p></li>
+<li><p data-original-en="Sliding-window attention is bounded by the window size">슬라이딩 윈도우 어텐션은 윈도우 크기로 제한됩니다. (Sliding-window attention is bounded by the window size)</p></li>
 </ul>
-<p data-original-en="Using one undifferentiated pool can over-provision memory for sliding-window layers, especially for long-context workloads. Hybrid KV cache management avoids this by separating the two memory paths.">sliding-window 레이어의 over-provision 메모리를 사용할 수 있습니다. 특히 long-context 워크로드를 위해 long-context를 사용할 수 있습니다. 하이브리드 KV cache 관리는 두 가지 메모리 경로 분리하여 이것을 방지합니다.</p>
+<p data-original-en="Using one undifferentiated pool can over-provision memory for sliding-window layers, especially for long-context workloads. Hybrid KV cache management avoids this by separating the two memory paths.">단일, 구분되지 않은 풀을 사용하면, 특히 긴 컨텍스트 워크로드에서 슬라이딩 윈도우 레이어에 대해 과도한 메모리를 할당할 수 있습니다. 하이브리드 KV 캐시 관리는 이러한 문제를 해결하기 위해 두 메모리 경로를 분리합니다. (Using one undifferentiated pool can over-provision memory for sliding-window layers, especially for long-context workloads. Hybrid KV cache management avoids this by separating the two memory paths.)</p>
 </section>
 <section id="how-it-works">
-<h2 data-original-en="How It Works">어떻게 작동 하는 것 입니까?<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
+<h2 data-original-en="How It Works">작동 방식<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
 <section id="pool-partitioning">
-<h3 data-original-en="Pool Partitioning">풀 파티션<a class="headerlink" href="#pool-partitioning" title="Link to this heading">#</a></h3>
-<p data-original-en="At initialization, Furiosa-LLM partitions KV cache memory into:">초기화에서 Furiosa-LLM 파티션 KV cache 메모리로:</p>
+<h3 data-original-en="Pool Partitioning">KV 캐시 파티셔닝<a class="headerlink" href="#pool-partitioning" title="Link to this heading">#</a></h3>
+<p data-original-en="At initialization, Furiosa-LLM partitions KV cache memory into:">Furiosa-LLM이 초기화될 때, KV 캐시 메모리를 다음과 같이 파티셔닝합니다:</p>
 <ul class="simple">
-<li><p data-original-en="A global-attention pool">A <strong>global-attention 풀</strong></p></li>
-<li><p data-original-en="A sliding-window attention pool">A <strong>sliding-window 어텐션 풀</strong></p></li>
+<li><p data-original-en="A global-attention pool">전역 어텐션 풀</p></li>
+<li><p data-original-en="A sliding-window attention pool">슬라이딩 윈도우 어텐션 풀</p></li>
 </ul>
-<p data-original-en="Each pool is then assigned to the corresponding KV cache space for that attention type. The partitioning logic is attention-aware, so memory is distributed according to expected global vs windowed usage instead of a one-size-fits-all split.">각 풀은 그 관심 유형에 대한 대응 KV cache 공간에 할당됩니다. 파티션 논리는 attention-aware이므로 메모리는 one-size-fits-all 분할 대신 예상 글로벌 대 창 사용에 따라 배포됩니다.</p>
+<p data-original-en="Each pool is then assigned to the corresponding KV cache space for that attention type. The partitioning logic is attention-aware, so memory is distributed according to expected global vs windowed usage instead of a one-size-fits-all split.">각 풀은 해당 어텐션 유형에 맞는 KV 캐시 공간에 할당됩니다. 파티셔닝 로직은 어텐션 유형에 따라 메모리를 할당하므로, 전역 및 윈도우 사용량에 따라 메모리를 분배합니다. 즉, 모든 경우에 동일하게 분배하는 것이 아니라, 예상되는 사용량에 따라 분배합니다.</p>
 </section>
 <section id="request-lifecycle">
-<h3 data-original-en="Request Lifecycle">요청 생명주기<a class="headerlink" href="#request-lifecycle" title="Link to this heading">#</a></h3>
-<p data-original-en="For each request phase, the scheduler coordinates both pools together:">각 요청 단계의 경우, 스케줄러는 다음과 같이 풀을 조정합니다.</p>
+<h3 data-original-en="Request Lifecycle">요청 라이프사이클<a class="headerlink" href="#request-lifecycle" title="Link to this heading">#</a></h3>
+<p data-original-en="For each request phase, the scheduler coordinates both pools together:">각 요청 단계에서, 스케줄러는 두 풀을 함께 조정합니다:</p>
 <ul class="simple">
-<li><p data-original-en="Prefill: allocates write blocks in global and sliding-window pools for incoming tokens"><strong>Prefill</strong>: 들어오는 토큰을 위한 Global 및 sliding-window 풀에서 블록을 할당합니다.</p></li>
-<li><p data-original-en="Extend / Decode: loads existing cached blocks and allocates new write blocks for new tokens"><strong>연장 / Decode</strong>: 기존의 캐시 블록을로드하고 새로운 토큰에 대한 새로운 쓰기 블록을 할당</p></li>
-<li><p data-original-en="Cleanup: eagerly releases sliding-window blocks that moved out of the valid window, while keeping global blocks reusable for full-prefix history"><strong>청소</strong>: full-prefix 역사에 대한 글로벌 블록 재사용을 유지하면서 검증된 창에서 이전되는 sliding-window 블록을 출시합니다.</p></li>
+<li><p data-original-en="Prefill: allocates write blocks in global and sliding-window pools for incoming tokens">프리필 (Prefill): 들어오는 토큰에 대해 글로벌 풀과 슬라이딩 윈도우 풀에 쓰기 블록을 할당합니다.</p></li>
+<li><p data-original-en="Extend / Decode: loads existing cached blocks and allocates new write blocks for new tokens">확장 / 디코딩 (Extend / Decode): 기존 캐시된 블록을 로드하고 새로운 토큰에 대해 새로운 쓰기 블록을 할당합니다.</p></li>
+<li><p data-original-en="Cleanup: eagerly releases sliding-window blocks that moved out of the valid window, while keeping global blocks reusable for full-prefix history">정리 (Cleanup): 유효한 윈도우 밖으로 이동한 슬라이딩 윈도우 블록을 즉시 해제하고, 전체 프리픽스 기록을 재사용하기 위해 글로벌 블록을 유지합니다.</p></li>
 </ul>
-<p data-original-en="This is a key efficiency point: sliding-window cache entries outside the active window are reclaimed early instead of occupying memory until request completion.">이것은 주요 효율성 점입니다: sliding-window 캐시 항목 외부 활성 창은 요청 완료 될 때까지 메모리 대신 기억을 점유하는 대신 일찍 다시 인용됩니다.</p>
+<p data-original-en="This is a key efficiency point: sliding-window cache entries outside the active window are reclaimed early instead of occupying memory until request completion.">이것은 중요한 효율성 포인트입니다: 활성 윈도우 밖의 슬라이딩 윈도우 캐시 항목은 요청 완료될 때까지 메모리를 차지하는 대신, 조기에 재활용됩니다.</p>
 </section>
 <section id="interaction-with-prefix-caching">
-<h3 data-original-en="Interaction with Prefix Caching">Prefix Caching와의 상호 작용<a class="headerlink" href="#interaction-with-prefix-caching" title="Link to this heading">#</a></h3>
-<p data-original-en="When prefix caching is enabled, hybrid cache management works with hybrid prefix matching to deduplicate both global and sliding-window blocks. If part of a matched prefix no longer has valid sliding-window cache, Furiosa-LLM still reuses the valid portion and computes only what is needed. For details on hybrid prefix-match behavior, see Hybrid Attention Models in Prefix Caching. To retain reusable hybrid-attention prefixes in host memory, see Hierarchical Prefix Caching.">prefix caching가 활성화되면 하이브리드 캐시 관리는 글로벌 및 sliding-window 블록을 모두 복제하는 하이브리드 프리픽스와 함께 작동합니다. 일치한 프리픽의 일부가 더 이상 유효하지 않은 경우 sliding-window 캐시, Furiosa-LLM는 여전히 유효 부분을 재사용하고 필요한 것을 계산합니다. 하이브리드 prefix-match 행동에 대한 자세한 내용은 참조
-<a class="reference internal" href="prefix-caching.html#prefixcachinghybridattentionmodels"><span class="std std-ref">하이브리드 어텐션 모델</span></a> in
-<a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a>. 호스트 메모리에 재사용 가능한 hybrid-attention 접두사를 유지하려면, 참조 <a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching"><span class="std std-ref">계층적 Prefix Caching</span></a>.</p>
+<h3 data-original-en="Interaction with Prefix Caching">프리픽스 캐싱과의 상호 작용<a class="headerlink" href="#interaction-with-prefix-caching" title="Link to this heading">#</a></h3>
+<p data-original-en="When prefix caching is enabled, hybrid cache management works with hybrid prefix matching to deduplicate both global and sliding-window blocks. If part of a matched prefix no longer has valid sliding-window cache, Furiosa-LLM still reuses the valid portion and computes only what is needed. For details on hybrid prefix-match behavior, see Hybrid Attention Models in Prefix Caching. To retain reusable hybrid-attention prefixes in host memory, see Hierarchical Prefix Caching.">prefix caching가 활성화되면 하이브리드 캐시 관리는 글로벌 및 sliding-window 블록을 모두 복제하는 하이브리드 프리픽스와 함께 작동합니다. 일치한 프리픽의 일부가 더 이상 유효하지 않은 경우 sliding-window 캐시, Furiosa-LLM는 여전히 유효 부분을 재사용하고 필요한 것을 계산합니다. 하이브리드 prefix-match 행동에 대한 자세한 내용은 참조 <a class="reference internal" href="prefix-caching.html#prefixcachinghybridattentionmodels">하이브리드 어텐션 모델</a> in <a class="reference internal" href="prefix-caching.html#prefixcaching"><span class="std std-ref">Prefix Caching</span></a>. 호스트 메모리에 재사용 가능한 hybrid-attention 접두사를 유지하려면, 참조 <a class="reference internal" href="hierarchical-prefix-caching.html#hierarchicalprefixcaching">계층적 Prefix Caching</a>.</p>
 </section>
 </section>
 <section id="why-it-is-efficient">
-<h2 data-original-en="Why It Is Efficient">효과적 인 이유<a class="headerlink" href="#why-it-is-efficient" title="Link to this heading">#</a></h2>
-<p data-original-en="Compared to a single pooled approach, hybrid KV cache management provides:">단일 풀 접근 방식과 비교하여 하이브리드 KV cache 관리는 다음과 같습니다.</p>
+<h2 data-original-en="Why It Is Efficient">효율성의 이유<a class="headerlink" href="#why-it-is-efficient" title="Link to this heading">#</a></h2>
+<p data-original-en="Compared to a single pooled approach, hybrid KV cache management provides:">단일 풀링 방식에 비해, 하이브리드 KV 캐시 관리는 다음과 같은 이점을 제공합니다:</p>
 <ul class="simple">
-<li><p data-original-en="Lower memory waste in models with sparse or mixed attention patterns"><strong>메모리 낭비를 줄이는 것</strong> sparse 또는 혼합주의 패턴 모델</p></li>
-<li><p data-original-en="Higher effective cache capacity for long-context global attention"><strong>서버 측에서 더 높은 효과적인 캐시 용량</strong> long-context 전역 범위에 적용</p></li>
-<li><p data-original-en="Reduced eviction pressure by reclaiming stale sliding-window blocks earlier"><strong>제거 압력을 줄임</strong> stale sliding-window 블록을 이전</p></li>
-<li><p data-original-en="Stable serving behavior without requiring users to manually tune per-attention memory pools"><strong>안정적인 서비스 동작</strong> 수동 per-attention 메모리 풀을 조정하는 사용자 없이</p></li>
+<li><p data-original-en="Lower memory waste in models with sparse or mixed attention patterns">희소하거나 혼합된 어텐션 패턴을 가진 모델에서 메모리 낭비를 줄입니다.</p></li>
+<li><p data-original-en="Higher effective cache capacity for long-context global attention">긴 컨텍스트의 전역 어텐션에 대해 더 높은 효과적인 캐시 용량을 제공합니다.</p></li>
+<li><p data-original-en="Reduced eviction pressure by reclaiming stale sliding-window blocks earlier">오래된 슬라이딩 윈도우 블록을 더 일찍 회수하여 캐시 압력을 줄입니다.</p></li>
+<li><p data-original-en="Stable serving behavior without requiring users to manually tune per-attention memory pools">사용자가 매번 개별 어텐션 메모리 풀을 수동으로 조정하지 않고도 안정적인 서비스 동작을 보장</p></li>
 </ul>
-<p data-original-en="For end users, the main benefit is straightforward: better KV memory utilization and more consistent performance on hybrid-attention models, automatically.">최종 사용자의 경우, 주요 이점은 곧바로: hybrid-attention 모델에 더 나은 KV 메모리 활용 및 더 일관된 성능, 자동으로.</p>
+<p data-original-en="For end users, the main benefit is straightforward: better KV memory utilization and more consistent performance on hybrid-attention models, automatically.">주요 이점은 사용자가 더 나은 KV 메모리 활용 및 하이브리드 어텐션 모델에서 일관된 성능을 자동으로 얻는 것입니다.</p>
 </section>
 <section id="optional-tuning">
-<h2 data-original-en="Optional Tuning">선택적 조율<a class="headerlink" href="#optional-tuning" title="Link to this heading">#</a></h2>
-<p data-original-en="For hybrid-attention models, you can optionally set the EXPECTED_AVERAGE_SEQ_LENGTH environment variable to guide how much KV memory is reserved for global attention versus sliding-window attention.">hybrid-attention 모형을 위해, 당신은 선택적으로 놓을 수 있습니다 <code class="docutils literal notranslate"><span class="pre">EXPECTED_AVERAGE_SEQ_LENGTH</span></code> KV 메모리가 글로벌 주의 versus sliding-window주의에 대해 자세히 알아볼 수 있는 환경 변수.</p>
-<p data-original-en="This is useful when your workload has a stable prompt-length pattern (for example, consistently very long prompts), and you want memory partitioning to better match that pattern.">이것은 당신의 워크로드가 안정되어 있는 prompt 길이 본 (예를 들면, 일관되게 아주 긴 프롬프트를 위해)를 비치하고, 당신이 그 본을 더 나은 일치하기 위하여 분할하는 기억을 원할 때 유용합니다.</p>
+<h2 data-original-en="Optional Tuning">선택적 튜닝<a class="headerlink" href="#optional-tuning" title="Link to this heading">#</a></h2>
+<p data-original-en="For hybrid-attention models, you can optionally set the EXPECTED_AVERAGE_SEQ_LENGTH environment variable to guide how much KV memory is reserved for global attention versus sliding-window attention.">하이브리드 어텐션 모델의 경우, <code class="docutils literal notranslate"><span class="pre">EXPECTED_AVERAGE_SEQ_LENGTH</span></code> 환경 변수를 설정하여 글로벌 어텐션과 슬라이딩 윈도우 어텐션에 할당할 KV 메모리 양을 지정할 수 있습니다.</p>
+<p data-original-en="This is useful when your workload has a stable prompt-length pattern (for example, consistently very long prompts), and you want memory partitioning to better match that pattern.">이는 워크로드가 안정적인 프롬프트 길이를 가지는 경우 (예: 지속적으로 매우 긴 프롬프트)에 유용하며, 메모리 분할이 해당 패턴과 더 잘 맞도록 합니다.</p>
 <ul class="simple">
-<li><p data-original-en="If unset, Furiosa-LLM uses a default ratio based on the model’s global-attention and sliding-window attention cache requirements.">unset가 없다면, Furiosa-LLM는 모델의 global-attention 및 sliding-window주의 캐시 요구 사항에 따라 기본 비율을 사용합니다.</p></li>
-<li><p data-original-en="If set, Furiosa-LLM uses the provided expected sequence length to compute a more workload-aware split.">설정하면 Furiosa-LLM는 workload-aware 분할을 보완하기 위해 제공된 예상 시퀀스 길이를 사용합니다.</p></li>
-<li><p data-original-en="The value must be a positive integer.">값은 긍정적 인 정수이어야합니다.</p></li>
+<li><p data-original-en="If unset, Furiosa-LLM uses a default ratio based on the model’s global-attention and sliding-window attention cache requirements.">설정되지 않은 경우, Furiosa-LLM은 모델의 글로벌 어텐션 및 슬라이딩 윈도우 어텐션 캐시 요구 사항에 따른 기본 비율을 사용합니다.</p></li>
+<li><p data-original-en="If set, Furiosa-LLM uses the provided expected sequence length to compute a more workload-aware split.">expected_sequence_length가 설정되면, Furiosa-LLM은 워크로드에 더 적합한 방식으로 분할을 계산합니다.</p></li>
+<li><p data-original-en="The value must be a positive integer.">값은 양의 정수여야 합니다.</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">EXPECTED_AVERAGE_SEQ_LENGTH</span><span class="o">=</span><span class="m">8192</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>...

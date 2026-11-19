@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'overview/software_stack';</script>
@@ -290,55 +290,51 @@ html
 <article class="bd-article">
 <section id="furiosaai-s-software-stack">
 <span id="softwarestack"></span><h1 data-original-en="FuriosaAI’s Software Stack">FuriosaAI의 소프트웨어 스택<a class="headerlink" href="#furiosaai-s-software-stack" title="Link to this heading">#</a></h1>
-<p data-original-en="FuriosaAI offers a streamlined software stack that enables the FuriosaAI NPU to be used across various applications and environments. Here, we outline the software stack provided by FuriosaAI, explaining the roles of each component, along with guidelines and tutorials. The following diagram shows the software stack provided by FuriosaAI.">FuriosaAI는 다양한 응용 프로그램 및 환경 전반에 걸쳐 사용할 수있는 FuriosaAI NPU를 활성화 할 수있는 간소화 된 소프트웨어 스택을 제공합니다. 여기에 FuriosaAI에 의해 제공되는 소프트웨어 스택을 개요 및 자습서와 함께 각 구성 요소의 역할을 설명합니다. 다음 다이어그램은 FuriosaAI에 의해 제공 된 소프트웨어 스택을 보여줍니다.</p>
+<p data-original-en="FuriosaAI offers a streamlined software stack that enables the FuriosaAI NPU to be used across various applications and environments. Here, we outline the software stack provided by FuriosaAI, explaining the roles of each component, along with guidelines and tutorials. The following diagram shows the software stack provided by FuriosaAI.">FuriosaAI는 FuriosaAI NPU를 다양한 애플리케이션 및 환경에서 활용할 수 있도록 최적화된 소프트웨어 스택을 제공합니다. 여기서는 FuriosaAI에서 제공하는 소프트웨어 스택의 구성 요소, 역할, 지침 및 튜토리얼에 대한 설명을 제공합니다. 다음 다이어그램은 FuriosaAI에서 제공하는 소프트웨어 스택을 보여줍니다.</p>
 <figure class="align-center">
 <a class="reference internal image-reference" href="../_images/sw_stack.png"><img alt="FuriosaAI Software Stack" src="../_images/sw_stack.png" style="width: 500px;"/>
 </a>
 </figure>
 <section id="kernel-driver-firmware-and-pe-runtime">
-<h2 data-original-en="Kernel Driver, Firmware, and PE Runtime">Kernel Driver, Firmware 및 PE Runtime<a class="headerlink" href="#kernel-driver-firmware-and-pe-runtime" title="Link to this heading">#</a></h2>
-<p data-original-en="The kernel device driver enables the Linux operating system to recognize NPU devices and expose them as Linux device files. The firmware runs on the NPU and provides low-level APIs to the PE Runtime (PERT) that runs on the Processing Element (PE). PERT is responsible for communicating with the host’s runtime, as well as scheduling and managing the resources of PEs to execute NPU tasks.">커널 장치 driver는 Linux 운영 체제를 활성화하여 NPU 장치를 인식하고 Linux 장치 파일로 노출합니다. firmware는 NPU에서 실행되며 low-level API를 PE Runtime (PERT)에 PEXQXQXQXQ를 관리하고 runtime를 관리하고 runtime를 관리합니다.</p>
+<h2 data-original-en="Kernel Driver, Firmware, and PE Runtime">커널 드라이버, 펌웨어 및 PE 런타임<a class="headerlink" href="#kernel-driver-firmware-and-pe-runtime" title="Link to this heading">#</a></h2>
+<p data-original-en="The kernel device driver enables the Linux operating system to recognize NPU devices and expose them as Linux device files. The firmware runs on the NPU and provides low-level APIs to the PE Runtime (PERT) that runs on the Processing Element (PE). PERT is responsible for communicating with the host’s runtime, as well as scheduling and managing the resources of PEs to execute NPU tasks.">커널 드라이버는 Linux 운영 체제가 NPU 장치를 인식하고 Linux 장치 파일로 노출할 수 있도록 합니다. 펌웨어는 NPU에서 실행되며, PE(Processing Element)에서 실행되는 PE 런타임(PERT)에 대한 저수준 API를 제공합니다. PERT는 호스트 런타임과의 통신, PE의 리소스 스케줄링 및 관리를 통해 NPU 작업을 실행하는 데 사용됩니다.</p>
 </section>
 <section id="furiosa-compiler">
-<h2>Furiosa Compiler<a class="headerlink" href="#furiosa-compiler" title="Link to this heading">#</a></h2>
-<p data-original-en="The Furiosa Compiler optimizes model graphs and generates executable programs for the NPU. It performs several optimizations, including graph-level optimizations, operator fusion, optimization of memory allocations, scheduling, and optimization of cross-layer data movements. A single model can be compiled into multiple executables, depending on the model’s architecture and application requirements.">Furiosa Compiler는 모델 그래프를 최적화하고 NPU에 대한 실행 가능한 프로그램을 생성합니다. graph-level 최적화, 운영자 융합, 메모리 할당 최적화, 스케줄링 및 cross-layer 데이터 운동의 최적화를 포함하여 여러 최적화를 수행합니다. 단일 모델은 모델의 아키텍처 및 응용 프로그램에 따라 여러 실행 가능한 여러 모델을 컴파일 할 수 있습니다.</p>
-<p data-original-en="When using FuriosaAI’s backend for torch.compile() (FuriosaBackend), or the furiosa-llm package, the Furiosa Compiler is used transparently to generate NPU executables.">FuriosaAI의 백엔드를 사용하는 경우 <code class="docutils literal notranslate"><span class="pre">torch.compile()</span></code> (<code class="docutils literal notranslate"><span class="pre">FuriosaBackend</span></code>), 또는 <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span></code> 패키지, Furiosa Compiler는 NPU 실행을 생성하기 위해 투명하게 사용됩니다.</p>
+<h2 data-original-en="Furiosa Compiler">Furiosa 컴파일러<a class="headerlink" href="#furiosa-compiler" title="Link to this heading">#</a></h2>
+<p data-original-en="The Furiosa Compiler optimizes model graphs and generates executable programs for the NPU. It performs several optimizations, including graph-level optimizations, operator fusion, optimization of memory allocations, scheduling, and optimization of cross-layer data movements. A single model can be compiled into multiple executables, depending on the model’s architecture and application requirements.">Furiosa 컴파일러는 모델 그래프를 최적화하고 NPU용 실행 가능한 프로그램을 생성합니다. 컴파일러는 그래프 수준 최적화, 연산 융합, 메모리 할당 최적화, 스케줄링, 그리고 NPU 작업 실행을 위한 데이터 이동 최적화 등 다양한 최적화를 수행합니다. 단일 모델은 모델의 아키텍처 및 애플리케이션 요구 사항에 따라 여러 개의 실행 가능한 프로그램으로 컴파일될 수 있습니다.</p>
+<p data-original-en="When using FuriosaAI’s backend for torch.compile() (FuriosaBackend), or the furiosa-llm package, the Furiosa Compiler is used transparently to generate NPU executables.">FuriosaAI의 백엔드 (<code class="docutils literal notranslate"><span class="pre">torch.compile()</span></code>용 <code class="docutils literal notranslate"><span class="pre">FuriosaBackend</span></code>) 또는 <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span></code> 패키지를 사용할 때, Furiosa 컴파일러는 투명하게 NPU 실행 파일을 생성합니다. (Transparently generate NPU executables)</p>
 </section>
 <section id="furiosa-runtime">
-<h2>Furiosa Runtime<a class="headerlink" href="#furiosa-runtime" title="Link to this heading">#</a></h2>
-<p data-original-en="The Runtime loads the executables generated by the Furiosa compiler and runs them on the NPU. The Runtime is responsible for scheduling NPU programs and allocating memory on both the NPUs and the host RAM. Additionally, the Runtime supports the use of multiple NPUs and provides a unified entry point for running models across multiple NPUs seamlessly.">Runtime는 Furiosa compiler에 의해 생성된 실행파일을 로드하고 NPU에 그들을 실행합니다. Runtime는 NPU 프로그램을 스케줄링하고 NPU와 호스트 RAM 모두에 할당하는 메모리를 할당하는 역할을 담당하고 있습니다. 또한 Runtime는 여러 NPU의 사용을 지원하며 NPU를 실행하는 여러 가지 항목에 대해 통합되지 않은 여러 항목들을 제공합니다.</p>
+<h2 data-original-en="Furiosa Runtime">Furiosa 런타임<a class="headerlink" href="#furiosa-runtime" title="Link to this heading">#</a></h2>
+<p data-original-en="The Runtime loads the executables generated by the Furiosa compiler and runs them on the NPU. The Runtime is responsible for scheduling NPU programs and allocating memory on both the NPUs and the host RAM. Additionally, the Runtime supports the use of multiple NPUs and provides a unified entry point for running models across multiple NPUs seamlessly.">런타임은 Furiosa 컴파일러가 생성한 실행 파일을 로드하여 NPU에서 실행합니다. 런타임은 NPU 프로그램의 스케줄링 및 NPU와 호스트 RAM 모두에 대한 메모리 할당을 담당합니다. 또한, 런타임은 여러 NPU를 사용하도록 지원하며, 여러 NPU를 통해 모델을 원활하게 실행하기 위한 단일 진입점을 제공합니다.</p>
 </section>
 <section id="furiosa-model-compressor-quantizer">
-<h2 data-original-en="Furiosa Model Compressor (Quantizer)">Furiosa 모형 압축기 (Quantizer)<a class="headerlink" href="#furiosa-model-compressor-quantizer" title="Link to this heading">#</a></h2>
-<p data-original-en="The Furiosa Model Compressor is a toolkit for model calibration and quantization. Model quantization is a powerful technique to reduce memory usage, computation cost, inference latency, and power consumption. The Furiosa Model Compressor provides post-training quantization methods, such as:">Furiosa 모델 컴프레서는 모델 보정 및 quantization에 대한 툴킷입니다. 모델 quantization는 메모리 사용, 계산 비용, inference latency 및 전력 소비를 줄이기위한 강력한 기술입니다. Furiosa 모델 컴프레서는 post-training quantization 방법을 제공합니다.</p>
+<h2 data-original-en="Furiosa Model Compressor (Quantizer)">Furiosa 모델 압축기 (양자화)<a class="headerlink" href="#furiosa-model-compressor-quantizer" title="Link to this heading">#</a></h2>
+<p data-original-en="The Furiosa Model Compressor is a toolkit for model calibration and quantization. Model quantization is a powerful technique to reduce memory usage, computation cost, inference latency, and power consumption. The Furiosa Model Compressor provides post-training quantization methods, such as:">Furiosa 모델 압축기는 모델 교정 및 양자화 도구입니다. 모델 양자화는 메모리 사용량, 계산 비용, 추론 지연 시간 및 전력 소비를 줄이는 강력한 기술입니다. Furiosa 모델 압축기는 다음과 같은 사전 훈련 양자화 방법을 제공합니다:</p>
 <ul class="simple">
 <li><p>BF16 (W16A16)</p></li>
-<li><p data-original-en="INT8 Weight-Only (W8A16) (Planned)">INT8, Weight-Only (W8A16) (예정)</p></li>
+<li><p data-original-en="INT8 Weight-Only (W8A16) (Planned)">INT8 (단일 가중치) (W8A16) (예정)</p></li>
 <li><p>FP8 (W8A8)</p></li>
-<li><p data-original-en="INT8 SmoothQuant (W8A8) (Planned)">INT8 SmoothQuant (W8A8) (예정)</p></li>
-<li><p data-original-en="INT4 Weight-Only (W4A16 AWQ / GPTQ) (Planned)">INT4 Weight-Only (W4A16 AWQ/GPTQ) (예정)</p></li>
+<li><p data-original-en="INT8 SmoothQuant (W8A8) (Planned)">INT8 (부드러운 양자화) (W8A8) (예정)</p></li>
+<li><p data-original-en="INT4 Weight-Only (W4A16 AWQ / GPTQ) (Planned)">INT4 (단일 가중치) (W4A16 AWQ / GPTQ) (예정)</p></li>
 </ul>
 </section>
 <section id="furiosa-llm">
 <h2>Furiosa-LLM<a class="headerlink" href="#furiosa-llm" title="Link to this heading">#</a></h2>
-<p data-original-en="Furiosa-LLM is a high-performance inference engine for LLM models, such as Llama and GPT-J. The key features of Furiosa-LLM include:">Furiosa-LLM는 Llama 및 GPT-J와 같은 LLM 모델용 고성능 inference 엔진입니다.
-Furiosa-LLM의 주요 기능은 다음과 같습니다:</p>
+<p data-original-en="Furiosa-LLM is a high-performance inference engine for LLM models, such as Llama and GPT-J. The key features of Furiosa-LLM include:">Furiosa-LLM은 Llama 및 GPT-J와 같은 LLM 모델용 고성능 추론 엔진입니다. Furiosa-LLM의 주요 기능은 다음과 같습니다:</p>
 <ul class="simple">
-<li><p data-original-en="vLLM-compatible API, for seamless integration with vLLM-based workflows;">vLLM 호환 API, vLLM 기반 워크플로우와 원활한 통합;</p></li>
-<li><p data-original-en="PagedAttention, for optimized memory usage for attention computation;">PagedAttention는, 주의적인 계산을 위한 낙관한 기억 사용법을 위해;</p></li>
-<li><p data-original-en="Continuous batching, improving throughput by dynamically grouping inference requests;">연속 batching, 동적 그룹 inference 요청에 따라 throughput 개선;</p></li>
-<li><p data-original-en="Hugging Face Hub support, simplifying access to pre-trained models;"><a class="reference external" href="https://huggingface.co/docs/huggingface_hub">Hugging Face 허브</a> 지원, pre-trained 모델에 대한 액세스를 단순화;</p></li>
-<li><p data-original-en="OpenAI-compatible API server, enabling easy deployment using familiar APIs.">OpenAI 호환 API 서버, 익숙한 API를 사용하여 쉽게 배포 할 수 있습니다.</p></li>
+<li><p data-original-en="vLLM-compatible API, for seamless integration with vLLM-based workflows;">vLLM 호환 API를 통해 vLLM 기반 워크플로우와의 원활한 통합;</p></li>
+<li><p data-original-en="PagedAttention, for optimized memory usage for attention computation;">PagedAttention: 최적화된 메모리 사용량으로 어텐션 계산을 수행;</p></li>
+<li><p data-original-en="Continuous batching, improving throughput by dynamically grouping inference requests;">연속적인 배치 처리: 추론 요청을 동적으로 그룹화하여 처리량을 향상시킵니다;</p></li>
+<li><p data-original-en="Hugging Face Hub support, simplifying access to pre-trained models;"><a class="reference external" href="https://huggingface.co/docs/huggingface_hub">Hugging Face Hub</a> 지원: 사전 훈련된 모델에 대한 접근을 간소화합니다;</p></li>
+<li><p data-original-en="OpenAI-compatible API server, enabling easy deployment using familiar APIs.">OpenAI 호환 API 서버: 익숙한 API를 사용하여 쉽게 배포할 수 있도록 합니다.</p></li>
 </ul>
-<p data-original-en="For more information, please refer to the Furiosa-LLM section.">더 많은 정보를 원하시면, 참고하세요 <a class="reference internal" href="../furiosa_llm/intro.html#furiosallm"><span class="std std-ref">Furiosa-LLM</span></a> 부문</p>
+<p data-original-en="For more information, please refer to the Furiosa-LLM section.">자세한 내용은 <a class="reference internal" href="../furiosa_llm/intro.html#furiosallm"><span class="std std-ref">Furiosa-LLM</span></a> 섹션을 참조하십시오.</p>
 </section>
 <section id="kubernetes-support">
 <h2 data-original-en="Kubernetes Support">Kubernetes 지원<a class="headerlink" href="#kubernetes-support" title="Link to this heading">#</a></h2>
-<p data-original-en="Kubernetes, an open-source platform for managing containerized applications and services, is widely adopted by organizations for its powerful capabilities in deploying, scaling, and automating containerized workloads. The FuriosaAI software stack offers native integration with Kubernetes, enabling seamless deployment and management of AI applications within Kubernetes environments. FuriosaAI’s device plugin enables Kubernetes clusters to recognize FuriosaAI’s NPUs and schedule them for workloads that require them. This integration simplifies the deployment of AI workloads with FuriosaAI NPUs, ensuring efficient resource utilization and scalability.">Kubernetes는 컨테이너화된 애플리케이션 및 서비스를 관리하는 오픈 소스 플랫폼으로, 강력한 기능을 통해 컨테이너화된 워크로드를 배포, 확장 및 자동화하는 데 널리 사용됩니다.
-FuriosaAI 소프트웨어 스택은 Kubernetes와의 원활한 통합을 제공하여 Kubernetes 환경 내에서 AI 애플리케이션의 배포 및 관리를 용이하게 합니다.
-FuriosaAI의 장치 플러그인은 Kubernetes 클러스터가 FuriosaAI의 NPUs를 인식하고 해당 워크로드에 대해 예약할 수 있도록 합니다.
-이 통합은 FuriosaAI NPUs를 사용하여 AI 워크로드를 배포하는 것을 단순화하여 효율적인 리소스 활용 및 확장성을 보장합니다.</p>
-<p data-original-en="For more information about Kubernetes support, please refer to the Cloud Native Toolkit section.">Kubernetes 지원에 대한 자세한 내용은 다음을 참조하십시오. <a class="reference internal" href="../cloud_native_toolkit/intro.html#cloudnativetoolkit"><span class="std std-ref">클라우드 네이티브 툴킷</span></a> 부문</p>
+<p data-original-en="Kubernetes, an open-source platform for managing containerized applications and services, is widely adopted by organizations for its powerful capabilities in deploying, scaling, and automating containerized workloads. The FuriosaAI software stack offers native integration with Kubernetes, enabling seamless deployment and management of AI applications within Kubernetes environments. FuriosaAI’s device plugin enables Kubernetes clusters to recognize FuriosaAI’s NPUs and schedule them for workloads that require them. This integration simplifies the deployment of AI workloads with FuriosaAI NPUs, ensuring efficient resource utilization and scalability.">Kubernetes는 컨테이너화된 애플리케이션 및 서비스를 관리하는 오픈 소스 플랫폼으로, 강력한 배포, 확장 및 컨테이너화된 워크로드 자동화 기능을 제공하여 조직에서 널리 사용됩니다. FuriosaAI 소프트웨어 스택은 Kubernetes와의 원활한 통합을 제공하여 Kubernetes 환경 내에서 AI 애플리케이션의 배포 및 관리를 용이하게 합니다. FuriosaAI의 장치 플러그인은 Kubernetes 클러스터가 FuriosaAI의 NPU를 인식하고, 필요한 워크로드에 대해 할당할 수 있도록 합니다. 이를 통해 FuriosaAI NPU를 사용하는 AI 워크로드 배포가 간소화되어 효율적인 리소스 활용 및 확장성을 보장합니다.</p>
+<p data-original-en="For more information about Kubernetes support, please refer to the Cloud Native Toolkit section.">Kubernetes 지원에 대한 자세한 내용은 <a class="reference internal" href="../cloud_native_toolkit/intro.html#cloudnativetoolkit">클라우드 네이티브 툴킷</a> 섹션을 참조하십시오.</p>
 </section>
 </section>
 </article>

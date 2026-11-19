@@ -43,7 +43,7 @@ html
 <script src="../../_static/doctools.js?v=9bcbadda"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/copybutton.js?v=ko20261119"></script>
 <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'cloud_native_toolkit/kubernetes/metrics_exporter';</script>
@@ -290,16 +290,13 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="installing-furiosa-metrics-exporter">
-<span id="metricsexporter"></span><h1 data-original-en="Installing Furiosa Metrics Exporter">Furiosa 메트릭스 내보내기 설치<a class="headerlink" href="#installing-furiosa-metrics-exporter" title="Link to this heading">#</a></h1>
+<span id="metricsexporter"></span><h1 data-original-en="Installing Furiosa Metrics Exporter">Furiosa 메트릭스 익스포터 설치<a class="headerlink" href="#installing-furiosa-metrics-exporter" title="Link to this heading">#</a></h1>
 <section id="furiosa-metrics-exporter">
 <h2 data-original-en="Furiosa Metrics Exporter">Furiosa 메트릭스 내보내기<a class="headerlink" href="#furiosa-metrics-exporter" title="Link to this heading">#</a></h2>
-<p data-original-en="The Furiosa metrics exporter exposes collection of metrics related to FuriosaAI NPU devices in Prometheus format. In a Kubernetes cluster, you can scrape the metrics provided by furiosa-metrics-exporter using Prometheus and visualize them with a Grafana dashboard. This can be easily set up using the Prometheus Chart and Grafana Helm charts, along with the furiosa-metrics-exporter Helm chart.">Furiosa 메트릭 수출업자는 FuriosaAI NPU 장치와 관련된 미터의 컬렉션을 노출 <a class="reference external" href="https://prometheus.io/">프로메테우스</a> Kubernetes 클러스터에서, Prometheus를 사용하여 furiosa-metrics-exporter에서 제공하는 메트릭을 수집하고 Grafana 대시보드를 사용하여 시각화할 수 있습니다.
-이를 쉽게 설정하려면 다음을 사용하십시오: <a class="reference external" href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus">프로메테우스 차트</a>
-and <a class="reference external" href="https://github.com/grafana/helm-charts/tree/main/charts/grafana">그라파나</a>
-furiosa-metrics-exporter Helm 차트와 함께 헬멧 차트.</p>
+<p data-original-en="The Furiosa metrics exporter exposes collection of metrics related to FuriosaAI NPU devices in Prometheus format. In a Kubernetes cluster, you can scrape the metrics provided by furiosa-metrics-exporter using Prometheus and visualize them with a Grafana dashboard. This can be easily set up using the Prometheus Chart and Grafana Helm charts, along with the furiosa-metrics-exporter Helm chart.">Furiosa 메트릭스 내보내기는 FuriosaAI NPU 장치와 관련된 메트릭을 <a class="reference external" href="https://prometheus.io/">Prometheus</a> 형식으로 노출합니다. Kubernetes 클러스터에서, furiosa-metrics-exporter에서 제공하는 메트릭을 Prometheus를 사용하여 수집하고 <a class="reference external" href="https://github.com/grafana/helm-charts/tree/main/charts/grafana">Grafana</a> 대시보드를 통해 시각화할 수 있습니다. <a class="reference external" href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus">Prometheus Chart</a>, Grafana Helm Chart, 그리고 furiosa-metrics-exporter Helm Chart를 함께 사용하여 쉽게 설정할 수 있습니다.</p>
 <section id="deploying-furiosa-metrics-exporter-with-helm">
-<h3 data-original-en="Deploying Furiosa Metrics Exporter with Helm">Helm과 Furiosa Metrics Exporter 배포<a class="headerlink" href="#deploying-furiosa-metrics-exporter-with-helm" title="Link to this heading">#</a></h3>
-<p data-original-en="The Furiosa metrics exporter helm chart is available at furiosa-ai/helm-charts. To configure deployment as you need, you can modify charts/furiosa-metrics-exporter/values.yaml. For example, the Furiosa metrics exporter Helm chart automatically creates a Service Object with Prometheus annotations to enable metric scraping automatically. You can modify the values.yaml to change the port or disable the Prometheus annotations if needed. You can deploy the Furiosa Metrics Exporter by running the following commands:">Furiosa 미터 수출상 helm 도표는 유효합니다 <a class="github reference external" href="https://github.com/furiosa-ai/helm-charts">furiosa-ai/helm-charts</a>. 필요한대로 배포를 구성하려면 수정할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">charts/furiosa-metrics-exporter/values.yaml</span></code>. 예를 들어, Furiosa metrics Exporter Helm chart는 Prometheus annotations를 사용하여 자동적으로 메트릭 스크랩을 활성화합니다. 포트를 변경하거나 필요한 경우 Prometheus annotations를 비활성화하려면 values.yaml를 수정할 수 있습니다. 다음 명령을 실행하여 Furiosa Metrics Exporter를 배포할 수 있습니다.</p>
+<h3 data-original-en="Deploying Furiosa Metrics Exporter with Helm">Helm을 사용하여 Furiosa 메트릭스 내보내기 배포<a class="headerlink" href="#deploying-furiosa-metrics-exporter-with-helm" title="Link to this heading">#</a></h3>
+<p data-original-en="The Furiosa metrics exporter helm chart is available at furiosa-ai/helm-charts. To configure deployment as you need, you can modify charts/furiosa-metrics-exporter/values.yaml. For example, the Furiosa metrics exporter Helm chart automatically creates a Service Object with Prometheus annotations to enable metric scraping automatically. You can modify the values.yaml to change the port or disable the Prometheus annotations if needed. You can deploy the Furiosa Metrics Exporter by running the following commands:"><a class="github reference external" href="https://github.com/furiosa-ai/helm-charts">furiosa-ai/helm-charts</a>에서 Furiosa 메트릭스 내보내기 Helm Chart를 사용할 수 있습니다. 필요에 따라 <code class="docutils literal notranslate"><span class="pre">charts/furiosa-metrics-exporter/values.yaml</span></code> 파일을 수정하여 배포를 구성할 수 있습니다. 예를 들어, Furiosa 메트릭스 내보내기 Helm Chart는 Prometheus 주석이 포함된 Service Object를 자동으로 생성하여 메트릭 수집을 자동화합니다. 필요에 따라 포트를 변경하거나 Prometheus 주석을 비활성화하려면 values.yaml 파일을 수정할 수 있습니다. 다음 명령을 실행하여 Furiosa 메트릭스 내보내기를 배포할 수 있습니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>furiosa<span class="w"> </span>https://furiosa-ai.github.io/helm-charts
 helm<span class="w"> </span>repo<span class="w"> </span>update
 helm<span class="w"> </span>install<span class="w"> </span>furiosa-metrics-exporter<span class="w"> </span>furiosa/furiosa-metrics-exporter<span class="w"> </span>-n<span class="w"> </span>furiosa-system
@@ -307,28 +304,28 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-metrics-expor
 </div>
 </section>
 <section id="alternative-installation-furiosa-metrics-exporter-via-apt">
-<h3 data-original-en="Alternative Installation: furiosa-metrics-exporter via apt">대안 임명: apt를 통해 furiosa-metrics-exporter<a class="headerlink" href="#alternative-installation-furiosa-metrics-exporter-via-apt" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Alternative Installation: furiosa-metrics-exporter via apt">대안적인 설치: apt를 통한 furiosa-metrics-exporter<a class="headerlink" href="#alternative-installation-furiosa-metrics-exporter-via-apt" title="Link to this heading">#</a></h3>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="For special use cases or non-Kubernetes environments, you can alternatively install the exporter via an apt package.">특수 사용 케이스 또는 non-Kubernetes 환경을 위해, 당신은 대안으로 수출업자를 설치할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">apt</span></code> 패키지</p>
+<p data-original-en="For special use cases or non-Kubernetes environments, you can alternatively install the exporter via an apt package.">특별한 사용 사례 또는 Kubernetes 환경이 아닌 경우, exporter를 <code class="docutils literal notranslate"><span class="pre">apt</span></code> 패키지로 대안적으로 설치할 수 있습니다.</p>
 </div>
-<p data-original-en="The minimum requirements for installing the furiosa-metrics-exporter package are as follows:">설치를 위한 최소 요구 사항 <code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code> 다음 사항이 적용됩니다:</p>
+<p data-original-en="The minimum requirements for installing the furiosa-metrics-exporter package are as follows:"><code class="docutils literal notranslate"><span class="pre">furiosa-metrics-exporter</span></code> 패키지를 설치하기 위한 최소 요구 사항은 다음과 같습니다:</p>
 <ul class="simple">
-<li><p data-original-en="Ubuntu 22.04 LTS (Debian Bookworm) or later">Ubuntu 22.04 LTS (Debian Bookworm) 이상</p></li>
+<li><p data-original-en="Ubuntu 22.04 LTS (Debian Bookworm) or later">Ubuntu 22.04 LTS (Debian Bookworm) 또는 이후 버전</p></li>
 <li><p data-original-en="Linux Kernel 6.3 or later">Linux 커널 6.3 또는 이후 버전</p></li>
-<li><p data-original-en="Administrator privileges on the system (root)">시스템의 관리자 권한 (root)</p></li>
-<li><p data-original-en="Setting up the Package Repository and Installing Prerequisites"><a class="reference internal" href="../../get_started/prerequisites.html#aptsetup"><span class="std std-ref">패키지 저장소 설정</span></a> and <a class="reference internal" href="../../get_started/prerequisites.html#installingprerequisites"><span class="std std-ref">사전 설치</span></a></p></li>
+<li><p data-original-en="Administrator privileges on the system (root)">시스템 (root) 관리자 권한</p></li>
+<li><p data-original-en="Setting up the Package Repository and Installing Prerequisites"><a class="reference internal" href="../../get_started/prerequisites.html#aptsetup">패키지 저장소 설정</a> 및 <a class="reference internal" href="../../get_started/prerequisites.html#installingprerequisites">필수 구성 요소 설치</a></p></li>
 </ul>
-<p data-original-en="Then, please install the furiosa-metrics-exporter package as follows:">다음으로 furiosa-metrics-exporter 패키지를 설치하십시오.</p>
+<p data-original-en="Then, please install the furiosa-metrics-exporter package as follows:">다음 단계를 통해 furiosa-metrics-exporter 패키지를 설치하십시오:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>furiosa-metrics-exporter
 </pre></div>
 </div>
-<p data-original-en="This command installs packages furiosa-libsmi and furiosa-metrics-exporter.">이 명령은 패키지 furiosa-libsmi 및 furiosa-metrics-exporter를 설치합니다.</p>
+<p data-original-en="This command installs packages furiosa-libsmi and furiosa-metrics-exporter.">이 명령은 furiosa-libsmi 및 furiosa-metrics-exporter 패키지를 설치합니다.</p>
 </section>
 <section id="configuration">
 <h3 data-original-en="Configuration">구성<a class="headerlink" href="#configuration" title="Link to this heading">#</a></h3>
-<p data-original-en="The Furiosa Metrics Exporter has various command-line (CLI) options. The following table summarizes the available CLI options:">Furiosa Metrics Exporter에는 다양한 command-line (CLI) 옵션이 있습니다. 다음 테이블은 CLI 옵션을 요약합니다.</p>
+<p data-original-en="The Furiosa Metrics Exporter has various command-line (CLI) options. The following table summarizes the available CLI options:">Furiosa Metrics Exporter는 다양한 명령줄 (CLI) 옵션을 제공합니다. 다음 표는 사용 가능한 CLI 옵션을 요약합니다:</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id1">
 <caption><span class="caption-text">Furiosa 메트릭스 내보내기 CLI 옵션</span><a class="headerlink" href="#id1" title="Link to this table">#</a></caption>
 <colgroup>
@@ -338,34 +335,34 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p data-original-en="CLI Option">CLI 옵션</p></th>
-<th class="head"><p data-original-en="Required">필요성</p></th>
+<th class="head"><p data-original-en="Required">필수</p></th>
 <th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--interval</span> <span class="pre">&lt;int&gt;</span></code></p></td>
-<td><p>Yes</p></td>
-<td><p data-original-en="Metrics collection interval in seconds. e.g., --interval 10 for collecting metrics every 10 seconds.">초에 있는 미터 수집 간격. e.g., <code class="docutils literal notranslate"><span class="pre">--interval</span> <span class="pre">10</span></code> 모든 10 초마다 메트릭을 수집합니다.</p></td>
+<td><p data-original-en="Yes">예</p></td>
+<td><p data-original-en="Metrics collection interval in seconds. e.g., --interval 10 for collecting metrics every 10 seconds.">메트릭 수집 간격 (초 단위). 예: <code class="docutils literal notranslate"><span class="pre">--interval</span> <span class="pre">10</span></code>은 매 10초마다 메트릭을 수집합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--port</span> <span class="pre">&lt;int&gt;</span></code></p></td>
-<td><p>Yes</p></td>
-<td><p data-original-en="Port number for the metrics HTTP server. e.g., --port 6254.">미터 HTTP 서버를 위한 항구 수. e.g., <code class="docutils literal notranslate"><span class="pre">--port</span> <span class="pre">6254</span></code>.</p></td>
+<td><p data-original-en="Yes">예</p></td>
+<td><p data-original-en="Port number for the metrics HTTP server. e.g., --port 6254.">메트릭 HTTP 서버의 포트 번호. 예: <code class="docutils literal notranslate"><span class="pre">--port</span> <span class="pre">6254</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--node-name</span> <span class="pre">&lt;string&gt;</span></code></p></td>
-<td><p>No</p></td>
-<td><p data-original-en='If set, hostname label will be added to the metrics. Default is empty ("").'>설정하면 hostname 레이블이 메트릭에 추가됩니다. 기본값은 비어 있습니다 (<code class="docutils literal notranslate"><span class="pre">""</span></code>).</p></td>
+<td><p data-original-en="No">아니오</p></td>
+<td><p data-original-en='If set, hostname label will be added to the metrics. Default is empty ("").'>설정하면, 메트릭에 호스트 이름 레이블이 추가됩니다. 기본값은 비어 있습니다 (<code class="docutils literal notranslate"><span class="pre">""</span></code>).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--kube-resources-label</span> <span class="pre">&lt;bool&gt;</span></code></p></td>
-<td><p>No</p></td>
-<td><p data-original-en="If set, Kubernetes resource labels (such as namespace, pod, and container) will be added to the metrics. Default is false. Recommended when running in Kubernetes for richer metrics context.">설정된 경우 Kubernetes 리소스 라벨(이름 공간, 파드 및 컨테이너와 같은)은 메트릭스에 추가됩니다. 기본값은 <code class="docutils literal notranslate"><span class="pre">false</span></code>. Kubernetes에서 부유 한 메트릭스 컨텍스트를 실행할 때 권장.</p></td>
+<td><p data-original-en="No">아니오</p></td>
+<td><p data-original-en="If set, Kubernetes resource labels (such as namespace, pod, and container) will be added to the metrics. Default is false. Recommended when running in Kubernetes for richer metrics context.">설정하면, Kubernetes 리소스 레이블 (예: 네임스페이스, 포드, 컨테이너)이 메트릭에 추가됩니다. 기본값은 <code class="docutils literal notranslate"><span class="pre">false</span></code>입니다. Kubernetes 환경에서 더 풍부한 메트릭 컨텍스트를 위해 권장됩니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 </section>
 <section id="metrics">
-<h3 data-original-en="Metrics">매트릭<a class="headerlink" href="#metrics" title="Link to this heading">#</a></h3>
-<p data-original-en="The exporter is composed of chain of collectors, each collector is responsible for collecting specific metrics from the Furiosa NPU devices. The following table shows the available collectors and metrics:">수출업자는 수집가의 사슬로 구성되고, 각 수집가는 Furiosa NPU 장치에서 특정한 미터를 모으기를 책임집니다. 뒤에 오는 테이블은 유효한 수집가 및 미터를 보여줍니다:</p>
+<h3 data-original-en="Metrics">메트릭 (Metrics)<a class="headerlink" href="#metrics" title="Link to this heading">#</a></h3>
+<p data-original-en="The exporter is composed of chain of collectors, each collector is responsible for collecting specific metrics from the Furiosa NPU devices. The following table shows the available collectors and metrics:">이 추출기는 Furiosa NPU 장치에서 수집할 특정 메트릭을 수집하는 여러 수집기들의 사슬로 구성됩니다. 다음 표는 사용 가능한 수집기 및 메트릭을 보여줍니다.</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id2">
 <caption><span class="caption-text">NPU 측정</span><a class="headerlink" href="#id2" title="Link to this table">#</a></caption>
 <colgroup>
@@ -376,78 +373,78 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <col style="width: 33.3%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Collector Name">수집자 이름</p></th>
-<th class="head"><p data-original-en="Metric">메트릭</p></th>
-<th class="head"><p data-original-en="Type">종류</p></th>
-<th class="head"><p data-original-en="Metric Labels">메트릭 레이블</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Collector Name">수집기 이름 (Collector Name)</p></th>
+<th class="head"><p data-original-en="Metric">메트릭 (Metric)</p></th>
+<th class="head"><p data-original-en="Type">유형</p></th>
+<th class="head"><p data-original-en="Metric Labels">메트릭 레이블 (Metric Labels)</p></th>
 <th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p data-original-en="Liveness">생동감</p></td>
+<tr class="row-even"><td><p data-original-en="Liveness">생존성 (Liveness)</p></td>
 <td><p>furiosa_npu_alive</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The liveness of the Furiosa NPU device.">Furiosa NPU 장치의 수명.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The liveness of the Furiosa NPU device.">Furiosa NPU 장치의 상태 확인.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Temperature</p></td>
+<tr class="row-odd"><td><p data-original-en="Temperature">온도</p></td>
 <td><p>furiosa_npu_hw_temperature</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container, label">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너, 라벨</p></td>
-<td><p data-original-en="The temperature of the Furiosa NPU device.">temperature의 Furiosa NPU 장치.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container, label">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container, label</p></td>
+<td><p data-original-en="The temperature of the Furiosa NPU device.">Furiosa NPU 장치의 온도 (온도)</p></td>
 </tr>
-<tr class="row-even"><td><p data-original-en="Power">전력</p></td>
+<tr class="row-even"><td><p data-original-en="Power">전력 (전력 소비)</p></td>
 <td><p>furiosa_npu_hw_power</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container, label">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너, 라벨</p></td>
-<td><p data-original-en="The power consumption of the Furiosa NPU device.">Furiosa NPU 장치의 전력 소비.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container, label">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container, label</p></td>
+<td><p data-original-en="The power consumption of the Furiosa NPU device.">Furiosa NPU 장치의 전력 소비 (전력 소비)</p></td>
 </tr>
-<tr class="row-odd"><td><p data-original-en="Core Utilization">핵심 활용</p></td>
+<tr class="row-odd"><td><p data-original-en="Core Utilization">코어 사용률</p></td>
 <td><p>furiosa_npu_core_utilization</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The core utilization of the Furiosa NPU device.">Furiosa NPU 장치의 핵심 이용.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The core utilization of the Furiosa NPU device.">Furiosa NPU 장치의 코어 사용량.</p></td>
 </tr>
-<tr class="row-even"><td><p data-original-en="Core Frequency">핵심 주파수</p></td>
+<tr class="row-even"><td><p data-original-en="Core Frequency">코어 주파수</p></td>
 <td><p>furiosa_npu_core_frequency</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The core frequency of the Furiosa NPU device.">Furiosa NPU 장치의 핵심 빈도.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The core frequency of the Furiosa NPU device.">Furiosa NPU 장치의 코어 주파수.</p></td>
 </tr>
-<tr class="row-odd"><td><p data-original-en="Cycle Count">순환 수</p></td>
+<tr class="row-odd"><td><p data-original-en="Cycle Count">사이클 수</p></td>
 <td><p>furiosa_npu_total_cycle_count</p></td>
-<td><p data-original-en="counter">카운터</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The total cycle count of the Furiosa NPU device.">Furiosa NPU 장치의 총 주기 조사.</p></td>
+<td><p data-original-en="counter">총 사이클 수</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The total cycle count of the Furiosa NPU device.">Furiosa NPU 장치의 총 사이클 수.</p></td>
 </tr>
-<tr class="row-even"><td><p data-original-en="Task Execution Cycle">작업 실행 순환</p></td>
+<tr class="row-even"><td><p data-original-en="Task Execution Cycle">작업 실행 사이클</p></td>
 <td><p>furiosa_npu_task_execution_cycle</p></td>
-<td><p data-original-en="counter">카운터</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The task execution cycle of the NPU Task.">NPU 작업의 작업 실행주기.</p></td>
+<td><p data-original-en="counter">총 사이클 수</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The task execution cycle of the NPU Task.">NPU 작업의 작업 실행 사이클.</p></td>
 </tr>
-<tr class="row-odd"><td><p data-original-en="Total DRAM Size">전체 DRAM 크기</p></td>
+<tr class="row-odd"><td><p data-original-en="Total DRAM Size">총 DRAM 용량</p></td>
 <td><p>furiosa_npu_dram_total</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The total DRAM size of the Furiosa NPU device.">Furiosa NPU 장치의 총 DRAM 크기.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The total DRAM size of the Furiosa NPU device.">Furiosa NPU 장치의 총 DRAM 용량.</p></td>
 </tr>
-<tr class="row-even"><td><p data-original-en="DRAM Used Size">사용 된 크기는 DRAM</p></td>
+<tr class="row-even"><td><p data-original-en="DRAM Used Size">사용 중인 DRAM 용량</p></td>
 <td><p>furiosa_npu_dram_usage</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The currently used DRAM size of the Furiosa NPU device.">현재 Furiosa NPU 장치의 DRAM 크기를 사용했습니다.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The currently used DRAM size of the Furiosa NPU device.">Furiosa NPU 장치에서 현재 사용 중인 DRAM 용량.</p></td>
 </tr>
-<tr class="row-odd"><td><p data-original-en="Throttling Events Count">제한 이벤트 수</p></td>
+<tr class="row-odd"><td><p data-original-en="Throttling Events Count">Furiosa NPU에서의 Throttling 이벤트 수 (Furiosa NPU에서 발생하는 Throttling 이벤트의 개수)</p></td>
 <td><p>furiosa_npu_throttling_events_count</p></td>
-<td><p data-original-en="gauge">가수</p></td>
-<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">아카이브, 코어, 장치, uuid, pci_bus_id, firmware_version, driver_version, 호스트 이름, 네임스페이스, 포드, 컨테이너</p></td>
-<td><p data-original-en="The number of throttling events that occurred on the Furiosa NPU device within a fixed time window.">고정 시간 창 내에서 Furiosa NPU 장치에서 발생 한 스로틀링 이벤트의 수.</p></td>
+<td><p data-original-en="gauge">지표 (Gauge)</p></td>
+<td><p data-original-en="arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container">arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container</p></td>
+<td><p data-original-en="The number of throttling events that occurred on the Furiosa NPU device within a fixed time window.">Furiosa NPU 장치 내에서 고정된 시간 간격 동안 발생한 Throttling 이벤트의 개수.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="All metrics share common metric labels such as arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, and container. The following table describes the common metric labels:">모든 미터는 아치와 같은 일반적인 미터 상표, 핵심, 장치, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod 및 콘테이너 공유합니다. 뒤에 오는 테이블은 일반적인 미터 상표를 설명합니다:</p>
+<p data-original-en="All metrics share common metric labels such as arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, and container. The following table describes the common metric labels:">모든 메트릭은 arch, core, device, uuid, pci_bus_id, firmware_version, driver_version, hostname, namespace, pod, container 등의 공통 메트릭 레이블을 공유합니다. 다음 표는 공통 메트릭 레이블을 설명합니다:</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id3">
 <caption><span class="caption-text">일반적인 NPU 메트릭 레이블 속성</span><a class="headerlink" href="#id3" title="Link to this table">#</a></caption>
 <colgroup>
@@ -460,32 +457,31 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p data-original-en="arch">아치</p></td>
-<td><p data-original-en="The architecture of the Furiosa NPU device. e.g. warboy, rngd">Furiosa NPU 장치의 건축. e.g. warboy, rngd</p></td>
+<tr class="row-even"><td><p data-original-en="arch">아키텍처 (architecture)</p></td>
+<td><p data-original-en="The architecture of the Furiosa NPU device. e.g. warboy, rngd">Furiosa NPU 장치의 아키텍처. 예: warboy, rngd</p></td>
 </tr>
 <tr class="row-odd"><td><p data-original-en="core">핵심</p></td>
-<td><p data-original-en="The core number of the Furiosa NPU device. e.g. 0, 1, 2, 3, 4, 5, 6, 7, 0-7">Furiosa NPU 장치의 핵심 수. e.g. 0, 1, 2, 3, 4, 5, 6, 7, 0-7</p></td>
+<td><p data-original-en="The core number of the Furiosa NPU device. e.g. 0, 1, 2, 3, 4, 5, 6, 7, 0-7">Furiosa NPU 장치의 핵심 개수. 예: 0, 1, 2, 3, 4, 5, 6, 7, 0-7</p></td>
 </tr>
-<tr class="row-even"><td><p data-original-en="device">기기</p></td>
-<td><p data-original-en="The device name of the Furiosa NPU device. e.g. npu0">Furiosa NPU 장치의 장치 이름. e.g. npu0</p></td>
+<tr class="row-even"><td><p data-original-en="device">장치</p></td>
+<td><p data-original-en="The device name of the Furiosa NPU device. e.g. npu0">Furiosa NPU 장치의 장치 이름. 예: npu0</p></td>
 </tr>
 <tr class="row-odd"><td><p>uuid</p></td>
-<td><p data-original-en="The UUID of the Furiosa NPU device.">Furiosa NPU 장치의 UUID</p></td>
+<td><p data-original-en="The UUID of the Furiosa NPU device.">Furiosa NPU 장치의 UUID.</p></td>
 </tr>
 <tr class="row-even"><td><p>pci_bus_id</p></td>
 <td><p data-original-en="The PCI bus ID of the Furiosa NPU device. e.g. 0000:c7:00.0">Furiosa NPU 장치의 PCI 버스 ID. 예: 0000:c7:00.0</p></td>
 </tr>
 <tr class="row-odd"><td><p>firmware_version</p></td>
-<td><p data-original-en="The firmware version of the Furiosa NPU device. e.g. 2025.1.0+696efad">Furiosa NPU 장치의 firmware 버전. 예: 2025.1.0+696efad</p></td>
+<td><p data-original-en="The firmware version of the Furiosa NPU device. e.g. 2025.1.0+696efad">Furiosa NPU 장치의 펌웨어 버전. 예: 2025.1.0+696efad</p></td>
 </tr>
 <tr class="row-even"><td><p>driver_version</p></td>
-<td><p data-original-en="The driver version of the Furiosa NPU device. e.g. 2025.1.0+f09a8d8">Furiosa NPU 장치의 driver 버전. 예: 2025.1.0+f09a8d8</p></td>
+<td><p data-original-en="The driver version of the Furiosa NPU device. e.g. 2025.1.0+f09a8d8">Furiosa NPU 장치의 드라이버 버전. 예: 2025.1.0+f09a8d8</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="The following metric labels are optional and enabled only when the corresponding command-line options (--node-name and --kube-resources-label) are set. Additionally, the namespace, pod, and container labels require an environment where the Kubernetes PodResource API is supported.">다음과 같은 메트릭 라벨은 해당 command-line 옵션(선택 사항 및 사용 가능)일 때만 사용할 수 있습니다.<code class="docutils literal notranslate"><span class="pre">--node-name</span></code> and <code class="docutils literal notranslate"><span class="pre">--kube-resources-label</span></code>)가 설정됩니다.
-또한, <em>이름 공간</em>, <em>pod</em>, 그리고 <em>컨테이너</em> 라벨은 환경이 필요한 경우 <a class="reference external" href="https://kubernetes.io/blog/2023/08/23/kubelet-podresources-api-ga/">Kubernetes PodResource API</a> 지원됩니다.</p>
+<p data-original-en="The following metric labels are optional and enabled only when the corresponding command-line options (--node-name and --kube-resources-label) are set. Additionally, the namespace, pod, and container labels require an environment where the Kubernetes PodResource API is supported.">다음 메트릭 레이블은 선택 사항이며, 해당 명령줄 옵션 (<code class="docutils literal notranslate"><span class="pre">--node-name</span></code> 및 <code class="docutils literal notranslate"><span class="pre">--kube-resources-label</span></code>)이 설정될 때만 활성화됩니다. 또한, 네임스페이스, 포드 및 컨테이너 레이블은 <a class="reference external" href="https://kubernetes.io/blog/2023/08/23/kubelet-podresources-api-ga/">Kubernetes PodResource API</a>가 지원되는 환경에서 필요합니다.</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id4">
 <caption><span class="caption-text">선택적인 NPU 미터 상표 특성</span><a class="headerlink" href="#id4" title="Link to this table">#</a></caption>
 <colgroup>
@@ -499,21 +495,21 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </thead>
 <tbody>
 <tr class="row-even"><td><p data-original-en="hostname">호스트 이름</p></td>
-<td><p data-original-en="The hostname of the machine where the exporter is running.">수출업자가 운영하는 기계의 hostname.</p></td>
+<td><p data-original-en="The hostname of the machine where the exporter is running.">에이전트가 실행되는 머신의 호스트 이름.</p></td>
 </tr>
-<tr class="row-odd"><td><p data-original-en="namespace">이름 공간</p></td>
-<td><p data-original-en="The namespace of the Kubernetes pod to which the NPU is allocated.">NPU가 할당되는 Kubernetes pod의 네임스페이스.</p></td>
+<tr class="row-odd"><td><p data-original-en="namespace">네임스페이스</p></td>
+<td><p data-original-en="The namespace of the Kubernetes pod to which the NPU is allocated.">NPU가 할당된 Kubernetes 파드에 대한 네임스페이스.</p></td>
 </tr>
-<tr class="row-even"><td><p>pod</p></td>
-<td><p data-original-en="The name of the Kubernetes pod to which the NPU is allocated.">NPU가 할당되는 Kubernetes pod의 이름.</p></td>
+<tr class="row-even"><td><p data-original-en="pod">파드</p></td>
+<td><p data-original-en="The name of the Kubernetes pod to which the NPU is allocated.">NPU가 할당된 Kubernetes 파드의 이름.</p></td>
 </tr>
 <tr class="row-odd"><td><p data-original-en="container">컨테이너</p></td>
-<td><p data-original-en="The container name within the Kubernetes pod to which the NPU is allocated.">NPU가 할당되는 Kubernetes pod 내의 컨테이너 이름.</p></td>
+<td><p data-original-en="The container name within the Kubernetes pod to which the NPU is allocated.">Kubernetes Pod 내에서 NPU에 할당되는 컨테이너의 이름입니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="The metric label “label” is used to describe additional attributes specific to each metric. This approach helps avoid having too many metric definitions and effectively aggregates metrics that share common characteristics.">메트릭 라벨 "label"은 각 미터에 특정 속성을 설명하는 데 사용됩니다. 이 접근법은 일반적인 특성을 공유하는 너무 많은 메트릭 정의 및 효과적으로 집계 지표를 방지하는 데 도움이됩니다.</p>
+<p data-original-en="The metric label “label” is used to describe additional attributes specific to each metric. This approach helps avoid having too many metric definitions and effectively aggregates metrics that share common characteristics.">"label"이라는 메트릭 레이블은 각 메트릭에 특정한 추가 속성을 설명하는 데 사용됩니다. 이 방식은 과도한 메트릭 정의를 방지하고, 공통적인 특징을 공유하는 메트릭을 효과적으로 집계하는 데 도움이 됩니다.</p>
 <div class="pst-scrollable-table-container"><table class="table table-center" id="id5">
 <caption><span class="caption-text">추가적인 측정 레이블 속성</span><a class="headerlink" href="#id5" title="Link to this table">#</a></caption>
 <colgroup>
@@ -522,29 +518,29 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <col style="width: 47.6%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Metric Type">메트릭 타입</p></th>
-<th class="head"><p data-original-en="Label Name">라벨 이름</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Metric Type">메트릭 유형</p></th>
+<th class="head"><p data-original-en="Label Name">레이블 이름</p></th>
 <th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>Temperature</p></td>
+<tr class="row-even"><td><p data-original-en="Temperature">온도</p></td>
 <td><p data-original-en="peak">피크</p></td>
-<td><p data-original-en="The highest temperature observed from SoC sensors">SoC 센서에서 가장 높은 temperature</p></td>
+<td><p data-original-en="The highest temperature observed from SoC sensors">SoC 센서에서 관측된 최고 온도 (가장 높은 온도)</p></td>
 </tr>
-<tr class="row-odd"><td><p>Temperature</p></td>
-<td><p data-original-en="ambient">환경</p></td>
-<td><p data-original-en="The temperature observed from sensors attached to the board">temperature는 보드에 부착된 센서에서 관찰했습니다.</p></td>
+<tr class="row-odd"><td><p data-original-en="Temperature">온도</p></td>
+<td><p data-original-en="ambient">주변 온도</p></td>
+<td><p data-original-en="The temperature observed from sensors attached to the board">보드에 부착된 센서에서 관측된 온도</p></td>
 </tr>
-<tr class="row-even"><td><p data-original-en="Power">전력</p></td>
+<tr class="row-even"><td><p data-original-en="Power">전력 (전력 소비)</p></td>
 <td><p>rms</p></td>
-<td><p data-original-en="Root Mean Square (RMS) value of the power consumed by the device, providing an average power consumption metric over a period of time.">Root Mean Square (RMS)는 장치의 소비 전력의 값으로, 시간의 기간 동안 평균 전력 소비 미터를 제공합니다.</p></td>
+<td><p data-original-en="Root Mean Square (RMS) value of the power consumed by the device, providing an average power consumption metric over a period of time.">장치가 소비하는 전력의 제곱 평균값(Root Mean Square, RMS)을 제공하여, 특정 기간 동안의 평균 전력 소비를 측정합니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="Examples"><strong>예제</strong></p>
-<p data-original-en="The following shows real-world example of the metrics:">다음의 real-world 예제를 메트릭의 보여줍니다.</p>
+<p data-original-en="Examples">예제</p>
+<p data-original-en="The following shows real-world example of the metrics:">다음은 실제 사용 예시입니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1">#liveness</span>
 furiosa_npu_alive<span class="o">{</span><span class="nv">arch</span><span class="o">=</span><span class="s2">"rngd"</span>,container<span class="o">=</span><span class="s2">"furiosa"</span>,core<span class="o">=</span><span class="s2">"0-7"</span>,device<span class="o">=</span><span class="s2">"npu0"</span>,driver_version<span class="o">=</span><span class="s2">"2025.1.0+f09a8d8"</span>,firmware_version<span class="o">=</span><span class="s2">"2025.1.0+696efad"</span>,hostname<span class="o">=</span><span class="s2">"cntk002"</span>,namespace<span class="o">=</span><span class="s2">"default"</span>,pci_bus_id<span class="o">=</span><span class="s2">"0000:c7:00.0"</span>,pod<span class="o">=</span><span class="s2">"furiosa"</span>,uuid<span class="o">=</span><span class="s2">"09512C86-0702-4303-8F40-474746474A40"</span><span class="o">}</span><span class="w"> </span><span class="m">1</span>
 

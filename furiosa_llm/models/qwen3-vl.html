@@ -43,7 +43,7 @@ html
 <script src="../../_static/doctools.js?v=9bcbadda"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/copybutton.js?v=ko20261119"></script>
 <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/models/qwen3-vl';</script>
@@ -292,86 +292,81 @@ html
 <article class="bd-article">
 <section id="qwen3-vl">
 <span id="furiosa-llm-model-qwen3-vl"></span><h1>Qwen3-VL<a class="headerlink" href="#qwen3-vl" title="Link to this heading">#</a></h1>
-<p data-original-en="The upstream Qwen3-VL models are dense vision-language models that pair a vision encoder with a dense transformer decoder, using Interleaved-MRoPE positional embeddings and DeepStack multi-level feature fusion to handle images and videos alongside text. They cover visual understanding tasks such as OCR, document and chart analysis, spatial reasoning, and video comprehension, and natively support tool (function) calling.">하류 <a class="reference external" href="https://huggingface.co/Qwen">Qwen3-VL</a> 모델은 밀집해서 <strong>vision-language 모델</strong> Interleaved-MRoPE 위치 삽입 및 DeepStack multi-level 특징은 이미지와 비디오와 텍스트를 처리하는 데 초점을 맞춘 비전 인코더를 결합합니다. OCR, 문서 및 차트 분석, 공간 소싱 및 비디오 comprehension 및 네이티브 지원 도구 (기능) 호출과 같은 시각적 이해 작업을 커버합니다.</p>
-<p data-original-en="FuriosaAI publishes the Qwen3-VL models under the furiosa-ai organization on the Hugging Face Hub, each shipping a Furiosa Executable Bundle (FXB) for running it on FuriosaAI RNGD with Furiosa-LLM. Both the Instruct (non-thinking) and Thinking editions are published; the Thinking editions emit an explicit chain of thought before the final answer (see Basic Usage below). The same upstream weights also run on other frameworks (such as vLLM, SGLang, and Transformers); for usage with those, see the upstream model cards linked below.">FuriosaAI는 Qwen3-VL 모형을 아래에 발행합니다
-<a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> 구성 요소가 Hugging Face 허브에 연결됨</a>, 각 발송 Furiosa 실행 가능한 번들 (FXB)에 그것을 달리기를 위해
-<a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> Furiosa-LLM와 함께. Instruct (non-thinking)과 Thinking 판 모두 출판됩니다. Thinking 판은 최종 답하기 전에 언급 한 체인을 방출 (참고 참조) <a class="reference internal" href="#basic-usage">기본 사용</a>
-아래). 동일한 업스트림 무게는 다른 프레임 워크 (vLLM, SGLang 및 변압기와 같은); 그와 함께 사용, 아래 링크 업스트림 모델 카드를 참조하십시오.</p>
+<p data-original-en="The upstream Qwen3-VL models are dense vision-language models that pair a vision encoder with a dense transformer decoder, using Interleaved-MRoPE positional embeddings and DeepStack multi-level feature fusion to handle images and videos alongside text. They cover visual understanding tasks such as OCR, document and chart analysis, spatial reasoning, and video comprehension, and natively support tool (function) calling.">상류 <a class="reference external" href="https://huggingface.co/Qwen">Qwen3-VL</a> 모델은 이미지와 텍스트를 함께 처리하기 위해, 비전 인코더와 밀집된 트랜스포머 디코더를 결합하고, Interleaved-MRoPE 위치 임베딩과 DeepStack 다중 레벨 특징 융합을 사용하는 밀집 시각-언어 모델입니다. OCR, 문서 및 차트 분석, 공간 추론, 비디오 이해 등 시각적 이해 작업과 함께, 도구 (함수) 호출을 기본적으로 지원합니다.</p>
+<p data-original-en="FuriosaAI publishes the Qwen3-VL models under the furiosa-ai organization on the Hugging Face Hub, each shipping a Furiosa Executable Bundle (FXB) for running it on FuriosaAI RNGD with Furiosa-LLM. Both the Instruct (non-thinking) and Thinking editions are published; the Thinking editions emit an explicit chain of thought before the final answer (see Basic Usage below). The same upstream weights also run on other frameworks (such as vLLM, SGLang, and Transformers); for usage with those, see the upstream model cards linked below.">FuriosaAI publishes the Qwen3-VL models under the <a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> organization on the Hugging Face Hub</a>, each shipping a Furiosa Executable Bundle (FXB) for running it on <a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> with Furiosa-LLM. Both the Instruct (non-thinking) and Thinking editions are published; the Thinking editions emit an explicit chain of thought before the final answer (see <a class="reference internal" href="#basic-usage">Basic Usage</a> below). The same upstream weights also run on other frameworks (such as vLLM, SGLang, and Transformers); for usage with those, see the upstream model cards linked below.</p>
 <section id="available-models">
 <h2 data-original-en="Available Models">사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p data-original-en="Model">모델</p></th>
-<th class="head"><p>Quantization</p></th>
-<th class="head"><p data-original-en="RNGD cards">RNGD 카드</p></th>
-<th class="head"><p data-original-en="Notes">노트</p></th>
+<th class="head"><p data-original-en="Quantization">양자화</p></th>
+<th class="head"><p data-original-en="RNGD cards">RNGD 카드 (RNGD 카드)</p></th>
+<th class="head"><p data-original-en="Notes">참고 사항</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-VL-2B-Instruct"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-2B-Instruct</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="2B dense; Instruct (non-thinking) edition">2B 밀도; Instruct (non-thinking) 판</p></td>
+<td><p data-original-en="2B dense; Instruct (non-thinking) edition">2B 밀집; Instruct (생각하지 않는) 버전</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-VL-4B-Instruct"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-4B-Instruct</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="4B dense; Instruct (non-thinking) edition">4B 밀도; Instruct (non-thinking) 판</p></td>
+<td><p data-original-en="4B dense; Instruct (non-thinking) edition">4B 밀집; Instruct (생각하지 않는) 버전</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-VL-32B-Instruct"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-32B-Instruct</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>4</p></td>
-<td><p data-original-en="32B dense; Instruct (non-thinking) edition">32B 밀도; Instruct (non-thinking) 판</p></td>
+<td><p data-original-en="32B dense; Instruct (non-thinking) edition">32B 밀집형; 지시형 (추론하지 않는) 버전</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-VL-2B-Thinking"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-2B-Thinking</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="2B dense; Thinking edition (always reasons)">2B dense; 생각 판 (대략 이유)</p></td>
+<td><p data-original-en="2B dense; Thinking edition (always reasons)">2B 밀집형; 추론형 버전 (항상 추론)</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-VL-4B-Thinking"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-4B-Thinking</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="4B dense; Thinking edition (always reasons)">4B dense; 생각 판 (대략 이유)</p></td>
+<td><p data-original-en="4B dense; Thinking edition (always reasons)">4B 밀집형; 추론형 버전 (항상 추론)</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-VL-32B-Thinking"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-32B-Thinking</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>4</p></td>
-<td><p data-original-en="32B dense; Thinking edition (always reasons)">32B dense; Thinking 판 (대략 이유)</p></td>
+<td><p data-original-en="32B dense; Thinking edition (always reasons)">32B Dense; Thinking 버전 (항상 추론 과정을 포함)</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <ul class="simple">
-<li><p data-original-en="Architecture: Qwen3-VL (dense), Qwen3VLForConditionalGeneration"><strong>건축:</strong> Qwen3-VL (거밀) <code class="docutils literal notranslate"><span class="pre">Qwen3VLForConditionalGeneration</span></code></p></li>
-<li><p data-original-en="Input / Output: Image + Text / Text"><strong>입력 / 출력:</strong> 이미지 + 텍스트 / 텍스트</p></li>
-<li><p data-original-en="Quantization: No quantization is applied — the models run in the same precision as the upstream weights."><strong>Quantization:</strong> quantization는 적용되지 않습니다 - 상류 중량과 동일한 정밀도에서 모델이 실행됩니다.</p></li>
+<li><p data-original-en="Architecture: Qwen3-VL (dense), Qwen3VLForConditionalGeneration">아키텍처: Qwen3-VL (Dense), <code class="docutils literal notranslate"><span class="pre">Qwen3VLForConditionalGeneration</span></code></p></li>
+<li><p data-original-en="Input / Output: Image + Text / Text">입력 / 출력: 이미지 + 텍스트 / 텍스트</p></li>
+<li><p data-original-en="Quantization: No quantization is applied — the models run in the same precision as the upstream weights.">양자화: 양자화는 적용되지 않음 – 모델은 업스트림 가중치의 동일한 정밀도로 실행됩니다.</p></li>
 </ul>
 </section>
 <section id="usage">
-<h2 data-original-en="Usage">사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p data-original-en="To run these models with Furiosa-LLM, follow the example commands below after installing Furiosa-LLM and its prerequisites. The examples use the smallest 2B models; the larger sizes run the same way (see Available Models for the RNGD card counts).">Furiosa-LLM와 함께 이 모델을 실행하려면, 다음의 예제 명령을 따르십시오.
-<a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>. 예제는 가장 작은 2B 모델을 사용합니다. 더 큰 크기는 동일한 방법을 실행합니다 (참고하십시오)
-<a class="reference internal" href="#available-models">사용 가능한 모델</a> RNGD 카드에 대한 (카운트)</p>
+<h2 data-original-en="Usage">사용법<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p data-original-en="To run these models with Furiosa-LLM, follow the example commands below after installing Furiosa-LLM and its prerequisites. The examples use the smallest 2B models; the larger sizes run the same way (see Available Models for the RNGD card counts).">Furiosa-LLM와 함께 이 모델을 실행하려면, 다음의 예제 명령을 따르십시오. <a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>. 예제는 가장 작은 2B 모델을 사용합니다. 더 큰 크기는 동일한 방법을 실행합니다 (참고하십시오) <a class="reference internal" href="#available-models">사용 가능한 모델</a> RNGD 카드에 대한 (카운트)</p>
 <section id="launch-the-server">
-<h3 data-original-en="Launch the server">서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
-<p data-original-en="Serve a model by passing its furiosa-ai/&lt;repo&gt; identifier:">모델을 지정하여 제공: <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자:</p>
+<h3 data-original-en="Launch the server">서버 시작<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
+<p data-original-en="Serve a model by passing its furiosa-ai/&lt;repo&gt; identifier:">모델을 실행하려면 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자를 전달합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Qwen3-VL-2B-Instruct — single RNGD card</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-2B-Instruct
 </pre></div>
 </div>
-<p data-original-en="The Thinking editions always produce a chain of thought before the final answer; serve them with --reasoning-parser qwen3 so the reasoning is returned in a separate field (see Basic Usage below):">The <strong>생각</strong> 판은 항상 최종 답하기 전에 생각의 사슬을 생산; 그들과 봉사 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code> 그래서 이유는 별도의 필드에 반환됩니다 (see <a class="reference internal" href="#basic-usage">기본 사용</a> 아래):</p>
+<p data-original-en="The Thinking editions always produce a chain of thought before the final answer; serve them with --reasoning-parser qwen3 so the reasoning is returned in a separate field (see Basic Usage below):">Thinking 버전은 항상 최종 답변 전에 추론 과정을 생성합니다. <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code> 옵션을 사용하여 추론 결과를 별도의 필드에 반환하도록 제공해야 합니다 (<a class="reference internal" href="#basic-usage">기본 사용</a>법 참조).</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Qwen3-VL-2B-Thinking — single RNGD card</span>
 furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-2B-Thinking<span class="w"> </span>--reasoning-parser<span class="w"> </span>qwen3
 </pre></div>
 </div>
-<p data-original-en="To also enable tool (function) calling, add the hermes tool-call parser (the parser used by the Qwen3 series):">또한 도구 (기능) 호출을 활성화하려면, 추가 <code class="docutils literal notranslate"><span class="pre">hermes</span></code> tool-call 파서 (Qwen3 시리즈에 의해 사용되는 파서):</p>
+<p data-original-en="To also enable tool (function) calling, add the hermes tool-call parser (the parser used by the Qwen3 series):">도구 (함수) 호출 기능을 활성화하려면 <code class="docutils literal notranslate"><span class="pre">hermes</span></code> tool-call parser (Qwen3 시리즈에서 사용되는 파서)를 추가합니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--enable-auto-tool-choice<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--tool-call-parser<span class="w"> </span>hermes
 </pre></div>
 </div>
-<p data-original-en="The Thinking editions additionally keep --reasoning-parser qwen3 so thinking is still parsed into its own field.">The <strong>생각</strong> 또한 추가로 보관 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code> 그래서 생각은 여전히 자신의 필드에 패러다임.</p>
-<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음을 볼 수 있습니다.</p>
+<p data-original-en="The Thinking editions additionally keep --reasoning-parser qwen3 so thinking is still parsed into its own field.">Thinking 버전은 또한 <code class="docutils literal notranslate"><span class="pre">--reasoning-parser</span> <span class="pre">qwen3</span></code> 옵션을 사용하여 추론 과정을 별도의 필드에 저장합니다. (추론 파싱)</p>
+<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음과 같은 메시지를 확인합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>INFO:<span class="w">     </span>Started<span class="w"> </span>server<span class="w"> </span>process<span class="w"> </span><span class="o">[</span><span class="m">27507</span><span class="o">]</span>
 INFO:<span class="w">     </span>Waiting<span class="w"> </span><span class="k">for</span><span class="w"> </span>application<span class="w"> </span>startup.
 INFO:<span class="w">     </span>Application<span class="w"> </span>startup<span class="w"> </span>complete.
@@ -380,8 +375,8 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </section>
 <section id="basic-usage">
-<h3 data-original-en="Basic Usage">기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
-<p data-original-en="The server exposes an OpenAI-compatible API. You can send a text-only request with curl:">서버는 OpenAI 호환 API를 노출합니다. text-only 요청을 보낼 수 있습니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>:</p>
+<h3 data-original-en="Basic Usage">기본 사용법<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="The server exposes an OpenAI-compatible API. You can send a text-only request with curl:">서버는 OpenAI와 호환되는 API를 노출합니다. <code class="docutils literal notranslate"><span class="pre">curl</span></code>을 사용하여 텍스트 기반 요청을 보낼 수 있습니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -391,7 +386,7 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
 </pre></div>
 </div>
-<p data-original-en="To ask about an image, pass an image_url content part in the message:">이미지를 문의하려면 [구체적인 정보 삽입]을 전달하십시오. <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 메시지의 내용 부분:</p>
+<p data-original-en="To ask about an image, pass an image_url content part in the message:">이미지를 요청하려면 메시지에 <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 콘텐츠 부분을 포함합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -407,13 +402,11 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
 </pre></div>
 </div>
-<p data-original-en="The image_url.url field accepts a remote http:///https:// URL, an inline base64 data: URL, or a local file:// path (the last requires the --allowed-local-media-path flag described under Advanced Usage).">The <code class="docutils literal notranslate"><span class="pre">image_url.url</span></code> 필드는 원격 연결을 허용합니다. <code class="docutils literal notranslate"><span class="pre">http://</span></code>/<code class="docutils literal notranslate"><span class="pre">https://</span></code> URL, 즉, 내장된
-base64 <code class="docutils literal notranslate"><span class="pre">data:</span></code> URL, 또는 지역 <code class="docutils literal notranslate"><span class="pre">file://</span></code> 경로 (마지막 단계에서는
-<code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code> 아래에 설명된 깃발 <a class="reference internal" href="#advanced-usage">발전 된 사용</a>).</p>
-<p data-original-en="The Thinking editions (such as furiosa-ai/Qwen3-VL-2B-Thinking) return their reasoning separately from the final answer:">The <strong>생각</strong> 에디션 (예를 들어 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-2B-Thinking</span></code>) 마지막 응답에서 별도로 주장을 반환:</p>
+<p data-original-en="The image_url.url field accepts a remote http:///https:// URL, an inline base64 data: URL, or a local file:// path (the last requires the --allowed-local-media-path flag described under Advanced Usage).">The <code class="docutils literal notranslate"><span class="pre">image_url.url</span></code> 필드는 원격 연결을 허용합니다. <code class="docutils literal notranslate"><span class="pre">http://</span></code>/<code class="docutils literal notranslate"><span class="pre">https://</span></code> URL, 즉, 내장된 base64 <code class="docutils literal notranslate"><span class="pre">data:</span></code> URL, 또는 지역 <code class="docutils literal notranslate"><span class="pre">file://</span></code> 경로 (마지막 단계에서는 <code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code> 아래에 설명된 깃발 <a class="reference internal" href="#advanced-usage">발전 된 사용</a>).</p>
+<p data-original-en="The Thinking editions (such as furiosa-ai/Qwen3-VL-2B-Thinking) return their reasoning separately from the final answer:">Thinking 버전 (예: <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-VL-2B-Thinking</span></code>)은 최종 답변과 추론을 분리하여 반환합니다.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">response.choices[].message.reasoning</span></code> (non-streaming)</p></li>
-<li><p data-original-en="response.choices[].delta.reasoning (streaming)"><code class="docutils literal notranslate"><span class="pre">response.choices[].delta.reasoning</span></code> [ 스트리밍 ]</p></li>
+<li><p data-original-en="response.choices[].message.reasoning (non-streaming)"><code class="docutils literal notranslate"><span class="pre">response.choices[].message.reasoning</span></code> (스트리밍 미사용)</p></li>
+<li><p data-original-en="response.choices[].delta.reasoning (streaming)"><code class="docutils literal notranslate"><span class="pre">response.choices[].delta.reasoning</span></code> (스트리밍 사용)</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
@@ -429,45 +422,36 @@ base64 <code class="docutils literal notranslate"><span class="pre">data:</span>
 </pre></div>
 </div>
 <blockquote>
-<div><p data-original-en="Note: The reasoning field is not part of the OpenAI API specification but is a widely followed convention (the OpenAI Agents SDK, vLLM, and others). It appears only in responses that contain reasoning content; accessing it otherwise raises an AttributeError."><strong>참고:</strong> The <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 필드는 OpenAI API 사양의 일부가 아니지만 다양한 컨벤션 (OpenAI Agents SDK, vLLM 및 기타)입니다. 그것은 그 대신 콘텐츠가 포함 된 응답에만 나타납니다. 그렇지 않으면 그에 도달 <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>.</p>
+<div><p data-original-en="Note: The reasoning field is not part of the OpenAI API specification but is a widely followed convention (the OpenAI Agents SDK, vLLM, and others). It appears only in responses that contain reasoning content; accessing it otherwise raises an AttributeError.">참고: <code class="docutils literal notranslate"><span class="pre">reasoning</span></code> 필드는 OpenAI API 사양에 포함되지 않지만, 널리 사용되는 관례입니다 (OpenAI Agents SDK, vLLM 등). 이 필드는 추론 내용을 포함하는 응답에서만 나타나며, 그렇지 않으면 <code class="docutils literal notranslate"><span class="pre">AttributeError</span></code>가 발생합니다.</p>
 </div></blockquote>
 </section>
 <section id="advanced-usage">
-<h3 data-original-en="Advanced Usage">발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
-<p data-original-en="Multimodal serving options. This example allows local images under /srv/media, restricts remote image fetches to cdn.example.com, and limits each request to four images:"><strong>다중 모드 제공 옵션.</strong> 이 예제는 로컬 이미지를 허용합니다.
-<code class="docutils literal notranslate"><span class="pre">/srv/media</span></code>에서 확인하십시오. <code class="docutils literal notranslate"><span class="pre">cdn.example.com</span></code>, 각 4개의 이미지에 각 요구 한계:</p>
+<h3 data-original-en="Advanced Usage">고급 사용법<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="Multimodal serving options. This example allows local images under /srv/media, restricts remote image fetches to cdn.example.com, and limits each request to four images:">멀티모달 서비스 옵션. 이 예제는 <code class="docutils literal notranslate"><span class="pre">/srv/media</span></code> 아래의 로컬 이미지를 허용하고, 원격 이미지 가져오기를 <code class="docutils literal notranslate"><span class="pre">cdn.example.com</span></code>으로 제한하며, 각 요청당 4개의 이미지를 제한합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--allowed-local-media-path<span class="w"> </span>/srv/media<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--allowed-media-domains<span class="w"> </span>cdn.example.com<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--image-limit-per-prompt<span class="w"> </span><span class="m">4</span>
 </pre></div>
 </div>
-<p data-original-en="See Server Options in the Vision-Language Models guide for the full option reference and defaults.">See <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#server-options">서버 옵션</a>
-Vision-Language 모델은 전체 옵션 참조 및 기본값에 대한 가이드입니다.</p>
-<p data-original-en="Image processing options. This example sets a 10-second HTTP image-fetch timeout and uses min_pixels and max_pixels to bound image resizing:"><strong>이미지 처리 옵션.</strong> 이 예제는 10-second HTTP image-fetch 타임아웃을 설정하고 사용 <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code> and <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code> 이미지 크기 조정 제한:</p>
+<p data-original-en="See Server Options in the Vision-Language Models guide for the full option reference and defaults.">Vision-Language Models 가이드의 "<a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#server-options">서버 옵션</a>" 섹션을 참조하여 전체 옵션 및 기본값을 확인하십시오.</p>
+<p data-original-en="Image processing options. This example sets a 10-second HTTP image-fetch timeout and uses min_pixels and max_pixels to bound image resizing:">이미지 처리 옵션. 이 예제는 10초의 HTTP 이미지 가져오기 타임아웃을 설정하고, <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code> 및 <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code>를 사용하여 이미지 크기 조정 범위를 제한합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-2B-Instruct<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--media-io-kwargs<span class="w"> </span><span class="s1">'{"image": {"timeout": 10}}'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--mm-processor-kwargs<span class="w"> </span><span class="s1">'{"min_pixels": 4096, "max_pixels": 200704}'</span>
 </pre></div>
 </div>
-<p data-original-en="For supported values, sizing behavior, and per-request overrides, see Multimodal Options in the Vision-Language Models guide.">지원된 값에 대해서는, 행동을 정성화하고, per-request는 과대를 강화하고, 보기
-<a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#multimodal-options">멀티모달 옵션</a>
-Vision-Language 모델 가이드.</p>
-<p data-original-en="Reasoning. The Thinking editions always reason; there is no enable_thinking switch (the Instruct editions are the non-thinking counterparts)."><strong>추론하는 것</strong> The <strong>생각</strong> 항상 편집본을 고려해야 하며, 이는
-<code class="docutils literal notranslate"><span class="pre">enable_thinking</span></code> 스위치 (파괴 판은 non-thinking 대응)입니다.</p>
-<p data-original-en="Tool calling. With the server launched using --enable-auto-tool-choice --tool-call-parser hermes (see Launch the server), pass tools in the request and let the model decide when to call them. See the Tool Calling guide for a complete client example and details on tool-choice options."><strong>도구 호출.</strong> 서버를 [구체적인 정보 삽입]을 사용하여 시작할 때
-<code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span> <span class="pre">--tool-call-parser</span> <span class="pre">hermes</span></code> ( 참조)
-<a class="reference internal" href="#launch-the-server">서버를 시작하세요</a>), 통과 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 요청에서 모델을 결정할 때 호출합니다. 참조
-<a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출 가이드</a>
-tool-choice 옵션에 대한 완벽한 클라이언트 예 및 세부 사항.</p>
+<p data-original-en="For supported values, sizing behavior, and per-request overrides, see Multimodal Options in the Vision-Language Models guide.">지원되는 값, 크기 조정 동작, 그리고 요청별 오버라이드에 대한 자세한 내용은 "<a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html#multimodal-options">멀티모달 옵션</a>" (Vision-Language Models 가이드)을 참조하십시오.</p>
+<p data-original-en="Reasoning. The Thinking editions always reason; there is no enable_thinking switch (the Instruct editions are the non-thinking counterparts).">추론: Thinking 버전은 항상 추론을 수행합니다. <code class="docutils literal notranslate"><span class="pre">enable_thinking</span></code> 스위치는 사용되지 않습니다 (Instruct 버전은 추론 기능을 사용하지 않습니다).</p>
+<p data-original-en="Tool calling. With the server launched using --enable-auto-tool-choice --tool-call-parser hermes (see Launch the server), pass tools in the request and let the model decide when to call them. See the Tool Calling guide for a complete client example and details on tool-choice options.">도구 호출. 서버를 [구체적인 정보 삽입]을 사용하여 시작할 때 <code class="docutils literal notranslate"><span class="pre">--enable-auto-tool-choice</span> <span class="pre">--tool-call-parser</span> <span class="pre">hermes</span></code> ( 참조) <a class="reference internal" href="#launch-the-server">서버를 시작하세요</a>), 통과 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 요청에서 모델을 결정할 때 호출합니다. 참조 <a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출 가이드</a> tool-choice 옵션에 대한 완벽한 클라이언트 예 및 세부 사항.</p>
 </section>
 </section>
 <section id="learn-more">
-<h2 data-original-en="Learn more">더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Learn more">자세한 내용은 참조하십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p data-original-en="Vision-Language Models — image input formats, multimodal server options, and content-based caching"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html">Vision-Language 모델과 함께 구성됩니다.</a> - 이미지 입력 형식, 다중 서버 옵션 및 content-based 캐싱</p></li>
-<li><p data-original-en="Tool Calling — parsers, tool-choice options, and more examples"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, tool-choice 옵션 및 더 많은 예제</p></li>
-<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference and serving options"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — 가득 차있는 OpenAI 호환이 되는 API 참고와 서빙 선택권</p></li>
+<li><p data-original-en="Vision-Language Models — image input formats, multimodal server options, and content-based caching"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/vision-language.html">비전-언어 모델</a> — 이미지 입력 형식, 멀티모달 서버 옵션 및 콘텐츠 기반 캐싱</p></li>
+<li><p data-original-en="Tool Calling — parsers, tool-choice options, and more examples"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/toolcalling.html">도구 호출</a> — 파서, 도구 선택 옵션, 추가 예</p></li>
+<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference and serving options"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM Server (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — full OpenAI-compatible API reference and serving options</p></li>
 <li><p data-original-en="Upstream model cards: Qwen/Qwen3-VL-2B-Instruct, Qwen/Qwen3-VL-4B-Instruct, Qwen/Qwen3-VL-32B-Instruct, Qwen/Qwen3-VL-2B-Thinking, Qwen/Qwen3-VL-4B-Thinking, Qwen/Qwen3-VL-32B-Thinking">상류 모델 카드: <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-VL-2B-Instruct">Qwen/Qwen3-VL-2B-Instruct</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-VL-4B-Instruct">Qwen/Qwen3-VL-4B-Instruct</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-VL-32B-Instruct">Qwen/Qwen3-VL-32B-Instruct</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-VL-2B-Thinking">Qwen/Qwen3-VL-2B-Thinking</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-VL-4B-Thinking">Qwen/Qwen3-VL-4B-Thinking</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-VL-32B-Thinking">Qwen/Qwen3-VL-32B-Thinking</a></p></li>
 </ul>
 </section>

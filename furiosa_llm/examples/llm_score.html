@@ -43,7 +43,7 @@ html
 <script src="../../_static/doctools.js?v=9bcbadda"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/copybutton.js?v=ko20261119"></script>
 <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/examples/llm_score';</script>
@@ -286,11 +286,11 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="scoring-similarity-scoring">
-<span id="furiosallmexamplesscore"></span><h1 data-original-en="Scoring (Similarity Scoring)">점수 (유사 점수)<a class="headerlink" href="#scoring-similarity-scoring" title="Link to this heading">#</a></h1>
-<p data-original-en="This example demonstrates how to use the LLM.score() method for calculating similarity scores between text pairs. This is applicable to binary classification models, including Qwen3-Reranker models or models converted using as_binary_seq_cls_model.">이 예제는 사용 방법을 설명합니다. <code class="docutils literal notranslate"><span class="pre">LLM.score()</span></code> 텍스트 쌍 사이의 유사성 점수를 계산하는 방법. 이것은 Qwen3-Reranker 모델 또는 모델이 사용하여 변환 된 바이너리 분류 모델에 적용된다. <code class="docutils literal notranslate"><span class="pre">as_binary_seq_cls_model</span></code>.</p>
+<span id="furiosallmexamplesscore"></span><h1 data-original-en="Scoring (Similarity Scoring)">점수 (유사도 점수) 계산<a class="headerlink" href="#scoring-similarity-scoring" title="Link to this heading">#</a></h1>
+<p data-original-en="This example demonstrates how to use the LLM.score() method for calculating similarity scores between text pairs. This is applicable to binary classification models, including Qwen3-Reranker models or models converted using as_binary_seq_cls_model.">이 예제는 <code class="docutils literal notranslate"><span class="pre">LLM.score()</span></code> 메서드를 사용하여 텍스트 쌍 간의 유사도 점수를 계산하는 방법을 보여줍니다. 이는 Qwen3-Reranker 모델 또는 <code class="docutils literal notranslate"><span class="pre">as_binary_seq_cls_model</span></code>을 사용하여 변환된 모델을 포함한 이진 분류 모델에 적용할 수 있습니다.</p>
 <section id="python-api-example">
-<h2 data-original-en="Python API Example">Python API 예<a class="headerlink" href="#python-api-example" title="Link to this heading">#</a></h2>
-<p data-original-en="The following example demonstrates 1-to-1, 1-to-N, and N-to-N scoring with PoolingParams:">다음 예제는 1-to-1, 1-to-N, N-to-N를 PoolingParams로 스코링합니다.</p>
+<h2 data-original-en="Python API Example">Python API 예제<a class="headerlink" href="#python-api-example" title="Link to this heading">#</a></h2>
+<p data-original-en="The following example demonstrates 1-to-1, 1-to-N, and N-to-N scoring with PoolingParams:">다음 예제는 PoolingParams를 사용하여 1-to-1, 1-to-N, 및 N-to-N 점수를 보여줍니다.</p>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">LLM.score()를 사용하는 예</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">PoolingParams</span>
@@ -361,19 +361,19 @@ html
 </section>
 <section id="use-cases">
 <h2 data-original-en="Use Cases">사용 사례<a class="headerlink" href="#use-cases" title="Link to this heading">#</a></h2>
-<p data-original-en="The LLM.score() method is useful for:">The <code class="docutils literal notranslate"><span class="pre">LLM.score()</span></code> 방법은 다음과 같은 용도로 유용합니다:</p>
+<p data-original-en="The LLM.score() method is useful for:"><code class="docutils literal notranslate"><span class="pre">LLM.score()</span></code> 메서드는 다음과 같은 용도로 유용합니다:</p>
 <ul class="simple">
-<li><p data-original-en="Document Retrieval: Finding the most relevant documents for a query"><strong>문서 검색</strong>: 쿼리에 대한 가장 관련 문서 찾기</p></li>
-<li><p data-original-en="Semantic Similarity: Measuring how similar two pieces of text are"><strong>의미적 유사성</strong>: 유사한 두 개의 텍스트를 측정하는 방법</p></li>
-<li><p data-original-en="Question Answering: Identifying which document best answers a question"><strong>질문 에 대한 대답</strong>: 문서가 가장 좋은 질문에 대한 답변을 식별</p></li>
-<li><p data-original-en="Duplicate Detection: Finding similar or duplicate content"><strong>복제 탐지</strong>: 유사한 또는 중복 콘텐츠 찾기</p></li>
-<li><p data-original-en="Content Recommendation: Suggesting related articles or documents"><strong>콘텐츠 추천</strong>: 관련 기사 및 문서 제안</p></li>
+<li><p data-original-en="Document Retrieval: Finding the most relevant documents for a query">문서 검색: 쿼리에 가장 적합한 문서를 찾기</p></li>
+<li><p data-original-en="Semantic Similarity: Measuring how similar two pieces of text are">의미적 유사성: 두 텍스트 간의 유사성을 측정하는 방법</p></li>
+<li><p data-original-en="Question Answering: Identifying which document best answers a question">질문 답변: 질문에 가장 적합한 문서를 식별하는 방법</p></li>
+<li><p data-original-en="Duplicate Detection: Finding similar or duplicate content">중복 감지: 유사하거나 중복된 콘텐츠를 찾기</p></li>
+<li><p data-original-en="Content Recommendation: Suggesting related articles or documents">콘텐츠 추천: 관련 기사 또는 문서를 제안하는 방법</p></li>
 </ul>
-<p data-original-en="For ranking multiple documents by relevance, see Rerank API example.">relevance에 의해 여러 문서를 순위에 대 한, 참조 <a class="reference internal" href="llm_rerank.html#furiosallmexamplesrerank"><span class="std std-ref">Rerank API 예제</span></a>.</p>
+<p data-original-en="For ranking multiple documents by relevance, see Rerank API example.">여러 문서의 관련성을 기준으로 순위를 매기려면, <a class="reference internal" href="llm_rerank.html#furiosallmexamplesrerank">Rerank API 예제</a>를 참조하세요.</p>
 </section>
 <section id="server-api-example">
 <h2 data-original-en="Server API Example">서버 API 예제<a class="headerlink" href="#server-api-example" title="Link to this heading">#</a></h2>
-<p data-original-en="You can also use the scoring functionality through the OpenAI-compatible server:">OpenAI 호환 서버를 통해 스코링 기능을 사용할 수 있습니다.</p>
+<p data-original-en="You can also use the scoring functionality through the OpenAI-compatible server:">또한 OpenAI 호환 서버를 통해 점수 기능을 사용할 수도 있습니다:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">유사한 득점을 위한 점수 API를 사용하는의 예</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -404,7 +404,7 @@ html
 </pre></div>
 </div>
 </div>
-<p data-original-en="See Score API Reference for complete server API documentation.">See <a class="reference internal" href="../furiosa-llm-serve.html#scoreapi"><span class="std std-ref">점수 API 참조</span></a> 완전한 서버 API 문서.</p>
+<p data-original-en="See Score API Reference for complete server API documentation.">See <a class="reference internal" href="../furiosa-llm-serve.html#scoreapi">점수 API 참조</a> 완전한 서버 API 문서.</p>
 </section>
 </section>
 </article>

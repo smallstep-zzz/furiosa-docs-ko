@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'whatsnew/release-2026.1.0';</script>
@@ -291,69 +291,67 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="furiosa-sdk-release-2026-1">
-<span id="release2026-1-0"></span><h1 data-original-en="Furiosa SDK Release 2026.1">Furiosa SDK 배포 2026.1<a class="headerlink" href="#furiosa-sdk-release-2026-1" title="Link to this heading">#</a></h1>
-<p data-original-en="This release brings major architectural improvements focusing on throughput, efficiency, and scalability. Key introductions include Hybrid Batching to balance high throughput with low latency, Prefix Caching for reduced latency in multi-turn applications, and comprehensive support for Pooling Models (Embeddings, Scoring, Reranking). Additionally, we have enhanced our production readiness with distributed inference capabilities using LLM-D, NPU operator, Dynamic Resource Allocation (DRA) for K8s, and advanced observability features.">이번 릴리스는 throughput, 효율성 및 확장성에 중점을 둔 주요 아키텍처 개선 사항을 제공합니다.
-주요 기능으로는 고 throughput와 낮은 latency 사이의 균형을 맞추는 하이브리드 Batching, 다중 턴 애플리케이션에서 latency를 줄이는 데 사용되는 Prefix Caching, 그리고 포털 모델(임베딩, 점수, Reranking)에 대한 포괄적인 지원 등이 있습니다.
-또한, PCIe 토폴로지 기반 전략을 사용하여 분산된 inference 기능을 활용하여 생산 준비성을 향상시켰습니다. <a class="reference external" href="https://llm-d.ai/docs/architecture">LLM-D</a>, NPU 운영자, <a class="reference external" href="https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/">동적 리소스 할당 (DRA)</a> K8s 및 고급 관찰 기능에 대 한.</p>
-<p data-original-en="Please refer to the Upgrading FuriosaAI’s Software section for instructions on obtaining this update.">참고: <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a> 이 업데이트를 얻기에 대한 지침에 대한 섹션.</p>
+<span id="release2026-1-0"></span><h1 data-original-en="Furiosa SDK Release 2026.1">Furiosa SDK 2026.1 릴리즈<a class="headerlink" href="#furiosa-sdk-release-2026-1" title="Link to this heading">#</a></h1>
+<p data-original-en="This release brings major architectural improvements focusing on throughput, efficiency, and scalability. Key introductions include Hybrid Batching to balance high throughput with low latency, Prefix Caching for reduced latency in multi-turn applications, and comprehensive support for Pooling Models (Embeddings, Scoring, Reranking). Additionally, we have enhanced our production readiness with distributed inference capabilities using LLM-D, NPU operator, Dynamic Resource Allocation (DRA) for K8s, and advanced observability features.">이번 릴리스는 throughput, 효율성 및 확장성에 중점을 둔 주요 아키텍처 개선 사항을 제공합니다. 주요 기능으로는 고 throughput와 낮은 latency 사이의 균형을 맞추는 하이브리드 Batching, 다중 턴 애플리케이션에서 latency를 줄이는 데 사용되는 Prefix Caching, 그리고 포털 모델(임베딩, 점수, Reranking)에 대한 포괄적인 지원 등이 있습니다. 또한, PCIe 토폴로지 기반 전략을 사용하여 분산된 inference 기능을 활용하여 생산 준비성을 향상시켰습니다. <a class="reference external" href="https://llm-d.ai/docs/architecture">LLM-D</a>, NPU 운영자, <a class="reference external" href="https://kubernetes.io/docs/concepts/scheduling-eviction/dynamic-resource-allocation/">동적 리소스 할당 (DRA)</a> K8s 및 고급 관찰 기능에 대 한.</p>
+<p data-original-en="Please refer to the Upgrading FuriosaAI’s Software section for instructions on obtaining this update.">이 업데이트를 얻는 방법에 대한 지침은 "<a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide">FuriosaAI 소프트웨어 업그레이드</a>" 섹션을 참조하십시오.</p>
 <section id="highlights">
-<span id="release2026-1-0-highlights"></span><h2 data-original-en="🚀 Highlights"> ⁇  주요 내용<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
+<span id="release2026-1-0-highlights"></span><h2 data-original-en="🚀 Highlights">🚀 주요 기능<a class="headerlink" href="#highlights" title="Link to this heading">#</a></h2>
 <section id="major-features-improvements">
 <h3 data-original-en="Major Features &amp; Improvements">주요 기능 및 개선 사항<a class="headerlink" href="#major-features-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p data-original-en="Hybrid Batching"><strong>하이브리드 Batching</strong></p>
+<li><p data-original-en="Hybrid Batching">하이브리드 배치</p>
 <ul>
-<li><p data-original-en="Introduced hybrid batching capabilities that intelligently combine multiple prefill and decode requests within a single batch.">단일 배치 내에서 여러 prefill 및 decode 요청을 지능적으로 결합하는 하이브리드 batching 기능을 도입했습니다.</p></li>
-<li><p data-original-en="This feature boosts throughput while maintaining low tail latency, achieving up to significantly higher requests per second compared to the previous versions.">이 기능은 throughput를 향상시키고 낮은 꼬리 latency를 유지하면서 이전 버전과 비교하여 두 번째로 더 높은 요청을 달성합니다.</p></li>
+<li><p data-original-en="Introduced hybrid batching capabilities that intelligently combine multiple prefill and decode requests within a single batch.">여러 프리필 및 디코딩 요청을 단일 배치 내에서 지능적으로 결합하는 하이브리드 배치 기능을 도입했습니다.</p></li>
+<li><p data-original-en="This feature boosts throughput while maintaining low tail latency, achieving up to significantly higher requests per second compared to the previous versions.">이 기능은 낮은 지연 시간을 유지하면서 처리량을 크게 향상시켜 이전 버전보다 훨씬 더 많은 요청당 초당 처리량을 달성합니다.</p></li>
 </ul>
 </li>
-<li><p><strong>Prefix Caching</strong></p>
+<li><p data-original-en="Prefix Caching">접두사 캐싱</p>
 <ul>
-<li><p data-original-en="Automatically detects and reuses common prompt prefixes across requests using a branch-compressed radix tree, eliminating redundant computation.">branch-compressed Radx 나무를 사용하여 요청에 따라 prompt prefixes를 자동으로 감지하고 재사용하여 중복 계산을 제거하십시오.</p></li>
-<li><p data-original-en="Ideal for applications with shared context such as chatbots with system prompts and RAG systems.">시스템 프롬프트 및 RAG 시스템과 같은 채팅봇과 같은 공유된 컨텍스트와 애플리케이션에 이상적입니다.</p></li>
-<li><p data-original-en="Significantly reduces Time-To-First-Token (TTFT) with SIMD-optimized prefix matching and cache eviction.">SIMD-optimized 접두사 매칭 및 캐시 퇴치와 같은 Time-To-First-Token (TTFT)를 재현합니다.</p></li>
-<li><p data-original-en="Smart eviction strategies leverage idle time to minimize memory overhead while maintaining high cache hit rates.">Smart eviction 전략은 높은 캐시 히트율을 유지하면서 메모리 오버 헤드를 최소화 할 수 있습니다.</p></li>
+<li><p data-original-en="Automatically detects and reuses common prompt prefixes across requests using a branch-compressed radix tree, eliminating redundant computation.">분기 압축된 래디스 트리를 사용하여 요청 간에 공통 프롬프트 프리픽스를 자동으로 감지하고 재사용하여 불필요한 계산을 제거합니다.</p></li>
+<li><p data-original-en="Ideal for applications with shared context such as chatbots with system prompts and RAG systems.">시스템 프롬프트 및 RAG 시스템과 같이 공유 컨텍스트가 필요한 애플리케이션에 적합합니다.</p></li>
+<li><p data-original-en="Significantly reduces Time-To-First-Token (TTFT) with SIMD-optimized prefix matching and cache eviction.">SIMD 최적화된 프리픽스 매칭 및 캐시 제거를 통해 첫 번째 토큰 생성 시간을 크게 단축합니다.</p></li>
+<li><p data-original-en="Smart eviction strategies leverage idle time to minimize memory overhead while maintaining high cache hit rates.">지능형 제거 전략은 유휴 시간을 활용하여 메모리 오버헤드를 최소화하면서 높은 캐시 히트율을 유지합니다.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Pooling Model Support"><strong>풀링 모델 지원</strong></p>
+<li><p data-original-en="Pooling Model Support">모델 풀링 지원</p>
 <ul>
-<li><p data-original-en="Added comprehensive support for pooling models to enable critical NLP tasks:">풀 모델에 대한 포괄적 인 지원을 추가하여 중요한 NLP 작업을 가능하게합니다.</p>
+<li><p data-original-en="Added comprehensive support for pooling models to enable critical NLP tasks:">핵심 자연어 처리 작업을 가능하게 하기 위해 모델 풀링에 대한 포괄적인 지원이 추가되었습니다:</p>
 <ul>
-<li><p data-original-en="Embeddings: Generate vector representations for semantic search using encode() and embed() APIs."><strong>Embeddings</strong>: semantic 검색에 대한 벡터 표현 생성 <code class="docutils literal notranslate"><span class="pre">encode()</span></code> and <code class="docutils literal notranslate"><span class="pre">embed()</span></code> API.</p></li>
-<li><p data-original-en="Scoring: Evaluate relevance between query-document pairs with the score() API."><strong>점수</strong>: query-document 쌍 사이 굴절률 <code class="docutils literal notranslate"><span class="pre">score()</span></code> API</p></li>
-<li><p data-original-en="Reranking: Improve search results by reordering candidates using the rerank() API."><strong>Reranking</strong>: 재주문 후보자에 의한 검색결과 개선 <code class="docutils literal notranslate"><span class="pre">rerank()</span></code> API</p></li>
+<li><p data-original-en="Embeddings: Generate vector representations for semantic search using encode() and embed() APIs.">임베딩: <code class="docutils literal notranslate"><span class="pre">encode()</span></code> 및 <code class="docutils literal notranslate"><span class="pre">embed()</span></code> API를 사용하여 의미 검색을 위한 벡터 표현을 생성합니다.</p></li>
+<li><p data-original-en="Scoring: Evaluate relevance between query-document pairs with the score() API.">점수: query-document 쌍 간의 관련성을 <code class="docutils literal notranslate"><span class="pre">score()</span></code> API를 사용하여 평가합니다.</p></li>
+<li><p data-original-en="Reranking: Improve search results by reordering candidates using the rerank() API.">재순위: <code class="docutils literal notranslate"><span class="pre">rerank()</span></code> API를 사용하여 검색 결과를 개선하기 위해 후보 항목의 순서를 재정렬합니다.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Includes PoolingParams.normalize support for normalized embedding outputs.">포함 <code class="docutils literal notranslate"><span class="pre">PoolingParams.normalize</span></code> 정상적인 embedding 산출을 위한 지원.</p></li>
-<li><p data-original-en="Currently supports Qwen3-8B embedding and reranking models, with plans to expand support.">현재 지원 <strong>Qwen3-8B embedding 및 reranking 모델</strong>(향후 지원 확대를 계획)</p></li>
+<li><p data-original-en="Includes PoolingParams.normalize support for normalized embedding outputs."><code class="docutils literal notranslate"><span class="pre">PoolingParams.normalize</span></code>를 통해 정규화된 임베딩 출력 지원.</p></li>
+<li><p data-original-en="Currently supports Qwen3-8B embedding and reranking models, with plans to expand support.">현재 Qwen3-8B 임베딩 및 재순위 모델을 지원하며, 지원 범위를 확장할 계획입니다.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Structured Output with Multiple Backends"><strong>여러 백엔드와 구조 출력</strong></p>
+<li><p data-original-en="Structured Output with Multiple Backends">다중 백엔드 기반의 구조화된 출력</p>
 <ul>
-<li><p data-original-en="Production-ready structured output generation supporting JSON schema validation, Regular expression constraints, and Grammar-based generation.">Production-ready는 JSON 스키마 검증, 정규식 식 제약 및 Grammar-based 생성을 지원하는 출력 생성을 구조화했습니다.</p></li>
+<li><p data-original-en="Production-ready structured output generation supporting JSON schema validation, Regular expression constraints, and Grammar-based generation.">JSON 스키마 유효성 검사, 정규 표현식 제약 조건, 문법 기반 생성 등 생산 환경에 적합한 구조화된 출력 생성 지원.</p></li>
 <li><p data-original-en="Includes both outlines and xgrammar backends, providing flexibility and performance for various use cases.">둘 다 포함됩니다 <code class="docutils literal notranslate"><span class="pre">outlines</span></code> and <code class="docutils literal notranslate"><span class="pre">xgrammar</span></code> 다양한 용도 케이스에 유연성과 성능을 제공합니다.</p></li>
-<li><p data-original-en="Optimized guided decoding with bitmask prefetching for reduced latency during NPU task execution.">NPU 작업 실행 중 latency 감소를 위해 비트 마스크 prefetching와 최적화 된 가이드 디코딩.</p></li>
+<li><p data-original-en="Optimized guided decoding with bitmask prefetching for reduced latency during NPU task execution.">NPU 작업 실행 시 지연 시간을 줄이는 비트마스크 사전 로딩을 활용한 최적화된 가이드 디코딩. (Optimized guided decoding with bitmask prefetching for reduced latency during NPU task execution)</p></li>
 </ul>
 </li>
-<li><p data-original-en="Distributed and Scaling Inference"><strong>분산 및 확장 Inference 값 및</strong></p>
+<li><p data-original-en="Distributed and Scaling Inference">분산 및 확장 가능한 추론</p>
 <ul>
-<li><p data-original-en="LLM-D (LLM Distributed): Enabled seamless deployment of large language models across multiple nodes, intelligently handling request routing."><strong>LLM-D (LLM 분산형)</strong>: 여러 노드를 가로지르는 대형 언어 모델의 원활한 배포를 통해 지능적으로 처리 요청 여정을 처리할 수 있습니다.</p>
+<li><p data-original-en="LLM-D (LLM Distributed): Enabled seamless deployment of large language models across multiple nodes, intelligently handling request routing.">LLM-D (LLM Distributed): 여러 노드에 걸쳐 대규모 언어 모델을 원활하게 배포하고, 요청 라우팅을 지능적으로 처리합니다.</p>
 <ul>
-<li><p data-original-en="Supports KV-cache usage aware routing, prefix-aware routing, and LLM-aware routing.">지원 KV-cache 사용 aware 여정, prefix-aware 여정, 및 LLM-aware 여정.</p></li>
-<li><p data-original-en="See LLM-D documentation for more details.">See <a class="reference external" href="https://llm-d.ai/docs/architecture">LLM-D 문서</a> 더 자세한 내용은</p></li>
+<li><p data-original-en="Supports KV-cache usage aware routing, prefix-aware routing, and LLM-aware routing.">KV-캐시 사용, 프리픽스 기반 라우팅, LLM 기반 라우팅을 지원합니다.</p></li>
+<li><p data-original-en="See LLM-D documentation for more details.">자세한 내용은 <a class="reference external" href="https://llm-d.ai/docs/architecture">LLM-D 문서</a>를 참조하십시오.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Dynamic Resource Allocation (DRA): Intelligent resource management to allocate/deallocate NPU resources based on PCIe topology-aware strategies."><strong>동적 리소스 할당 (DRA)</strong>: PCIe 토폴로지에 대한 인식을 바탕으로 NPU 리소스를 할당/해제하는 지능형 리소스 관리.</p></li>
-<li><p data-original-en="NPU Operator Support: Added comprehensive support for Kubernetes environments with native NPU operator integration, handling device discovery, driver/fw rolling upgrade, and lifecycle management."><strong>NPU 운영자 지원</strong>: 기본 NPU 통신 사업자 통합, 장치 검색, driver/fw 롤링 업그레이드 및 수명주기 관리와 함께 Kubernetes 환경을 포괄적 인 지원을 추가했습니다.</p></li>
+<li><p data-original-en="Dynamic Resource Allocation (DRA): Intelligent resource management to allocate/deallocate NPU resources based on PCIe topology-aware strategies.">동적 리소스 할당 (DRA): PCIe 토폴로지 기반 전략에 따라 NPU 리소스를 할당/해제하는 지능적인 리소스 관리.</p></li>
+<li><p data-original-en="NPU Operator Support: Added comprehensive support for Kubernetes environments with native NPU operator integration, handling device discovery, driver/fw rolling upgrade, and lifecycle management.">NPU 운영자 지원: Kubernetes 환경에 대한 포괄적인 지원을 추가했으며, NPU 운영자 통합, 장치 검색, 드라이버/펌웨어 롤링 업그레이드, 그리고 라이프사이클 관리를 처리합니다. (NPU Operator)</p></li>
 </ul>
 </li>
-<li><p data-original-en="Enhanced Observability"><strong>향상된 관측 가능성</strong></p>
+<li><p data-original-en="Enhanced Observability">향상된 관측성</p>
 <ul>
-<li><p data-original-en="Migrated metrics collection to Rust native implementations for improved performance and reduced overhead.">향상된 성능과 향상된 오버 헤드를 위한 Rust Native 구현에 대한 Migrated 메트 수집.</p></li>
-<li><p data-original-en="Added comprehensive instrumentation including per-device metrics, KV cache utilization, request pool statistics, and detailed scheduler logs for hybrid batching.">per-device 메트릭, KV cache 활용, 요청 풀 통계 및 하이브리드 batching에 대한 상세한 스케줄러 로그를 포함하여 종합 계측이 추가되었습니다.</p></li>
-<li><p data-original-en="Integrated OpenTelemetry support with quiet span filtering for production environments.">통합 <strong>오픈텔레미트리</strong> 생산 환경을 위한 조용한 경간을 가진 지원.</p></li>
-<li><p data-original-en="Improved liveness check endpoints and health monitoring capabilities.">삶의 질을 향상시키고, 건강 모니터링 능력.</p></li>
-<li><p data-original-en="Metrics enabled by default with configurable Prometheus endpoint export.">configurable Prometheus endpoint export를 기본으로 설정한다.</p></li>
+<li><p data-original-en="Migrated metrics collection to Rust native implementations for improved performance and reduced overhead.">성능 향상 및 오버헤드 감소를 위해, 메트릭 수집을 Rust 네이티브 구현으로 마이그레이션했습니다.</p></li>
+<li><p data-original-en="Added comprehensive instrumentation including per-device metrics, KV cache utilization, request pool statistics, and detailed scheduler logs for hybrid batching.">하이브리드 배치에 대한 포괄적인 측정 장치를 추가했습니다. 여기에는 장치별 메트릭, KV 캐시 활용률, 요청 풀 통계, 그리고 상세 스케줄러 로그가 포함됩니다.</p></li>
+<li><p data-original-en="Integrated OpenTelemetry support with quiet span filtering for production environments.">프로덕션 환경에 Quiet Span 필터링을 지원하는 OpenTelemetry 통합을 추가했습니다.</p></li>
+<li><p data-original-en="Improved liveness check endpoints and health monitoring capabilities.">라이브니스 체크 엔드포인트를 개선하고, 건강 모니터링 기능을 향상했습니다.</p></li>
+<li><p data-original-en="Metrics enabled by default with configurable Prometheus endpoint export.">기본적으로 활성화되는 지표, 설정 가능한 Prometheus 엔드포인트 내보내기 기능과 함께.</p></li>
 </ul>
 </li>
 </ul>
@@ -361,34 +359,34 @@ html
 <section id="performance-efficiency">
 <h3 data-original-en="Performance &amp; Efficiency">성능 및 효율성<a class="headerlink" href="#performance-efficiency" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p data-original-en="Optimization"><strong>최적화</strong></p>
+<li><p data-original-en="Optimization">최적화</p>
 <ul>
-<li><p data-original-en="Ahead-of-Time (AOT) Wired Pipeline: Pre-wired execution graphs for low-latency task launches and reduced runtime overhead."><strong>Ahead-of-Time (AOT) 유선 파이프라인</strong>: 낮은 latency 작업 시작 및 감소된 runtime 오버헤드를 위한 사전 구성된 실행 그래프.</p></li>
-<li><p data-original-en="SIMD Optimizations: Applied throughout the host runtime for decoding strategies, prefix caching, radix tree’s branch operations, and other performance-critical paths."><strong>SIMD 최적화</strong>: prefix caching, Radx 나무의 지점 운영 및 기타 performance-critical 경로 디코딩 전략을 위한 호스트 runtime를 통해 적용.</p>
+<li><p data-original-en="Ahead-of-Time (AOT) Wired Pipeline: Pre-wired execution graphs for low-latency task launches and reduced runtime overhead.">사전 구성된 워크플로우 (AOT): 낮은 지연 시간으로 작업 실행 및 실행 시간 오버헤드를 줄이기 위한 사전 구성된 실행 그래프.</p></li>
+<li><p data-original-en="SIMD Optimizations: Applied throughout the host runtime for decoding strategies, prefix caching, radix tree’s branch operations, and other performance-critical paths.">SIMD 최적화: 호스트 런타임 전반에 걸쳐 적용, 디코딩 전략, 프리픽스 캐싱, 래디스 트리의 분기 연산 및 기타 성능에 중요한 경로에 사용.</p>
 <ul>
-<li><p data-original-en="Softmax, log-softmax, and normalization operations accelerated with AVX-512 16-lane vectorization (f32x16, u16x16).">Softmax, log-softmax 및 정상화 가동은 AVX-512 16-lane 벡터화로 가속했습니다 (<code class="docutils literal notranslate"><span class="pre">f32x16</span></code>, <code class="docutils literal notranslate"><span class="pre">u16x16</span></code>).</p></li>
-<li><p data-original-en="libmvec integration for SIMD-optimized exponential function, loaded via dynamic linking."><code class="docutils literal notranslate"><span class="pre">libmvec</span></code> SIMD-optimized exponential 기능을 위한 통합은, 동적인 연결을 통해 적재했습니다.</p></li>
-<li><p data-original-en="Native bf16 (bfloat16) support with automatic f32 widening for numerical precision.">고유 bf16 (bfloat16)는 수치 정밀도를 위해 자동적인 f32로 지원합니다.</p></li>
-<li><p data-original-en="Runtime CPU feature detection with automatic scalar fallback for non-AVX-512 systems.">Runtime CPU는 non-AVX-512 체계를 위한 자동적인 사기그레이 fallback를 가진 탐지를 특색짓습니다.</p></li>
+<li><p data-original-en="Softmax, log-softmax, and normalization operations accelerated with AVX-512 16-lane vectorization (f32x16, u16x16).">AVX-512 16개의 라인 벡터화 (<code class="docutils literal notranslate"><span class="pre">f32x16</span></code>, <code class="docutils literal notranslate"><span class="pre">u16x16</span></code>)를 사용하여 Softmax, log-softmax, 및 정규화 연산 가속화.</p></li>
+<li><p data-original-en="libmvec integration for SIMD-optimized exponential function, loaded via dynamic linking.">SIMD-최적화된 지수 함수를 위한 <code class="docutils literal notranslate"><span class="pre">libmvec</span></code> 통합, 동적 링크를 통해 로드. (SIMD-최적화된 지수 함수, libmvec 통합)</p></li>
+<li><p data-original-en="Native bf16 (bfloat16) support with automatic f32 widening for numerical precision.">f32로의 자동 확장과 함께 네이티브 bf16 (bfloat16) 지원, 수치적 정밀도를 위해. (네이티브 bf16 (bfloat16), 자동 f32 확장)</p></li>
+<li><p data-original-en="Runtime CPU feature detection with automatic scalar fallback for non-AVX-512 systems.">AVX-512 시스템이 아닌 경우, 자동 스칼라 대체 기능과 함께 런타임 CPU 기능 감지. (런타임 CPU 기능 감지, 자동 스칼라 대체)</p></li>
 </ul>
 </li>
-<li><p data-original-en="Memory Management: Improved with expandable buffer pools, smart KV cache allocation strategies, and efficient memory usage for sliding window attention in long context models."><strong>메모리 관리</strong>: 확장 가능한 버퍼 풀, 스마트 KV cache 할당 전략 및 긴 컨텍스트 모델에 관심있는 슬라이딩 창에 대한 효율적인 메모리 사용으로 개선되었습니다.</p></li>
-<li><p data-original-en="Pipeline Loading: Parallelized pipeline loading with Ray-based parallelization for next-gen artifact builds."><strong>파이프라인 로딩</strong>: next-gen Artifact 빌드에 대한 Ray-based 병렬화와 병렬화 파이프로드.</p></li>
-<li><p data-original-en="Warm Up: Warm-up of tokenizers and templates before serving for reduced cold-start latency."><strong>따뜻 해 주세요</strong>: Warm-up 토큰화기 및 템플릿의 cold-start latency를 감소시키기 전에.</p></li>
+<li><p data-original-en="Memory Management: Improved with expandable buffer pools, smart KV cache allocation strategies, and efficient memory usage for sliding window attention in long context models.">메모리 관리: 확장 가능한 버퍼 풀, 지능형 KV 캐시 할당 전략, 그리고 긴 컨텍스트 모델에서 슬라이딩 윈도우 어텐션에 대한 효율적인 메모리 사용으로 개선됨. (메모리 관리, 확장 가능한 버퍼 풀, 지능형 KV 캐시 할당 전략, 슬라이딩 윈도우 어텐션)</p></li>
+<li><p data-original-en="Pipeline Loading: Parallelized pipeline loading with Ray-based parallelization for next-gen artifact builds.">파이프라인 로딩: Ray 기반 병렬화를 사용하여 차세대 아티팩트 빌드를 위한 병렬 파이프라인 로딩. (파이프라인 로딩, Ray 기반 병렬화)</p></li>
+<li><p data-original-en="Warm Up: Warm-up of tokenizers and templates before serving for reduced cold-start latency.">토크나이저 및 템플릿의 사전 워밍, 서비스 시작 시의 초기 지연 시간을 줄이기 위해. (사전 워밍, 토크나이저 및 템플릿)</p></li>
 </ul>
 </li>
 </ul>
 </section>
 <section id="expanded-model-quantization-support">
-<h3 data-original-en="Expanded Model &amp; Quantization Support">확장된 모델 및 Quantization 지원<a class="headerlink" href="#expanded-model-quantization-support" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Expanded Model &amp; Quantization Support">확장된 모델 및 양자화 지원<a class="headerlink" href="#expanded-model-quantization-support" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p data-original-en="New Model Support:"><strong>새로운 모델 지원</strong>:</p>
+<li><p data-original-en="New Model Support:">새로운 모델 지원:</p>
 <ul>
-<li><p data-original-en="Qwen3 Family: Support for 32B variants and 8B embedding/reranking models."><strong>Qwen3 가족</strong>: 32B 변형 및 8B embedding/reranking 모델 지원</p></li>
-<li><p data-original-en="Exaone4: Comprehensive support including up to 128k context length, sparse attention, and sliding window attention."><strong>엑소네4</strong>: 최대 128k 컨텍스트 길이, 비소주의, 슬라이딩 윈도우주의를 포함한 종합 지원</p></li>
+<li><p data-original-en="Qwen3 Family: Support for 32B variants and 8B embedding/reranking models.">Qwen3 시리즈: 32B 모델 및 8B 임베딩/재랭킹 모델 지원.</p></li>
+<li><p data-original-en="Exaone4: Comprehensive support including up to 128k context length, sparse attention, and sliding window attention.">Exaone4: 최대 128k 컨텍스트 길이, 희소 어텐션 및 슬라이딩 윈도우 어텐션 등 포괄적인 지원.</p></li>
 </ul>
 </li>
-<li><p><strong>Quantization</strong>:</p>
+<li><p data-original-en="Quantization:">양자화:</p>
 <ul>
 <li><p data-original-en="Fine-grained FP8 quantization support, enabling DeepSeek-style 2D-block weight quantization and per-token group activation quantization."><a class="reference external" href="https://huggingface.co/docs/transformers/en/quantization/finegrained_fp8">Fine-grained FP8 quantization</a> 지원, DeepSeek-style 2D 블록 무게 quantization 및 per-token 그룹 활성화 quantization를 활성화.</p></li>
 </ul>
@@ -398,68 +396,68 @@ html
 <section id="api-usability-improvements">
 <h3 data-original-en="API &amp; Usability Improvements">API 및 사용성 개선<a class="headerlink" href="#api-usability-improvements" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p data-original-en="Tool Calling Enhancements:"><strong>도구 호출 개선</strong>:</p>
+<li><p data-original-en="Tool Calling Enhancements:">도구 호출 기능 강화:</p>
 <ul>
-<li><p data-original-en='Support for tool_choice="required", tool_choice="auto", and named tool selection in Tool Calling API.'>지원 <code class="docutils literal notranslate"><span class="pre">tool_choice="required"</span></code>, <code class="docutils literal notranslate"><span class="pre">tool_choice="auto"</span></code>도구에서 도구 선택 이름을 따서 API를 호출합니다.</p></li>
+<li><p data-original-en='Support for tool_choice="required", tool_choice="auto", and named tool selection in Tool Calling API.'>Tool Calling API에서 <code class="docutils literal notranslate"><span class="pre">tool_choice="required"</span></code>, <code class="docutils literal notranslate"><span class="pre">tool_choice="auto"</span></code>, 그리고 이름으로 도구를 선택하는 기능을 지원합니다.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Sampling Parameters:"><strong>Sampling 파라미터</strong>:</p>
+<li><p data-original-en="Sampling Parameters:">샘플링 매개변수:</p>
 <ul>
-<li><p data-original-en="Added repetition_penalty for controlling repetitive outputs.">추가 <code class="docutils literal notranslate"><span class="pre">repetition_penalty</span></code> 반복적인 출력을 제어하기 위한 기능.</p></li>
-<li><p data-original-en="Added return_token_ids for returning token IDs alongside text.">추가 <code class="docutils literal notranslate"><span class="pre">return_token_ids</span></code> token ID를 뒤집어 텍스트로 반환합니다.</p></li>
-<li><p data-original-en="Added skip_special_tokens for controlling special token inclusion in outputs.">추가 <code class="docutils literal notranslate"><span class="pre">skip_special_tokens</span></code> 산출에 있는 특별한 token inclusion 통제를 위해.</p></li>
-<li><p data-original-en="Added ignore_eos for bypassing end-of-sequence token handling.">추가 <code class="docutils literal notranslate"><span class="pre">ignore_eos</span></code> end-of-sequence token 취급 우회를 위해.</p></li>
-<li><p data-original-en="Added stop_token_ids for custom stopping criteria.">추가 <code class="docutils literal notranslate"><span class="pre">stop_token_ids</span></code> 사용자 정의 중지 기준을 설정합니다.</p></li>
+<li><p data-original-en="Added repetition_penalty for controlling repetitive outputs.">반복적인 출력을 제어하기 위한 <code class="docutils literal notranslate"><span class="pre">repetition_penalty</span></code>를 추가했습니다.</p></li>
+<li><p data-original-en="Added return_token_ids for returning token IDs alongside text.">텍스트와 함께 토큰 ID를 반환하기 위한 <code class="docutils literal notranslate"><span class="pre">return_token_ids</span></code>를 추가했습니다.</p></li>
+<li><p data-original-en="Added skip_special_tokens for controlling special token inclusion in outputs.">특별 토큰의 포함 여부를 제어하기 위한 <code class="docutils literal notranslate"><span class="pre">skip_special_tokens</span></code> 기능 추가.</p></li>
+<li><p data-original-en="Added ignore_eos for bypassing end-of-sequence token handling.">시퀀스 종료 토큰 처리를 우회하기 위한 <code class="docutils literal notranslate"><span class="pre">ignore_eos</span></code> 기능 추가.</p></li>
+<li><p data-original-en="Added stop_token_ids for custom stopping criteria.">사용자 정의 중지 기준을 설정하기 위한 <code class="docutils literal notranslate"><span class="pre">stop_token_ids</span></code> 기능 추가.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Prompt Logprobs Support:"><strong>Prompt 로그 확률 지원</strong>:</p>
+<li><p data-original-en="Prompt Logprobs Support:">프롬프트 로그 확률 지원:</p>
 <ul>
-<li><p data-original-en="Added prompt_logprobs parameter to return log probabilities for prompt tokens.">추가 <code class="docutils literal notranslate"><span class="pre">prompt_logprobs</span></code> prompt 토큰에 대한 로그 확률을 반환하는 매개 변수.</p></li>
-<li><p data-original-en="Useful for analyzing model confidence and token-level predictions.">모델의 신뢰와 token-level 예측을 분석하는 데 도움이.</p></li>
+<li><p data-original-en="Added prompt_logprobs parameter to return log probabilities for prompt tokens.">프롬프트 토큰에 대한 로그 확률을 반환하기 위한 <code class="docutils literal notranslate"><span class="pre">prompt_logprobs</span></code> 매개변수 추가.</p></li>
+<li><p data-original-en="Useful for analyzing model confidence and token-level predictions.">모델의 신뢰도 분석 및 토큰 수준 예측에 유용.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Security &amp; Authentication:"><strong>보안 및 인증</strong>:</p>
+<li><p data-original-en="Security &amp; Authentication:">보안 및 인증:</p>
 <ul>
-<li><p data-original-en="Implemented API key authentication via --api-key argument for secure server access.">API 키 인증 구축 <code class="docutils literal notranslate"><span class="pre">--api-key</span></code> 안전한 서버 액세스를 위한 인자.</p></li>
+<li><p data-original-en="Implemented API key authentication via --api-key argument for secure server access.">서버에 안전하게 접근하기 위한 <code class="docutils literal notranslate"><span class="pre">--api-key</span></code> 인수를 사용하여 API 키 인증을 구현했습니다.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Content Format Improvements:"><strong>콘텐츠 형식 개선이 필요합니다.</strong>:</p>
+<li><p data-original-en="Content Format Improvements:">콘텐츠 형식 개선:</p>
 <ul>
-<li><p data-original-en="Support for Harmony response format in Chat Completions API with proper reasoning token counting.">지원 <strong>Harmony 응답 형식</strong> token 계산을 적절한 이유를 가진 채팅 완료 API에서.</p></li>
-<li><p data-original-en="Support for content parts format for multi-part messages in chat completions.">지원 <strong>내용 부분 형식</strong> 채팅 완료에 multi-part 메시지를 위해.</p></li>
+<li><p data-original-en="Support for Harmony response format in Chat Completions API with proper reasoning token counting.">Chat Completions API에서 Harmony 응답 형식을 지원하며, 적절한 추론 토큰 계산을 수행합니다.</p></li>
+<li><p data-original-en="Support for content parts format for multi-part messages in chat completions.">챗 컴플리션에서 다중 메시지 파트를 위한 콘텐츠 파트 형식을 지원합니다.</p></li>
 </ul>
 </li>
 </ul>
 </section>
 </section>
 <section id="breaking-changes-deprecations">
-<h2 data-original-en="🚨 Breaking Changes &amp; Deprecations">🚨 주요 변경 사항 및 폐기<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
+<h2 data-original-en="🚨 Breaking Changes &amp; Deprecations">🚨 주요 변경 사항 및 기능 제거<a class="headerlink" href="#breaking-changes-deprecations" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p data-original-en="Legacy Artifact Format Deprecated:"><strong>레거시 아티팩트 형식은 더 이상 사용되지 않습니다.</strong>:</p>
+<li><p data-original-en="Legacy Artifact Format Deprecated:">기존 아티팩트 형식 (Legacy Artifact Format) 은 더 이상 지원되지 않습니다:</p>
 <ul>
-<li><p data-original-en="Blockwise artifact format is no longer supported. Migration: All artifacts must be rebuilt using the new ArtifactBuilder.">Blockwise artifact 형식은 더 이상 지원되지 않습니다. <strong>이주</strong>: 모든 artifacts는 새로운 ArtifactBuilder를 사용하여 재건해야합니다.</p></li>
+<li><p data-original-en="Blockwise artifact format is no longer supported. Migration: All artifacts must be rebuilt using the new ArtifactBuilder.">블록 단위 아티팩트 형식은 더 이상 사용되지 않습니다. 마이그레이션: 모든 아티팩트는 새로운 ArtifactBuilder를 사용하여 다시 빌드해야 합니다.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Python Version Requirement:"><strong>Python 버전 요구 사항</strong>:</p>
+<li><p data-original-en="Python Version Requirement:">Python 버전 요구 사항:</p>
 <ul>
-<li><p data-original-en="Minimum Python version increased to 3.10+. Migration: Upgrade to Python 3.10 or later before installing this release.">최소 Python 버전은 3.10+로 증가했습니다. <strong>이주</strong>: 이 릴리스를 설치하기 전에 Python 3.10 또는 나중에로 업그레이드하십시오.</p></li>
+<li><p data-original-en="Minimum Python version increased to 3.10+. Migration: Upgrade to Python 3.10 or later before installing this release.">최소 Python 버전이 3.10 이상으로 변경되었습니다. 마이그레이션: 이 버전을 설치하기 전에 Python 3.10 또는 그 이상으로 업그레이드하십시오.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Transformer and PyTorch Library Update:"><strong>변압기 및 PyTorch 라이브러리 업데이트</strong>:</p>
+<li><p data-original-en="Transformer and PyTorch Library Update:">Transformer 및 PyTorch 라이브러리 업데이트:</p>
 <ul>
-<li><p data-original-en="Bumped transformers to 4.57.1.">트랜스포머를 4.57.1로 업그레이드했습니다.</p></li>
-<li><p data-original-en="Bumped PyTorch to 2.7.1. Migration: Ensure your environment supports PyTorch 2.7.x.">PyTorch를 2.7.1로 변경했습니다. <strong>이주</strong>: 환경 지원 PyTorch 2.7.x.</p></li>
+<li><p data-original-en="Bumped transformers to 4.57.1.">transformers 버전이 4.57.1로 업그레이드되었습니다.</p></li>
+<li><p data-original-en="Bumped PyTorch to 2.7.1. Migration: Ensure your environment supports PyTorch 2.7.x.">PyTorch를 2.7.1 버전으로 업그레이드했습니다. 마이그레이션: 환경이 PyTorch 2.7.x 버전을 지원하는지 확인하십시오.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Removed Beam Search Support:"><strong>Beam Search 지원 제거</strong>:</p>
+<li><p data-original-en="Removed Beam Search Support:">Beam Search 지원을 제거했습니다:</p>
 <ul>
-<li><p data-original-en="Beam search decoding has been removed from the LLM engine. Migration: Use sampling-based decoding methods such as top-k, top-p, or temperature sampling.">빔 검색 디코딩은 LLM 엔진에서 제거되었습니다. <strong>이주</strong>: top-k, top-p 또는 temperature sampling와 같은 sampling 기반 디코딩 방법을 사용합니다.</p></li>
+<li><p data-original-en="Beam search decoding has been removed from the LLM engine. Migration: Use sampling-based decoding methods such as top-k, top-p, or temperature sampling.">LLM 엔진에서 Beam Search 디코딩 기능이 제거되었습니다. 마이그레이션: top-k, top-p, 또는 온도 샘플링과 같은 샘플링 기반 디코딩 방법을 사용하십시오.</p></li>
 </ul>
 </li>
-<li><p data-original-en="Removed furiosa-pert-rngd Package:"><strong>furiosa-pert-rngd 패키지를 제거</strong>:</p>
+<li><p data-original-en="Removed furiosa-pert-rngd Package:">furiosa-pert-rngd 패키지를 제거했습니다:</p>
 <ul>
-<li><p data-original-en="The furiosa-pert-rngd package has been removed. PERT is now dynamically loaded onto the device through the runtime, eliminating the need for a separate package installation.">The <code class="docutils literal notranslate"><span class="pre">furiosa-pert-rngd</span></code> 패키지가 제거되었습니다. PERT는 이제 runtime를 통해 장치에 동적로드되어 별도의 패키지 설치에 필요한 것을 제거합니다.</p></li>
-<li><p data-original-en="Migration: See the Upgrading FuriosaAI’s Software for details."><strong>이주</strong>: 참조 <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a> 세부사항을 알려주세요.</p></li>
+<li><p data-original-en="The furiosa-pert-rngd package has been removed. PERT is now dynamically loaded onto the device through the runtime, eliminating the need for a separate package installation."><code class="docutils literal notranslate"><span class="pre">furiosa-pert-rngd</span></code> 패키지가 제거되었습니다. PERT는 런타임을 통해 동적으로 장치에 로드되므로 별도의 패키지 설치가 필요하지 않습니다.</p></li>
+<li><p data-original-en="Migration: See the Upgrading FuriosaAI’s Software for details.">마이그레이션: <a class="reference internal" href="../get_started/upgrade_guide.html#upgradeguide">FuriosaAI 소프트웨어 업그레이드</a> 방법에 대한 자세한 내용은 참조하십시오.</p></li>
 </ul>
 </li>
 </ul>

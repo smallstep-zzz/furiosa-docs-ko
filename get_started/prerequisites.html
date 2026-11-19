@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'get_started/prerequisites';</script>
@@ -289,15 +289,15 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="installing-prerequisites">
-<span id="installingprerequisites"></span><h1 data-original-en="Installing Prerequisites">사전 설치<a class="headerlink" href="#installing-prerequisites" title="Link to this heading">#</a></h1>
-<p data-original-en="This article describes how to install the prerequisite packages necessary for the FuriosaAI software stack, namely the device driver, and firmware. These packages are available for Debian/Ubuntu systems (via APT) and for Rocky Linux / RHEL systems (via RPM).">이 문서는 FuriosaAI 소프트웨어 스택에 필요한 사전 예약 패키지를 설치하는 방법을 설명, 즉, 장치 driver, 및 firmware. 이 패키지는 Debian/Ubuntu 시스템 (APT를 통해) 및 Rocky Linux / RHEL 시스템 (를 통해 RPM)에 사용할 수 있습니다.</p>
+<span id="installingprerequisites"></span><h1 data-original-en="Installing Prerequisites">필수 구성 요소 설치<a class="headerlink" href="#installing-prerequisites" title="Link to this heading">#</a></h1>
+<p data-original-en="This article describes how to install the prerequisite packages necessary for the FuriosaAI software stack, namely the device driver, and firmware. These packages are available for Debian/Ubuntu systems (via APT) and for Rocky Linux / RHEL systems (via RPM).">이 문서는 FuriosaAI 소프트웨어 스택에 필요한 필수 패키지, 즉 장치 드라이버 및 펌웨어를 설치하는 방법을 설명합니다. 이러한 패키지는 Debian/Ubuntu 시스템(APT를 통해) 및 Rocky Linux/RHEL 시스템(RPM을 통해)에서 사용할 수 있습니다.</p>
 <section id="requirements">
 <h2 data-original-en="Requirements">요구 사항<a class="headerlink" href="#requirements" title="Link to this heading">#</a></h2>
-<p data-original-en="The minimum requirements are as follows:">최소 요구 사항은 다음과 같습니다.</p>
+<p data-original-en="The minimum requirements are as follows:">최소 요구 사항은 다음과 같습니다:</p>
 <ul class="simple">
-<li><p data-original-en="A supported Linux distribution:">지원되는 Linux 배포:</p>
+<li><p data-original-en="A supported Linux distribution:">지원되는 Linux 배포판:</p>
 <ul>
-<li><p data-original-en="Ubuntu 22.04 LTS (or Debian Bookworm) or later, or">Ubuntu 22.04 LTS (또는 Debian Bookworm) 또는 나중에</p></li>
+<li><p data-original-en="Ubuntu 22.04 LTS (or Debian Bookworm) or later, or">Ubuntu 22.04 LTS (또는 Debian Bookworm) 또는 이후 버전, 또는</p></li>
 <li><p>Rocky Linux 10 / RHEL 10</p></li>
 </ul>
 </li>
@@ -307,15 +307,15 @@ html
 </section>
 <section id="checking-for-installed-devices">
 <h2 data-original-en="Checking for Installed Devices">설치된 장치 확인<a class="headerlink" href="#checking-for-installed-devices" title="Link to this heading">#</a></h2>
-<p data-original-en="To confirm that FuriosaAI devices are correctly installed on your system, run the following command:">FuriosaAI 장치가 시스템에 올바르게 설치되었는지 확인하려면 다음 명령을 실행하십시오.</p>
+<p data-original-en="To confirm that FuriosaAI devices are correctly installed on your system, run the following command:">FuriosaAI 장치가 시스템에 올바르게 설치되었는지 확인하려면 다음 명령을 실행하십시오:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>lspci<span class="w"> </span>-nn<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>FuriosaAI
 </pre></div>
 </div>
-<p data-original-en="If the device is properly installed, the output will be similar to the following:">장치가 제대로 설치되면 출력은 다음과 같습니다.</p>
+<p data-original-en="If the device is properly installed, the output will be similar to the following:">장치가 올바르게 설치되면, 다음과 유사한 출력이 표시됩니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>4e:00.0<span class="w"> </span>Processing<span class="w"> </span>accelerators<span class="w"> </span><span class="o">[</span><span class="m">1200</span><span class="o">]</span>:<span class="w"> </span>FuriosaAI,<span class="w"> </span>Inc.<span class="w"> </span>Device<span class="w"> </span><span class="o">[</span>1ed2:0001<span class="o">]</span><span class="w"> </span><span class="o">(</span>rev<span class="w"> </span><span class="m">01</span><span class="o">)</span>
 </pre></div>
 </div>
-<p data-original-en="If the lspci command is not available, you can install it and update the PCIe ID database using the following commands:">만약 <code class="docutils literal notranslate"><span class="pre">lspci</span></code> 명령은 사용할 수 없습니다. 다음 명령을 사용하여 PCIe ID 데이터베이스를 설치하고 업데이트 할 수 있습니다.</p>
+<p data-original-en="If the lspci command is not available, you can install it and update the PCIe ID database using the following commands:"><code class="docutils literal notranslate"><span class="pre">lspci</span></code> 명령이 사용 가능하지 않은 경우, 다음 명령을 사용하여 설치하고 PCIe ID 데이터베이스를 업데이트할 수 있습니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>pciutils
 sudo<span class="w"> </span>update-pciids
 </pre></div>
@@ -323,21 +323,21 @@ sudo<span class="w"> </span>update-pciids
 </section>
 <section id="setting-up-the-package-repository">
 <span id="aptsetup"></span><h2 data-original-en="Setting up the Package Repository">패키지 저장소 설정<a class="headerlink" href="#setting-up-the-package-repository" title="Link to this heading">#</a></h2>
-<p data-original-en="FuriosaAI distributes its packages through both an APT repository (for Debian/Ubuntu) and an RPM repository (for Rocky Linux / RHEL). Select the tab matching your Linux distribution.">FuriosaAI는 APT 저장소 (Debian/Ubuntu 용) 및 RPM 저장소 (Rocky Linux / RHEL 용)를 통해 패키지를 배포합니다. Linux 배포와 일치하는 탭을 선택하십시오.</p>
+<p data-original-en="FuriosaAI distributes its packages through both an APT repository (for Debian/Ubuntu) and an RPM repository (for Rocky Linux / RHEL). Select the tab matching your Linux distribution.">FuriosaAI는 APT 저장소(Debian/Ubuntu용) 및 RPM 저장소(Rocky Linux / RHEL용)를 통해 패키지를 배포합니다. 사용 중인 Linux 배포판에 해당하는 탭을 선택하십시오.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="apt" for="sd-tab-item-0">
 APT (Debian/Ubuntu)</label><div class="sd-tab-content docutils">
-<p data-original-en="To use the APT server provided by FuriosaAI, follow the steps below:">FuriosaAI에 의해 제공된 APT 서버를 사용하려면 아래 단계를 따르십시오:</p>
+<p data-original-en="To use the APT server provided by FuriosaAI, follow the steps below:">FuriosaAI에서 제공하는 APT 서버를 사용하려면 다음 단계를 따르십시오:</p>
 <ol class="arabic simple">
-<li><p data-original-en="Install the required packages and register the signing key.">필요한 패키지를 설치하고 서명 키를 등록하십시오.</p></li>
+<li><p data-original-en="Install the required packages and register the signing key.">필요한 패키지를 설치하고 서명 키를 등록합니다.</p></li>
 </ol>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>curl<span class="w"> </span>gnupg
 curl<span class="w"> </span>https://packages.cloud.google.com/apt/doc/apt-key.gpg<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>gpg<span class="w"> </span>--dearmor<span class="w"> </span>-o<span class="w"> </span>/etc/apt/trusted.gpg.d/cloud.google.gpg
 </pre></div>
 </div>
 <ol class="arabic simple" start="2">
-<li><p data-original-en="Configure the APT server for your Linux distribution by executing the following command:">다음 명령을 실행하여 Linux 배포를 위한 APT 서버를 구성하십시오:</p></li>
+<li><p data-original-en="Configure the APT server for your Linux distribution by executing the following command:">다음 명령을 실행하여 Linux 배포판에 대한 APT 서버를 구성합니다:</p></li>
 </ol>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">"deb [arch=</span><span class="k">$(</span>dpkg<span class="w"> </span>--print-architecture<span class="k">)</span><span class="s2">] http://asia-northeast3-apt.pkg.dev/projects/furiosa-ai </span><span class="k">$(</span>.<span class="w"> </span>/etc/os-release<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="s2">"</span><span class="nv">$VERSION_CODENAME</span><span class="s2">"</span><span class="k">)</span><span class="s2"> main"</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/furiosa.list
 </pre></div>
@@ -346,7 +346,7 @@ curl<span class="w"> </span>https://packages.cloud.google.com/apt/doc/apt-key.gp
 <input id="sd-tab-item-1" name="sd-tab-set-0" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="rpm-rocky" for="sd-tab-item-1">
 RPM (로키 Linux)</label><div class="sd-tab-content docutils">
-<p data-original-en="FuriosaAI provides an RPM repository for installing the same packages. Register it by creating the following repository file:">FuriosaAI는 동일한 패키지를 설치하기 위해 RPM 저장소를 제공합니다. 다음 저장소 파일을 작성하여 등록하십시오.</p>
+<p data-original-en="FuriosaAI provides an RPM repository for installing the same packages. Register it by creating the following repository file:">FuriosaAI는 동일한 패키지를 설치하기 위한 RPM 저장소를 제공합니다. 다음 저장소 파일을 생성하여 등록합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/yum.repos.d/furiosa.repo<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
 <span class="s">[furiosa]</span>
 <span class="s">name=furiosa</span>
@@ -361,7 +361,7 @@ RPM (로키 Linux)</label><div class="sd-tab-content docutils">
 <input id="sd-tab-item-2" name="sd-tab-set-0" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="rpm-rhel" for="sd-tab-item-2">
 RPM (RHEL)</label><div class="sd-tab-content docutils">
-<p data-original-en="FuriosaAI provides an RPM repository for installing the same packages. Register it by creating the following repository file:">FuriosaAI는 동일한 패키지를 설치하기 위해 RPM 저장소를 제공합니다. 다음 저장소 파일을 작성하여 등록하십시오.</p>
+<p data-original-en="FuriosaAI provides an RPM repository for installing the same packages. Register it by creating the following repository file:">FuriosaAI는 동일한 패키지를 설치하기 위한 RPM 저장소를 제공합니다. 다음 저장소 파일을 생성하여 등록합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/yum.repos.d/furiosa.repo<span class="w"> </span>&gt;<span class="w"> </span>/dev/null<span class="w"> </span><span class="s">&lt;&lt; EOF</span>
 <span class="s">[furiosa]</span>
 <span class="s">name=furiosa</span>
@@ -376,8 +376,8 @@ RPM (RHEL)</label><div class="sd-tab-content docutils">
 </div>
 </section>
 <section id="installing-prerequisite-packages">
-<h2 data-original-en="Installing Prerequisite Packages">필수 구성 요소 설치<a class="headerlink" href="#installing-prerequisite-packages" title="Link to this heading">#</a></h2>
-<p data-original-en="After registering FuriosaAI’s package repository as described above, you can now install the required packages: the device driver, the PE Runtime, and optionally the device control/information tool (furiosa-smi). On RPM systems, the commands also install the EPEL repository, which provides the kernel-build dependencies.">FuriosaAI의 패키지 저장소를 위에서 설명 한 후, 당신은 지금 필요한 패키지를 설치할 수 있습니다: 장치 driver, PE Runtime 및 옵션으로 장치 control/information 도구 (<a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html#furiosasmicli"><span class="std std-ref">furiosa-smi</span></a>). RPM 체계에, 명령은 또한 kernel-build 의존성을 제공하는 EPEL 저장소를 설치합니다.</p>
+<h2 data-original-en="Installing Prerequisite Packages">필수 패키지 설치<a class="headerlink" href="#installing-prerequisite-packages" title="Link to this heading">#</a></h2>
+<p data-original-en="After registering FuriosaAI’s package repository as described above, you can now install the required packages: the device driver, the PE Runtime, and optionally the device control/information tool (furiosa-smi). On RPM systems, the commands also install the EPEL repository, which provides the kernel-build dependencies.">위에서 설명한 대로 FuriosaAI의 패키지 저장소를 등록한 후, 다음 필수 패키지를 설치할 수 있습니다: 장치 드라이버, PE 런타임, 그리고 선택적으로 장치 제어/정보 도구 (<a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html#furiosasmicli"><span class="std std-ref">furiosa-smi</span></a>). RPM 시스템에서는 명령이 EPEL 저장소도 설치하여, 커널 빌드에 필요한 종속성을 제공합니다.</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="apt" for="sd-tab-item-3">
@@ -412,11 +412,11 @@ sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> <
 </section>
 <section id="verifying-npu-device-installation">
 <h2 data-original-en="Verifying NPU Device Installation">NPU 장치 설치 확인<a class="headerlink" href="#verifying-npu-device-installation" title="Link to this heading">#</a></h2>
-<p data-original-en="Once the device driver and furiosa-smi are successfully installed, you can check the list of NPU devices by running the following command:">장치 driver 및 <a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html#furiosasmicli"><span class="std std-ref">furiosa-smi</span></a> 성공적으로 설치되어 다음 명령을 실행하여 NPU 장치의 목록을 확인할 수 있습니다.</p>
+<p data-original-en="Once the device driver and furiosa-smi are successfully installed, you can check the list of NPU devices by running the following command:">장치 드라이버와 <a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html#furiosasmicli"><span class="std std-ref">furiosa-smi</span></a>가 성공적으로 설치되면, 다음 명령을 실행하여 NPU 장치 목록을 확인할 수 있습니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-smi<span class="w"> </span>info
 </pre></div>
 </div>
-<p data-original-en="Example output:">예제 출력:</p>
+<p data-original-en="Example output:">예시 출력:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>+------+--------+----------------+---------+-------+--------------+
 | Arch | Device | Firmware       | Temp.   | Power | PCI-BDF      |
 +------+--------+----------------+---------+-------+--------------+
@@ -424,13 +424,11 @@ sudo<span class="w"> </span>dnf<span class="w"> </span>install<span class="w"> <
 +------+--------+----------------+---------+-------+--------------+
 </pre></div>
 </div>
-<p data-original-en="Please refer to Furiosa SMI CLI to learn more about the furiosa-smi command.">참고하시기 바랍니다 <a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html#furiosasmicli"><span class="std std-ref">Furiosa SMI CLI</span></a> 더 자세한 정보를 얻으려면 <code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code>
-지휘관</p>
+<p data-original-en="Please refer to Furiosa SMI CLI to learn more about the furiosa-smi command."><code class="docutils literal notranslate"><span class="pre">furiosa-smi</span></code> 명령에 대한 자세한 내용은 <a class="reference internal" href="../device_management/system_management_interface/furiosa_smi_cli.html#furiosasmicli"><span class="std std-ref">Furiosa SMI CLI</span></a>를 참조하십시오.</p>
 </section>
 <section id="upgrading-the-software-stack">
 <h2 data-original-en="Upgrading the Software Stack">소프트웨어 스택 업그레이드<a class="headerlink" href="#upgrading-the-software-stack" title="Link to this heading">#</a></h2>
-<p data-original-en="To upgrade an existing installation — the driver, firmware, and Furiosa-LLM — see the Upgrading FuriosaAI’s Software.">기존의 설치를 업그레이드하려면 driver, firmware 및 Furiosa-LLM — 참조
-<a class="reference internal" href="upgrade_guide.html#upgradeguide"><span class="std std-ref">FuriosaAI 소프트웨어 업그레이드</span></a>.</p>
+<p data-original-en="To upgrade an existing installation — the driver, firmware, and Furiosa-LLM — see the Upgrading FuriosaAI’s Software.">기존 설치(드라이버, 펌웨어, Furiosa-LLM)를 업그레이드하려면, "<a class="reference internal" href="upgrade_guide.html#upgradeguide">FuriosaAI의 소프트웨어 업그레이드</a>"를 참조하십시오.</p>
 </section>
 </section>
 </article>

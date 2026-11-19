@@ -43,7 +43,7 @@ html
 <script src="../../_static/doctools.js?v=9bcbadda"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/copybutton.js?v=ko20261119"></script>
 <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/models/qwen3-reranker';</script>
@@ -292,55 +292,51 @@ html
 <article class="bd-article">
 <section id="qwen3-reranker">
 <span id="furiosa-llm-model-qwen3-reranker"></span><h1>Qwen3-Reranker<a class="headerlink" href="#qwen3-reranker" title="Link to this heading">#</a></h1>
-<p data-original-en="The Qwen3-Reranker series is a family of reranking models built on the Qwen3 dense transformer backbone. Given a query and a set of candidate documents, they produce relevance scores used to reorder retrieval results — a common second stage in retrieval-augmented generation (RAG) and search pipelines.">The <a class="reference external" href="https://huggingface.co/Qwen">Qwen3-Reranker</a> 시리즈는 Qwen3 조밀한 변압기 백본에 건설된 reranking 모형의 가족입니다. 조회를 주고 후보자 문서의 세트를 주기 위하여, 그들은 재주문 검색 결과에 사용된 relevance 점수를 생성합니다 — retrieval-augmented 세대 (RAG)에 있는 일반적인 두번째 단계 및 수선.</p>
-<p data-original-en="FuriosaAI publishes the Qwen3-Reranker models under the furiosa-ai organization on the Hugging Face Hub, each shipping a Furiosa Executable Bundle (FXB) for running it on FuriosaAI RNGD with Furiosa-LLM. The same upstream weights also run on other frameworks (such as Sentence Transformers, vLLM, and Transformers); for usage with those, see the upstream model cards linked below.">FuriosaAI는 Qwen3-Reranker 모형을 아래에 발행합니다
-<a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> 구성 요소가 Hugging Face 허브에 연결됨</a>, 각 발송 Furiosa 실행 가능한 번들 (FXB)에 그것을 달리기를 위해
-<a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> Furiosa-LLM로. 동일한 상류 무게는 또한 다른 기구 (지속 변압기와 같은 vLLM 및 변압기); 그와 함께 사용을 위해, 아래에 연결되는 상류 모형 카드를 보십시오.</p>
-<p data-original-en="For the related embedding model see Qwen3-Embedding; for the dense Qwen3 chat models see Qwen3 (dense).">관련 임베딩 모델은 다음을 참조하십시오: <a class="reference internal" href="qwen3-embedding.html"><span class="doc">Qwen3-Embedding</span></a>; dense Qwen3 채팅 모델 참조 <a class="reference internal" href="qwen3.html"><span class="doc">Qwen3 (밀집)</span></a>.</p>
+<p data-original-en="The Qwen3-Reranker series is a family of reranking models built on the Qwen3 dense transformer backbone. Given a query and a set of candidate documents, they produce relevance scores used to reorder retrieval results — a common second stage in retrieval-augmented generation (RAG) and search pipelines."><a class="reference external" href="https://huggingface.co/Qwen">Qwen3-Reranker</a> 시리즈는 Qwen3의 밀집형 트랜스포머 기반을 기반으로 구축된 재랭킹 모델의 집합입니다. 주어진 쿼리와 후보 문서 집을 입력으로 받아, 검색 결과의 순서를 재정렬하는 데 사용되는 관련성 점수를 생성합니다. 이는 검색 증강 생성 (RAG) 및 검색 파이프라인의 일반적인 두 번째 단계입니다.</p>
+<p data-original-en="FuriosaAI publishes the Qwen3-Reranker models under the furiosa-ai organization on the Hugging Face Hub, each shipping a Furiosa Executable Bundle (FXB) for running it on FuriosaAI RNGD with Furiosa-LLM. The same upstream weights also run on other frameworks (such as Sentence Transformers, vLLM, and Transformers); for usage with those, see the upstream model cards linked below.">FuriosaAI publishes the Qwen3-Reranker models under the <a class="reference external" href="https://huggingface.co/furiosa-ai"><code class="docutils literal notranslate"><span class="pre">furiosa-ai</span></code> organization on the Hugging Face Hub</a>, each shipping a Furiosa Executable Bundle (FXB) for running it on <a class="reference external" href="https://furiosa.ai">FuriosaAI RNGD</a> with Furiosa-LLM. The same upstream weights also run on other frameworks (such as Sentence Transformers, vLLM, and Transformers); for usage with those, see the upstream model cards linked below.</p>
+<p data-original-en="For the related embedding model see Qwen3-Embedding; for the dense Qwen3 chat models see Qwen3 (dense).">관련 임베딩 모델은 <a class="reference internal" href="qwen3-embedding.html"><span class="doc">Qwen3-Embedding</span></a>을 참조하고, 밀집형 Qwen3 챗 모델은 <a class="reference internal" href="qwen3.html"><span class="doc">Qwen3 (dense)</span></a>를 참조합니다.</p>
 <section id="available-models">
 <h2 data-original-en="Available Models">사용 가능한 모델<a class="headerlink" href="#available-models" title="Link to this heading">#</a></h2>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
 <tr class="row-odd"><th class="head"><p data-original-en="Model">모델</p></th>
-<th class="head"><p>Quantization</p></th>
-<th class="head"><p data-original-en="RNGD cards">RNGD 카드</p></th>
-<th class="head"><p data-original-en="Notes">노트</p></th>
+<th class="head"><p data-original-en="Quantization">양자화</p></th>
+<th class="head"><p data-original-en="RNGD cards">RNGD 카드 (RNGD 카드)</p></th>
+<th class="head"><p data-original-en="Notes">참고 사항</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-Reranker-0.6B"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-Reranker-0.6B</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="0.6B reranker">0.6B 리렌커</p></td>
+<td><p data-original-en="0.6B reranker">0.6B 크기(size)의 reranker 모델</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-Reranker-4B"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-Reranker-4B</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="4B reranker">4B 리랭커</p></td>
+<td><p data-original-en="4B reranker">4B 크기(size)의 reranker 모델</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference external" href="https://huggingface.co/furiosa-ai/Qwen3-Reranker-8B"><code class="docutils literal notranslate"><span class="pre">furiosa-ai/Qwen3-Reranker-8B</span></code></a></p></td>
 <td><p>None BF16)</p></td>
 <td><p>1</p></td>
-<td><p data-original-en="8B reranker">8B 리랭커</p></td>
+<td><p data-original-en="8B reranker">8B 크기(size)의 reranker 모델</p></td>
 </tr>
 </tbody>
 </table>
 </div>
 <ul class="simple">
-<li><p data-original-en="Architecture: Qwen3 (dense), Qwen3ForSequenceClassification"><strong>건축:</strong> Qwen3 (밀집), <code class="docutils literal notranslate"><span class="pre">Qwen3ForSequenceClassification</span></code></p></li>
-<li><p data-original-en="Task: Reranking"><strong>임무:</strong> Reranking</p></li>
-<li><p data-original-en="Input / Output: Text (query-document pairs) / Relevance score"><strong>입력 / 출력:</strong> 텍스트 (query-document 쌍) / 관련 점수</p></li>
-<li><p data-original-en="Quantization: No quantization — the models run in their native BF16 precision."><strong>Quantization:</strong> quantization - 모델은 네이티브 BF16 정밀도에서 실행됩니다.</p></li>
+<li><p data-original-en="Architecture: Qwen3 (dense), Qwen3ForSequenceClassification">아키텍처: Qwen3 (밀집), <code class="docutils literal notranslate"><span class="pre">Qwen3ForSequenceClassification</span></code></p></li>
+<li><p data-original-en="Task: Reranking">작업: 재랭킹</p></li>
+<li><p data-original-en="Input / Output: Text (query-document pairs) / Relevance score">입력 / 출력: 텍스트 (쿼리-문서 쌍) / 관련성 점수</p></li>
+<li><p data-original-en="Quantization: No quantization — the models run in their native BF16 precision.">양자화: 양자화 없음 — 모델은 원래 BF16 정밀도로 실행됩니다.</p></li>
 </ul>
 </section>
 <section id="usage">
-<h2 data-original-en="Usage">사용<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
-<p data-original-en="To run these models with Furiosa-LLM, follow the examples below after installing Furiosa-LLM and its prerequisites. You can use a model either online through the OpenAI-compatible server or offline through the Furiosa-LLM Python API. Select a variant tab below; the choice is kept in sync across all the examples on this page.">Furiosa-LLM와 함께 이러한 모델을 실행하려면 아래 예제를 따르십시오.
-<a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>.
-모델을 온라인 서버(OpenAI 호환)를 통해 또는 Furiosa-LLM Python API를 통해 오프라인으로 사용할 수 있습니다. 아래의 변형 탭을 선택하면, 이 페이지의 모든 예제에서 선택이 동기화됩니다.</p>
+<h2 data-original-en="Usage">사용법<a class="headerlink" href="#usage" title="Link to this heading">#</a></h2>
+<p data-original-en="To run these models with Furiosa-LLM, follow the examples below after installing Furiosa-LLM and its prerequisites. You can use a model either online through the OpenAI-compatible server or offline through the Furiosa-LLM Python API. Select a variant tab below; the choice is kept in sync across all the examples on this page.">Furiosa-LLM와 함께 이러한 모델을 실행하려면 아래 예제를 따르십시오. <a class="reference external" href="https://developer.furiosa.ai/latest/en/get_started/furiosa_llm.html#installing-furiosa-llm">Furiosa-LLM 및 그 전제 조건 설치</a>. 모델을 온라인 서버(OpenAI 호환)를 통해 또는 Furiosa-LLM Python API를 통해 오프라인으로 사용할 수 있습니다. 아래의 변형 탭을 선택하면, 이 페이지의 모든 예제에서 선택이 동기화됩니다.</p>
 <section id="launch-the-server">
-<h3 data-original-en="Launch the server">서버를 시작하세요<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
-<p data-original-en="Serve a model by passing its furiosa-ai/&lt;repo&gt; identifier:">모델을 지정하여 제공: <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자:</p>
+<h3 data-original-en="Launch the server">서버 시작<a class="headerlink" href="#launch-the-server" title="Link to this heading">#</a></h3>
+<p data-original-en="Serve a model by passing its furiosa-ai/&lt;repo&gt; identifier:">모델을 실행하려면 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/&lt;repo&gt;</span></code> 식별자를 전달합니다:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-0" name="sd-tab-set-0" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="v06" for="sd-tab-item-0">
@@ -367,7 +363,7 @@ furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3
 </div>
 </div>
 </div>
-<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음을 볼 수 있습니다.</p>
+<p data-original-en="When the server is ready, you will see:">서버가 준비되면 다음과 같은 메시지를 확인합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>INFO:<span class="w">     </span>Started<span class="w"> </span>server<span class="w"> </span>process<span class="w"> </span><span class="o">[</span><span class="m">27507</span><span class="o">]</span>
 INFO:<span class="w">     </span>Waiting<span class="w"> </span><span class="k">for</span><span class="w"> </span>application<span class="w"> </span>startup.
 INFO:<span class="w">     </span>Application<span class="w"> </span>startup<span class="w"> </span>complete.
@@ -376,9 +372,8 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </section>
 <section id="basic-usage">
-<h3 data-original-en="Basic Usage">기본 사용<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
-<p data-original-en="The server exposes a /v1/rerank endpoint (compatible with the Cohere/Jina rerank API, also used by vLLM). Send a query and the candidate documents with curl; the server returns the documents reordered by relevance_score:">서버는 <code class="docutils literal notranslate"><span class="pre">/v1/rerank</span></code> endpoint (Cohere/Jina rerank API와 호환, 또한 vLLM에 의해 사용). 쿼리 및 후보 문서를 보내
-<code class="docutils literal notranslate"><span class="pre">curl</span></code>; 서버는 재주문을 받아서 문서를 반환합니다 <code class="docutils literal notranslate"><span class="pre">relevance_score</span></code>:</p>
+<h3 data-original-en="Basic Usage">기본 사용법<a class="headerlink" href="#basic-usage" title="Link to this heading">#</a></h3>
+<p data-original-en="The server exposes a /v1/rerank endpoint (compatible with the Cohere/Jina rerank API, also used by vLLM). Send a query and the candidate documents with curl; the server returns the documents reordered by relevance_score:">서버는 <code class="docutils literal notranslate"><span class="pre">/v1/rerank</span></code> endpoint (Cohere/Jina rerank API와 호환, 또한 vLLM에 의해 사용). 쿼리 및 후보 문서를 보내 <code class="docutils literal notranslate"><span class="pre">curl</span></code>; 서버는 재주문을 받아서 문서를 반환합니다 <code class="docutils literal notranslate"><span class="pre">relevance_score</span></code>:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-3" name="sd-tab-set-1" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="v06" for="sd-tab-item-3">
@@ -435,7 +430,7 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </div>
 </div>
-<p data-original-en="You can do the same from Python with the requests library, and pass top_n to keep only the most relevant documents:">Python와 동일 할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">requests</span></code> 도서관, 그리고 통과 <code class="docutils literal notranslate"><span class="pre">top_n</span></code> 가장 관련 문서만 보관하려면:</p>
+<p data-original-en="You can do the same from Python with the requests library, and pass top_n to keep only the most relevant documents:"><code class="docutils literal notranslate"><span class="pre">requests</span></code> 라이브러리를 사용하여 Python에서도 동일하게 수행할 수 있으며, <code class="docutils literal notranslate"><span class="pre">top_n</span></code> 매개변수를 사용하여 가장 관련성 높은 문서만 선택할 수 있습니다:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-6" name="sd-tab-set-2" type="radio"/>
 <label class="sd-tab-label" data-sync-group="tab" data-sync-id="v06" for="sd-tab-item-6">
@@ -510,10 +505,10 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </div>
 </div>
 </div>
-<p data-original-en="To score query-document pairs directly instead of reranking, the server also exposes a /v1/score endpoint.">reranking 대신 쿼리-문서 쌍을 직접 평가하려면 서버는 또한 <code class="docutils literal notranslate"><span class="pre">/v1/score</span></code> 끝점</p>
+<p data-original-en="To score query-document pairs directly instead of reranking, the server also exposes a /v1/score endpoint.">재정렬 대신 쿼리-문서 쌍을 직접 점수 매기기 위해, 서버는 <code class="docutils literal notranslate"><span class="pre">/v1/score</span></code> 엔드포인트를 노출합니다.</p>
 </section>
 <section id="advanced-usage">
-<h3 data-original-en="Advanced Usage">발전 된 사용<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Advanced Usage">고급 사용법<a class="headerlink" href="#advanced-usage" title="Link to this heading">#</a></h3>
 <p data-original-en="For offline use, load the model with the LLM constructor (the FXB shipped in the repo is discovered automatically) and call score with a query and the candidate documents to obtain relevance scores:">오프라인 사용을 위해, 모형을 가진 적재하십시오 <code class="docutils literal notranslate"><span class="pre">LLM</span></code> constructor (Repo에서 발송되는 FXB는 자동적으로 발견됩니다)와 호출 <code class="docutils literal notranslate"><span class="pre">score</span></code> 쿼리 및 후보 문서로 relevance 점수를 얻는:</p>
 <div class="sd-tab-set docutils">
 <input checked="checked" id="sd-tab-item-9" name="sd-tab-set-3" type="radio"/>
@@ -571,10 +566,10 @@ INFO:<span class="w">     </span>Uvicorn<span class="w"> </span>running<span cla
 </section>
 </section>
 <section id="learn-more">
-<h2 data-original-en="Learn more">더 많은 것을 배우십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Learn more">자세한 내용은 참조하십시오<a class="headerlink" href="#learn-more" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference, including the Rerank and Score APIs"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM 서버 (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> - Rerank 및 Score API를 포함한 전체 OpenAI 호환 API 참조</p></li>
-<li><p data-original-en="Furiosa-LLM — Furiosa-LLM documentation and API reference"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/intro.html">Furiosa-LLM</a> - Furiosa-LLM 문서 및 API 참조</p></li>
+<li><p data-original-en="Furiosa-LLM Server (furiosa-llm serve) — full OpenAI-compatible API reference, including the Rerank and Score APIs"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/furiosa-llm-serve.html">Furiosa-LLM Server (<code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code>)</a> — full OpenAI-compatible API reference, including the Rerank and Score APIs</p></li>
+<li><p data-original-en="Furiosa-LLM — Furiosa-LLM documentation and API reference"><a class="reference external" href="https://developer.furiosa.ai/latest/en/furiosa_llm/intro.html">Furiosa-LLM</a> — Furiosa-LLM 문서 및 API 참조</p></li>
 <li><p data-original-en="Upstream model cards: Qwen/Qwen3-Reranker-0.6B, Qwen/Qwen3-Reranker-4B, Qwen/Qwen3-Reranker-8B">상류 모델 카드: <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-Reranker-0.6B">Qwen/Qwen3-Reranker-0.6B</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-Reranker-4B">Qwen/Qwen3-Reranker-4B</a>, <a class="reference external" href="https://huggingface.co/Qwen/Qwen3-Reranker-8B">Qwen/Qwen3-Reranker-8B</a></p></li>
 </ul>
 </section>

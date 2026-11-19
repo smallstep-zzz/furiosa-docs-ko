@@ -43,7 +43,7 @@ html
 <script src="../../_static/doctools.js?v=9bcbadda"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/copybutton.js?v=ko20261119"></script>
 <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/examples/llm_rerank';</script>
@@ -294,13 +294,13 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="reranking-document-reranking">
-<span id="furiosallmexamplesrerank"></span><h1 data-original-en="Reranking (Document Reranking)">재평가 (문서 재평가)<a class="headerlink" href="#reranking-document-reranking" title="Link to this heading">#</a></h1>
-<p data-original-en="This example demonstrates how to use the rerank functionality to order documents by relevance to a query. Reranking is particularly useful for retrieval-augmented generation (RAG) and information retrieval applications.">이 예제는 쿼리에 의존하여 문서를 주문하기 위해 rerank 기능을 사용하는 방법을 설명합니다. Reranking는 retrieval-augmented 세대 (RAG) 및 정보 검색 응용 프로그램에 특히 유용합니다.</p>
+<span id="furiosallmexamplesrerank"></span><h1 data-original-en="Reranking (Document Reranking)">재순서화 (문서 재순서화)<a class="headerlink" href="#reranking-document-reranking" title="Link to this heading">#</a></h1>
+<p data-original-en="This example demonstrates how to use the rerank functionality to order documents by relevance to a query. Reranking is particularly useful for retrieval-augmented generation (RAG) and information retrieval applications.">이 예제는 재순서화 기능을 사용하여 쿼리에 대한 문서의 관련성을 기준으로 문서를 정렬하는 방법을 보여줍니다. 재순서화는 특히 검색 기반 생성 (RAG) 및 정보 검색 애플리케이션에 유용합니다.</p>
 <section id="server-api-example">
 <h2 data-original-en="Server API Example">서버 API 예제<a class="headerlink" href="#server-api-example" title="Link to this heading">#</a></h2>
-<p data-original-en="The rerank API is available through the OpenAI-compatible server. Currently, there is no direct Python LLM.rerank() method; use the LLM.score() method and sort results manually, or use the HTTP API.">rerank API는 OpenAI 호환 서버를 통해 사용할 수 있습니다. 현재 Python는 직접 없습니다. <code class="docutils literal notranslate"><span class="pre">LLM.rerank()</span></code> 방법; <code class="docutils literal notranslate"><span class="pre">LLM.score()</span></code> 방법 및 정렬 결과 수동으로, 또는 HTTP API를 사용합니다.</p>
+<p data-original-en="The rerank API is available through the OpenAI-compatible server. Currently, there is no direct Python LLM.rerank() method; use the LLM.score() method and sort results manually, or use the HTTP API.">재순서화 API는 OpenAI와 호환되는 서버를 통해 사용할 수 있습니다. 현재는 직접적인 Python <code class="docutils literal notranslate"><span class="pre">LLM.rerank()</span></code> 메서드는 제공되지 않으므로, <code class="docutils literal notranslate"><span class="pre">LLM.score()</span></code> 메서드를 사용하여 결과를 평가하고 수동으로 정렬하거나 HTTP API를 사용해야 합니다.</p>
 <section id="basic-reranking">
-<h3 data-original-en="Basic Reranking">기본 Reranking<a class="headerlink" href="#basic-reranking" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Basic Reranking">기본 재순서화<a class="headerlink" href="#basic-reranking" title="Link to this heading">#</a></h3>
 <div class="literal-block-wrapper docutils container" id="id1">
 <div class="code-block-caption"><span class="caption-text">문서 reranking를 위한 Rerank API를 사용하는 예</span><a class="headerlink" href="#id1" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -342,8 +342,8 @@ html
 </div>
 </section>
 <section id="using-top-n-parameter">
-<h3 data-original-en="Using top_n Parameter">top_n 파라미터 사용<a class="headerlink" href="#using-top-n-parameter" title="Link to this heading">#</a></h3>
-<p data-original-en="Limit the number of returned results to the top N most relevant documents:">상단 N 가장 관련 문서에 반환된 결과의 수를 제한:</p>
+<h3 data-original-en="Using top_n Parameter">top_n 매개변수 사용<a class="headerlink" href="#using-top-n-parameter" title="Link to this heading">#</a></h3>
+<p data-original-en="Limit the number of returned results to the top N most relevant documents:">반환되는 결과 수를 상위 N개의 가장 관련성 높은 문서로 제한합니다:</p>
 <div class="literal-block-wrapper docutils container" id="id2">
 <div class="code-block-caption"><span class="caption-text">top_n 매개 변수를 가진 Rerank API를 사용하는 예</span><a class="headerlink" href="#id2" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -383,8 +383,8 @@ html
 </div>
 </section>
 <section id="truncating-long-documents">
-<h3 data-original-en="Truncating Long Documents">긴 문서 자르기<a class="headerlink" href="#truncating-long-documents" title="Link to this heading">#</a></h3>
-<p data-original-en="Use truncate_prompt_tokens to handle long documents that exceed the model’s context length:">Use <code class="docutils literal notranslate"><span class="pre">truncate_prompt_tokens</span></code> 모델의 컨텍스트 길이를 초과하는 긴 문서를 처리하기 위해:</p>
+<h3 data-original-en="Truncating Long Documents">긴 문서를 잘라내기<a class="headerlink" href="#truncating-long-documents" title="Link to this heading">#</a></h3>
+<p data-original-en="Use truncate_prompt_tokens to handle long documents that exceed the model’s context length:"><code class="docutils literal notranslate"><span class="pre">truncate_prompt_tokens</span></code>를 사용하여 모델의 컨텍스트 길이를 초과하는 긴 문서를 처리합니다:</p>
 <div class="literal-block-wrapper docutils container" id="id3">
 <div class="code-block-caption"><span class="caption-text">truncate_prompt_tokens와 Rerank API를 사용하는 예</span><a class="headerlink" href="#id3" title="Link to this code">#</a></div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
@@ -425,8 +425,8 @@ html
 </section>
 </section>
 <section id="using-python-client">
-<h2 data-original-en="Using Python Client">Python 클라이언트를 이용<a class="headerlink" href="#using-python-client" title="Link to this heading">#</a></h2>
-<p data-original-en="You can also use the OpenAI Python client or any HTTP client:">OpenAI Python 클라이언트 또는 어떤 HTTP 클라이언트도 사용할 수 있습니다:</p>
+<h2 data-original-en="Using Python Client">Python 클라이언트를 사용하기<a class="headerlink" href="#using-python-client" title="Link to this heading">#</a></h2>
+<p data-original-en="You can also use the OpenAI Python client or any HTTP client:">OpenAI Python 클라이언트를 사용하거나 HTTP 클라이언트를 사용할 수도 있습니다:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
 <span class="c1"># Initialize client pointing to Furiosa-LLM server</span>
@@ -442,34 +442,34 @@ html
 </section>
 <section id="use-cases">
 <h2 data-original-en="Use Cases">사용 사례<a class="headerlink" href="#use-cases" title="Link to this heading">#</a></h2>
-<p data-original-en="Reranking is essential for:">으로 이전하는 경우, 재순서는 다음과 같은 경우에 필수적입니다:</p>
+<p data-original-en="Reranking is essential for:">재랭킹은 다음 작업에 필수적입니다:</p>
 <ul class="simple">
-<li><p data-original-en="Retrieval-Augmented Generation (RAG)"><strong>Retrieval-Augmented 세대 (RAG)</strong></p>
+<li><p data-original-en="Retrieval-Augmented Generation (RAG)">검색 기반 생성 (Retrieval-Augmented Generation, RAG)</p>
 <ul>
-<li><p data-original-en="First-stage retrieval returns many candidates">First-stage retrieval은 많은 후보자를 반환</p></li>
-<li><p data-original-en="Reranking selects the most relevant documents to include in the LLM context">Reranking는 LLM 컨텍스트에 포함된 대부분의 관련 문서를 선정합니다</p></li>
-<li><p data-original-en="Improves answer quality by providing better context">더 나은 컨텍스트를 제공함으로써 질의 응답 향상</p></li>
+<li><p data-original-en="First-stage retrieval returns many candidates">초기 검색 단계에서 많은 후보가 반환됨</p></li>
+<li><p data-original-en="Reranking selects the most relevant documents to include in the LLM context">재랭킹은 LLM 컨텍스트에 가장 관련성이 높은 문서를 선택하여 포함</p></li>
+<li><p data-original-en="Improves answer quality by providing better context">더 나은 컨텍스트를 제공하여 답변 품질을 향상</p></li>
 </ul>
 </li>
-<li><p data-original-en="Search Engines"><strong>검색 엔진</strong></p>
+<li><p data-original-en="Search Engines">검색 엔진</p>
 <ul>
-<li><p data-original-en="Initial search returns broad results">초기 검색은 넓은 결과를 반환</p></li>
-<li><p data-original-en="Reranking orders them by relevance to user query">Reranking는 사용자 쿼리에 의존하여 주문을</p></li>
-<li><p data-original-en="Enhances user experience with more accurate results">더 정확한 결과를 가진 사용자 경험 향상</p></li>
+<li><p data-original-en="Initial search returns broad results">초기 검색은 광범위한 결과를 반환합니다 (Initial search returns broad results)</p></li>
+<li><p data-original-en="Reranking orders them by relevance to user query">재랭킹은 사용자의 쿼리에 따라 관련성을 기준으로 결과를 재정렬합니다 (Reranking orders them by relevance to user query)</p></li>
+<li><p data-original-en="Enhances user experience with more accurate results">더 정확한 결과를 제공하여 사용자 경험을 향상시킵니다 (Enhances user experience with more accurate results)</p></li>
 </ul>
 </li>
-<li><p data-original-en="Question Answering Systems"><strong>질문 답변 시스템</strong></p>
+<li><p data-original-en="Question Answering Systems">질문 답변 시스템 (Question Answering Systems)</p>
 <ul>
-<li><p data-original-en="Multiple knowledge base articles retrieved">여러 지식 기반 기사 retrieved</p></li>
-<li><p data-original-en="Reranking identifies which article best answers the question">Reranking는 기사가 질문에 대한 답을 가장 잘 식별합니다.</p></li>
-<li><p data-original-en="Reduces latency by processing fewer documents">latency를 축소하여 더 적은 문서 처리</p></li>
+<li><p data-original-en="Multiple knowledge base articles retrieved">여러 지식 기반 문서가 검색됩니다 (Multiple knowledge base articles retrieved)</p></li>
+<li><p data-original-en="Reranking identifies which article best answers the question">재랭킹은 질문에 가장 적합한 문서를 식별합니다 (Reranking identifies which article best answers the question)</p></li>
+<li><p data-original-en="Reduces latency by processing fewer documents">문서 처리량을 줄여 응답 시간을 단축합니다 (처리하는 문서 수를 줄여 지연 시간을 감소)</p></li>
 </ul>
 </li>
-<li><p data-original-en="Content Recommendation"><strong>콘텐츠 추천</strong></p>
+<li><p data-original-en="Content Recommendation">콘텐츠 추천</p>
 <ul>
-<li><p data-original-en="Candidate items filtered by basic criteria">기본 기준에 의해 필터링 된 후보 항목</p></li>
-<li><p data-original-en="Reranking personalizes based on user query or context">Reranking는 사용자 쿼리 또는 상황에 따라 개인화</p></li>
-<li><p data-original-en="Delivers more relevant recommendations">더 많은 관련 권고사항 전달</p></li>
+<li><p data-original-en="Candidate items filtered by basic criteria">기본 기준에 따라 필터링된 후보 항목</p></li>
+<li><p data-original-en="Reranking personalizes based on user query or context">사용자 쿼리 또는 컨텍스트 기반으로 재순위를 적용하여 개인화된 추천</p></li>
+<li><p data-original-en="Delivers more relevant recommendations">더욱 관련성 높은 추천 제공</p></li>
 </ul>
 </li>
 </ul>
@@ -516,18 +516,18 @@ html
 </div>
 </section>
 <section id="api-compatibility">
-<h2 data-original-en="API Compatibility">API 적합성<a class="headerlink" href="#api-compatibility" title="Link to this heading">#</a></h2>
-<p data-original-en="Furiosa-LLM’s rerank API follows the vLLM rerank API specification and is compatible with:">Furiosa-LLM의 rerank API는 vLLM rerank API 명세를 따르고 호환이 됩니다:</p>
+<h2 data-original-en="API Compatibility">API 호환성<a class="headerlink" href="#api-compatibility" title="Link to this heading">#</a></h2>
+<p data-original-en="Furiosa-LLM’s rerank API follows the vLLM rerank API specification and is compatible with:">Furiosa-LLM의 재순서 API는 vLLM의 재순서 API 사양을 따르며, 다음과 같은 API 경로와 호환됩니다.</p>
 <ul class="simple">
 <li><p data-original-en="Multiple endpoint paths: /rerank, /v1/rerank, /v2/rerank">여러 엔드포인트 경로: <code class="docutils literal notranslate"><span class="pre">/rerank</span></code>, <code class="docutils literal notranslate"><span class="pre">/v1/rerank</span></code>, <code class="docutils literal notranslate"><span class="pre">/v2/rerank</span></code></p></li>
-<li><p data-original-en="JinaAI rerank API format (commonly used in RAG frameworks like RAGFlow)">JinaAI rerank API 형식 (RAGFlow와 같은 RAG 프레임 워크에서 사용)</p></li>
+<li><p data-original-en="JinaAI rerank API format (commonly used in RAG frameworks like RAGFlow)">JinaAI 재순서 API 형식 (RAGFlow와 같은 RAG 프레임워크에서 일반적으로 사용됨)</p></li>
 </ul>
-<p data-original-en="This ensures compatibility with existing tools and frameworks that support these standards.">이 표준을 지원하는 기존 도구 및 프레임 워크와 호환성을 보장합니다.</p>
-<p data-original-en="For scoring individual pairs without ranking, see Score API example.">순위없이 개별 쌍을 득점하기 위해, 참조 <a class="reference internal" href="llm_score.html#furiosallmexamplesscore"><span class="std std-ref">점수 API 예제</span></a>.</p>
+<p data-original-en="This ensures compatibility with existing tools and frameworks that support these standards.">이를 통해 기존 표준을 지원하는 도구 및 프레임워크와의 호환성을 보장합니다.</p>
+<p data-original-en="For scoring individual pairs without ranking, see Score API example.">순위없이 개별 쌍을 득점하기 위해, 참조 <a class="reference internal" href="llm_score.html#furiosallmexamplesscore">점수 API 예제</a>.</p>
 </section>
 <section id="api-reference">
 <h2 data-original-en="API Reference">API 참조<a class="headerlink" href="#api-reference" title="Link to this heading">#</a></h2>
-<p data-original-en="See Rerank API Reference for complete parameter documentation.">See <a class="reference internal" href="../furiosa-llm-serve.html#rerankapi"><span class="std std-ref">Rerank API 참조</span></a> 완전한 매개 변수 문서.</p>
+<p data-original-en="See Rerank API Reference for complete parameter documentation.">자세한 파라미터 설명은 <a class="reference internal" href="../furiosa-llm-serve.html#rerankapi">Rerank API 참조</a>를 참조하십시오.</p>
 </section>
 </section>
 </article>

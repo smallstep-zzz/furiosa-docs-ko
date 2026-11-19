@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'cloud_native_toolkit/container';</script>
@@ -299,17 +299,17 @@ html
 <section id="container-support">
 <span id="container"></span><h1 data-original-en="Container Support">컨테이너 지원<a class="headerlink" href="#container-support" title="Link to this heading">#</a></h1>
 <section id="container-runtime-support">
-<h2 data-original-en="Container Runtime Support">컨테이너 Runtime 지원<a class="headerlink" href="#container-runtime-support" title="Link to this heading">#</a></h2>
-<p data-original-en="We support the following container runtimes:">우리는 뒤에 오는 콘테이너 runtimes를 지원합니다:</p>
+<h2 data-original-en="Container Runtime Support">컨테이너 런타임 지원<a class="headerlink" href="#container-runtime-support" title="Link to this heading">#</a></h2>
+<p data-original-en="We support the following container runtimes:">다음 컨테이너 런타임을 지원합니다:</p>
 <ul class="simple">
-<li><p data-original-en="Docker: v25.0.0 or later">Docker: v25.0.0 또는 이후 버전</p></li>
-<li><p data-original-en="Podman">포드맨</p></li>
-<li><p data-original-en="ContainerD: v1.7.0 or later">ContainerD: v1.7.0 또는 이후 버전</p></li>
-<li><p data-original-en="CRI-O: v1.28.0 or later">CRI-O: v1.28.0 또는 그 이상</p></li>
+<li><p data-original-en="Docker: v25.0.0 or later">Docker: v25.0.0 이상</p></li>
+<li><p data-original-en="Podman">Podman</p></li>
+<li><p data-original-en="ContainerD: v1.7.0 or later">ContainerD: v1.7.0 이상</p></li>
+<li><p data-original-en="CRI-O: v1.28.0 or later">CRI-O: v1.28.0 이상</p></li>
 </ul>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="The supported container runtimes above (Docker, Podman, ContainerD, CRI-O) are validated with the low-level container runtimes runc and crun. Other low-level runtimes or isolation technologies (such as gVisor or firecracker) are not officially tested yet and may have compatibility limitations.">지원되는 컨테이너 런타임 (Docker, Podman, ContainerD, CRI-O)는 low-level 컨테이너 런타임으로 검증됩니다. <code class="docutils literal notranslate"><span class="pre">runc</span></code> and <code class="docutils literal notranslate"><span class="pre">crun</span></code>. 다른 low-level 런타임 또는 고립 기술 (와 같은) <code class="docutils literal notranslate"><span class="pre">gVisor</span></code> or <code class="docutils literal notranslate"><span class="pre">firecracker</span></code>) 아직 공식적으로 시험되지 않으며 호환성 제한이 있을지도 모릅니다.</p>
+<p data-original-en="The supported container runtimes above (Docker, Podman, ContainerD, CRI-O) are validated with the low-level container runtimes runc and crun. Other low-level runtimes or isolation technologies (such as gVisor or firecracker) are not officially tested yet and may have compatibility limitations.">위에 언급된 컨테이너 런타임 (Docker, Podman, ContainerD, CRI-O)은 <code class="docutils literal notranslate"><span class="pre">runc</span></code> 및 <code class="docutils literal notranslate"><span class="pre">crun</span></code>과 같은 저수준 컨테이너 런타임과 함께 검증되었습니다. 다른 저수준 런타임 또는 격리 기술 (예: <code class="docutils literal notranslate"><span class="pre">gVisor</span></code> 또는 <code class="docutils literal notranslate"><span class="pre">firecracker</span></code>)은 아직 공식적으로 테스트되지 않았으며 호환성 문제가 있을 수 있습니다.</p>
 </div>
 <div class="admonition warning">
 <p class="admonition-title" data-original-en="Warning">경고</p>
@@ -319,43 +319,42 @@ html
 <li><p>io_uring_enter</p></li>
 <li><p>io_uring_register</p></li>
 </ul>
-<p data-original-en="RNGD driver relies on these syscalls. Therefore, users must either create and apply a custom seccomp profile explicitly permitting these syscalls or run containers with the unconfined seccomp setting.">RNGD driver는 이 syscalls에 의존합니다. 따라서 사용자는 이 syscalls를 허용하거나 unconfined seccomp 조정을 가진 콘테이너를 실행하는 관례 seccomp 단면도를 창조하고 적용합니다.</p>
+<p data-original-en="RNGD driver relies on these syscalls. Therefore, users must either create and apply a custom seccomp profile explicitly permitting these syscalls or run containers with the unconfined seccomp setting.">RNGD 드라이버는 이러한 시스템 호출에 의존합니다. 따라서 사용자는 명시적으로 이러한 시스템 호출을 허용하는 사용자 정의 seccomp 프로필을 생성하고 적용하거나, unconfined seccomp 설정을 사용하여 컨테이너를 실행해야 합니다.</p>
 </div>
 </section>
 <section id="container-device-interface-support">
 <h2 data-original-en="Container Device Interface Support">컨테이너 장치 인터페이스 지원<a class="headerlink" href="#container-device-interface-support" title="Link to this heading">#</a></h2>
-<p data-original-en="Container Device Interface (CDI) is a standard interface and specification for exposing devices to container runtimes. It provides abstract mechanisms required to allocate and expose these devices to containers. This abstraction simplifies device management and enhances user experience by hiding complex device integration details.">컨테이너 장치 인터페이스 (CDI)는 컨테이너 런타임에 기기를 탐험하기위한 표준 인터페이스 및 사양입니다. 이 장치를 용기에 할당하고 노출하기 위해 필요한 초기 메커니즘을 제공합니다. 이 요약은 장치 관리 단순화 및 복잡한 장치 통합 세부 사항을 숨겨서 사용자 경험을 향상시킵니다.</p>
+<p data-original-en="Container Device Interface (CDI) is a standard interface and specification for exposing devices to container runtimes. It provides abstract mechanisms required to allocate and expose these devices to containers. This abstraction simplifies device management and enhances user experience by hiding complex device integration details.">컨테이너 장치 인터페이스 (CDI)는 컨테이너 런타임에 장치를 노출하기 위한 표준 인터페이스 및 사양입니다. 이는 장치를 할당하고 컨테이너에 노출하는 데 필요한 추상 메커니즘을 제공합니다. 이러한 추상화를 통해 장치 관리가 단순화되고, 복잡한 장치 통합 세부 사항을 숨겨 사용자 경험을 향상시킵니다.</p>
 <section id="installing-furiosa-cdi-cli">
-<h3 data-original-en="Installing furiosa-cdi CLI">설치 <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> CLI<a class="headerlink" href="#installing-furiosa-cdi-cli" title="Link to this heading">#</a></h3>
-<p data-original-en="To install the furiosa-cdi CLI, install the furiosa-cdi package.">설치하기 위해 <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> CLI <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 패키지</p>
-<p data-original-en="The minimum requirements for installing furiosa-cdi package are as follows:">설치를 위한 최소 요구 사항 <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 다음 사항이 적용됩니다:</p>
+<h3 data-original-en="Installing furiosa-cdi CLI"><code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> CLI 설치<a class="headerlink" href="#installing-furiosa-cdi-cli" title="Link to this heading">#</a></h3>
+<p data-original-en="To install the furiosa-cdi CLI, install the furiosa-cdi package."><code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> CLI를 설치하려면 <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 패키지를 설치합니다.</p>
+<p data-original-en="The minimum requirements for installing furiosa-cdi package are as follows:"><code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 패키지를 설치하기 위한 최소 요구 사항은 다음과 같습니다:</p>
 <ul class="simple">
-<li><p data-original-en="Ubuntu 22.04 LTS (Debian Bookworm) or later">Ubuntu 22.04 LTS (Debian Bookworm) 이상</p></li>
+<li><p data-original-en="Ubuntu 22.04 LTS (Debian Bookworm) or later">Ubuntu 22.04 LTS (Debian Bookworm) 또는 이후 버전</p></li>
 <li><p data-original-en="Linux Kernel 6.3 or later">Linux 커널 6.3 또는 이후 버전</p></li>
-<li><p data-original-en="Administrator privileges on system (root)">시스템의 관리자 권한 (root)</p></li>
-<li><p data-original-en="Setting up the Package Repository and Installing Prerequisites"><a class="reference internal" href="../get_started/prerequisites.html#aptsetup"><span class="std std-ref">패키지 저장소 설정</span></a> and <a class="reference internal" href="../get_started/prerequisites.html#installingprerequisites"><span class="std std-ref">사전 설치</span></a></p></li>
+<li><p data-original-en="Administrator privileges on system (root)">시스템에 관리자 권한 (root)</p></li>
+<li><p data-original-en="Setting up the Package Repository and Installing Prerequisites"><a class="reference internal" href="../get_started/prerequisites.html#aptsetup">패키지 저장소 설정</a> 및 <a class="reference internal" href="../get_started/prerequisites.html#installingprerequisites">필수 구성 요소 설치</a></p></li>
 </ul>
-<p data-original-en="Then, please install the furiosa-cdi package as follows:">그런 다음, 다음을 설치하십시오. <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 패키지:</p>
+<p data-original-en="Then, please install the furiosa-cdi package as follows:">그런 다음, <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 패키지를 다음과 같이 설치하십시오:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt<span class="w"> </span>update
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>furiosa-cdi
 </pre></div>
 </div>
-<p data-original-en="This command installs packages furiosa-libsmi and furiosa-cdi.">이 명령은 패키지를 설치합니다. <code class="docutils literal notranslate"><span class="pre">furiosa-libsmi</span></code> and <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code>.</p>
+<p data-original-en="This command installs packages furiosa-libsmi and furiosa-cdi.">이 명령은 <code class="docutils literal notranslate"><span class="pre">furiosa-libsmi</span></code> 및 <code class="docutils literal notranslate"><span class="pre">furiosa-cdi</span></code> 패키지를 설치합니다.</p>
 </section>
 <section id="generating-cdi-specification">
 <h3 data-original-en="Generating CDI Specification">CDI 사양 생성<a class="headerlink" href="#generating-cdi-specification" title="Link to this heading">#</a></h3>
-<p data-original-en="Following command generates a CDI specification file in the /etc/cdi directory, enabling your container runtime to identify and manage Furiosa NPUs as CDI resources.">다음 명령은 CDI 사양 파일을 생성합니다. <code class="docutils literal notranslate"><span class="pre">/etc/cdi</span></code> 디렉토리는 컨테이너 runtime를 사용하여 Furiosa NPU를 CDI 리소스로 식별하고 관리합니다.</p>
+<p data-original-en="Following command generates a CDI specification file in the /etc/cdi directory, enabling your container runtime to identify and manage Furiosa NPUs as CDI resources.">다음 명령은 <code class="docutils literal notranslate"><span class="pre">/etc/cdi</span></code> 디렉토리에 CDI 사양 파일을 생성하여, 컨테이너 런타임이 Furiosa NPUs를 CDI 리소스로 식별하고 관리할 수 있도록 합니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>furiosa-cdi<span class="w"> </span>generate
 </pre></div>
 </div>
 </section>
 <section id="configuring-container-runtimes">
 <h3 data-original-en="Configuring Container Runtimes">컨테이너 런타임 구성<a class="headerlink" href="#configuring-container-runtimes" title="Link to this heading">#</a></h3>
-<p data-original-en="Depending on the container runtime and version, CDI feature may need to be explicitly enabled through configuration. The section below provides detailed instructions for configuring CDI for each supported runtime.">컨테이너 runtime 및 버전에 따라 CDI 기능은 구성을 통해 명시적으로 활성화되어야 할 수 있습니다. 아래의 섹션은 각 지원 runtime에 대한 CDI 구성에 대한 자세한 지침을 제공합니다.</p>
+<p data-original-en="Depending on the container runtime and version, CDI feature may need to be explicitly enabled through configuration. The section below provides detailed instructions for configuring CDI for each supported runtime.">컨테이너 런타임 및 버전에 따라 CDI 기능이 명시적으로 구성되어야 할 수 있습니다. 아래 섹션에서는 각 지원되는 런타임에 대한 CDI 구성에 대한 자세한 지침을 제공합니다.</p>
 <section id="docker">
 <h4>Docker<a class="headerlink" href="#docker" title="Link to this heading">#</a></h4>
-<p data-original-en="Docker currently supports CDI as an experimental feature. Update the Docker daemon configuration file daemon.json to enable CDI feature and include /etc/cdi in the cdi-spec-dirs setting. Below is an example of daemon.json configuration:">Docker는 현재 실험적인 특징으로 CDI를 지원합니다. Docker daemon 구성 파일을 업데이트하십시오 <code class="docutils literal notranslate"><span class="pre">daemon.json</span></code> CDI 기능을 활성화하고, <code class="docutils literal notranslate"><span class="pre">/etc/cdi</span></code> 이 <code class="docutils literal notranslate"><span class="pre">cdi-spec-dirs</span></code> 설정을 선택합니다.
-아래는 예시입니다. <code class="docutils literal notranslate"><span class="pre">daemon.json</span></code> 구성:</p>
+<p data-original-en="Docker currently supports CDI as an experimental feature. Update the Docker daemon configuration file daemon.json to enable CDI feature and include /etc/cdi in the cdi-spec-dirs setting. Below is an example of daemon.json configuration:">현재 Docker는 CDI를 실험적인 기능으로 지원합니다. CDI 기능을 활성화하기 위해 Docker 데몬 구성 파일인 <code class="docutils literal notranslate"><span class="pre">daemon.json</span></code>을 업데이트하고, <code class="docutils literal notranslate"><span class="pre">/etc/cdi</span></code>를 <code class="docutils literal notranslate"><span class="pre">cdi-spec-dirs</span></code> 설정에 포함해야 합니다. 다음은 <code class="docutils literal notranslate"><span class="pre">daemon.json</span></code> 구성 파일의 예시입니다:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"features"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">     </span><span class="nt">"cdi"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
@@ -367,15 +366,15 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 <p data-original-en="For more details, refer to the official Docker documentation on enabling CDI devices.">자세한 내용은 공식 Docker 문서 참조 <a class="reference external" href="https://docs.docker.com/reference/cli/dockerd/#enable-cdi-devices">CDI 장치를 활성화</a>.</p>
 </section>
 <section id="containerd">
-<h4 data-original-en="ContainerD">컨테이너<a class="headerlink" href="#containerd" title="Link to this heading">#</a></h4>
-<p data-original-en="ContainerD supports CDI starting from version 2.0.0 by default. For earlier versions, CDI must be explicitly enabled through the configuration file config.toml, typically located at /etc/containerd/config.toml.">ContainerD는 기본적으로 버전 2.0.0에서 시작하는 CDI를 지원합니다. 이전 버전의 경우, CDI는 구성 파일 config.toml를 통해 명시적으로 활성화해야 합니다. <code class="docutils literal notranslate"><span class="pre">/etc/containerd/config.toml</span></code>.</p>
-<p data-original-en="To enable CDI support, add the following configuration:">CDI 지원을 활성화하려면 다음 구성을 추가하십시오.</p>
+<h4 data-original-en="ContainerD">ContainerD<a class="headerlink" href="#containerd" title="Link to this heading">#</a></h4>
+<p data-original-en="ContainerD supports CDI starting from version 2.0.0 by default. For earlier versions, CDI must be explicitly enabled through the configuration file config.toml, typically located at /etc/containerd/config.toml.">ContainerD는 기본적으로 2.0.0 버전부터 CDI (Container Definition Infrastructure)를 지원합니다. 이전 버전의 경우, CDI를 명시적으로 활성화하려면 구성 파일 config.toml (일반적으로 <code class="docutils literal notranslate"><span class="pre">/etc/containerd/config.toml</span></code> 위치에 있음)을 수정해야 합니다.</p>
+<p data-original-en="To enable CDI support, add the following configuration:">CDI 지원을 활성화하려면 다음 구성 항목을 추가하십시오:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[plugins.</span><span class="s2">"io.containerd.grpc.v1.cri"</span><span class="k">]</span>
 <span class="n">enable_cdi</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="n">cdi_spec_dirs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s2">"/etc/cdi"</span><span class="p">,</span><span class="w"> </span><span class="s2">"/var/run/cdi"</span><span class="p">]</span>
 </pre></div>
 </div>
-<p data-original-en="After modifying the configuration, restart ContainerD to apply the changes:">구성을 수정한 후, ContainerD를 다시 시작해서 변경 사항을 적용할 수 있습니다.</p>
+<p data-original-en="After modifying the configuration, restart ContainerD to apply the changes:">구성 파일을 수정 후, ContainerD를 재시작하여 변경 사항을 적용하십시오:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>systemctl<span class="w"> </span>restart<span class="w"> </span>containerd
 </pre></div>
 </div>
@@ -383,12 +382,12 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </section>
 <section id="cri-o">
 <h4>CRI-O<a class="headerlink" href="#cri-o" title="Link to this heading">#</a></h4>
-<p data-original-en="CRI-O enables CDI support by default, configured to use the standard CDI directories /etc/cdi and /var/run/cdi.">CRI-O는 표준 CDI 디렉토리를 사용하도록 구성된 기본으로 CDI 지원을 가능하게 합니다. <code class="docutils literal notranslate"><span class="pre">/etc/cdi</span></code> and <code class="docutils literal notranslate"><span class="pre">/var/run/cdi</span></code>.</p>
+<p data-original-en="CRI-O enables CDI support by default, configured to use the standard CDI directories /etc/cdi and /var/run/cdi.">CRI-O는 기본적으로 CDI 지원을 활성화하며, 표준 CDI 디렉토리 <code class="docutils literal notranslate"><span class="pre">/etc/cdi</span></code> 및 <code class="docutils literal notranslate"><span class="pre">/var/run/cdi</span></code>를 사용하도록 구성됩니다.</p>
 </section>
 </section>
 <section id="assign-furiosa-npus-to-containers-using-cdi">
 <h3 data-original-en="Assign Furiosa NPUs to Containers using CDI">CDI를 사용하여 컨테이너에 Furiosa NPUs 할당<a class="headerlink" href="#assign-furiosa-npus-to-containers-using-cdi" title="Link to this heading">#</a></h3>
-<p data-original-en="After generating the CDI specification, use the furiosa-cdi list command to discover available NPU resources. The special entry all aggregates all available NPUs for simultaneous allocation:">CDI 사양을 생성한 후 furiosa-cdi 목록 명령을 사용하여 NPU 리소스를 검색할 수 있습니다. 특수 항목 <code class="docutils literal notranslate"><span class="pre">all</span></code> 동시 할당을 위한 모든 유효한 NPUs 집계:</p>
+<p data-original-en="After generating the CDI specification, use the furiosa-cdi list command to discover available NPU resources. The special entry all aggregates all available NPUs for simultaneous allocation:">CDI 사양을 생성한 후, furiosa-cdi list 명령을 사용하여 사용 가능한 NPU 리소스를 확인합니다. <code class="docutils literal notranslate"><span class="pre">all</span></code> 항목은 동시에 할당할 수 있는 모든 NPUs를 집계합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>furiosa-cdi<span class="w"> </span>list
 +----------------+------+
 <span class="p">|</span><span class="w">      </span>KIND<span class="w">      </span><span class="p">|</span><span class="w"> </span>NAME<span class="w"> </span><span class="p">|</span>
@@ -405,11 +404,11 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 +----------------+------+
 </pre></div>
 </div>
-<p data-original-en="Below is an example of assigning npu0 to a Docker container using CDI:">아래는 할당 예시입니다. <code class="docutils literal notranslate"><span class="pre">npu0</span></code> Docker 컨테이너에 CDI를 사용하여:</p>
+<p data-original-en="Below is an example of assigning npu0 to a Docker container using CDI:">다음은 CDI를 사용하여 Docker 컨테이너에 <code class="docutils literal notranslate"><span class="pre">npu0</span></code>을 할당하는 예입니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--security-opt<span class="w"> </span><span class="nv">seccomp</span><span class="o">=</span>unconfined<span class="w"> </span>--device<span class="o">=</span>furiosa.ai/npu<span class="o">=</span>npu0<span class="w"> </span>-it<span class="w"> </span>ubuntu:latest<span class="w"> </span>/bin/bash
 </pre></div>
 </div>
-<p data-original-en="To allocate multiple NPUs, repeat the --device option or use the all entry:">여러 NPU를 할당하려면 반복하십시오. <code class="docutils literal notranslate"><span class="pre">--device</span></code> 선택 또는 <code class="docutils literal notranslate"><span class="pre">all</span></code> 항목:</p>
+<p data-original-en="To allocate multiple NPUs, repeat the --device option or use the all entry:">여러 개의 NPUs를 할당하려면 <code class="docutils literal notranslate"><span class="pre">--device</span></code> 옵션을 반복하거나, "<code class="docutils literal notranslate"><span class="pre">all</span></code>" 엔트리를 사용합니다:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># Allocating multiple NPUs</span>
 docker<span class="w"> </span>run<span class="w"> </span>--security-opt<span class="w"> </span><span class="nv">seccomp</span><span class="o">=</span>unconfined<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--device<span class="o">=</span>furiosa.ai/npu<span class="o">=</span>npu0<span class="w"> </span><span class="se">\</span>
@@ -422,13 +421,13 @@ docker<span class="w"> </span>run<span class="w"> </span>--security-opt<span cla
 <span class="w">  </span>-it<span class="w"> </span>ubuntu:latest<span class="w"> </span>/bin/bash
 </pre></div>
 </div>
-<p data-original-en="Similarly, for ContainerD (ctr/nerdctl) and CRI-O, use their respective CDI syntax to reference Furiosa NPU devices.">컨테이너 (ctr/nerdctl) 및 CRI-O에 대한 마찬가지로, Furiosa NPU 장치를 참조하기 위해 각각의 CDI 구문을 사용합니다.</p>
+<p data-original-en="Similarly, for ContainerD (ctr/nerdctl) and CRI-O, use their respective CDI syntax to reference Furiosa NPU devices.">마찬가지로, ContainerD (ctr/nerdctl) 및 CRI-O의 경우, Furiosa NPU 장치를 참조하기 위해 해당 CDI 구문을 사용합니다.</p>
 </section>
 </section>
 <section id="assign-furiosa-npus-to-containers-manually">
-<h2 data-original-en="Assign Furiosa NPUs to Containers Manually">수동으로 콘테이너에 Furiosa NPUs 할당<a class="headerlink" href="#assign-furiosa-npus-to-containers-manually" title="Link to this heading">#</a></h2>
-<p data-original-en="In environments where CDI support is unavailable or if manual allocation of Furiosa NPUs is preferred, this section provides guidance for manually assigning Furiosa NPUs to containers.">CDI 지원이 사용할 수 없거나 Furiosa NPU의 수동 할당이 선호되는 환경에서, 이 섹션은 수동으로 Furiosa NPU를 컨테이너로 할당하는 지침을 제공합니다.</p>
-<p data-original-en="To use a Furiosa NPU inside a container, the corresponding device nodes must be mapped into the container. Each Furiosa card has 35 required device nodes. The device node paths follow the format below, where {index} represents the NPU device number (e.g., npu0, npu1):">컨테이너 내부의 Furiosa NPU를 사용하려면 해당 장치 노드가 컨테이너로 매핑되어야 합니다. 각 Furiosa 카드에는 35가 필요한 장치 노드가 있습니다. 장치 노드 경로는 아래 형식을 따르며, 여기서 <code class="docutils literal notranslate"><span class="pre">{index}</span></code> NPU 장치 번호를 나타냅니다 (e.g., <code class="docutils literal notranslate"><span class="pre">npu0</span></code>, <code class="docutils literal notranslate"><span class="pre">npu1</span></code>):</p>
+<h2 data-original-en="Assign Furiosa NPUs to Containers Manually">Furiosa NPUs를 컨테이너에 수동으로 할당합니다.<a class="headerlink" href="#assign-furiosa-npus-to-containers-manually" title="Link to this heading">#</a></h2>
+<p data-original-en="In environments where CDI support is unavailable or if manual allocation of Furiosa NPUs is preferred, this section provides guidance for manually assigning Furiosa NPUs to containers.">CDI 지원이 없는 환경 또는 Furiosa NPUs를 수동으로 할당하는 것을 선호하는 경우, 이 섹션은 컨테이너에 Furiosa NPUs를 수동으로 할당하는 방법에 대한 지침을 제공합니다.</p>
+<p data-original-en="To use a Furiosa NPU inside a container, the corresponding device nodes must be mapped into the container. Each Furiosa card has 35 required device nodes. The device node paths follow the format below, where {index} represents the NPU device number (e.g., npu0, npu1):">컨테이너 내에서 Furiosa NPU를 사용하려면, 해당 장치 노드를 컨테이너에 매핑해야 합니다. 각 Furiosa 카드는 35개의 필수 장치 노드를 가지고 있습니다. 장치 노드 경로는 아래 형식에 따라 지정되며, <code class="docutils literal notranslate"><span class="pre">{index}</span></code>는 NPU 장치 번호를 나타냅니다 (예: <code class="docutils literal notranslate"><span class="pre">npu0</span></code>, <code class="docutils literal notranslate"><span class="pre">npu1</span></code>):</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>/dev/rngd/npu{index}bar0
 /dev/rngd/npu{index}bar2
 /dev/rngd/npu{index}bar4
@@ -466,7 +465,7 @@ docker<span class="w"> </span>run<span class="w"> </span>--security-opt<span cla
 /dev/rngd/npu{index}pe7
 </pre></div>
 </div>
-<p data-original-en="Below is an example of how to assign the device nodes for npu0 to a container using Docker. For ContainerD (ctr/nerdctl) and CRI-O, pass the device nodes listed above and configure the required seccomp settings.">아래는 디바이스 노드를 할당하는 방법의 예입니다. <code class="docutils literal notranslate"><span class="pre">npu0</span></code> Docker를 사용하여 컨테이너에. 컨테이너 (ctr/nerdctl) 및 CRI-O의 경우 위의 장치 노드를 통과하고 필요한 seccomp 설정을 구성합니다.</p>
+<p data-original-en="Below is an example of how to assign the device nodes for npu0 to a container using Docker. For ContainerD (ctr/nerdctl) and CRI-O, pass the device nodes listed above and configure the required seccomp settings.">다음은 Docker를 사용하여 <code class="docutils literal notranslate"><span class="pre">npu0</span></code>의 장치 노드를 컨테이너에 할당하는 예입니다. ContainerD (ctr/nerdctl) 및 CRI-O의 경우, 위에 나열된 장치 노드를 전달하고 필요한 seccomp 설정을 구성합니다.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>docker<span class="w"> </span>run<span class="w"> </span>--security-opt<span class="w"> </span><span class="nv">seccomp</span><span class="o">=</span>unconfined<span class="w"> </span>-it<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--device<span class="w"> </span>/dev/rngd/npu0bar0:rw<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--device<span class="w"> </span>/dev/rngd/npu0bar2:rw<span class="w"> </span><span class="se">\</span>

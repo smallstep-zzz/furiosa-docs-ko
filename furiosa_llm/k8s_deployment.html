@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/k8s_deployment';</script>
@@ -290,20 +290,20 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="deploying-furiosa-llm-on-kubernetes">
-<span id="k8sfuriosallmdeployment"></span><h1 data-original-en="Deploying Furiosa-LLM on Kubernetes">Furiosa-LLM를 Kubernetes에 배포<a class="headerlink" href="#deploying-furiosa-llm-on-kubernetes" title="Link to this heading">#</a></h1>
-<p data-original-en="This guide describes how to deploy Furiosa-LLM—an OpenAI-compatible server optimized for Furiosa AI RNGDs—on Kubernetes.">이 가이드는 Furiosa AI RNGDs에서 Kubernetes에 최적화된 OpenAI 호환 서버인 Furiosa-LLM-an OpenAI 호환 서버를 배포하는 방법을 설명합니다.</p>
+<span id="k8sfuriosallmdeployment"></span><h1 data-original-en="Deploying Furiosa-LLM on Kubernetes">Kubernetes에 Furiosa-LLM 배포<a class="headerlink" href="#deploying-furiosa-llm-on-kubernetes" title="Link to this heading">#</a></h1>
+<p data-original-en="This guide describes how to deploy Furiosa-LLM—an OpenAI-compatible server optimized for Furiosa AI RNGDs—on Kubernetes.">이 가이드는 Furiosa-LLM을 Kubernetes에 배포하는 방법을 설명합니다. Furiosa AI RNGD에 최적화된, OpenAI와 호환되는 서버입니다.</p>
 <section id="prerequisites">
-<h2 data-original-en="Prerequisites">전제 조건<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Prerequisites">필수 구성 요소<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p data-original-en="A Kubernetes cluster equipped with Furiosa RNGD devices.">Furiosa RNGD 장치가 장착 된 Kubernetes 클러스터.</p></li>
-<li><p data-original-en="Hugging Face account and access token.">Hugging Face 계정 및 액세스 token.</p></li>
+<li><p data-original-en="A Kubernetes cluster equipped with Furiosa RNGD devices.">Furiosa RNGD 장치가 장착된 Kubernetes 클러스터.</p></li>
+<li><p data-original-en="Hugging Face account and access token.">Hugging Face 계정 및 액세스 토큰.</p></li>
 <li><p data-original-en="A Kubernetes storage class which supports dynamic volume provisioning.">동적 볼륨 프로비저닝을 지원하는 Kubernetes 스토리지 클래스.</p></li>
 </ul>
-<p data-original-en="For detailed instructions on setting up an RNGD cluster, please refer to Installing Prerequisites and Kubernetes Plugins.">RNGD 클러스터 설정에 대한 자세한 지침은 참조하시기 바랍니다 <a class="reference internal" href="../get_started/prerequisites.html#installingprerequisites"><span class="std std-ref">사전 설치</span></a> and <a class="reference internal" href="../cloud_native_toolkit/kubernetes.html#kubernetes"><span class="std std-ref">Kubernetes</span></a>.</p>
+<p data-original-en="For detailed instructions on setting up an RNGD cluster, please refer to Installing Prerequisites and Kubernetes Plugins.">RNGD 클러스터를 설정하는 방법에 대한 자세한 내용은 "<a class="reference internal" href="../get_started/prerequisites.html#installingprerequisites"><span class="std std-ref">Installing Prerequisites</span></a> and <a class="reference internal" href="../cloud_native_toolkit/kubernetes.html#kubernetes"><span class="std std-ref">Kubernetes Plugins</span></a>"를 참조하십시오.</p>
 </section>
 <section id="step-1-prepare-kubernetes-secret">
-<h2 data-original-en="Step 1: Prepare Kubernetes Secret">단계 1: Kubernetes 비밀 키 준비<a class="headerlink" href="#step-1-prepare-kubernetes-secret" title="Link to this heading">#</a></h2>
-<p data-original-en="Create a Kubernetes secret for your Hugging Face token:">Hugging Face token에 대한 Kubernetes 비밀 만들기:</p>
+<h2 data-original-en="Step 1: Prepare Kubernetes Secret">1단계: Kubernetes Secret 준비<a class="headerlink" href="#step-1-prepare-kubernetes-secret" title="Link to this heading">#</a></h2>
+<p data-original-en="Create a Kubernetes secret for your Hugging Face token:">Hugging Face 토큰에 대한 Kubernetes Secret을 생성합니다:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -313,22 +313,22 @@ html
 <span class="w">  </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;your_base64_encoded_hf_token&gt;</span>
 </pre></div>
 </div>
-<p data-original-en="Encode your token using the following command:">다음 명령을 사용하여 token를 인코딩하십시오.</p>
+<p data-original-en="Encode your token using the following command:">다음 명령을 사용하여 토큰을 인코딩합니다:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span>-n<span class="w"> </span><span class="s1">'&lt;your_HF_TOKEN&gt;'</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64
 </pre></div>
 </div>
-<p data-original-en="Then apply the secret:">그런 다음 비밀 기능을 적용합니다:</p>
+<p data-original-en="Then apply the secret:">그런 다음, 다음 단계를 적용합니다:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>secret.yaml
 </pre></div>
 </div>
 </section>
 <section id="step-2-create-persistent-volume-claim-pvc">
-<h2 data-original-en="Step 2: Create Persistent Volume Claim (PVC)">단계 2: Persistent 볼륨 클레임 만들기 (PVC)<a class="headerlink" href="#step-2-create-persistent-volume-claim-pvc" title="Link to this heading">#</a></h2>
+<h2 data-original-en="Step 2: Create Persistent Volume Claim (PVC)">2단계: Persistent Volume Claim (PVC) 생성<a class="headerlink" href="#step-2-create-persistent-volume-claim-pvc" title="Link to this heading">#</a></h2>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="Using ephemeral storage inside a Pod for large files, such as LLM model caches, may result in eviction due to disk pressure. Thus, using a Persistent Volume Claim (PVC) is highly recommended to ensure data durability and stability.">LLM 모델 캐시와 같은 큰 파일에 대한 파드 내부 저장소를 사용하여 디스크 압력으로 인해 퇴치가 발생할 수 있습니다. 따라서 Persistent Volume Claim (PVC)을 사용하여 데이터 내구성과 안정성을 보장하는 것이 좋습니다.</p>
+<p data-original-en="Using ephemeral storage inside a Pod for large files, such as LLM model caches, may result in eviction due to disk pressure. Thus, using a Persistent Volume Claim (PVC) is highly recommended to ensure data durability and stability.">LLM 모델 캐시와 같이 대용량 파일을 Pod 내의 임시 스토리지에서 사용하는 경우, 디스크 압력으로 인해 Pod가 종료될 수 있습니다. 따라서 데이터의 내구성과 안정성을 보장하기 위해 Persistent Volume Claim (PVC)을 사용하는 것이 권장됩니다.</p>
 </div>
-<p data-original-en="Create a PVC manifest to store models. The storage class specified below (“default”) is an example, and the actual available storage class in your Kubernetes environment may vary. Please verify and specify the appropriate storage class for your cluster:">PVC를 만들기 위해 모델을 저장합니다. 아래에 지정된 저장 클래스는 예를 들어 Kubernetes 환경에서 실제 사용 가능한 저장 클래스는 다를 수 있습니다. 클러스터에 적합한 저장 클래스를 확인하고 지정하십시오.</p>
+<p data-original-en="Create a PVC manifest to store models. The storage class specified below (“default”) is an example, and the actual available storage class in your Kubernetes environment may vary. Please verify and specify the appropriate storage class for your cluster:">모델을 저장하기 위한 PVC(Persistent Volume Claim) 정의를 생성합니다. 아래에 지정된 스토리지 클래스(“default”)는 예시이며, 실제 Kubernetes 환경에서 사용 가능한 스토리지 클래스는 다를 수 있습니다. 클러스터에 적합한 스토리지 클래스를 확인하고 지정하십시오:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersistentVolumeClaim</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -343,14 +343,14 @@ html
 <span class="w">  </span><span class="nt">storageClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
 </pre></div>
 </div>
-<p data-original-en="Apply the PVC:">PVC를 적용:</p>
+<p data-original-en="Apply the PVC:">PVC 적용:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>pvc.yaml
 </pre></div>
 </div>
 </section>
 <section id="step-3-deploy-furiosa-llm-server">
-<h2 data-original-en="Step 3: Deploy Furiosa-LLM Server">단계 3: Furiosa-LLM 서버 배포<a class="headerlink" href="#step-3-deploy-furiosa-llm-server" title="Link to this heading">#</a></h2>
-<p data-original-en="Create a Deployment manifest for serving the furiosa-ai/Llama-3.1-8B-Instruct model with Furiosa-LLM. For detailed information about the furiosa-ai/Llama-3.1-8B-Instruct model, please see the Hugging Face model page.">Deployment 표시를 작성합니다. <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.1-8B-Instruct</span></code> Furiosa-LLM 모델. 자세한 내용은 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.1-8B-Instruct</span></code> 모델에 대한 자세한 내용은 <a class="reference external" href="https://huggingface.co/furiosa-ai/Llama-3.1-8B-Instruct">Hugging Face 모델 페이지</a>.</p>
+<h2 data-original-en="Step 3: Deploy Furiosa-LLM Server">3단계: Furiosa-LLM 서버 배포<a class="headerlink" href="#step-3-deploy-furiosa-llm-server" title="Link to this heading">#</a></h2>
+<p data-original-en="Create a Deployment manifest for serving the furiosa-ai/Llama-3.1-8B-Instruct model with Furiosa-LLM. For detailed information about the furiosa-ai/Llama-3.1-8B-Instruct model, please see the Hugging Face model page.">Furiosa-LLM을 사용하여 <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.1-8B-Instruct</span></code> 모델을 실행하기 위한 배포 정의를 생성합니다. <code class="docutils literal notranslate"><span class="pre">furiosa-ai/Llama-3.1-8B-Instruct</span></code> 모델에 대한 자세한 내용은 <a class="reference external" href="https://huggingface.co/furiosa-ai/Llama-3.1-8B-Instruct">Hugging Face 모델 페이지</a>를 참조하십시오.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apps/v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Deployment</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -426,8 +426,8 @@ html
 </div>
 </section>
 <section id="step-4-expose-the-deployment-as-a-service">
-<h2 data-original-en="Step 4: Expose the Deployment as a Service">단계 4: 서비스로 배포를 노출<a class="headerlink" href="#step-4-expose-the-deployment-as-a-service" title="Link to this heading">#</a></h2>
-<p data-original-en="Expose the Furiosa-LLM server using a Kubernetes Service:">Kubernetes 서비스를 사용하여 Furiosa-LLM 서버 노출:</p>
+<h2 data-original-en="Step 4: Expose the Deployment as a Service">4단계: 배포를 서비스로 노출<a class="headerlink" href="#step-4-expose-the-deployment-as-a-service" title="Link to this heading">#</a></h2>
+<p data-original-en="Expose the Furiosa-LLM server using a Kubernetes Service:">Furiosa-LLM 서버를 Kubernetes 서비스로 노출:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">v1</span>
 <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Service</span>
 <span class="nt">metadata</span><span class="p">:</span>
@@ -441,29 +441,29 @@ html
 <span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIP</span>
 </pre></div>
 </div>
-<p data-original-en="Apply the service:">서비스를 적용:</p>
+<p data-original-en="Apply the service:">서비스 적용:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>service.yaml
 </pre></div>
 </div>
 </section>
 <section id="step-5-test-the-deployment">
-<h2 data-original-en="Step 5: Test the Deployment">단계 5: 배포 테스트<a class="headerlink" href="#step-5-test-the-deployment" title="Link to this heading">#</a></h2>
-<p data-original-en="Confirm the server is running by inspecting the logs:">로그를 검사하여 서버가 실행되도록:</p>
+<h2 data-original-en="Step 5: Test the Deployment">5단계: 배포 테스트<a class="headerlink" href="#step-5-test-the-deployment" title="Link to this heading">#</a></h2>
+<p data-original-en="Confirm the server is running by inspecting the logs:">로그를 검사하여 서버가 실행 중인지 확인:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>logs<span class="w"> </span>deployment/llama-3-8b
 </pre></div>
 </div>
-<p data-original-en="You should see output similar to:">다음과 유사한 출력을 확인해야 합니다:</p>
+<p data-original-en="You should see output similar to:">다음과 같은 출력을 확인해야 합니다:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">INFO</span><span class="p">:</span>     <span class="n">Started</span> <span class="n">server</span> <span class="n">process</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 <span class="n">INFO</span><span class="p">:</span>     <span class="n">Waiting</span> <span class="k">for</span> <span class="n">application</span> <span class="n">startup</span><span class="o">.</span>
 <span class="n">INFO</span><span class="p">:</span>     <span class="n">Application</span> <span class="n">startup</span> <span class="n">complete</span><span class="o">.</span>
 <span class="n">INFO</span><span class="p">:</span>     <span class="n">Uvicorn</span> <span class="n">running</span> <span class="n">on</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">0.0.0.0</span><span class="p">:</span><span class="mi">8000</span> <span class="p">(</span><span class="n">Press</span> <span class="n">CTRL</span><span class="o">+</span><span class="n">C</span> <span class="n">to</span> <span class="n">quit</span><span class="p">)</span>
 </pre></div>
 </div>
-<p data-original-en="Test the inference endpoint:">inference 엔드포인트를 테스트합니다:</p>
+<p data-original-en="Test the inference endpoint:">추론 엔드포인트를 테스트:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>kubectl<span class="w"> </span>port-forward<span class="w"> </span>svc/llama-3-8b<span class="w"> </span><span class="m">8000</span>:8000
 </pre></div>
 </div>
-<p data-original-en="Then, issue a test request:">그런 다음, 테스트 요청을 발행합니다:</p>
+<p data-original-en="Then, issue a test request:">그런 다음, 테스트 요청을 실행합니다:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -474,7 +474,7 @@ html
 <span class="s1">      }'</span>
 </pre></div>
 </div>
-<p data-original-en="You should receive a valid response from the Furiosa-LLM server, similar to:">Furiosa-LLM 서버에서 유효한 응답을 받으려면 다음과 같습니다.</p>
+<p data-original-en="You should receive a valid response from the Furiosa-LLM server, similar to:">Furiosa-LLM 서버로부터 유효한 응답을 받게 되며, 다음과 유사한 형태가 될 것입니다:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"cmpl-69102e5d78c94e29b74660eaadbe39db"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"object"</span><span class="p">:</span><span class="w"> </span><span class="s2">"text_completion"</span><span class="p">,</span>
@@ -501,7 +501,7 @@ html
 </section>
 <section id="conclusion">
 <h2 data-original-en="Conclusion">결론<a class="headerlink" href="#conclusion" title="Link to this heading">#</a></h2>
-<p data-original-en="Deploying Furiosa-LLM with Kubernetes leverages the efficiency and scalability of Furiosa RNGD accelerators. This guide provides a straightforward approach to setting up your Kubernetes cluster to serve inference workloads efficiently.">Kubernetes는 Furiosa RNGD 가속기와 Furiosa의 효율성과 확장성을 활용합니다. 이 가이드는 Kubernetes 클러스터를 설정하여 효율적으로 inference 워크로드를 제공합니다.</p>
+<p data-original-en="Deploying Furiosa-LLM with Kubernetes leverages the efficiency and scalability of Furiosa RNGD accelerators. This guide provides a straightforward approach to setting up your Kubernetes cluster to serve inference workloads efficiently.">Kubernetes를 사용하여 Furiosa-LLM을 배포하면, Furiosa RNGD 가속기의 효율성과 확장성을 활용할 수 있습니다. 이 가이드는 Kubernetes 클러스터를 효율적으로 설정하여 추론 워크로드를 실행하는 방법을 안내합니다.</p>
 </section>
 </section>
 </article>

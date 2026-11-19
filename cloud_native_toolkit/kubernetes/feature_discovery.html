@@ -43,7 +43,7 @@ html
 <script src="../../_static/doctools.js?v=9bcbadda"></script>
 <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../../_static/copybutton.js?v=f281be69"></script>
+<script src="../../_static/copybutton.js?v=ko20261119"></script>
 <script src="../../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'cloud_native_toolkit/kubernetes/feature_discovery';</script>
@@ -288,17 +288,17 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="installing-furiosa-feature-discovery">
-<span id="featurediscovery"></span><h1 data-original-en="Installing Furiosa Feature Discovery">Furiosa 기능 디스커버리 설치<a class="headerlink" href="#installing-furiosa-feature-discovery" title="Link to this heading">#</a></h1>
+<span id="featurediscovery"></span><h1 data-original-en="Installing Furiosa Feature Discovery">Furiosa Feature Discovery 설치<a class="headerlink" href="#installing-furiosa-feature-discovery" title="Link to this heading">#</a></h1>
 <section id="furiosa-feature-discovery-and-nfd">
-<h2 data-original-en="Furiosa Feature Discovery and NFD">Furiosa 기능 발견 및 NFD<a class="headerlink" href="#furiosa-feature-discovery-and-nfd" title="Link to this heading">#</a></h2>
-<p data-original-en="The Furiosa Feature Discovery automatically labels Kubernetes nodes with information about FuriosaAI NPU properties, such as the NPU family, count, and various versions. Using these labels, you can schedule your Kubernetes workloads based on specific NPU requirements.">Furiosa 기능 디스커버리는 Kubernetes 노드를 FuriosaAI NPU 특성에 대한 정보를 자동적으로 NPU 제품군, 카운트 및 다양한 버전과 같은 NPU 속성에 대해 설명합니다. 이 라벨을 사용하여 특정 NPU 요구 사항에 따라 Kubernetes 워크로드를 일정할 수 있습니다.</p>
-<p data-original-en="The Furiosa Feature Discovery leverage NFD(Node Feature Discovery) which is a tool that detects hardware features and labels Kubernetes nodes. It is recommended to use NFD and Furiosa Feature Discovery to ensure that the Cloud Native Toolkit is deployed only on nodes equipped with FuriosaAI NPUs.">Furiosa 기능 디스커버리는 하드웨어 기능과 라벨 Kubernetes 노드를 감지하는 도구인 NFD(Node Feature Discovery)를 활용합니다. NFD 및 Furiosa 기능 디스커버리를 사용하여 클라우드 네이티브 툴킷이 FuriosaAI NPU가 장착된 노드에서만 배포됩니다.</p>
+<h2 data-original-en="Furiosa Feature Discovery and NFD">Furiosa Feature Discovery 및 NFD<a class="headerlink" href="#furiosa-feature-discovery-and-nfd" title="Link to this heading">#</a></h2>
+<p data-original-en="The Furiosa Feature Discovery automatically labels Kubernetes nodes with information about FuriosaAI NPU properties, such as the NPU family, count, and various versions. Using these labels, you can schedule your Kubernetes workloads based on specific NPU requirements.">Furiosa Feature Discovery는 FuriosaAI NPU 속성에 대한 정보를 Kubernetes 노드에 자동으로 레이블로 추가합니다 (예: NPU 종류, 개수, 다양한 버전). 이러한 레이블을 사용하여 Kubernetes 워크로드를 특정 NPU 요구 사항에 따라 스케줄링할 수 있습니다.</p>
+<p data-original-en="The Furiosa Feature Discovery leverage NFD(Node Feature Discovery) which is a tool that detects hardware features and labels Kubernetes nodes. It is recommended to use NFD and Furiosa Feature Discovery to ensure that the Cloud Native Toolkit is deployed only on nodes equipped with FuriosaAI NPUs.">Furiosa Feature Discovery는 NFD(Node Feature Discovery)를 활용합니다. NFD는 하드웨어 기능을 감지하고 Kubernetes 노드를 레이블링하는 도구입니다. Furiosa Feature Discovery와 함께 사용하면 Cloud Native Toolkit이 FuriosaAI NPUs가 장착된 노드에서만 배포되도록 보장할 수 있습니다.</p>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="If multiple versions of device-level components (like firmware) exist on the same node, the related labels are removed to avoid conflicts.">device-level 구성 요소 (firmware와 같은)의 여러 버전이 동일한 노드에 존재하면 관련 라벨이 충돌을 방지하기 위해 제거됩니다.</p>
+<p data-original-en="If multiple versions of device-level components (like firmware) exist on the same node, the related labels are removed to avoid conflicts.">동일 노드에 여러 버전의 장치 레벨 구성 요소(예: 펌웨어)가 존재할 경우, 관련된 레이블이 제거되어 충돌을 방지합니다.</p>
 </div>
 <section id="deploying-furiosa-feature-discovery-with-helm">
-<h3 data-original-en="Deploying Furiosa Feature Discovery with Helm">Helm과 Furiosa 기능 디스커버리 배포<a class="headerlink" href="#deploying-furiosa-feature-discovery-with-helm" title="Link to this heading">#</a></h3>
+<h3 data-original-en="Deploying Furiosa Feature Discovery with Helm">Helm을 사용하여 Furiosa Feature Discovery 배포<a class="headerlink" href="#deploying-furiosa-feature-discovery-with-helm" title="Link to this heading">#</a></h3>
 <p data-original-en="With the helm chart you can easily install Furiosa feature discovery and NFD into your Kubernetes cluster. Following command shows how to install them. The Furiosa device plugin helm chart is available at furiosa-ai/helm-charts. To configure deployment as you need, you can modify charts/furiosa-feature-discovery/values.yaml.">hlm 차트를 사용하면 Furiosa 기능 발견 및 NFD를 Kubernetes 클러스터에 쉽게 설치할 수 있습니다. 다음 명령은 설치 방법을 보여줍니다. Furiosa 장치 플러그인 helm 차트는 사용할 수 있습니다. <a class="github reference external" href="https://github.com/furiosa-ai/helm-charts">furiosa-ai/helm-charts</a>. 필요한대로 배포를 구성하려면 수정할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">charts/furiosa-feature-discovery/values.yaml</span></code>.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>helm<span class="w"> </span>repo<span class="w"> </span>add<span class="w"> </span>furiosa<span class="w"> </span>https://furiosa-ai.github.io/helm-charts
 helm<span class="w"> </span>repo<span class="w"> </span>update
@@ -307,8 +307,8 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-feature-disco
 </div>
 </section>
 <section id="labels">
-<h3 data-original-en="Labels">라벨<a class="headerlink" href="#labels" title="Link to this heading">#</a></h3>
-<p data-original-en="The followings are the labels that the Furiosa Feature Discovery attaches and what they mean.">다음은 Furiosa 기능 디스커버리가 붙은 라벨입니다.</p>
+<h3 data-original-en="Labels">레이블<a class="headerlink" href="#labels" title="Link to this heading">#</a></h3>
+<p data-original-en="The followings are the labels that the Furiosa Feature Discovery attaches and what they mean.">Furiosa Feature Discovery가 추가하는 레이블과 그 의미는 다음과 같습니다.</p>
 <div class="pst-scrollable-table-container"><table class="table table-center">
 <colgroup>
 <col style="width: 23.6%"/>
@@ -316,19 +316,19 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-feature-disco
 <col style="width: 47.3%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Label">라벨</p></th>
-<th class="head"><p data-original-en="Value">가치</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Label">레이블 (Label)</p></th>
+<th class="head"><p data-original-en="Value">값 (Value)</p></th>
 <th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p>furiosa ai/npu.count</p></td>
+<tr class="row-even"><td><p>furiosa.ai/npu.count</p></td>
 <td><p>n</p></td>
-<td><p data-original-en="# of NPU devices"># NPU 장치</p></td>
+<td><p data-original-en="# of NPU devices">NPU 장치 수</p></td>
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.family</p></td>
 <td><p>rngd</p></td>
-<td><p data-original-en="Chip family">칩 가족</p></td>
+<td><p data-original-en="Chip family">칩 종류</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.product</p></td>
 <td><p>rngd, rngd-s, rngd-max</p></td>
@@ -336,51 +336,51 @@ helm<span class="w"> </span>install<span class="w"> </span>furiosa-feature-disco
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.driver.version</p></td>
 <td><p>x.y.z</p></td>
-<td><p data-original-en="NPU device driver version">NPU 장치 driver 버전</p></td>
+<td><p data-original-en="NPU device driver version">NPU 장치 드라이버 버전</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.driver.version.major</p></td>
 <td><p>x</p></td>
-<td><p data-original-en="NPU device driver version major part">NPU 장치 driver 버전 중요한 부분</p></td>
+<td><p data-original-en="NPU device driver version major part">NPU 장치 드라이버 버전의 주요 버전 (Major Version)</p></td>
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.driver.version.minor</p></td>
 <td><p>y</p></td>
-<td><p data-original-en="NPU device driver version minor part">NPU 장치 driver 버전 미성년자 부분</p></td>
+<td><p data-original-en="NPU device driver version minor part">NPU 장치 드라이버 버전의 부 버전 (Minor Version)</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.driver.version.patch</p></td>
 <td><p>z</p></td>
-<td><p data-original-en="NPU device driver version patch part">NPU 장치 driver 버전 패치 부품</p></td>
+<td><p data-original-en="NPU device driver version patch part">NPU 장치 드라이버 버전의 패치 버전 (Patch Version)</p></td>
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.driver.version.metadata</p></td>
 <td><p>abcxyz</p></td>
-<td><p data-original-en="NPU device driver version metadata">NPU 장치 driver 버전 메타데이터</p></td>
+<td><p data-original-en="NPU device driver version metadata">NPU 장치 드라이버 버전 메타데이터</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.driver.version.prerelease</p></td>
 <td><p>abcxyz</p></td>
-<td><p data-original-en="NPU device driver version pre-release part">NPU 장치 driver 버전 pre-release 부속</p></td>
+<td><p data-original-en="NPU device driver version pre-release part">NPU 장치 드라이버 버전 (베타) 버전</p></td>
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.firmware.version</p></td>
 <td><p>x.y.z</p></td>
-<td><p data-original-en="NPU firmware version">NPU firmware 버전</p></td>
+<td><p data-original-en="NPU firmware version">NPU 펌웨어 버전</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.firmware.version.major</p></td>
 <td><p>x</p></td>
-<td><p data-original-en="NPU firmware version major part">NPU firmware 주요 기능</p></td>
+<td><p data-original-en="NPU firmware version major part">NPU 펌웨어 버전의 주요 버전</p></td>
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.firmware.version.minor</p></td>
 <td><p>y</p></td>
-<td><p data-original-en="NPU firmware version minor part">NPU firmware 부 기능</p></td>
+<td><p data-original-en="NPU firmware version minor part">NPU 펌웨어 버전의 부 버전</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.firmware.version.patch</p></td>
 <td><p>z</p></td>
-<td><p data-original-en="NPU firmware version patch part">NPU firmware 버전 패치 부분</p></td>
+<td><p data-original-en="NPU firmware version patch part">NPU 펌웨어 버전 패치 부분</p></td>
 </tr>
 <tr class="row-odd"><td><p>furiosa.ai/npu.firmware.version.metadata</p></td>
 <td><p>abcxyz</p></td>
-<td><p data-original-en="NPU firmware version metadata">NPU firmware 버전 메타데이터</p></td>
+<td><p data-original-en="NPU firmware version metadata">NPU 펌웨어 버전 메타데이터</p></td>
 </tr>
 <tr class="row-even"><td><p>furiosa.ai/npu.firmware.version.prerelease</p></td>
 <td><p>abcxyz</p></td>
-<td><p data-original-en="NPU firmware version pre-release part">NPU firmware 버전 pre-release 부품</p></td>
+<td><p data-original-en="NPU firmware version pre-release part">NPU 펌웨어 버전 프리릴리즈 부분</p></td>
 </tr>
 </tbody>
 </table>

@@ -43,7 +43,7 @@ html
 <script src="../_static/doctools.js?v=9bcbadda"></script>
 <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
 <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-<script src="../_static/copybutton.js?v=f281be69"></script>
+<script src="../_static/copybutton.js?v=ko20261119"></script>
 <script src="../_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
 <script src="../_static/design-tabs.js?v=f930bc37"></script>
 <script>DOCUMENTATION_OPTIONS.pagename = 'furiosa_llm/vision-language';</script>
@@ -299,25 +299,20 @@ html
 <div id="searchbox"></div>
 <article class="bd-article">
 <section id="vision-language-models">
-<span id="visionlanguagemodels"></span><h1 data-original-en="Vision-Language Models">Vision-Language 모델과 함께 구성됩니다.<a class="headerlink" href="#vision-language-models" title="Link to this heading">#</a></h1>
-<p data-original-en="Furiosa-LLM serves Vision-Language (VL) models that accept text and images through the OpenAI-compatible Chat Completions API and the Responses API. The first supported architecture is Qwen3-VL (e.g., Qwen/Qwen3-VL-32B-Instruct); see Supported Models for the authoritative list.">Furiosa-LLM는 OpenAI와 API와 API를 통해 텍스트 및 이미지를 받아 들여지는 Vision-Language (VL) 모델을 제공합니다.
-<a class="reference internal" href="responses-api.html#responsesapi"><span class="std std-ref">답변 API</span></a>. 첫번째 지원된 건축은 입니다 <strong>Qwen3-VL</strong> (e.g.,
-<code class="docutils literal notranslate"><span class="pre">Qwen/Qwen3-VL-32B-Instruct</span></code>); 참조 <a class="reference internal" href="supported_models.html#supportedmodels"><span class="std std-ref">지원 된 모델</span></a> 권위 있는 목록을 위해.</p>
-<p data-original-en="Image inputs may be passed as a remote https:// URL, a base64 data: URL, or a local file:// path. Preprocessing (resizing, patching, prompt-token expansion) is handled by the Hugging Face AutoProcessor that ships with the model.">이미지 입력은 리모트로 통과될지도 모릅니다 <code class="docutils literal notranslate"><span class="pre">https://</span></code> URL, 베이스64
-<code class="docutils literal notranslate"><span class="pre">data:</span></code> URL, 또는 지역 <code class="docutils literal notranslate"><span class="pre">file://</span></code> 경로. 사전 처리 (저장, 패치, prompt-token 확장)는 Hugging Face에 의해 처리됩니다
-<code class="docutils literal notranslate"><span class="pre">AutoProcessor</span></code> 모델에 기본적으로 포함된 구성품.</p>
+<span id="visionlanguagemodels"></span><h1 data-original-en="Vision-Language Models">비전-언어 모델<a class="headerlink" href="#vision-language-models" title="Link to this heading">#</a></h1>
+<p data-original-en="Furiosa-LLM serves Vision-Language (VL) models that accept text and images through the OpenAI-compatible Chat Completions API and the Responses API. The first supported architecture is Qwen3-VL (e.g., Qwen/Qwen3-VL-32B-Instruct); see Supported Models for the authoritative list.">Furiosa-LLM은 OpenAI 호환 Chat Completions API 및 <a class="reference internal" href="responses-api.html#responsesapi"><span class="std std-ref">Responses API</span></a>를 통해 텍스트와 이미지를 입력으로 받는 비전-언어 (VL) 모델을 제공합니다. 현재 지원되는 첫 번째 아키텍처는 Qwen3-VL (예: <code class="docutils literal notranslate"><span class="pre">Qwen/Qwen3-VL-32B-Instruct</span></code>)입니다. 자세한 내용은 "<a class="reference internal" href="supported_models.html#supportedmodels">지원되는 모델</a>"을 참조하십시오.</p>
+<p data-original-en="Image inputs may be passed as a remote https:// URL, a base64 data: URL, or a local file:// path. Preprocessing (resizing, patching, prompt-token expansion) is handled by the Hugging Face AutoProcessor that ships with the model.">이미지 입력은 리모트로 통과될지도 모릅니다 <code class="docutils literal notranslate"><span class="pre">https://</span></code> URL, 베이스64 <code class="docutils literal notranslate"><span class="pre">data:</span></code> URL, 또는 지역 <code class="docutils literal notranslate"><span class="pre">file://</span></code> 경로. 사전 처리 (저장, 패치, prompt-token 확장)는 Hugging Face에 의해 처리됩니다 <code class="docutils literal notranslate"><span class="pre">AutoProcessor</span></code> 모델에 기본적으로 포함된 구성품.</p>
 <div class="admonition note">
 <p class="admonition-title" data-original-en="Note">참고</p>
-<p data-original-en="Video input is not currently supported. Support is planned for Furiosa SDK 2026.5.0."><strong>Video 입력은 현재 지원되지 않습니다.</strong> 지원이 계획 중입니다
-<strong>Furiosa SDK 2026.5.0</strong>.</p>
+<p data-original-en="Video input is not currently supported. Support is planned for Furiosa SDK 2026.5.0.">비디오 입력은 현재 지원되지 않습니다. Furiosa SDK 2026.5.0에서 지원될 예정입니다.</p>
 </div>
 <section id="quick-start">
 <h2 data-original-en="Quick Start">빠른 시작<a class="headerlink" href="#quick-start" title="Link to this heading">#</a></h2>
-<p data-original-en="Launch a server with a vision-language model that includes a compatible FXB:">호환 FXB를 포함하는 vision-language 모델로 서버를 실행:</p>
+<p data-original-en="Launch a server with a vision-language model that includes a compatible FXB:">FXB와 호환되는 비전-언어 모델을 포함하는 서버를 시작하십시오:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-32B-Instruct
 </pre></div>
 </div>
-<p data-original-en="Send a chat-completion request with an image and a text prompt:">이미지와 텍스트 prompt와 chat-completion 요청 보내기:</p>
+<p data-original-en="Send a chat-completion request with an image and a text prompt:">이미지와 텍스트 프롬프트를 사용하여 챗 컴플리션 요청을 보내기:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>curl<span class="w"> </span>http://localhost:8000/v1/chat/completions<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-H<span class="w"> </span><span class="s2">"Content-Type: application/json"</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>-d<span class="w"> </span><span class="s1">'{</span>
@@ -341,13 +336,13 @@ html
 <span class="w">    </span><span class="p">|</span><span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>json.tool
 </pre></div>
 </div>
-<p data-original-en="(see the Python Example section below for a Python client example).">( <a class="reference internal" href="#vlpythonexample"><span class="std std-ref">Python 예제</span></a> Python 클라이언트 예제의 아래 섹션).</p>
+<p data-original-en="(see the Python Example section below for a Python client example).">(Python 클라이언트 예제는 아래의 <a class="reference internal" href="#vlpythonexample">Python 예제</a> 섹션을 참조하세요).</p>
 </section>
 <section id="image-input-formats">
 <h2 data-original-en="Image Input Formats">이미지 입력 형식<a class="headerlink" href="#image-input-formats" title="Link to this heading">#</a></h2>
-<p data-original-en="The image_url.url field in a chat-completion message accepts three URL schemes:">The <code class="docutils literal notranslate"><span class="pre">image_url.url</span></code> chat-completion 메시지의 필드는 3 URL 계획을 받아들입니다:</p>
+<p data-original-en="The image_url.url field in a chat-completion message accepts three URL schemes:">chat-completion 메시지의 <code class="docutils literal notranslate"><span class="pre">image_url.url</span></code> 필드는 다음 URL 스킴을 지원합니다:</p>
 <ol class="arabic">
-<li><p data-original-en="Remote URL (http:// / https://) — the server fetches the image with httpx."><strong>원격 URL</strong> (<code class="docutils literal notranslate"><span class="pre">http://</span></code> / <code class="docutils literal notranslate"><span class="pre">https://</span></code>) — 서버는 이미지를 fetches <code class="docutils literal notranslate"><span class="pre">httpx</span></code>.</p>
+<li><p data-original-en="Remote URL (http:// / https://) — the server fetches the image with httpx.">원격 URL (<code class="docutils literal notranslate"><span class="pre">http://</span></code> / <code class="docutils literal notranslate"><span class="pre">https://</span></code>) — 서버는 <code class="docutils literal notranslate"><span class="pre">httpx</span></code>를 사용하여 이미지를 가져옵니다.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/photo.png"</span><span class="p">}</span>
@@ -355,7 +350,7 @@ html
 </pre></div>
 </div>
 </li>
-<li><p data-original-en="Base64 data URL — useful for inline payloads:"><strong>데이터베이스64 URL</strong> — 인라인 페이로드에 유용합니다:</p>
+<li><p data-original-en="Base64 data URL — useful for inline payloads:">Base64 데이터 URL — 인라인 페이로드에 유용합니다:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"data:image/png;base64,iVBORw0KGgoAAAANSUh..."</span><span class="p">}</span>
@@ -363,8 +358,7 @@ html
 </pre></div>
 </div>
 </li>
-<li><p data-original-en="Local file (file://) — disabled by default; requires the --allowed-local-media-path server flag (see below)."><strong>로컬 파일</strong> (<code class="docutils literal notranslate"><span class="pre">file://</span></code>) - 기본적으로 비활성화; 필요
-<code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code> 서버 플래그 (아래 참조).</p>
+<li><p data-original-en="Local file (file://) — disabled by default; requires the --allowed-local-media-path server flag (see below).">로컬 파일 (<code class="docutils literal notranslate"><span class="pre">file://</span></code>) — 기본적으로 비활성화되어 있습니다. <code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code> 서버 플래그가 필요합니다 (아래 참조).</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"file:///srv/media/photo.png"</span><span class="p">}</span>
@@ -373,17 +367,15 @@ html
 </div>
 </li>
 </ol>
-<p data-original-en="A request may contain multiple image_url parts interleaved with text parts. The model’s chat template controls how image placeholders are rendered into the prompt:">요청에는 여러 <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 는
-<code class="docutils literal notranslate"><span class="pre">text</span></code> 부품. 모델의 채팅 템플릿은 이미지 홀더가 prompt로 렌더링되는 방법을 제어합니다.</p>
+<p data-original-en="A request may contain multiple image_url parts interleaved with text parts. The model’s chat template controls how image placeholders are rendered into the prompt:">요청에는 여러 <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 는 <code class="docutils literal notranslate"><span class="pre">text</span></code> 부품. 모델의 채팅 템플릿은 이미지 홀더가 prompt로 렌더링되는 방법을 제어합니다.</p>
 <ul class="simple">
-<li><p data-original-en="OpenAI-format chat templates (the common case) iterate the content array themselves, so image placeholders land at their original positions automatically — no extra server flag needed."><strong>OpenAI 형식의 채팅 템플릿</strong> (일반적인 경우) 반복합니다.
-<code class="docutils literal notranslate"><span class="pre">content</span></code> 자체적으로, 그래서 이미지 placeholders 토지는 원래 위치에 자동으로 - 추가 서버 플래그가 필요하지 않습니다.</p></li>
-<li><p data-original-en="String-format chat templates flatten content into a single text string. By default, placeholders for any images are prepended to the prompt; pass --interleave-mm-strings to keep them at their original positions instead."><strong>String-format 템플릿</strong> 납작한 <code class="docutils literal notranslate"><span class="pre">content</span></code> 단일 텍스트 문자열로. 기본적으로, 어떤 이미지에 대한 위주자는 prompt에 prepended; 패스 <code class="docutils literal notranslate"><span class="pre">--interleave-mm-strings</span></code> 대신 자신의 원래 위치에 보관하십시오.</p></li>
+<li><p data-original-en="OpenAI-format chat templates (the common case) iterate the content array themselves, so image placeholders land at their original positions automatically — no extra server flag needed.">OpenAI 형식의 채팅 템플릿 (일반적인 경우) 반복합니다. <code class="docutils literal notranslate"><span class="pre">content</span></code> 자체적으로, 그래서 이미지 placeholders 토지는 원래 위치에 자동으로 - 추가 서버 플래그가 필요하지 않습니다.</p></li>
+<li><p data-original-en="String-format chat templates flatten content into a single text string. By default, placeholders for any images are prepended to the prompt; pass --interleave-mm-strings to keep them at their original positions instead.">String-format 템플릿 납작한 <code class="docutils literal notranslate"><span class="pre">content</span></code> 단일 텍스트 문자열로. 기본적으로, 어떤 이미지에 대한 위주자는 prompt에 prepended; 패스 <code class="docutils literal notranslate"><span class="pre">--interleave-mm-strings</span></code> 대신 자신의 원래 위치에 보관하십시오.</p></li>
 </ul>
 </section>
 <section id="server-options">
 <h2 data-original-en="Server Options">서버 옵션<a class="headerlink" href="#server-options" title="Link to this heading">#</a></h2>
-<p data-original-en="The following furiosa-llm serve flags configure multimodal behaviour. Requests that violate any of them are rejected with HTTP 400 before reaching the NPU.">아래와 같이 <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> 플래그는 멀티모드 동작을 구성합니다. NPU에 도달하기 전에 HTTP 400로 거부되는 것을 요청합니다.</p>
+<p data-original-en="The following furiosa-llm serve flags configure multimodal behaviour. Requests that violate any of them are rejected with HTTP 400 before reaching the NPU.">다음 <code class="docutils literal notranslate"><span class="pre">furiosa-llm</span> <span class="pre">serve</span></code> 플래그는 멀티모달 동작을 구성합니다. 이러한 규칙을 위반하는 요청은 NPU에 도달하기 전에 HTTP 400 오류로 거부됩니다.</p>
 <div class="pst-scrollable-table-container"><table class="table table-center">
 <colgroup>
 <col style="width: 30.6%"/>
@@ -391,50 +383,48 @@ html
 <col style="width: 55.6%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Flag">깃발</p></th>
-<th class="head"><p data-original-en="Default">기본 설정</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Flag">플래그</p></th>
+<th class="head"><p data-original-en="Default">기본값</p></th>
 <th class="head"><p data-original-en="Description">설명</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--image-limit-per-prompt</span> <span class="pre">N</span></code></p></td>
 <td><p data-original-en="unlimited">무제한</p></td>
-<td><p data-original-en="Maximum number of images allowed per request. Exceeding the limit returns HTTP 400.">요청에 따라 허용되는 최대 이미지 수. 한계를 초과하는 것은 HTTP 400를 반환합니다.</p></td>
+<td><p data-original-en="Maximum number of images allowed per request. Exceeding the limit returns HTTP 400.">요청당 생성 가능한 이미지의 최대 개수. 이 제한을 초과하면 HTTP 400 오류가 반환됩니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--video-limit-per-prompt</span> <span class="pre">N</span></code></p></td>
 <td><p data-original-en="unlimited">무제한</p></td>
-<td><p data-original-en="Maximum number of videos allowed per request. Video input is not currently supported (see the note above), so this flag has no effect yet.">요청 당 허용되는 최대 비디오 수. 비디오 입력은 현재 지원되지 않습니다 (위의 메모 참조), 그래서이 플래그는 아직 효과가 없습니다.</p></td>
+<td><p data-original-en="Maximum number of videos allowed per request. Video input is not currently supported (see the note above), so this flag has no effect yet.">요청당 생성 가능한 비디오의 최대 개수. 현재 비디오 입력은 지원되지 않으므로 (위의 참고 사항 참조), 이 플래그는 현재 아무런 효과가 없습니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span> <span class="pre">PATH</span></code></p></td>
-<td><p data-original-en="disabled">장애인</p></td>
+<td><p data-original-en="disabled">비활성화</p></td>
 <td><p data-original-en="Allow file:// URLs whose resolved path is under PATH. Required to serve local images; other file:// URLs are rejected.">허락해 <code class="docutils literal notranslate"><span class="pre">file://</span></code> 해결된 경로가 아래에 있는 URL <code class="docutils literal notranslate"><span class="pre">PATH</span></code>. 지역 이미지를 봉사하는 필요; 다른 사람 <code class="docutils literal notranslate"><span class="pre">file://</span></code> URL는 거부됩니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--allowed-media-domains</span> <span class="pre">D</span> <span class="pre">[D</span> <span class="pre">…]</span></code></p></td>
-<td><p data-original-en="all allowed">모든 것이 허용됩니다</p></td>
-<td><p data-original-en="Whitelist of remote domains for SSRF protection. When set, only images from listed domains are fetched; others return HTTP 400.">SSRF 보호를 위한 원격 도메인의 Whitelist. 설정할 때, 목록된 도메인의 이미지만 fetched; 다른 사람 반환 HTTP 400.</p></td>
+<td><p data-original-en="all allowed">모든 허용된 도메인</p></td>
+<td><p data-original-en="Whitelist of remote domains for SSRF protection. When set, only images from listed domains are fetched; others return HTTP 400.">SSRF 보호를 위한 원격 도메인 목록입니다. 설정되면, 목록에 있는 도메인에서만 이미지를 가져오며, 나머지는 HTTP 400 오류를 반환합니다.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--interleave-mm-strings</span></code></p></td>
-<td><p>off</p></td>
-<td><p data-original-en="See Image Input Formats above. No-op for the common OpenAI-format chat templates.">See <em>이미지 입력 형식</em> 위의. No-op 일반적인 OpenAI 형식 채팅 템플릿.</p></td>
+<tr class="row-even"><td><p data-original-en="--interleave-mm-strings"><code class="docutils literal notranslate"><span class="pre">--interleave-mm-strings</span></code> (병렬 처리)</p></td>
+<td><p data-original-en="off">off (끄기)</p></td>
+<td><p data-original-en="See Image Input Formats above. No-op for the common OpenAI-format chat templates.">상단의 이미지 입력 형식 참조. OpenAI 형식의 일반적인 챗 템플릿에는 영향을 미치지 않습니다.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span> <span class="pre">GB</span></code></p></td>
+<tr class="row-odd"><td><p data-original-en="--mm-processor-cache-gb GB"><code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span> <span class="pre">GB</span></code> (멀티모달 프로세서 캐시 크기)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">4.0</span></code></p></td>
-<td><p data-original-en="Size of the multimodal preprocessing cache in GiB. Set to 0 to disable preprocessing caching; encoded embeddings can still be reused. See Caching Multimodal Inputs with UUID below.">GiB의 멀티모드 사전처리 캐시의 크기. 설정 <code class="docutils literal notranslate"><span class="pre">0</span></code> 사전 처리 캐싱을 비활성화; 인코딩 된 embedding 여전히 재사용 될 수 있습니다. 참조 <em>UUID를 사용하여 다중 모달 입력을 캐싱</em> 아래쪽</p></td>
+<td><p data-original-en="Size of the multimodal preprocessing cache in GiB. Set to 0 to disable preprocessing caching; encoded embeddings can still be reused. See Caching Multimodal Inputs with UUID below.">멀티모달 전처리 캐시의 크기를 GiB 단위로 설정합니다. <code class="docutils literal notranslate"><span class="pre">0</span></code>으로 설정하면 전처리 캐싱을 비활성화합니다. 인코딩된 임베딩은 여전히 재사용할 수 있습니다. UUID를 사용하여 멀티모달 입력 캐싱에 대한 자세한 내용은 "UUID를 사용하여 멀티모달 입력 캐싱" 참조.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--media-io-kwargs</span> <span class="pre">JSON</span></code></p></td>
+<tr class="row-even"><td><p data-original-en="--media-io-kwargs JSON"><code class="docutils literal notranslate"><span class="pre">--media-io-kwargs</span> <span class="pre">JSON</span></code> (미디어 I/O 매개변수)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{}</span></code></p></td>
-<td><p data-original-en="Default image-fetch options, keyed by modality. See Multimodal Options for timeouts and request overrides.">기본 image-fetch 옵션, modality에 의해 키 입력. 참조
-<a class="reference internal" href="#multimodaloptions"><span class="std std-ref">멀티모달 옵션</span></a> — 타임아웃 및 요청 덮어쓰기를 위해</p></td>
+<td><p data-original-en="Default image-fetch options, keyed by modality. See Multimodal Options for timeouts and request overrides.">기본 이미지 가져오기 옵션, 모달리티별로 지정. <a class="reference internal" href="#multimodaloptions">멀티모달 옵션</a>에서 타임아웃 및 요청 오버라이드를 참조하세요.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--mm-processor-kwargs</span> <span class="pre">JSON</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{}</span></code></p></td>
-<td><p data-original-en="Processor defaults with optional images_kwargs. See Multimodal Options for model-specific controls and request overrides.">프로세서 기본 설정이며, 선택 사항입니다. <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>보시다시피
-<a class="reference internal" href="#multimodaloptions"><span class="std std-ref">멀티모달 옵션</span></a> model-specific 제어 및 요청 overrides에 대한.</p></td>
+<td><p data-original-en="Processor defaults with optional images_kwargs. See Multimodal Options for model-specific controls and request overrides.">선택적으로 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>를 포함한 프로세서 기본 설정. <a class="reference internal" href="#multimodaloptions">멀티모달 옵션</a>에서 모델별 제어 및 요청 오버라이드를 참조하세요.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en='Example with multiple allowed domains (nargs="+"):'>다중 허용된 도메인의 예 (예)<code class="docutils literal notranslate"><span class="pre">nargs="+"</span></code>):</p>
+<p data-original-en='Example with multiple allowed domains (nargs="+"):'>여러 허용된 도메인(<code class="docutils literal notranslate"><span class="pre">nargs="+"</span></code>)을 사용하는 예시:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>Qwen/Qwen3-VL-32B-Instruct<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--fxb<span class="w"> </span>/path/to/qwen3-vl-32b.fxb<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--allowed-media-domains<span class="w"> </span>developer.furiosa.ai<span class="w"> </span>cdn.example.com
@@ -442,25 +432,22 @@ html
 </div>
 <div class="admonition warning">
 <p class="admonition-title" data-original-en="Warning">경고</p>
-<p data-original-en="Local file access (file://) is disabled unless --allowed-local-media-path is set. Treat it as a security boundary — only point it at directories whose contents you are willing to expose to chat-completion clients.">로컬 파일 액세스 (<code class="docutils literal notranslate"><span class="pre">file://</span></code>) 이 기능이 비활성화될 경우
-<code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code> 설정입니다. 보안 경계로 치료 — chat-completion 클라이언트에 노출 될 컨텐츠를 담당하는 디렉터리에만 포인트.</p>
+<p data-original-en="Local file access (file://) is disabled unless --allowed-local-media-path is set. Treat it as a security boundary — only point it at directories whose contents you are willing to expose to chat-completion clients."><code class="docutils literal notranslate"><span class="pre">--allowed-local-media-path</span></code>가 설정되지 않은 경우, 로컬 파일 접근(<code class="docutils literal notranslate"><span class="pre">file://</span></code>)은 비활성화됩니다. 이를 보안 경계로 사용하세요. 채팅 완료 클라이언트에 노출할 의사가 있는 디렉토리만 지정해야 합니다.</p>
 </div>
 <div class="admonition tip">
-<p class="admonition-title">Tip</p>
-<p data-original-en="For production deployments fetching from the public internet, restrict --allowed-media-domains to the smallest set you need to limit SSRF and bandwidth-amplification risk.">생산 배치는 공공 인터넷에서 fetching, 제한 <code class="docutils literal notranslate"><span class="pre">--allowed-media-domains</span></code> 가장 작은 세트로 SSRF 및 bandwidth-amplification 위험을 제한해야합니다.</p>
+<p class="admonition-title" data-original-en="Tip">팁</p>
+<p data-original-en="For production deployments fetching from the public internet, restrict --allowed-media-domains to the smallest set you need to limit SSRF and bandwidth-amplification risk.">공용 인터넷에서 가져오는 경우(예: 프로덕션 배포), SSRF 및 대역폭 증폭 위험을 줄이기 위해 <code class="docutils literal notranslate"><span class="pre">--allowed-media-domains</span></code>를 가장 작은 세트로 제한하세요.</p>
 </div>
 </section>
 <section id="multimodal-options">
-<span id="multimodaloptions"></span><h2 data-original-en="Multimodal Options">멀티모달 옵션<a class="headerlink" href="#multimodal-options" title="Link to this heading">#</a></h2>
-<p data-original-en="media_io_kwargs uses an image object. mm_processor_kwargs accepts processor options and optional images_kwargs. videos_kwargs and audio_kwargs are currently rejected because only image processing is supported. Set server defaults with the CLI:"><code class="docutils literal notranslate"><span class="pre">media_io_kwargs</span></code> 사용 <code class="docutils literal notranslate"><span class="pre">image</span></code> 객체 <code class="docutils literal notranslate"><span class="pre">mm_processor_kwargs</span></code> 프로세서 옵션 및 옵션 허용 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>.
-<code class="docutils literal notranslate"><span class="pre">videos_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">audio_kwargs</span></code> 현재는 이미지 처리가 지원되기 때문에 거부됩니다. CLI와 서버 기본값을 설정하십시오:</p>
+<span id="multimodaloptions"></span><h2 data-original-en="Multimodal Options">다중 모달 옵션<a class="headerlink" href="#multimodal-options" title="Link to this heading">#</a></h2>
+<p data-original-en="media_io_kwargs uses an image object. mm_processor_kwargs accepts processor options and optional images_kwargs. videos_kwargs and audio_kwargs are currently rejected because only image processing is supported. Set server defaults with the CLI:"><code class="docutils literal notranslate"><span class="pre">media_io_kwargs</span></code> 사용 <code class="docutils literal notranslate"><span class="pre">image</span></code> 객체 <code class="docutils literal notranslate"><span class="pre">mm_processor_kwargs</span></code> 프로세서 옵션 및 옵션 허용 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>. <code class="docutils literal notranslate"><span class="pre">videos_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">audio_kwargs</span></code> 현재는 이미지 처리가 지원되기 때문에 거부됩니다. CLI와 서버 기본값을 설정하십시오:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>furiosa-llm<span class="w"> </span>serve<span class="w"> </span>furiosa-ai/Qwen3-VL-32B-Instruct<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--media-io-kwargs<span class="w"> </span><span class="s1">'{"image": {"timeout": 10}}'</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--mm-processor-kwargs<span class="w"> </span><span class="s1">'{"min_pixels": 1024}'</span>
 </pre></div>
 </div>
-<p data-original-en="Chat Completions and Responses requests can override these defaults with media_io_kwargs and mm_processor_kwargs in the JSON request body. With the OpenAI Python client, pass these fields through extra_body:">Chat Completions 및 Responses 요청은 이러한 기본값을 override 할 수 있습니다.
-<code class="docutils literal notranslate"><span class="pre">media_io_kwargs</span></code> and <code class="docutils literal notranslate"><span class="pre">mm_processor_kwargs</span></code> JSON 요청 몸에서. OpenAI Python 클라이언트로, 이 필드를 통해 전달 <code class="docutils literal notranslate"><span class="pre">extra_body</span></code>:</p>
+<p data-original-en="Chat Completions and Responses requests can override these defaults with media_io_kwargs and mm_processor_kwargs in the JSON request body. With the OpenAI Python client, pass these fields through extra_body:">챗 컴플리트 및 응답: JSON 요청 본문에 <code class="docutils literal notranslate"><span class="pre">media_io_kwargs</span></code> 및 <code class="docutils literal notranslate"><span class="pre">mm_processor_kwargs</span></code>를 사용하여 이러한 기본 설정을 덮어쓸 수 있습니다. OpenAI Python 클라이언트를 사용하여, <code class="docutils literal notranslate"><span class="pre">extra_body</span></code>를 통해 이러한 필드를 전달합니다.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">OpenAI</span>
 
@@ -488,12 +475,11 @@ html
 <span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 </pre></div>
 </div>
-<p data-original-en="Overrides apply only to that request and do not change server defaults. Omitting either dictionary, setting it to null, or passing {} retains defaults. The two dictionaries have different merge rules, described below.">Overrides는 해당 요청에만 적용되며 서버 기본값을 변경하지 않습니다. 사전 설정, 설정 <code class="docutils literal notranslate"><span class="pre">null</span></code>, 또는 통과 <code class="docutils literal notranslate"><span class="pre">{}</span></code> 기본값을 유지합니다. 두 개의 사전에는 다음과 같은 다른 합병 규칙이 있습니다.</p>
+<p data-original-en="Overrides apply only to that request and do not change server defaults. Omitting either dictionary, setting it to null, or passing {} retains defaults. The two dictionaries have different merge rules, described below.">이러한 덮어쓰기는 해당 요청에만 적용되며 서버 기본 설정을 변경하지 않습니다. 두 개의 딕셔너리를 생략하거나, <code class="docutils literal notranslate"><span class="pre">null</span></code>로 설정하거나, <code class="docutils literal notranslate"><span class="pre">{}</span></code>를 전달하면 기본 설정을 유지합니다. 두 딕셔너리는 서로 다른 병합 규칙을 가지며, 아래에 설명되어 있습니다.</p>
 <section id="image-fetch-options">
-<h3 data-original-en="Image-fetch options">Image-fetch 옵션<a class="headerlink" href="#image-fetch-options" title="Link to this heading">#</a></h3>
-<p data-original-en='Request option keys override defaults within each modality. Passing {"image": {}} retains default image-fetch options.'>각 modality 내의 옵션 키 오버라이드 디폴트를 요청합니다. Passing
-<code class="docutils literal notranslate"><span class="pre">{"image":</span> <span class="pre">{}}</span></code> 기본 image-fetch 옵션 유지.</p>
-<p data-original-en="The following fetch option is supported:">다음 fetch 옵션이 지원됩니다:</p>
+<h3 data-original-en="Image-fetch options">이미지 가져오기 옵션<a class="headerlink" href="#image-fetch-options" title="Link to this heading">#</a></h3>
+<p data-original-en='Request option keys override defaults within each modality. Passing {"image": {}} retains default image-fetch options.'>요청 옵션 키는 각 모달리티 내에서 기본 설정을 덮어씁니다. <code class="docutils literal notranslate"><span class="pre">{"image":</span> <span class="pre">{}}</span></code>를 전달하면 기본 이미지 가져오기 옵션이 유지됩니다.</p>
+<p data-original-en="The following fetch option is supported:">다음 가져오기 옵션을 지원합니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 25.0%"/>
@@ -502,35 +488,34 @@ html
 <col style="width: 35.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Option">선택 사항</p></th>
-<th class="head"><p data-original-en="Validation">유효성</p></th>
-<th class="head"><p data-original-en="Default">기본 설정</p></th>
-<th class="head"><p data-original-en="Behavior">행동</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Option">옵션</p></th>
+<th class="head"><p data-original-en="Validation">유효성 검사</p></th>
+<th class="head"><p data-original-en="Default">기본값</p></th>
+<th class="head"><p data-original-en="Behavior">동작</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">media_io_kwargs.image.timeout</span></code></p></td>
-<td><p data-original-en="Finite positive number of seconds; strings, booleans, and null are rejected.">몇 초의 Finite 긍정적 인 수; 문자열, 불린, 및 <code class="docutils literal notranslate"><span class="pre">null</span></code> 거절당합니다.</p></td>
-<td><p data-original-en="30 seconds when omitted from both server defaults and the request.">30 초는 서버 기본과 요청 모두에서 omitted.</p></td>
-<td><p data-original-en="Controls HTTP fetching, not image processing or generation. Has no effect on local files, inline data URLs, or references without a URL.">HTTP fetching, 이미지 처리 또는 세대를 제어합니다. URL없이 로컬 파일, 인라인 데이터 URL 또는 참조에 영향을 미치지 않습니다.</p></td>
+<td><p data-original-en="Finite positive number of seconds; strings, booleans, and null are rejected.">양수 형태의 초 단위 시간 (예: 60초, 1분 30초). 문자열, 불리언, <code class="docutils literal notranslate"><span class="pre">null</span></code> 값은 허용되지 않습니다. (정수 형태의 시간)</p></td>
+<td><p data-original-en="30 seconds when omitted from both server defaults and the request.">기본 설정 또는 요청에서 누락된 경우, 30초.</p></td>
+<td><p data-original-en="Controls HTTP fetching, not image processing or generation. Has no effect on local files, inline data URLs, or references without a URL.">HTTP 요청 처리에 사용되며, 이미지 처리 또는 생성과는 관련이 없습니다. 로컬 파일, 인라인 데이터 URL, URL이 없는 참조에는 영향을 미치지 않습니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="The server’s local-path and domain restrictions still apply and cannot be overridden through this dictionary.">서버의 local-path 및 도메인 제한은 여전히 적용되며이 사전을 통해 overridden 할 수 없습니다.</p>
+<p data-original-en="The server’s local-path and domain restrictions still apply and cannot be overridden through this dictionary.">서버의 로컬 경로 및 도메인 제한 사항은 여전히 적용되며, 이 딕셔너리를 통해 변경할 수 없습니다. (local-path, domain restrictions)</p>
 </section>
 <section id="processor-options">
-<h3 data-original-en="Processor options">프로세서 옵션<a class="headerlink" href="#processor-options" title="Link to this heading">#</a></h3>
-<p data-original-en="Request keys replace matching top-level processor defaults, including entire nested objects. For example, an override of size replaces the entire default size object rather than merging its dimensions.">요청 키는 일치 top-level 프로세서 기본을 대체, 전체 배열 개체를 포함. 예를 들어, override of <code class="docutils literal notranslate"><span class="pre">size</span></code> 는 전체 기본 설정을 대체합니다. <code class="docutils literal notranslate"><span class="pre">size</span></code> 그 차원을 merging 보다는 오히려 목표.</p>
-<p data-original-en="Image-specific options can be supplied in images_kwargs:">Image-specific 옵션은 공급할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>:</p>
+<h3 data-original-en="Processor options">(프로세서) 옵션<a class="headerlink" href="#processor-options" title="Link to this heading">#</a></h3>
+<p data-original-en="Request keys replace matching top-level processor defaults, including entire nested objects. For example, an override of size replaces the entire default size object rather than merging its dimensions.">요청 키는 일치하는 최상위 프로세서 기본값을 대체하며, 여기에는 중첩된 객체 전체가 포함됩니다. 예를 들어, "<code class="docutils literal notranslate"><span class="pre">size</span></code>"의 대체는 전체 기본 "<code class="docutils literal notranslate"><span class="pre">size</span></code>" 객체를 대체하는 것이며, 그 차원을 병합하는 것이 아닙니다.</p>
+<p data-original-en="Image-specific options can be supplied in images_kwargs:">이미지에 특정한 옵션은 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>에 제공할 수 있습니다.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">"mm_processor_kwargs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"min_pixels"</span><span class="p">:</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="nt">"images_kwargs"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"max_pixels"</span><span class="p">:</span><span class="w"> </span><span class="mi">200704</span><span class="p">}}}</span>
 </pre></div>
 </div>
-<p data-original-en='This uses both controls. A request’s images_kwargs replaces the entire default images_kwargs object; {"images_kwargs": {}} clears that group and keeps the remaining top-level options. An option must not appear both at the top level and inside images_kwargs, including after defaults and request options are combined. This applies to all option names, even when their values are equal.'>이 두 컨트롤을 사용합니다. 요청의 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code> 전체를 대체합니다.
-기본 설정 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code> 객체 <code class="docutils literal notranslate"><span class="pre">{"images_kwargs":</span> <span class="pre">{}}</span></code> 그룹을 명확하고 나머지 top-level 옵션을 유지합니다. 옵션은 최고 수준과 내부에 모두 나타나지 않아야합니다. <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>기본 및 요청 옵션이 결합된 후 ,. 이 값이 동등할 때 모든 옵션 이름에 적용된다.</p>
+<p data-original-en='This uses both controls. A request’s images_kwargs replaces the entire default images_kwargs object; {"images_kwargs": {}} clears that group and keeps the remaining top-level options. An option must not appear both at the top level and inside images_kwargs, including after defaults and request options are combined. This applies to all option names, even when their values are equal.'>이 기능은 두 가지 제어를 모두 사용합니다. 요청의 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>는 전체 기본 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code> 객체를 대체합니다. <code class="docutils literal notranslate"><span class="pre">{"images_kwargs":</span> <span class="pre">{}}</span></code>는 해당 그룹을 지우고 나머지 최상위 옵션만 유지합니다. 옵션은 최상위 레벨과 <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code> 내에 동시에 나타날 수 없습니다. 여기에는 기본값 및 요청 옵션이 결합된 후에도 적용됩니다. 이는 모든 옵션 이름에 적용됩니다.</p>
 <section id="registered-image-processor-options">
-<h4 data-original-en="Registered image processor options">등록된 이미지 프로세서 옵션<a class="headerlink" href="#registered-image-processor-options" title="Link to this heading">#</a></h4>
-<p data-original-en="The catalog lists recommended runtime controls, rather than every upstream processor argument. The common options below apply to Qwen-VL, EXAONE 4.5, and Gemma 4. EXAONE uses the Qwen image processor with additional window-aligned resizing. Defaults come from the loaded processor configuration. The table shows the Transformers 5.8 class fallbacks; checkpoint configuration can override them, including normalization values. Omitted options use those loaded defaults. An explicit null is forwarded as such and is not generally equivalent to omission.">카탈로그 목록은 모든 상류 프로세서 аргументи보다는 runtime 컨트롤을 권장합니다. 아래의 일반적인 옵션은 Qwen-VL, EXAONE 4.5 및 Gemma 4에 적용됩니다. EXAONE는 추가 window-aligned 크기를 변경하는 Qwen 이미지 프로세서를 사용합니다. 기본값은 로드 프로세서 구성에서 발생합니다. 테이블은 트랜스포머 5.8 클래스 패러백을 보여줍니다. 체크포인트 구성은 정상화 값을 포함하여 그들을 초과 할 수 있습니다. 허용된 옵션은 해당 로드 된 기본값을 사용합니다. <code class="docutils literal notranslate"><span class="pre">null</span></code> 일반적으로 배출과 동일하지 않습니다.</p>
+<h4 data-original-en="Registered image processor options">(이미지 프로세서) 옵션<a class="headerlink" href="#registered-image-processor-options" title="Link to this heading">#</a></h4>
+<p data-original-en="The catalog lists recommended runtime controls, rather than every upstream processor argument. The common options below apply to Qwen-VL, EXAONE 4.5, and Gemma 4. EXAONE uses the Qwen image processor with additional window-aligned resizing. Defaults come from the loaded processor configuration. The table shows the Transformers 5.8 class fallbacks; checkpoint configuration can override them, including normalization values. Omitted options use those loaded defaults. An explicit null is forwarded as such and is not generally equivalent to omission.">카탈로그는 모든 업스트림 프로세서 인수를 나열하는 대신, 권장되는 런타임 제어 목록을 제공합니다. 아래의 일반적인 옵션은 Qwen-VL, EXAONE 4.5, Gemma 4에 적용됩니다. EXAONE은 Qwen 이미지 프로세서를 사용하며, 추가적으로 윈도우 정렬된 리사이징을 수행합니다. 기본값은 로드된 프로세서 구성에서 가져옵니다. 아래 표는 Transformers 5.8 클래스의 기본값 fallback을 보여줍니다. 체크포인트 구성은 이를 덮어쓸 수 있으며, 여기에는 정규화 값도 포함됩니다. 누락된 옵션은 로드된 기본값을 사용합니다. 명시적인 <code class="docutils literal notranslate"><span class="pre">null</span></code> 값은 그대로 전달되며, 일반적으로 누락과 동일하지 않습니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 20.0%"/>
@@ -539,62 +524,62 @@ html
 <col style="width: 35.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Option">선택 사항</p></th>
-<th class="head"><p data-original-en="Accepted values">받아들여진 가치</p></th>
-<th class="head"><p data-original-en="Default">기본 설정</p></th>
-<th class="head"><p data-original-en="Behavior">행동</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Option">옵션</p></th>
+<th class="head"><p data-original-en="Accepted values">허용되는 값</p></th>
+<th class="head"><p data-original-en="Default">기본값</p></th>
+<th class="head"><p data-original-en="Behavior">동작</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">do_convert_rgb</span></code></p></td>
-<td><p data-original-en="Boolean or null">툴리안 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Boolean or null">부울 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
-<td><p data-original-en="Convert inputs to RGB. EXAONE performs this before window-aligned resizing.">입력을 RGB로 변환합니다. EXAONE은 window-aligned의 재화하기 전에 이것을 수행합니다.</p></td>
+<td><p data-original-en="Convert inputs to RGB. EXAONE performs this before window-aligned resizing.">입력 데이터를 RGB로 변환합니다. EXAONE은 윈도우 정렬된 리사이징 전에 이 작업을 수행합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">resample</span></code></p></td>
-<td><p data-original-en="Integer 0 through 5, or null">정수 <code class="docutils literal notranslate"><span class="pre">0</span></code> 통행 <code class="docutils literal notranslate"><span class="pre">5</span></code>, or <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
-<td><p data-original-en="3 (bicubic)"><code class="docutils literal notranslate"><span class="pre">3</span></code> (비큐브)</p></td>
-<td><p data-original-en="Pillow filter: nearest (0), Lanczos (1), bilinear (2), bicubic (3), box (4), or Hamming (5). The selected backend determines supported filters.">베개 필터: 가장 가까운 (0), Lanczos (1), bilinear (2), bicubic (3), 상자 (4), 또는 Hamming (5). 선택한 백엔드는 지원된 필터를 결정합니다.</p></td>
+<td><p data-original-en="Integer 0 through 5, or null"><code class="docutils literal notranslate"><span class="pre">0</span></code>부터 <code class="docutils literal notranslate"><span class="pre">5</span></code>까지의 정수, 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="3 (bicubic)"><code class="docutils literal notranslate"><span class="pre">3</span></code> (양방향)</p></td>
+<td><p data-original-en="Pillow filter: nearest (0), Lanczos (1), bilinear (2), bicubic (3), box (4), or Hamming (5). The selected backend determines supported filters.">Pillow 필터: nearest (0), Lanczos (1), bilinear (2), bicubic (3), box (4), 또는 Hamming (5). 선택된 백엔드에 따라 지원되는 필터가 결정됩니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">do_rescale</span></code></p></td>
-<td><p data-original-en="Boolean or null">툴리안 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Boolean or null">부울 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
-<td><p data-original-en="Multiply pixel values by rescale_factor.">픽셀 값을 곱합니다. <code class="docutils literal notranslate"><span class="pre">rescale_factor</span></code>.</p></td>
+<td><p data-original-en="Multiply pixel values by rescale_factor.">픽셀 값을 <code class="docutils literal notranslate"><span class="pre">rescale_factor</span></code>로 곱합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rescale_factor</span></code></p></td>
-<td><p data-original-en="Finite number or null">제한된 숫자 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Finite number or null">유한한 숫자 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code> 값</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">255</span></code></p></td>
-<td><p data-original-en="Pixel rescaling multiplier, used when do_rescale is enabled.">화소 rescaling multiplier, 사용될 때 <code class="docutils literal notranslate"><span class="pre">do_rescale</span></code> 활성화되어 있습니다.</p></td>
+<td><p data-original-en="Pixel rescaling multiplier, used when do_rescale is enabled.">픽셀 리스케일 멀티플라이어, <code class="docutils literal notranslate"><span class="pre">do_rescale</span></code>가 활성화된 경우 사용됩니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">do_normalize</span></code></p></td>
-<td><p data-original-en="Boolean or null">툴리안 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
-<td><p data-original-en="Qwen: true. Gemma: false.">퀸: <code class="docutils literal notranslate"><span class="pre">true</span></code>제마: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
-<td><p data-original-en="Normalize pixels with image_mean and image_std.">픽셀을 정규화하여 <code class="docutils literal notranslate"><span class="pre">image_mean</span></code> and <code class="docutils literal notranslate"><span class="pre">image_std</span></code>.</p></td>
+<td><p data-original-en="Boolean or null">부울 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Qwen: true. Gemma: false.">Qwen: <code class="docutils literal notranslate"><span class="pre">true</span></code>. Gemma: <code class="docutils literal notranslate"><span class="pre">false</span></code>.</p></td>
+<td><p data-original-en="Normalize pixels with image_mean and image_std."><code class="docutils literal notranslate"><span class="pre">image_mean</span></code> 및 <code class="docutils literal notranslate"><span class="pre">image_std</span></code>를 사용하여 픽셀을 정규화합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">image_mean</span></code></p></td>
-<td><p data-original-en="Number, sequence of numbers, or null">숫자, 숫자 시퀀스, 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
-<td><p data-original-en="Qwen: [0.48145466, 0.4578275, 0.40821073]. Gemma: [0, 0, 0].">퀸: <code class="docutils literal notranslate"><span class="pre">[0.48145466,</span> <span class="pre">0.4578275,</span> <span class="pre">0.40821073]</span></code>제마: <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>.</p></td>
-<td><p data-original-en="Scalar or per-channel mean; used when normalization is enabled.">Scalar 또는 per-channel는 의미한다; 정상적인화가 활성화 될 때 사용.</p></td>
+<td><p data-original-en="Number, sequence of numbers, or null">숫자, 숫자 시퀀스 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Qwen: [0.48145466, 0.4578275, 0.40821073]. Gemma: [0, 0, 0].">Qwen: <code class="docutils literal notranslate"><span class="pre">[0.48145466,</span> <span class="pre">0.4578275,</span> <span class="pre">0.40821073]</span></code>. Gemma: <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>.</p></td>
+<td><p data-original-en="Scalar or per-channel mean; used when normalization is enabled.">스칼라 또는 채널별 평균; 정규화가 활성화된 경우 사용됩니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">image_std</span></code></p></td>
-<td><p data-original-en="Number, sequence of numbers, or null">숫자, 숫자 시퀀스, 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
-<td><p data-original-en="Qwen: [0.26862954, 0.26130258, 0.27577711]. Gemma: [1, 1, 1].">퀸: <code class="docutils literal notranslate"><span class="pre">[0.26862954,</span> <span class="pre">0.26130258,</span> <span class="pre">0.27577711]</span></code>제마: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>.</p></td>
-<td><p data-original-en="Scalar or per-channel standard deviation; used when normalization is enabled.">Scalar 또는 per-channel 표준 편차; 정상화가 활성화될 때 사용해.</p></td>
+<td><p data-original-en="Number, sequence of numbers, or null">숫자, 숫자 시퀀스 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Qwen: [0.26862954, 0.26130258, 0.27577711]. Gemma: [1, 1, 1].">Qwen: <code class="docutils literal notranslate"><span class="pre">[0.26862954,</span> <span class="pre">0.26130258,</span> <span class="pre">0.27577711]</span></code>. Gemma: <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code>.</p></td>
+<td><p data-original-en="Scalar or per-channel standard deviation; used when normalization is enabled.">스칼라 또는 채널별 표준 편차; 정규화가 활성화된 경우 사용됩니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">input_data_format</span></code></p></td>
-<td><p data-original-en="String or null">줄 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
-<td><p data-original-en="null (infer from input)"><code class="docutils literal notranslate"><span class="pre">null</span></code> (입문에서 추론)</p></td>
-<td><p data-original-en="Input channel placement: channels_first or channels_last. EXAONE forwards channel-first data after its initial conversion.">입력 채널 배치: <code class="docutils literal notranslate"><span class="pre">channels_first</span></code> or <code class="docutils literal notranslate"><span class="pre">channels_last</span></code>. EXAONE는 그것의 처음 변환 후에 channel-first 자료를 전달합니다.</p></td>
+<td><p data-original-en="String or null">문자열 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="null (infer from input)"><code class="docutils literal notranslate"><span class="pre">null</span></code> (입력 데이터에서 유추)</p></td>
+<td><p data-original-en="Input channel placement: channels_first or channels_last. EXAONE forwards channel-first data after its initial conversion.">입력 채널 배치: <code class="docutils literal notranslate"><span class="pre">channels_first</span></code> 또는 <code class="docutils literal notranslate"><span class="pre">channels_last</span></code>. EXAONE는 초기 변환 후 채널-first 데이터를 전송합니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">device</span></code></p></td>
-<td><p data-original-en="Device string or null; offline also accepts torch.device">장치 문자열 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code>; 오프라인 환경에서도 지원 <code class="docutils literal notranslate"><span class="pre">torch.device</span></code></p></td>
-<td><p data-original-en="null (input device)"><code class="docutils literal notranslate"><span class="pre">null</span></code> (입기 장치)</p></td>
+<td><p data-original-en="Device string or null; offline also accepts torch.device">장치 문자열 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code>; 오프라인 모드에서도 <code class="docutils literal notranslate"><span class="pre">torch.device</span></code>를 지원합니다.</p></td>
+<td><p data-original-en="null (input device)"><code class="docutils literal notranslate"><span class="pre">null</span></code> (입력 장치)</p></td>
 <td><p data-original-en="Device for image processing, such as cpu. PIL images start on CPU.">이미지 처리용 장치, 등 <code class="docutils literal notranslate"><span class="pre">cpu</span></code>PIL 이미지는 CPU에서 시작됩니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="Model-specific controls are listed below. Omitted sizing controls retain Furiosa’s automatic sizing. EXAONE always performs window-aligned resizing.">Model-specific 제어는 아래에 나열되어 있습니다. 조정 컨트롤은 Furiosa의 자동 조정을 유지합니다. EXAONE은 항상 window-aligned 재조합을 수행합니다.</p>
+<p data-original-en="Model-specific controls are listed below. Omitted sizing controls retain Furiosa’s automatic sizing. EXAONE always performs window-aligned resizing.">모델별 설정 옵션은 아래에 나열되어 있습니다. 크기 관련 설정이 누락되면 Furiosa가 자동으로 크기를 조정합니다. EXAONE는 항상 윈도우 크기에 맞춰 조정합니다.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <colgroup>
 <col style="width: 20.0%"/>
@@ -603,69 +588,62 @@ html
 <col style="width: 35.0%"/>
 </colgroup>
 <thead>
-<tr class="row-odd"><th class="head"><p data-original-en="Option">선택 사항</p></th>
-<th class="head"><p data-original-en="Model family">모델 가족</p></th>
-<th class="head"><p data-original-en="Accepted values">받아들여진 가치</p></th>
+<tr class="row-odd"><th class="head"><p data-original-en="Option">옵션</p></th>
+<th class="head"><p data-original-en="Model family">모델 종류</p></th>
+<th class="head"><p data-original-en="Accepted values">허용되는 값</p></th>
 <th class="head"><p data-original-en="Default and behavior">기본 설정 및 동작</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">do_resize</span></code></p></td>
 <td><p>Qwen-VL / Gemma 4</p></td>
-<td><p data-original-en="Boolean or null">툴리안 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="Boolean or null">부울 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
 <td><p data-original-en="true. Enable image resizing."><code class="docutils literal notranslate"><span class="pre">true</span></code>이미지 크기 조정 기능을 활성화합니다.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">disable_grouping</span></code></p></td>
 <td><p>Qwen-VL / EXAONE 4.5</p></td>
-<td><p data-original-en="Boolean or null">툴리안 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
-<td><p data-original-en="null (automatic). Disable grouping equal-sized images for processing."><code class="docutils literal notranslate"><span class="pre">null</span></code> (자동). 처리를위한 equal-sized 이미지를 그룹화 할 수 있습니다.</p></td>
+<td><p data-original-en="Boolean or null">부울 또는 <code class="docutils literal notranslate"><span class="pre">null</span></code></p></td>
+<td><p data-original-en="null (automatic). Disable grouping equal-sized images for processing."><code class="docutils literal notranslate"><span class="pre">null</span></code> (자동). 동일 크기의 이미지를 처리하기 위한 그룹화를 비활성화합니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_pixels</span></code></p></td>
 <td><p>Qwen-VL / EXAONE 4.5</p></td>
-<td><p data-original-en="Positive integer">긍정적인 정수</p></td>
+<td><p data-original-en="Positive integer">양의 정수</p></td>
 <td><p data-original-en="With FXB buckets, (processor.patch_size * processor.merge_size) ** 2. Minimum resize pixel count; must not exceed max_pixels.">FXB 바킷으로 <code class="docutils literal notranslate"><span class="pre">(processor.patch_size</span> <span class="pre">*</span> <span class="pre">processor.merge_size)</span> <span class="pre">**</span> <span class="pre">2</span></code>. 최소한도 resize 화소 조사; 초과하지 않아야 합니다 <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_pixels</span></code></p></td>
 <td><p>Qwen-VL / EXAONE 4.5</p></td>
-<td><p data-original-en="Positive integer">긍정적인 정수</p></td>
-<td><p data-original-en="Selected automatically from the image and FXB vision buckets. Maximum resize pixel count; EXAONE also enforces window alignment.">이미지와 FXB 비전 버킷에서 자동 선정. 최대 크기 픽셀 수; EXAONE도 창 정렬을 시행합니다.</p></td>
+<td><p data-original-en="Positive integer">양의 정수</p></td>
+<td><p data-original-en="Selected automatically from the image and FXB vision buckets. Maximum resize pixel count; EXAONE also enforces window alignment.">이미지 및 FXB 비전 버킷에서 자동으로 선택됩니다. 최대 리사이즈 픽셀 수; EXAONE 또한 창 정렬을 적용합니다.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max_soft_tokens</span></code></p></td>
-<td><p data-original-en="Gemma 4">제마 4</p></td>
-<td><p data-original-en="Integer: 70, 140, 280, 560, or 1024">정수: <code class="docutils literal notranslate"><span class="pre">70</span></code>, <code class="docutils literal notranslate"><span class="pre">140</span></code>, <code class="docutils literal notranslate"><span class="pre">280</span></code>, <code class="docutils literal notranslate"><span class="pre">560</span></code>, or <code class="docutils literal notranslate"><span class="pre">1024</span></code></p></td>
-<td><p data-original-en="Selected automatically for the image and compiled capacity, starting from the loaded processor limit (HF fallback: 280).">이미지 및 컴파일된 용량에 대한 자동 선택, 로드된 프로세서 제한에서 시작 (HF fallback: <code class="docutils literal notranslate"><span class="pre">280</span></code>).</p></td>
+<td><p data-original-en="Gemma 4">Gemma 4</p></td>
+<td><p data-original-en="Integer: 70, 140, 280, 560, or 1024">정수: <code class="docutils literal notranslate"><span class="pre">70</span></code>, <code class="docutils literal notranslate"><span class="pre">140</span></code>, <code class="docutils literal notranslate"><span class="pre">280</span></code>, <code class="docutils literal notranslate"><span class="pre">560</span></code>, 또는 <code class="docutils literal notranslate"><span class="pre">1024</span></code></p></td>
+<td><p data-original-en="Selected automatically for the image and compiled capacity, starting from the loaded processor limit (HF fallback: 280).">이미지 및 컴파일된 용량에서 자동으로 선택되며, 로드된 프로세서 제한(HF 기본값: <code class="docutils literal notranslate"><span class="pre">280</span></code>)부터 시작합니다.</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-<p data-original-en="Without FXB vision buckets, sizing falls back to the loaded processor’s settings. images and return_tensors are supplied by the runtime and are not user processor options.">FXB 비전 버킷없이, sizing은로드 프로세서의 설정으로 돌아갑니다. <code class="docutils literal notranslate"><span class="pre">images</span></code> and <code class="docutils literal notranslate"><span class="pre">return_tensors</span></code> runtime에 의해 공급되고 사용자 가공업자 선택권이 아닙니다.</p>
-<p data-original-en="Strings, booleans, floats, and null are rejected for min_pixels, max_pixels, and max_soft_tokens. Defaults, request overrides, and their merged result are validated. Cross-field bounds are checked on the combined options. Unregistered options continue to pass through; the loaded processor determines whether they are supported. These options also participate in cache identity.">문자열, 불리언, 부동 소수점 숫자 등이 포함됩니다. <code class="docutils literal notranslate"><span class="pre">null</span></code> 거절당하는 경우 <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code>,
-<code class="docutils literal notranslate"><span class="pre">max_pixels</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">max_soft_tokens</span></code>. 과태, 요청 overrides 및 합병 결과가 검증됩니다. Cross-field 경계는 결합 된 옵션에 체크됩니다. 등록 된 옵션은 계속 통과합니다. 로드 된 프로세서는 지원 여부를 결정합니다. 이 옵션은 캐시 정체성에 참여합니다.</p>
-<p data-original-en="Processing remains subject to the loaded FXB’s compiled vision capacity. A valid option value alone does not guarantee that an image fits. The converter continues to use the loaded processor’s patch and merge geometry for capacity checks and output conversion; geometry overrides must agree with it.">처리는 로드 된 FXB의 컴파일된 시각 용량에 따라 남아 있습니다. 유효한 옵션 값은 혼자 이미지 적합을 보장하지 않습니다. 변환기는 용량 검사 및 출력 변환에 대한 로드 된 프로세서의 패치 및 결합 기하학을 계속 사용합니다. 기하학 오버라이드는 동의해야합니다.</p>
-<p data-original-en="Preprocessing cache hits skip image processing. Their keys include the supplied processor kwargs after server defaults and request overrides are merged and images_kwargs is flattened. Changing a supplied option such as do_rescale selects a separate cache entry. Supply the image again when requesting an option set that has not been cached; UUIDs still identify the original image.">처리 캐시는 건너뛰기 이미지 처리를 기록합니다. 그들의 열쇠는 서버 과태 후에 공급한 가공업자 kwargs를 포함하고 요구 overrides는 합병되고
-<code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code> flattened입니다. 공급된 선택권을 그런 것과 같이 바꾸기
-<code class="docutils literal notranslate"><span class="pre">do_rescale</span></code> 별도의 캐시 입력을 선택합니다. 캐시되지 않은 옵션 세트를 요청할 때 이미지를 다시 공급하십시오. UUIDs는 여전히 원본 이미지를 식별합니다.</p>
-<p data-original-en="Processor configuration defaults and automatically selected sizing values are not added to the preprocessing key. Omitting an option and explicitly supplying its default can therefore select different entries. Reuse still applies the existing min_pixels / max_pixels checks for Qwen-VL and EXAONE 4.5, or the max_soft_tokens check for Gemma 4. Entries outside the requested bounds are dropped from the hits and reprocessed. These checks do not guarantee that an automatically sized cached result matches a fresh processing run.">프로세서 구성 기본 및 자동 선택된 sizing 값은 사전 처리 키에 추가되지 않습니다. 옵션을 조정하고 기본적으로 다른 항목을 선택 할 수 있습니다. 재사용 여전히 기존에 적용 <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code> / <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code> checks for Qwen-VL and EXAONE 4.5, or the
-<code class="docutils literal notranslate"><span class="pre">max_soft_tokens</span></code> Gemma 4에 대한 체크. 요청한 경계 밖에 서 항목은 눈에 떨어지고 처리됩니다. 이 체크는 자동으로 크기 캐시 된 결과가 신선한 가공 실행에 일치한다는 것을 보장하지 않습니다.</p>
+<p data-original-en="Without FXB vision buckets, sizing falls back to the loaded processor’s settings. images and return_tensors are supplied by the runtime and are not user processor options.">FXB 비전 버킷이 없는 경우, 크기 설정은 로드된 프로세서의 설정을 사용합니다. <code class="docutils literal notranslate"><span class="pre">images</span></code>와 <code class="docutils literal notranslate"><span class="pre">return_tensors</span></code>는 런타임에서 제공되며, 사용자가 프로세서 설정을 변경할 수 없습니다.</p>
+<p data-original-en="Strings, booleans, floats, and null are rejected for min_pixels, max_pixels, and max_soft_tokens. Defaults, request overrides, and their merged result are validated. Cross-field bounds are checked on the combined options. Unregistered options continue to pass through; the loaded processor determines whether they are supported. These options also participate in cache identity."><code class="docutils literal notranslate"><span class="pre">min_pixels</span></code>, <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code>, <code class="docutils literal notranslate"><span class="pre">max_soft_tokens</span></code>에 대한 문자열, 불리언, 부동 소수점, <code class="docutils literal notranslate"><span class="pre">null</span></code> 값은 거부됩니다. 기본값, 요청 오버라이드, 그리고 이들의 결합된 결과는 유효성 검사를 거칩니다. 결합된 옵션에 대한 경계 검사는 수행됩니다. 등록되지 않은 옵션은 그대로 통과하며, 로드된 프로세서가 해당 옵션을 지원하는지 확인합니다. 이러한 옵션도 캐시 식별에 참여합니다.</p>
+<p data-original-en="Processing remains subject to the loaded FXB’s compiled vision capacity. A valid option value alone does not guarantee that an image fits. The converter continues to use the loaded processor’s patch and merge geometry for capacity checks and output conversion; geometry overrides must agree with it.">처리 과정은 로드된 FXB의 컴파일된 비전 용량에 따라 진행됩니다. 유효한 옵션 값만으로는 이미지가 적합한지 보장하지 않습니다. 변환기는 로드된 프로세서의 패치 및 병합 기하 정보를 사용하여 용량 확인 및 출력 변환을 수행합니다. 기하 정보 오버라이드는 이에 맞춰야 합니다.</p>
+<p data-original-en="Preprocessing cache hits skip image processing. Their keys include the supplied processor kwargs after server defaults and request overrides are merged and images_kwargs is flattened. Changing a supplied option such as do_rescale selects a separate cache entry. Supply the image again when requesting an option set that has not been cached; UUIDs still identify the original image.">사전 캐시 히트는 이미지 처리를 건너뜁니다. 키는 서버 기본값 및 요청 오버라이드가 병합된 후, <code class="docutils literal notranslate"><span class="pre">images_kwargs</span></code>가 평탄화된 후 제공된 프로세서 kwargs를 포함합니다. 예를 들어 <code class="docutils literal notranslate"><span class="pre">do_rescale</span></code>와 같은 제공된 옵션을 변경하면 별도의 캐시 항목이 선택됩니다. 캐시되지 않은 옵셋을 요청할 때 이미지를 다시 제공해야 합니다. UUID는 원래 이미지를 식별합니다.</p>
+<p data-original-en="Processor configuration defaults and automatically selected sizing values are not added to the preprocessing key. Omitting an option and explicitly supplying its default can therefore select different entries. Reuse still applies the existing min_pixels / max_pixels checks for Qwen-VL and EXAONE 4.5, or the max_soft_tokens check for Gemma 4. Entries outside the requested bounds are dropped from the hits and reprocessed. These checks do not guarantee that an automatically sized cached result matches a fresh processing run.">프로세서 구성의 기본값 및 자동으로 선택된 크기 설정은 사전 캐시에 추가되지 않습니다. 옵션을 생략하고 기본값을 명시적으로 제공하면 다른 항목이 선택될 수 있습니다. Qwen-VL 및 EXAONE 4.5의 기존 <code class="docutils literal notranslate"><span class="pre">min_pixels</span></code> / <code class="docutils literal notranslate"><span class="pre">max_pixels</span></code> 검사 또는 Gemma 4의 <code class="docutils literal notranslate"><span class="pre">max_soft_tokens</span></code> 검사와 같은 항목은 여전히 적용됩니다. 요청 범위를 벗어난 항목은 히트에서 제거되고 다시 처리됩니다. 이러한 검사는 자동으로 크기가 조정된 캐시 결과가 신선한 처리 결과와 일치한다는 것을 보장하지 않습니다.</p>
 </section>
 </section>
 <section id="validation-errors">
-<h3 data-original-en="Validation errors">유효성 오류<a class="headerlink" href="#validation-errors" title="Link to this heading">#</a></h3>
-<p data-original-en="Invalid request options return HTTP 400 or 422; invalid offline options raise ValueError. Invalid CLI option structures or fetch options are argument errors, while model-specific processor validation occurs when loading the model. These checks also apply to requests without images.">잘못된 요청 옵션 반환 HTTP 400 또는 422; 잘못된 오프라인 옵션 인상
-<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. 잘못된 CLI 옵션 구조 또는 fetch 옵션은 model-specific 프로세서 유효성 검사가 모델을 로드할 때 발생합니다. 이 체크는 이미지없이 요청에 적용됩니다.</p>
-<p data-original-en="If native vision encoding or embedding reuse returns a token count that disagrees with the processed image layout, the request is aborted before text generation. Chat Completions and Responses return HTTP 500 InternalServerError as JSON, including for streaming requests, before sending any SSE events. Offline callers receive MultimodalTokenCountError (a RuntimeError); LLMEngine delivers it through step(), and AsyncLLMEngine raises it while iterating generate().">네이티브 비전 인코딩 또는 embedding 재사용은 처리 된 이미지 레이아웃에 동의하는 token 카운트를 반환하면 요청은 텍스트 생성 전에 낙태됩니다. 채팅 완료 및 응답은 HTTP 500를 반환 <code class="docutils literal notranslate"><span class="pre">InternalServerError</span></code> 스트리밍 요청을 포함하여 JSON로, SSE 이벤트를 전송하기 전에. 오프라인 통화는 수신됩니다 <code class="docutils literal notranslate"><span class="pre">MultimodalTokenCountError</span></code> (a <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code>);
-<code class="docutils literal notranslate"><span class="pre">LLMEngine</span></code> 그것을 전달합니다 <code class="docutils literal notranslate"><span class="pre">step()</span></code>, 그리고 <code class="docutils literal notranslate"><span class="pre">AsyncLLMEngine</span></code> 반복 중에 발생 <code class="docutils literal notranslate"><span class="pre">generate()</span></code>.</p>
-<p data-original-en="See Tokenizer API for tokenization-specific behavior and Multi-Turn Conversations for option handling with stored conversations.">See <a class="reference internal" href="furiosa-llm-serve.html#tokenizerapi"><span class="std std-ref">도케니저 API</span></a> tokenization-specific 행동 및
-<a class="reference internal" href="responses-api.html#responsesmultiturn"><span class="std std-ref">Multi-Turn 대화</span></a> 저장된 대화를 가진 선택권 취급을 위해.</p>
+<h3 data-original-en="Validation errors">유효성 검사 오류<a class="headerlink" href="#validation-errors" title="Link to this heading">#</a></h3>
+<p data-original-en="Invalid request options return HTTP 400 or 422; invalid offline options raise ValueError. Invalid CLI option structures or fetch options are argument errors, while model-specific processor validation occurs when loading the model. These checks also apply to requests without images.">유효하지 않은 요청 옵션은 HTTP 400 또는 422 오류를 반환하며, 유효하지 않은 오프라인 옵션은 <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>를 발생시킵니다. 잘못된 CLI 옵션 구조 또는 가져오기 옵션은 인자 오류이며, 모델별 프로세서 유효성 검사는 모델을 로드할 때 수행됩니다. 이러한 검사는 이미지 없는 요청에도 적용됩니다.</p>
+<p data-original-en="If native vision encoding or embedding reuse returns a token count that disagrees with the processed image layout, the request is aborted before text generation. Chat Completions and Responses return HTTP 500 InternalServerError as JSON, including for streaming requests, before sending any SSE events. Offline callers receive MultimodalTokenCountError (a RuntimeError); LLMEngine delivers it through step(), and AsyncLLMEngine raises it while iterating generate().">원시 비전 인코딩 또는 임베딩 재사용이 처리된 이미지 레이아웃과 일치하지 않는 토큰 수를 반환하는 경우, 텍스트 생성 전에 요청이 중단됩니다. Chat Completions 및 Responses는 스트리밍 요청을 포함하여 HTTP 500 <code class="docutils literal notranslate"><span class="pre">InternalServerError</span></code>를 JSON 형식으로 반환하며, SSE 이벤트를 전송하기 전에 반환합니다. 오프라인 호출자는 <code class="docutils literal notranslate"><span class="pre">MultimodalTokenCountError</span></code> (<code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code>)를 받으며, <code class="docutils literal notranslate"><span class="pre">LLMEngine</span></code>은 <code class="docutils literal notranslate"><span class="pre">step()</span></code>을 통해 전달하고, <code class="docutils literal notranslate"><span class="pre">AsyncLLMEngine</span></code>은 <code class="docutils literal notranslate"><span class="pre">generate()</span></code>를 반복하는 동안 발생시킵니다.</p>
+<p data-original-en="See Tokenizer API for tokenization-specific behavior and Multi-Turn Conversations for option handling with stored conversations.">토큰화 관련 동작에 대한 <a class="reference internal" href="furiosa-llm-serve.html#tokenizerapi"><span class="std std-ref">Tokenizer API</span></a> 및 저장된 대화와 함께 옵션 처리에 대한 <a class="reference internal" href="responses-api.html#responsesmultiturn"><span class="std std-ref">Multi-Turn Conversations</span></a>를 참조하십시오.</p>
 </section>
 </section>
 <section id="caching-multimodal-inputs-with-uuid">
-<h2 data-original-en="Caching Multimodal Inputs with UUID">UUID를 사용하여 다중 모달 입력을 캐싱<a class="headerlink" href="#caching-multimodal-inputs-with-uuid" title="Link to this heading">#</a></h2>
-<p data-original-en="Images are automatically hashed by content, and their processed results are cached even when no uuid is supplied. Repeated images can reuse cached results and skip pre-processing, subject to the processor-bound checks described in Multimodal Options.">이미지는 내용에 의해 자동적으로 해져지고, 그들의 가공한 결과는 조차 때 아무 때도 시동됩니다 <code class="docutils literal notranslate"><span class="pre">uuid</span></code> 공급됩니다. 반복 된 이미지는 캐시 된 결과를 재사용 할 수 있으며 pre-processing를 건너 뛸 수 있으며 processor-bound 체크인에 따라 달라질 수 있습니다. <a class="reference internal" href="#multimodaloptions"><span class="std std-ref">멀티모달 옵션</span></a>.</p>
-<p data-original-en="Cached results contain image preprocessing output, independent of the prompt. You can reuse an image with different text or at a different position in a later prompt. Each request still validates its image placeholders and expanded context length; reusing an image does not reuse a previous response.">그 결과 prompt의 독립적 인 이미지 처리 출력이 포함되어 있습니다. 나중에 prompt의 다른 위치에서 다른 텍스트 또는 다른 위치로 이미지를 재사용 할 수 있습니다. 각 요청은 여전히 이미지 홀더를 검증하고 상황에 따라 확장 할 수 있습니다. 이미지가 이전 응답을 재사용하지 않습니다.</p>
-<p data-original-en="After a preprocessing cache miss, the server preprocesses the supplied image again before checking for reusable encoded embeddings. Automatic resizing can change with the other images in a request. Encoded embeddings are reused only when the media identity, supplied processor options, processed pixels, and layout match; this applies with or without a UUID.">사전 처리 캐시가 놓은 후, 서버는 재사용 가능한 인코딩 된 embeddings를 검사하기 전에 공급 된 이미지를 다시 처리합니다. 자동 재처리는 요청에 다른 이미지로 변경할 수 있습니다. 인코딩 된 embeddings는 미디어 ID, 공급 된 프로세서 옵션, 처리 된 픽셀 및 레이아웃 일치 할 때만 재사용됩니다. UUID없이 또는이 적용됩니다.</p>
+<h2 data-original-en="Caching Multimodal Inputs with UUID">UUID를 사용하여 멀티모달 입력 캐싱<a class="headerlink" href="#caching-multimodal-inputs-with-uuid" title="Link to this heading">#</a></h2>
+<p data-original-en="Images are automatically hashed by content, and their processed results are cached even when no uuid is supplied. Repeated images can reuse cached results and skip pre-processing, subject to the processor-bound checks described in Multimodal Options.">이미지는 내용에 의해 자동적으로 해져지고, 그들의 가공한 결과는 조차 때 아무 때도 시동됩니다 <code class="docutils literal notranslate"><span class="pre">uuid</span></code> 공급됩니다. 반복 된 이미지는 캐시 된 결과를 재사용 할 수 있으며 pre-processing를 건너 뛸 수 있으며 processor-bound 체크인에 따라 달라질 수 있습니다. <a class="reference internal" href="#multimodaloptions">멀티모달 옵션</a>.</p>
+<p data-original-en="Cached results contain image preprocessing output, independent of the prompt. You can reuse an image with different text or at a different position in a later prompt. Each request still validates its image placeholders and expanded context length; reusing an image does not reuse a previous response.">캐시된 결과는 프롬프트와 독립적으로 이미지 전처리 출력을 포함합니다. 동일한 이미지를 다른 텍스트 또는 나중에 프롬프트에서 다른 위치에 사용하여 재사용할 수 있습니다. 각 요청은 여전히 이미지 플레이스홀더와 확장된 컨텍스트 길이를 유효성 검사하며, 이미지를 재사용하면 이전 응답이 재사용되지 않습니다.</p>
+<p data-original-en="After a preprocessing cache miss, the server preprocesses the supplied image again before checking for reusable encoded embeddings. Automatic resizing can change with the other images in a request. Encoded embeddings are reused only when the media identity, supplied processor options, processed pixels, and layout match; this applies with or without a UUID.">사전 처리 캐시 미스 발생 시, 서버는 제공된 이미지를 다시 사전 처리한 후, 재사용 가능한 인코딩된 임베딩을 확인합니다. 자동 크기 조정은 요청 내 다른 이미지와 함께 변경될 수 있습니다. 인코딩된 임베딩은 미디어 식별, 제공된 프로세서 옵션, 처리된 픽셀, 레이아웃이 일치할 때만 재사용됩니다. UUID가 있는 경우에도 적용됩니다.</p>
 <p data-original-en="You can optionally tag each image with a stable uuid to reference its cached result on follow-up requests without resending the image. UUIDs provide an additional lookup mechanism; omitting a UUID does not opt out of caching.">각 이미지를 안정시킬 수 있습니다. <code class="docutils literal notranslate"><span class="pre">uuid</span></code> 이미지를 다시 보류하지 않고 follow-up 요청에 대한 캐시 된 결과를 참조하십시오. UUIDs는 추가 검색 메커니즘을 제공합니다. UUID가 캐싱을 선택하지 않도록 설정하십시오.</p>
-<p data-original-en="Add uuid next to image_url on the content part:">Add <code class="docutils literal notranslate"><span class="pre">uuid</span></code> 그 옆에 <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 내용에 대해서는:</p>
+<p data-original-en="Add uuid next to image_url on the content part:">콘텐츠 항목에서 <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 옆에 <code class="docutils literal notranslate"><span class="pre">uuid</span></code>를 추가합니다.</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"image_url"</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">"image_url"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="nt">"url"</span><span class="p">:</span><span class="w"> </span><span class="s2">"https://example.com/receipt.png"</span><span class="p">},</span>
@@ -681,13 +659,12 @@ html
 <span class="p">}</span>
 </pre></div>
 </div>
-<p data-original-en="If no reusable entry exists for that UUID and the effective processor options (for example, an unknown UUID, eviction, changed options, or an entry outside the requested bounds), the server re-runs pre-processing when image_url is also supplied; otherwise it returns HTTP 400 unknown multimodal uuid, and the client should retry with the image attached. A UUID-only reference also skips fetching; supplying a URL still fetches and decodes the image before checking the processing cache. Offline callers can use multi_modal_uuids for the same reuse behavior (see Offline API below).">UUID 및 효과적인 프로세서 옵션에 대한 재사용 가능한 항목이 존재하지 않는 경우 (예를 들어, 알 수없는 UUID, 비활성, 변경 옵션 또는 요청된 경계 밖에 항목), 서버 re-runs pre-processing <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 또한 공급됩니다; 그렇지 않으면 HTTP 400를 반환합니다 <code class="docutils literal notranslate"><span class="pre">unknown</span> <span class="pre">multimodal</span> <span class="pre">uuid</span></code>, 그리고 클라이언트는 이미지로 붙어 있어야 합니다. UUID-only 참고는 또한 fetching를 건너갑니다; URL를 아직도 fetches 공급하고 처리 캐시를 검사하기 전에 이미지를 삭제하십시오. 따로 잇기 외침은 사용할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">multi_modal_uuids</span></code> 는 동일한 재사용 동작 [을 갖습니다 (자세한 내용은 다음 참조)] <em>오프라인 API</em> 아래와 같다).</p>
-<p data-original-en="Cache capacity is controlled by --mm-processor-cache-gb (default 4.0, 0 disables preprocessing caching). The cap counts the pixel buffers in preprocessing entries, rather than total server memory. The least-recently-used entries are evicted when the cache is full. Encoded embeddings have a separate lifetime and can still be reused after preprocessing eviction or when preprocessing caching is disabled. UUID-only requests require a resident preprocessing entry; a retained encoded embedding alone cannot satisfy them. The cache and UUID mappings are local to the process and reset on restart.">캐시 용량은 [제어] <code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span></code> (전기적으로)
-<code class="docutils literal notranslate"><span class="pre">4.0</span></code>, <code class="docutils literal notranslate"><span class="pre">0</span></code> preprocessing caching를 비활성화합니다. 캡은 전체 서버 메모리에 있는 preprocessing 입력에서 픽셀 버퍼를 계산합니다. least-recently-used 항목은 캐시가 가득하다가 배제됩니다. 암호화 된 embeddings은 별도의 수명을 가지고 있으며, 사전 처리 배제 후 또는 사전 처리 캐시가 비활성화되면 여전히 재사용 할 수 있습니다. UUID-만 요청은 레지던트 사전 처리 입력이 필요합니다. 복제 된 embedding은 그 자체로 만족시킬 수 없습니다. 캐시 및 UUID 매핑은 프로세스에 로컬이며 휴식에서 재설정됩니다.</p>
+<p data-original-en="If no reusable entry exists for that UUID and the effective processor options (for example, an unknown UUID, eviction, changed options, or an entry outside the requested bounds), the server re-runs pre-processing when image_url is also supplied; otherwise it returns HTTP 400 unknown multimodal uuid, and the client should retry with the image attached. A UUID-only reference also skips fetching; supplying a URL still fetches and decodes the image before checking the processing cache. Offline callers can use multi_modal_uuids for the same reuse behavior (see Offline API below).">UUID 및 효과적인 프로세서 옵션에 대한 재사용 가능한 항목이 존재하지 않는 경우 (예를 들어, 알 수없는 UUID, 비활성, 변경 옵션 또는 요청된 경계 밖에 항목), 서버 re-runs pre-processing <code class="docutils literal notranslate"><span class="pre">image_url</span></code> 또한 공급됩니다; 그렇지 않으면 HTTP 400를 반환합니다 <code class="docutils literal notranslate"><span class="pre">unknown</span> <span class="pre">multimodal</span> <span class="pre">uuid</span></code>, 그리고 클라이언트는 이미지로 붙어 있어야 합니다. UUID-only 참고는 또한 fetching를 건너갑니다; URL를 아직도 fetches 공급하고 처리 캐시를 검사하기 전에 이미지를 삭제하십시오. 따로 잇기 외침은 사용할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">multi_modal_uuids</span></code> 는 동일한 재사용 동작 [을 갖습니다 (자세한 내용은 다음 참조)] 오프라인 API 아래와 같다).</p>
+<p data-original-en="Cache capacity is controlled by --mm-processor-cache-gb (default 4.0, 0 disables preprocessing caching). The cap counts the pixel buffers in preprocessing entries, rather than total server memory. The least-recently-used entries are evicted when the cache is full. Encoded embeddings have a separate lifetime and can still be reused after preprocessing eviction or when preprocessing caching is disabled. UUID-only requests require a resident preprocessing entry; a retained encoded embedding alone cannot satisfy them. The cache and UUID mappings are local to the process and reset on restart.">캐시 용량은 <code class="docutils literal notranslate"><span class="pre">--mm-processor-cache-gb</span></code> (기본값: <code class="docutils literal notranslate"><span class="pre">4.0</span></code>, <code class="docutils literal notranslate"><span class="pre">0</span></code>은 사전 처리 캐싱을 비활성화)로 제어됩니다. 용량은 사전 처리 항목의 픽셀 버퍼 수를 계산합니다. 가장 최근에 사용되지 않은 항목은 캐시가 가득 찼을 때 제거됩니다. 인코딩된 임베딩은 별도의 수명을 가지며, 사전 처리 제거 또는 사전 처리 캐싱이 비활성화된 후에도 재사용될 수 있습니다. UUID만으로 요청하는 경우, 사전 처리 항목이 필요합니다. 단, 유지된 인코딩된 임베딩만으로는 충족할 수 없습니다. 캐시 및 UUID 매핑은 프로세스 수준이며 재시작 시 재설정됩니다.</p>
 </section>
 <section id="python-example">
 <span id="vlpythonexample"></span><h2 data-original-en="Python Example">Python 예제<a class="headerlink" href="#python-example" title="Link to this heading">#</a></h2>
-<p data-original-en="Using the OpenAI Python client against a Furiosa-LLM server:">OpenAI Python 클라이언트를 사용하여 Furiosa-LLM 서버:</p>
+<p data-original-en="Using the OpenAI Python client against a Furiosa-LLM server:">Furiosa-LLM 서버에 OpenAI Python 클라이언트를 사용하는 방법:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">"""</span>
 <span class="sd">OpenAI-Compatible Server - Vision-Language Chat Completion Example</span>
 
@@ -731,8 +708,7 @@ html
 </section>
 <section id="offline-api">
 <h2 data-original-en="Offline API">오프라인 API<a class="headerlink" href="#offline-api" title="Link to this heading">#</a></h2>
-<p data-original-en="The same image inputs are accepted by the offline LLM / LLMEngine APIs via the multi_modal_data field on the prompt dict. Pass PIL images keyed by modality:">동일한 이미지 입력은 오프라인으로 허용됩니다. <code class="docutils literal notranslate"><span class="pre">LLM</span></code> / <code class="docutils literal notranslate"><span class="pre">LLMEngine</span></code>
-API를 통해 <code class="docutils literal notranslate"><span class="pre">multi_modal_data</span></code> prompt dict에 필드. modality에 의해 키 PIL 이미지를 전달:</p>
+<p data-original-en="The same image inputs are accepted by the offline LLM / LLMEngine APIs via the multi_modal_data field on the prompt dict. Pass PIL images keyed by modality:">동일한 이미지 입력을 오프라인 <code class="docutils literal notranslate"><span class="pre">LLM</span></code> / <code class="docutils literal notranslate"><span class="pre">LLMEngine</span></code> API를 통해 <code class="docutils literal notranslate"><span class="pre">multi_modal_data</span></code> 필드에 있는 프롬프트 딕셔너리에 전달할 수 있습니다. PIL 이미지를 모다티에 따라 키하여 전달합니다:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">furiosa_llm</span><span class="w"> </span><span class="kn">import</span> <span class="n">LLM</span><span class="p">,</span> <span class="n">SamplingParams</span>
 
@@ -754,12 +730,9 @@ API를 통해 <code class="docutils literal notranslate"><span class="pre">multi
     <span class="nb">print</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">outputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
-<p data-original-en="LLM(mm_processor_kwargs=...) sets processor defaults. Each prompt’s mm_processor_kwargs overrides those defaults using the same processor merge rules as the server; the example uses min_pixels=4096 for this prompt. Offline callers supply decoded images, so media_io_kwargs is not an offline LLM option."><code class="docutils literal notranslate"><span class="pre">LLM(mm_processor_kwargs=...)</span></code> 프로세서 기본값을 설정합니다. 각 prompt
-<code class="docutils literal notranslate"><span class="pre">mm_processor_kwargs</span></code> 같은 기본을 overrides
-<a class="reference internal" href="#multimodaloptions"><span class="std std-ref">프로세서 병합 규칙</span></a> 을 사용합니다. 예시 <code class="docutils literal notranslate"><span class="pre">min_pixels=4096</span></code> 이 prompt를 위해. 따로 잇기 외침은 이미지를, 이렇게 분리했습니다 <code class="docutils literal notranslate"><span class="pre">media_io_kwargs</span></code> 오프라인으로 연결되지 않습니다. <code class="docutils literal notranslate"><span class="pre">LLM</span></code> 선택의 여지가 있습니다.</p>
-<p data-original-en="Content-based caching and the UUID references described in Caching Multimodal Inputs with UUID above are also available through the offline API. Add multi_modal_uuids alongside multi_modal_data, in the same order; pass None for items that do not need a UUID reference. Those items still participate in content-based caching.">Content-based 캐싱 및 UUID 참조
-<em>UUID를 사용하여 다중 모달 입력을 캐싱</em> 위의 오프라인 API를 통해 사용할 수 있습니다. 추가 <code class="docutils literal notranslate"><span class="pre">multi_modal_uuids</span></code> 옆으로 <code class="docutils literal notranslate"><span class="pre">multi_modal_data</span></code>, 동일한 순서로; 다음을 전달 <code class="docutils literal notranslate"><span class="pre">None</span></code> UUID 참조가 필요하지 않은 항목에 대한. 이러한 항목은 여전히 content-based 캐싱에 참여합니다.</p>
-<p data-original-en="Each modality’s UUID list must have exactly as many entries as its image list. A bare UUID string is also accepted for a single image. Repeating a UUID keeps each occurrence in the prompt: provide a corresponding image placeholder for every occurrence, even when they reuse the same cached result.">각 modality의 UUID 목록은 이미지 목록으로 많은 항목으로 정확히해야합니다. bare UUID 문자열은 단일 이미지로도 허용됩니다. UUID를 반복하면 prompt의 각 발생률을 유지합니다. 각 발생시 해당 이미지 홀더를 제공하므로 동일한 캐시 결과를 재사용 할 수 있습니다.</p>
+<p data-original-en="LLM(mm_processor_kwargs=...) sets processor defaults. Each prompt’s mm_processor_kwargs overrides those defaults using the same processor merge rules as the server; the example uses min_pixels=4096 for this prompt. Offline callers supply decoded images, so media_io_kwargs is not an offline LLM option."><code class="docutils literal notranslate"><span class="pre">LLM(mm_processor_kwargs=...)</span></code>는 프로세서 기본 설정을 설정합니다. 각 프롬프트의 <code class="docutils literal notranslate"><span class="pre">mm_processor_kwargs</span></code>는 서버와 동일한 <a class="reference internal" href="#multimodaloptions">프로세서 병합 규칙</a>을 사용하여 기본 설정을 덮어씁니다. 예제에서는 <code class="docutils literal notranslate"><span class="pre">min_pixels=4096</span></code>을 사용합니다. 오프라인 호출자는 디코딩된 이미지를 제공하므로 <code class="docutils literal notranslate"><span class="pre">media_io_kwargs</span></code>는 오프라인 <code class="docutils literal notranslate"><span class="pre">LLM</span></code> 옵션이 아닙니다.</p>
+<p data-original-en="Content-based caching and the UUID references described in Caching Multimodal Inputs with UUID above are also available through the offline API. Add multi_modal_uuids alongside multi_modal_data, in the same order; pass None for items that do not need a UUID reference. Those items still participate in content-based caching.">Caching Multimodal Inputs with UUID에서 설명된 콘텐츠 기반 캐싱 및 UUID 참조도 오프라인 API를 통해 사용할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">multi_modal_data</span></code>와 함께 <code class="docutils literal notranslate"><span class="pre">multi_modal_uuids</span></code>를 동일한 순서로 추가합니다. UUID 참조가 필요 없는 항목에는 <code class="docutils literal notranslate"><span class="pre">None</span></code>을 전달합니다. 이러한 항목도 콘텐츠 기반 캐싱에 참여합니다.</p>
+<p data-original-en="Each modality’s UUID list must have exactly as many entries as its image list. A bare UUID string is also accepted for a single image. Repeating a UUID keeps each occurrence in the prompt: provide a corresponding image placeholder for every occurrence, even when they reuse the same cached result.">각 모달리티의 UUID 목록은 해당 이미지 목록과 정확히 동일한 개수를 가져야 합니다. 단일 이미지의 경우, 빈 UUID 문자열도 허용됩니다. UUID를 반복하면, 프롬프트 내에서 해당 항목이 반복됩니다. 따라서 동일한 캐시된 결과를 재사용하더라도, 각 UUID에 해당하는 이미지 플레이스홀더를 제공해야 합니다.</p>
 <p data-original-en="For example:">예를 들어:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prompts</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
@@ -770,7 +743,7 @@ API를 통해 <code class="docutils literal notranslate"><span class="pre">multi
 <span class="p">]</span>
 </pre></div>
 </div>
-<p data-original-en="A follow-up prompt may then omit the image and reference it by UUID alone — pass None in the multi_modal_data slot:">follow-up prompt는 이미지와 참조를 혼자 UUID에 의해 - 통과 할 수 있습니다 <code class="docutils literal notranslate"><span class="pre">None</span></code> 이 <code class="docutils literal notranslate"><span class="pre">multi_modal_data</span></code> 슬롯:</p>
+<p data-original-en="A follow-up prompt may then omit the image and reference it by UUID alone — pass None in the multi_modal_data slot:">후속 프롬프트는 이미지를 생략하고 UUID만 참조할 수 있습니다. <code class="docutils literal notranslate"><span class="pre">multi_modal_data</span></code> 슬롯에 <code class="docutils literal notranslate"><span class="pre">None</span></code>을 전달합니다.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">followup</span> <span class="o">=</span> <span class="p">[</span>
     <span class="p">{</span>
         <span class="s2">"prompt"</span><span class="p">:</span> <span class="s2">"&lt;|vision_start|&gt;&lt;|image_pad|&gt;&lt;|vision_end|&gt;Translate to Korean."</span><span class="p">,</span>
@@ -780,14 +753,14 @@ API를 통해 <code class="docutils literal notranslate"><span class="pre">multi
 <span class="p">]</span>
 </pre></div>
 </div>
-<p data-original-en="See API Reference for the full API surface.">See <a class="reference internal" href="reference.html#furiosallmreference"><span class="std std-ref">API 참조</span></a> 전체 API 표면을 위해.</p>
+<p data-original-en="See API Reference for the full API surface.">자세한 내용은 <a class="reference internal" href="reference.html#furiosallmreference">API 참조</a>를 참조하십시오.</p>
 </section>
 <section id="see-also">
-<h2 data-original-en="See Also">또한 참조<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
+<h2 data-original-en="See Also">관련 자료<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
 <ul class="simple">
-<li><p data-original-en="Supported Models"><a class="reference internal" href="supported_models.html#supportedmodels"><span class="std std-ref">지원 된 모델</span></a></p></li>
-<li><p data-original-en="OpenAI-Compatible Server"><a class="reference internal" href="furiosa-llm-serve.html#openaiserver"><span class="std std-ref">OpenAI 호환 서버</span></a></p></li>
-<li><p data-original-en="Quick Start with Furiosa-LLM"><a class="reference internal" href="../get_started/furiosa_llm.html#gettingstartedfuriosallm"><span class="std std-ref">Furiosa-LLM를 사용한 빠른 시작</span></a></p></li>
+<li><p data-original-en="Supported Models"><a class="reference internal" href="supported_models.html#supportedmodels">지원되는 모델</a></p></li>
+<li><p data-original-en="OpenAI-Compatible Server"><a class="reference internal" href="furiosa-llm-serve.html#openaiserver">OpenAI 호환 서버</a></p></li>
+<li><p data-original-en="Quick Start with Furiosa-LLM"><a class="reference internal" href="../get_started/furiosa_llm.html#gettingstartedfuriosallm">Furiosa-LLM을 사용한 빠른 시작</a></p></li>
 </ul>
 </section>
 </section>

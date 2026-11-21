@@ -1,0 +1,80 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Diagnosis"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Diagnosis converts a schedule view into one testable bottleneck hypothesis.\nSeparate data dependencies from shared-resource waits.\nA schedule view does not establish a speedup by inspection alone."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Inspect a dumped schedule"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Generate and open the JSON with the [Schedule Viewer tool reference](../tools/schedule-viewer.md).\nThe viewer exposes the scheduled timeline, operation context, lifetime, connected tensors, and operator description.\nSelect a node to trace its inputs and outputs.\nZoom the cycle range to isolate the suspected region."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "Read the timeline"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "The final scheduled cycle defines the makespan, and the intervals that determine it provide the diagnosis:"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 21,
+    "text": "Identify the interval that reaches the final cycle."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 26,
+    "text": "Check whether its predecessor is a memory dependency, a shared resource, or an unscheduled gap."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 31,
+    "text": "Compare the relevant context lanes to see whether another operation could overlap."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 36,
+    "text": "State one candidate change and the reason it should alter that interval."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 41,
+    "text": "The schedule shows static compiler behavior.\nIt does not replace a value oracle, and it does not prove device throughput."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 44,
+    "text": "Keep the comparison valid"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 47,
+    "text": "Record the source revision, release profile, device-function filter, shapes, element types, mappings, and schedule file for each candidate.\nChange only the selected kernel choice between candidates.\nIf any of those inputs changes, treat the result as a new baseline rather than a tuning comparison."
+  }
+]

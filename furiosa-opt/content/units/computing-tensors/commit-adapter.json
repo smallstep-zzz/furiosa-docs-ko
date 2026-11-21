@@ -1,0 +1,250 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Commit Adapter"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Commit Adapter applies element-wise transformations to the packet stream before the [Commit Engine](../moving-tensors/commit-engine.md) writes it to DM.\nIt mirrors the [Fetch Adapter](./fetch-adapter.md) on the output side of the Tensor Unit."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "The adapter's stages chain as dedicated `.commit_xxx(...)` methods on the upstream tensor, and the chain always ends in `.commit(...)` for the actual DM write.\n[Trimming](#trimming) is the mandatory first stage: `.commit()` / `.commit_view()` are reachable only after `.commit_trim(...)`, so every commit is trimmed first (it is how flit padding is dropped).\nAfter trimming, type casting is optional and available only in the main context.\nGenerate Mode is a separate sub-context path used internally by `memset` for immediate fills; it does not chain off a `TuTensor`."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 12,
+    "text": "Main pipeline: [Trimming](#trimming) → [Type Casting](#type-casting) (optionally fusing ReLU) → `.commit()`."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 17,
+    "text": "Sub bypass: Generate Mode writes a constant directly for `memset`, without consuming an upstream Tensor Unit stream."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 25,
+    "text": "Operation"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 28,
+    "text": "Main"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 31,
+    "text": "Sub"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 38,
+    "text": "[Trimming](#trimming)"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 49,
+    "text": "[Type Casting](#type-casting) (optional fused ReLU)"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 60,
+    "text": "Generate Mode (internal `memset` path)"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 72,
+    "text": "The type system enforces each context restriction: each stage's method exists on one context's `TuTensor` only."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 75,
+    "text": "Trimming"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 78,
+    "text": "Stream packets in the Tensor Unit pipeline are always 32-byte *flits* (see [Collect Engine](./collect-engine.md)), but a flit may carry fewer valid elements than its capacity, with trailing elements filled by padding.\nWriting the full flit verbatim would clobber DM bytes beyond the valid region with the flit's padding values."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 81,
+    "text": "Trimming solves this by writing only the leading `valid_size` elements of each flit to DM, discarding the trailing padding.\nThe compiler derives `valid_size` from the output tensor mapping.\nUsers do not set it directly.\n`D[valid_size]` must be 8, 16, 24, or 32 bytes (where 32 means no trim).\nTrimming adds nearly zero latency."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 84,
+    "text": "Trimming is the mandatory first stage of the Commit Adapter, even though not every commit has padding to drop: when `valid_size` is already 32 bytes the flit is fully valid and the trim is a no-op.\nIt is mandatory because `.commit()` is reachable only after `.commit_trim(...)`, so it anchors the chain and runs ahead of [Type Casting](#type-casting) (main)."
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 86,
+    "offset": 0,
+    "length": 111,
+    "text": "// `D: MaterializableScalar` here (trim is the commit path's mandatory first stage) keeps i5/i9 uncommittable.\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 86,
+    "offset": 651,
+    "length": 32,
+    "text": "primitive(TuTensor::commit_trim)"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 86,
+    "offset": 864,
+    "length": 95,
+    "text": "// `transpose(false)` is type-system filler; real trim lowering lands with the backend wiring.\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 88,
+    "text": "`.commit_trim::<OutPacket>()` declares the post-trim packet, and the chained `.commit(...)` then performs the DM write on the trimmed stream.\nThe two are fully separate."
+  },
+  {
+    "id": "u0021",
+    "kind": "comment",
+    "token": 90,
+    "offset": 243,
+    "length": 68,
+    "text": "// 8 valid i8 out of 32 padded; OutPacket drops the `# 32` padding.\n"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 90,
+    "offset": 555,
+    "length": 53,
+    "text": "// 4 valid f32 out of 8; OutPacket resizes `W` to 4.\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 90,
+    "offset": 858,
+    "length": 55,
+    "text": "// 8 valid bf16 out of 16; OutPacket resizes `N` to 8.\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 90,
+    "offset": 1146,
+    "length": 39,
+    "text": "// No trimming; `OutPacket == Packet`.\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 92,
+    "text": "Type Casting"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 95,
+    "text": "Type casting converts `f32` data to `bf16` format on the commit path, optionally fusing a ReLU activation into the same pass.\nThe [Cast Engine](./cast-engine.md) handles most type conversions in the Tensor Unit pipeline.\nCommit Adapter type casting exists for one specific case, running main-context contraction in parallel with sub-context Vector Engine work.\nThe Cast Engine sits on top of the Vector Engine and so occupies it during a conversion.\nIf the main-context performed its `f32` → `bf16` conversion through the Cast Engine, the Vector Engine would be busy and the sub-context could not run in parallel.\nRouting the conversion through the Commit Adapter instead leaves the Vector Engine free for the sub-context.\nSub-context itself does not support type casting (consistent with the support matrix above)."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 98,
+    "text": "`commit_cast` and `commit_cast_relu` are separate methods because they are separate hardware conversions, not one conversion with a mode: ReLU has no standalone stage to select at run time, and exists only fused with the narrowing cast."
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 100,
+    "offset": 666,
+    "length": 32,
+    "text": "primitive(TuTensor::commit_cast)"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 100,
+    "offset": 1315,
+    "length": 37,
+    "text": "primitive(TuTensor::commit_cast_relu)"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 101,
+    "offset": 239,
+    "length": 67,
+    "text": "// Cast f32 to bf16 (values preserved), no activation. A real main\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "comment",
+    "token": 101,
+    "offset": 310,
+    "length": 66,
+    "text": "// commit runs `.commit_trim()` first, then `.commit(...)` after.\n"
+  },
+  {
+    "id": "u0032",
+    "kind": "comment",
+    "token": 101,
+    "offset": 380,
+    "length": 67,
+    "text": "// W = 8 f32 elements (32 bytes) stays 8 bf16 elements (16 bytes).\n"
+  },
+  {
+    "id": "u0033",
+    "kind": "comment",
+    "token": 101,
+    "offset": 690,
+    "length": 67,
+    "text": "// f32 -> bf16 with a fused ReLU: negative values clamped to zero.\n"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 103,
+    "text": "Generate Mode"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 106,
+    "text": "Generate Mode fills a DM region with a constant through `DmTensorViewMut::memset(value, &mut device.sub)`.\nThe fill runs in the sub context and takes a value of the tensor's element type, such as `0` for `i32` or `const { bf16::from_f32(1.0) }` for `bf16`."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 109,
+    "text": "It does not fetch from DM and does not consume any upstream Tensor Unit stream.\nThe constant `value` and the destination are the only inputs; the rest of the Tensor Unit pipeline (Fetch / Switch / Collect / Contraction / Vector / Cast / Transpose / Commit Adapter stages) is bypassed entirely."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 112,
+    "text": "Device compilation requires a compile-time constant value and a whole-region view from `view_mut()`.\nNon-constant values and tiled sub-view fills are rejected at translation.\nSupported element types are `i8`, `i16`, `i32`, `f32`, `bf16`, `f8e4m3`, and `i4`; sub-byte regions must be byte-aligned.\n`f4e2m1` fills are not yet supported by device compilation."
+  }
+]

@@ -1,0 +1,68 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Introduction"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "FuriosaAI's Tensor Contraction Processor (TCP) is a massively parallel AI accelerator targeting inference workloads.\nUnlike high-level frameworks like PyTorch and XLA, which abstract away memory layouts and hardware scheduling, TCP exposes direct programmer control without requiring the byte-level reasoning of low-level kernel APIs."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "TCP's Virtual Instruction Set Architecture (Virtual ISA, or vISA) is the programming interface that exposes this control.\nIt lets programmers reason in tensors while directly managing memory allocation and Tensor Unit scheduling.\nThis manual primarily helps authors guide an AI agent to write, verify, and optimize vISA kernels.\nIt also provides the technical material that compiler developers need when generating vISA.\n[The `furiosa-opt-std` rustdoc](https://docs.rs/crate/furiosa-opt-std) is the authoritative API source for published releases.\nThis book explains how to make and review kernel design decisions.\nBoth audiences assume basic Rust familiarity.\nSee [the language manual](https://doc.rust-lang.org/book/) if needed."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Read This Book by Task"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "[Quick Start](./quick-start.md) introduces the base-template kernel pattern and the learning route through Mapping, Moving, Computing, End-to-End Cases, Scheduling, and Tools."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 17,
+    "text": "[!WARNING]\n**Alpha Test Build: Experimental Software**"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 20,
+    "text": "This software is an early, experimental, and incomplete build intended strictly for technical evaluation and internal testing."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 23,
+    "text": "Before using this software for any production work, critical tasks, or for important data, you must consult with Furiosa engineers."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 26,
+    "text": "Your feedback is vital to our development.\nPlease provide it."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 30,
+    "text": "License"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 33,
+    "text": "This documentation and the entire `furiosa-opt` repository are licensed under the [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)."
+  }
+]

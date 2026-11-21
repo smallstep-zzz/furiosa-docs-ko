@@ -1,0 +1,1532 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Changelog"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "All notable changes to `furiosa-opt` are documented in this file."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "The format is based on [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/)."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "[Unreleased]"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Changed"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 21,
+    "text": "`Device::new` takes a `Topology`, which opens the first free placement of that shape, or a\n`Placement`, which opens exactly there; `device.placement()` and `device.topology()` tell what it\nopened. On the CPU it refuses a topology outside 1 to 8 chips of 1 to 8 PEs."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "`Kernel<F>` becomes `Kernel<F, Args>`: a kernel launches only with the arguments it was loaded\nfor, and other arguments are a compile error."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 31,
+    "text": "A hand-written `DeviceSend` implements `arguments(&self, access, bind)` instead of\n`bind(&self, buffers)`, handing each `(HbmBufferSlice, Access)` to `bind` in declaration order.\n`#[derive(DeviceSend)]` needs no change."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 36,
+    "text": "`HbmTensor::new()` is for device functions; allocate host-side tensors with\n`HbmTensor::alloc(&device)`."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 41,
+    "text": "`HbmBuffer::alloc` and `HbmTensor::alloc` place chip-local DRAM. A buffer another chip writes\nmust come from `HbmBuffer::alloc_shared`; binding chip-local memory to a peer-written argument is\nrefused."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 46,
+    "text": "`Device::memory()` returns `Memory` on both backends, with `capacity()` and `usage()`. Migrate:\nuse `memory().usage().available`."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 51,
+    "text": "Replace `scalar.write(value, dma)` with `HbmScalar::from_host(value, dma).output(&mut scalar)`."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 56,
+    "text": "The prelude exports the runtime API only; import plumbing types from `furiosa_opt_std::runtime`\nor `furiosa_opt_std::backend`."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 61,
+    "text": "`chip_tile` on an HBM view returns `HbmTensorView<.., SomeChips>`: device DMA takes it, a launch\nrefuses it at compile time."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 66,
+    "text": "A main-context `to_trf` takes the sub context: write `.to_trf(&mut device.sub)`, as `to_vrf` does."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 71,
+    "text": "The Tensor Unit's contraction stages and `commit_cast` / `commit_cast_relu` exist on the main\ncontext only, and `commit_valid_count_pack` on the sub context only; a call from the other\ncontext is a compile error."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 76,
+    "text": "A `for` loop that reassigns a scalar declared before it is refused with `cannot carry a scalar\nacross iterations`; carry the value in a tensor."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 81,
+    "text": "`PaddingKind::Bottom` (`#{!}`) padding is readable, holding arbitrary values."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 86,
+    "text": "A submitted launch runs to completion even when its Future is dropped, and its memory stays in\nuse until the device finishes."
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 91,
+    "text": "A device task that panics makes the code awaiting its launch panic with the task's message, as\non the CPU."
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 96,
+    "text": "A launch may run until one second before the kernel driver's deadline (`pe_ipc_timeout_ms`, 60 s\nby default) instead of 5 s; past it, it fails with `Error::Device`."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 101,
+    "text": "Device code that moves host or peer memory needs a kernel driver that reserves PDMA channels\n(`NPU_PDMA_CAPS_RESERVE`); without one such a launch fails with `DeviceError::Unsupported`."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 106,
+    "text": "`DeviceError` names what failed (`Busy`, `Capacity`, `Invalid`, `Unsupported`, `Panicked`,\n`OutOfMemory`, `SramOverlap`, ...) instead of the stage that failed."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 111,
+    "text": "A function's profile is fixed when it first loads: set `FURIOSA_OPT_PROFILE` and install the\n`span::npu` subscriber before its first launch."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 116,
+    "text": "`cargo furiosa-opt` writes a new image format; recompile programs with this release."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 121,
+    "text": "Added"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 126,
+    "text": "`HbmBuffer::alloc(&device, bytes)` allocates untyped memory, which `to_hbm` / `to_host`\ntransfer; `HbmTensor::try_from(buffer)` and `into_buffer` convert without copying, `split_at`\ndivides it and `alias` shares it. `buffer.slice(chips, bytes)` / `slice_mut` select chips and a\nbyte range."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 131,
+    "text": "`HostBuffer` holds transfer bytes, page-locked where supported (`is_pinned()`), and converts to\nand from `HostTensor` without copying."
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 136,
+    "text": "Launches and transfers are `Prepared` until `.await` or `.submit()`, which starts the work and\nreturns a `Submitted` Future."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 141,
+    "text": "`HbmBuffer::ready()`, `HbmTensor::ready()` and `Device::synchronize()` wait for earlier device\nwork without copying."
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 146,
+    "text": "`device.pdma.to_hbm(pairs)` copies a batch into existing HBM slices in one write."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 151,
+    "text": "`function.load(&device)?` returns a `Kernel` that launches without repeating the lookup; a\ngeneric function selects its instantiation with `Loadable::<Args>::load`."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 156,
+    "text": "`runtime::DeviceError` and `Error::Invalid` report runtime failures and requests outside a\nbuffer or tensor."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 161,
+    "text": "Device functions call closures, and a closure reads what it captures."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 166,
+    "text": "A runtime `if` yields a scalar, so a run-time value selects an array element:\n`inputs[if pick == 0 { 0 } else { 1 }]`."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 171,
+    "text": "An `if` whose condition is known at compile time compiles only the arm it takes."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 176,
+    "text": "A DMA moves a tile whose width does not divide its axis, such as width 3 of an axis of 8."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 181,
+    "text": "`Mapping::abstract_limits` and `abstract_limits_upperbound`."
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 186,
+    "text": "Removed"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 191,
+    "text": "`DeviceFn::execute` and `execute_into`; use `launch(f, args)` and `.output(&mut out)`."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 196,
+    "text": "NPU `HbmTensor::into_vec`, `to_vec` and `to_buf`; use `to_host(&mut device.pdma).await?.into_vec()`."
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 201,
+    "text": "`runtime::Buffers`, `TupleApply` and `backend::npu`."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 206,
+    "text": "`Error::Chips` and `Error::Poisoned`; match `Error::Device`."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 211,
+    "text": "`Address` (write `u64`) and `DpeTensor`."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 216,
+    "text": "The `furiosa-opt-rt` command-line runner."
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 221,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 226,
+    "text": "NPU tensor transfers between differing host and HBM layouts."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 231,
+    "text": "A launch of many short Tensor Unit operations, or many cluster syncs in a row, no longer times\nout or hangs."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 236,
+    "text": "Host transfers of 4 GiB or more, and many transfers in flight at once, complete."
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 241,
+    "text": "On the CPU, a `tile` whose window runs past its axis panics, and a tile of a reshaped view\nselects cells by the new axes."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 246,
+    "text": "Instantiations of a generic function whose axes have equal sizes but differ in type no longer\nshare one kernel."
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 251,
+    "text": "Kernels that the compiler wrongly refused now compile: a scalar `!=`, `to_vrf` straight after\n`collect`, a sub-context fetch with Vector Engine arithmetic, a `to_dm_view` into a resident\n`DmTensor`, 4-bit transposes of up to 16 rows, and full-width `i4` contractions."
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 256,
+    "text": "A gather's `to_dm` with an unaligned tail is refused, as a direct `to_dm` is."
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 264,
+    "text": "Changed"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 269,
+    "text": "Replace `dma_gather_scaled` / `dma_gather_unscaled` with\n`gather::<IndexedAxis, Payload>().by_byte_offsets(index)` / `.by_positions::<Domain>(index)`,\nfollowed by `.to_dm(&mut device.tdma)`."
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 274,
+    "text": "Replace `dma_scatter` / `dma_scatter_unscaled` with\n`dst.view_mut().scatter::<IndexedAxis, Payload>().by_byte_offsets(index)` /\n`.by_positions::<Domain>(index)`, followed by `.from_dm(&mut device.tdma, updates)`.\nUse `from_dm_view` to pass an updates view."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 279,
+    "text": "Low-level `Tensor::gather` is no longer public and `Tensor::scatter` no longer takes a\n`scaled: bool` argument. Use the staged HBM gather/scatter APIs above."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 284,
+    "text": "NPU backend `Function::{alloc,write,write_into,read,read_into}` are no longer public.\nUse `furiosa-opt-rt::Device::alloc`, `HostTensor::to_hbm`, and `HbmTensor::to_host`;\nuse `.output(..)` for transfers into existing tensors."
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 289,
+    "text": "`MappingExt::split_at` returns `Result<(Mapping, Mapping), SplitAtError>`.\n`FindAxisError::SpanExceedsMapping` and `WindowAxisError::SpanExceedsMapping` become\n`SpanDoesNotDivide`."
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 294,
+    "text": "Replace `Mapping::remove_padding()` with `remove_outermost_padding()`."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 299,
+    "text": "`TileError::Split` becomes `SingletonLength`, `IndexNotLocated`, or `WindowDoesNotFit`."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 304,
+    "text": "`furiosa-opt-lower::ElementSizeError` now has only `NotByteAligned` and `NotElementAligned`;\nupdate exhaustive matches accordingly."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 309,
+    "text": "In `furiosa-opt-rt`, replace `device.alloc(bytes)` with\n`device.alloc(image::Memory::Dram, bytes)` for HBM, or `image::Memory::Sram` for resident SRAM.\nAllocation failures use `Error::Allocation(AllocError)`; `FunctionError::UnsupportedSlotMemory`\nbecomes `WrongSlotMemory { slot, expects, has }`."
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 314,
+    "text": "Recompile device functions with the 0.9.0 compiler and update `furiosa-opt-rt` together.\nImages compiled by older versions are incompatible with the new runtime."
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 319,
+    "text": "Added"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 324,
+    "text": "`gather::<..>().by_byte_offsets(index).sparse_prefix(valid_length)` adds a runtime prefix\nlimit to a gather."
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 329,
+    "text": "`DmTensorView::to_spm` copies a DM view into an SPM tensor."
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 334,
+    "text": "`HbmScalar<T>` passes a runtime `bool`, `i32`, `u32`, `i64`, `u64`, or 64-bit `usize` value\nto device code through `from_host` (into a fresh scalar, or `.output(&mut scalar)` into an\nexisting one) and `to_spm`."
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 339,
+    "text": "Device scalar expressions support Rust integer `as` casts among `i32`, `u32`, `i64`, `u64`,\nand `usize`, including `usize` tensor indices."
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 344,
+    "text": "Runtime scalar conditions can guard work inside statically bounded `for` and `#[unroll]` loops."
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 349,
+    "text": "`DmTensor::alloc(&device)?` allocates SRAM that persists across launches, passed to kernels\nthrough `&DmTensor` or `&mut DmTensor`."
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 354,
+    "text": "`furiosa-opt-rt::Device::memory()` and `furiosa-opt-std::Device<Npu>::memory()` report\nper-chip HBM capacity, available bytes, and the largest contiguous free span."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 359,
+    "text": "`furiosa-opt-lower` exposes `gather_payload`, `scatter_payload`, and `validate_*` helpers\nfor indirect DMA validation."
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 364,
+    "text": "Mapping inspection adds `MappingExt::{remove_axis,is_broadcast,has_bottom_pad,has_no_padding}`\nand `Mapping::innermost_writable_size`."
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 369,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 374,
+    "text": "`DmTensorViewMut::to_dm_view` preserves the destination mapping's `Bottom` padding."
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 379,
+    "text": "Vector pipelines support repeated reads of one VRF value."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 384,
+    "text": "Runtime loop indices preserve their updated values across iterations in optimized builds."
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 389,
+    "text": "Unsupported register-file stores report compilation errors when they would discard computation."
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 394,
+    "text": "Inter-transpose layouts exceeding the consecutive-transfer limit fail compilation."
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 399,
+    "text": "Kernels exceeding `trace` profiling capacity can still run unprofiled or use `info` / `debug`."
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 404,
+    "text": "Launches reject conflicting argument bindings, overlapping writable buffers, and misaligned\nSRAM views. Completed launches release temporary buffers."
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 409,
+    "text": "`Ident::new` accepts lowercase ASCII axis names, matching identifiers parsed from strings."
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 417,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 422,
+    "text": "Ship the production-signed bootloader in runtime packages so production devices can initialize."
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 427,
+    "text": "Align `furiosa-opt-rt`, `furiosa-opt-abi`, and `furiosa-opt-ipc` with the release version."
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 435,
+    "text": "Added"
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 440,
+    "text": "`HbmTensor::hbm_chip_shuffle` and `HbmTensorView::hbm_chip_shuffle` compile; only the view API\nexisted before, and it reached MIR only."
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 445,
+    "text": "`DmTensor` and `DmTensorView` provide `chip_shuffle`, `cluster_swap`,\n`chip_slice::<Axis, Output>`, and `cluster_slice::<Axis, Output>`. Each slice call declares its\nresulting `Element` mapping, and these methods build a redistribution that `to_dm` or\n`to_dm_view` fuses into one SRAM DMA. Repeated slice calls can remove independently located axes."
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 450,
+    "text": "`DmTensor::{asymmetric_chip_slice,asymmetric_cluster_slice}` select one local slice per dimension index\nthrough the sub-context."
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 455,
+    "text": "`SpmTensor<D, Chip, Cluster, Pe, Element>` places a value in scratchpad memory, with `Pe` naming\nthe fused PEs a cluster's 64-slice groups form. `DmTensor::to_spm` and `SpmTensor::to_dm` move a\ndense tensor between DM and SPM through Tensor DMA, and require `Pe::SIZE == Slice::SIZE / 64`.\n`Element` must fit the 4 KiB scratchpad one PE holds, checked at compile time."
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 460,
+    "text": "`furiosa-opt-examples` provides separate chip- and cluster-reduction examples for ReduceScatter,\nAllGather, ring-style AllReduce, and Butterfly AllReduce."
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 465,
+    "text": "The fetch-size rule is published as `config_fetch_volume` / `FetchContext` in `furiosa-opt-lower`.\nA fetch narrower than one SRAM access word is legal when the cast widens the payload back to\nwhole words, which the compiler used to reject."
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 470,
+    "text": "`furiosa-opt-rt`: `Device::open(topology)` for a set of chips and\n`Device::builder(topology)` to set the per-launch `timeout`; `Function::load` from a device\nfunction's image; `Function::launch(inputs, outputs)` awaiting a `Launch`; and\n`Function::profiled(level)` returning the spans of one launch. Host memory goes through\n`Pinned<[T]>` and `Device::write`/`read` over `(bytes, view)` pairs, where a `Buffer` view is\na `slice`, the buffer `on` one chip, or `on_all`."
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 475,
+    "text": "`Device::launch(function, args)` launches with the context as the function's first parameter:\n`device.launch(f, (&a, &b))` is `launch(f, (&mut device, &a, &b))`."
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 480,
+    "text": "A task panic reports its message: the firmware sends it with the failing code, and the host error\nshows it."
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 485,
+    "text": "`HostTensor::pinned()` moves a tensor into page-locked memory, and `to_hbm(..).output(&mut hbm)` /\n`to_host(..).output(&mut host)` transfer into an existing tensor. A transfer to or from pinned\nmemory is the DMA's direct source or destination; pageable memory has its pages pinned on every\ncall, which costs a few microseconds per page."
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 490,
+    "text": "The firmware on each cluster logs through `log`, at the level the host process's logger allows\nfor the `furiosa_opt_firmware` target; the lines appear in the driver's `pe_log` debugfs files.\nAt `debug` every launch reports its setup time and its tasks' time."
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 495,
+    "text": "Device parameters support fixed-size arrays and borrowed, nested structs.\nRuntime loop indices can select tensor references such as `model.layers[index].weight.x`."
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 500,
+    "text": "Mapping factors accept generic axes and parenthesized counts, such as `m![Width / Factor]`\nand `m![Width / (Width / 256)]`."
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 505,
+    "text": "`#[unroll]` fully expands a static `for` loop before scheduling. See [Unroll a loop](https://developer.furiosa.ai/furiosa-opt/book/scheduling/tuning.html#unroll-a-loop)."
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 510,
+    "text": "`DmTensorViewMut::slice_tile` creates mutable slice views.\nIndexed writes through these views are not yet supported by NPU compilation."
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 515,
+    "text": "Changed"
+  },
+  {
+    "id": "u0104",
+    "kind": "prose",
+    "token": 518,
+    "text": "Breaking changes come first, each with what to write instead."
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 523,
+    "text": "A chip is a chip and a device is a device. `#[device(chip, pe)]` declares chips of PEs, so the\nruntime counts `Topology { chips, pes }` where it said `devices`, ranks a `ChipRank` where it said\n`DeviceRank`, holds `CHIP_PES` where it held `DEVICE_PES`, and reads `FURIOSA_VISIBLE_CHIPS` where\nit read `FURIOSA_VISIBLE_DEVICES`."
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 528,
+    "text": "`Error::Chips` is what a failure to open the chips is called, where it was `Error::Group`."
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 533,
+    "text": "`FunctionError::WrongTopology` names its `image_chips` the chips its message already called\nchips, where the field said `image_devices`."
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 538,
+    "text": "`Device` is what a process opens and what a device function runs on, replacing both `Context` and\nthe `DeviceGroup` that only existed because `Device` named a chip. `Device::new(topology)` opens\nchips of its own, so two devices of one topology hold different PEs, and a device function's first\nparameter is `&mut Device`. `Context` survives where it is one: the tensor-unit and DMA contexts a\ndevice carries, `main`, `sub`, `tdma` and `pdma`."
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 543,
+    "text": "One `Topology`, in `furiosa-opt-rt` and re-exported by `furiosa-opt-std`, which held a second\ncopy of the same two fields. Naming exact chips is `Builder::among`'s, so the variant that\ncarried a chip list is gone with the conversion that was its only constructor."
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 548,
+    "text": "`HbmTensor::dma_gather_unscaled` takes its raw row-position index as an `SpmTensor<i32>` instead\nof a `DmTensor<i32>`: the kernel now stages the index into SPM itself with `to_spm` rather than\nleaving the compiler to insert that transfer. The index's `Pe` must be padding-only (`m![1 # 4]`),\nsince the gather reads the whole list off PE 0."
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 553,
+    "text": "`TuContext::{parallel_copy_chip_slice,parallel_copy_cluster_slice}` are replaced by\n`DmTensor::{asymmetric_chip_slice,asymmetric_cluster_slice}`. The input tensor is now the receiver,\nthe sub-context is the first argument, and the input scalar and dimension types plus the number of\nslice indices are inferred instead of supplied as generic arguments."
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 558,
+    "text": "`DmTensorView::{dm_chip_shuffle,dm_cluster_swap}` are replaced by the staged\n`chip_shuffle(...).to_dm(...)` and `cluster_swap().to_dm(...)` forms. Use `to_dm_view` as the\nterminal operation to write into an existing view, and start the same operations directly from a\n`DmTensor` when no explicit view is needed."
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 563,
+    "text": "`VectorInitTensor::vector_intra_slice_unzip` infers the group-tiled input `Time` mapping. Calls now\nprovide only the axis name and output `Time` mapping, for example\n`vector_intra_slice_unzip::<I, m![R]>()` instead of\n`vector_intra_slice_unzip::<I, m![R, 1 # 2], m![R]>()`."
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 568,
+    "text": "`DmTensor::to_dm` can relayout every DM dimension. Its generic arguments are now\n`<Chip2, Cluster2, Slice2, Element2>` instead of `<Slice2, Element2>`; unchanged dimensions can be\nrepeated explicitly or inferred with `_` from the expected output type."
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 573,
+    "text": "The device-call ABI now uses `Binding`, structural `Bindings`, and `DeviceOutput`; `Buffer`,\n`BufferList`, `FixedBufferList`, `KernelOutput`, and `KernelOutputDestination` are gone. Derived\n`DeviceSend` implementations update automatically. Manual implementations must return\n`impl __private::Bindings` from `bind()`, and manual `DeviceFn` output types must implement both\n`DeviceSend` and `__private::DeviceOutput`."
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 578,
+    "text": "A DM-producing slice now requires an 8-byte-aligned `AxisToSlice` stride. An asymmetric slice\nadditionally requires that axis to be outermost in `Element`, and a chip shuffle requires a\npermutation of the tensor's chips. Redistribution source and slice indices must be compile-time\nconstants. Invalid mappings no longer reach hardware as a different operation than the kernel\ndeclared."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 583,
+    "text": "A launch and a transfer return `Result`: `launch(f, args).await`, `device.launch`, `to_hbm`,\n`to_host`, their `.output(..)` forms and `Device::acquire` are `Result<_, furiosa_opt_std::Error>`\non every backend. A queue that is full, a device that fails or times out, memory that runs out,\nan HBM tensor never placed by `to_hbm`, or a device function the binary has no image for is an\nerror the caller handles, not a panic. `#[derive(DeviceSend)]` follows: `bind` returns `Result`."
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 588,
+    "text": "`Device::new(function.topology())` names the device group it opens, where\n`Device::new()` returned a process-wide context and left the device to `Acquired::bind`.\n`#[device]` gives every function a `topology()`, and `Acquired` is gone with the singleton it\nguarded. Each acquisition opens a group of its own, so two contexts of one topology hold\ndifferent PEs."
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 593,
+    "text": "A device function's image records the topology it was compiled for and what each argument slot\nmust hold; a runtime rejects an image for another topology at load and a smaller buffer at\nlaunch."
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 598,
+    "text": "Device functions run on the standalone `furiosa-opt-rt` runtime instead of the vendored device\nruntime. Each NPU boots a signed bootloader and the runtime's own firmware, so a launch no longer\ncrosses a runtime process; a launch from an idle device takes tens of microseconds.\n`furiosa-opt-rt` is a dependency of `furiosa-opt-std` on Linux NPU builds. The public runtime\nembeds the vendor-built firmware image; its source is not part of the public distribution."
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 603,
+    "text": "Profiling turns on with `FURIOSA_OPT_PROFILE`, not `TUC_PROFILE_LEVEL`; the `span::npu` tracing\ntarget is unchanged. An invalid level or one the image cannot provide emits a warning and runs\nthe function unprofiled instead of panicking."
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 608,
+    "text": "The device function image format is ABI 1 of the new runtime: chunked tasks aligned to 256 bytes\nwith a 1 MiB chunk limit, and a profile section sized by depth. `cargo furiosa-opt` lowers the\nlimit with `FURIOSA_OPT_CHUNK_LIMIT` for tests that need several chunks."
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 613,
+    "text": "Primitive scalars no longer implement `DeviceSend`. Pass runtime data through HBM tensors\nand use const generics for compile-time values."
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 618,
+    "text": "`Kernel::alloc` is renamed to `alloc_binding`; use `launch` in place of `Kernel::run`."
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 623,
+    "text": "`Stride`, `Modulo`, `Resize`, and `Padding` take a mapping type as their factor: replace `N`\nwith `Broadcast<N>`. Existing literal and escaped-constant `m!` / `i!` syntax is unchanged."
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 628,
+    "text": "`TableLookup` is renamed to `TableLookupCast`; update imports and trait bounds.\nCalls to `fetch_table_lookup()` are unchanged."
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 633,
+    "text": "Replace `commit_view::<Element>(dst)` with `commit_view::<_, Element>(dst)` or `commit_view(dst)`.\nCompatible destination slice mappings may now use different padding kinds."
+  },
+  {
+    "id": "u0128",
+    "kind": "prose",
+    "token": 638,
+    "text": "`Mapping` debug output uses the same mapping notation as `Display`."
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 643,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0130",
+    "kind": "prose",
+    "token": 648,
+    "text": "Fixed incorrect rejection of custom broadcasts with padded destination slices."
+  },
+  {
+    "id": "u0131",
+    "kind": "prose",
+    "token": 653,
+    "text": "Fixed a compilation failure during cycle estimation for some contraction kernels."
+  },
+  {
+    "id": "u0132",
+    "kind": "prose",
+    "token": 658,
+    "text": "Unsupported scalar conversions report the supported types at the call site."
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 663,
+    "text": "Empty or malformed `m!` and `i!` expressions report errors at the macro invocation."
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 671,
+    "text": "Changed"
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 676,
+    "text": "`launch(function, args)` now returns a `Launch` builder that runs when awaited. Existing\n`launch(function, args).await` calls are unchanged; code that passes the un-awaited value to an\nAPI requiring `Future` must call `.into_future()`. `DeviceFn` implementations generated by\n`#[device]` also support `launch(function, args).output(&mut output).await`, which binds existing\noutput HBM in NPU builds instead of allocating new output buffers for each launch. Manual\n`DeviceFn` implementations keep working through the default allocate-and-assign implementation."
+  },
+  {
+    "id": "u0136",
+    "kind": "prose",
+    "token": 681,
+    "text": "`vector_intra_slice_reduce` is no longer available in pair mode, before or after the `_zip`. The\nreducer takes no group condition, so it cannot fold only the group a `_zip` wrote. The call no\nlonger compiles on a zipped tensor, and a stream that went through `vector_intra_slice_unzip` is\nrefused when it is compiled."
+  },
+  {
+    "id": "u0137",
+    "kind": "prose",
+    "token": 686,
+    "text": "`vector_intra_slice_reduce` checks the accumulator slots it needs. The non-reduce `Time` positions\ninner to the outermost reduced axis each hold a live accumulator, and the reducer has 8; a mapping\nthat asks for more is refused with the count it asked for. This is the bound the Time Reducer\nalready checked, now shared between the two engines."
+  },
+  {
+    "id": "u0138",
+    "kind": "prose",
+    "token": 691,
+    "text": "`vector_intra_slice_unzip` bounds the interleaved group it forms. The volume inside the group axis\nbecomes the branch group size, and one group waits in the VE register-file cache (1 KiB, 256 32-bit\nlanes) while the other streams in, so a larger group is refused with the volume it asked for. Read\nthe group axis further inside the fetch/collect time to shrink it."
+  },
+  {
+    "id": "u0139",
+    "kind": "prose",
+    "token": 696,
+    "text": "Added"
+  },
+  {
+    "id": "u0140",
+    "kind": "prose",
+    "token": 701,
+    "text": "Generic `#[device]` functions compile. Only a launch fixes their generic arguments, and the\nbinary being linked is what knows every launch, so that is where their kernels now compile:\na `cargo furiosa-opt` build embeds the kernels for each binary's own launches into that\nbinary, and a launch finds its kernel in the running binary itself — no kernel files ship\nnext to it. This covers every linked shape (a bin, an example, a test harness, and a cdylib\nsuch as a Python wheel's extension module), and launches of kernels another crate defines."
+  },
+  {
+    "id": "u0141",
+    "kind": "prose",
+    "token": 706,
+    "text": "`DmTensorView::dm_cluster_swap` swaps two clusters and lowers to EDF, with\nVISA/LIR/EDF regression coverage."
+  },
+  {
+    "id": "u0142",
+    "kind": "prose",
+    "token": 711,
+    "text": "The Transpose Engine accepts doubled input packing for 8-bit and 16-bit elements. A packet can\nnow contribute 16 valid elements per cycle; 4-bit and 32-bit doubled packing remain unsupported."
+  },
+  {
+    "id": "u0143",
+    "kind": "prose",
+    "token": 716,
+    "text": "`fetch_chip_lift`, `fetch_cluster_lift`, and `fetch_slice_lift` move axes that a plain `fetch`\nwould traverse in `Time` onto a broadcast slot in the `Chip`, `Cluster`, or `Slice` placement.\nEach destination reads a different offset from its local copy, with no data transfer and no change\nto `OutPacket`. The source region must already be replicated."
+  },
+  {
+    "id": "u0144",
+    "kind": "prose",
+    "token": 721,
+    "text": "A lift works in either execution context and follows the source view selected at runtime. Slice\nbases combine constant offsets with the source address in that context. Lifted reads support\ncustom-broadcast switches and DM, VRF, or TRF outputs."
+  },
+  {
+    "id": "u0145",
+    "kind": "prose",
+    "token": 726,
+    "text": "Removed"
+  },
+  {
+    "id": "u0146",
+    "kind": "prose",
+    "token": 731,
+    "text": "`DmTensor::to_dm_pcopy` and `DmTensorView::to_dm_view_pcopy` are gone; neither ever compiled past\nMIR. Write the same DM to DM copy as a fetch/commit round trip through the Tensor Unit\n(`begin` -> `fetch` -> `collect` -> `commit_trim` -> `commit` / `commit_view`), or as\n`DmTensor::to_dm` / `DmTensorView::to_dm_view` for a DMA copy."
+  },
+  {
+    "id": "u0147",
+    "kind": "prose",
+    "token": 739,
+    "text": "Changed"
+  },
+  {
+    "id": "u0148",
+    "kind": "prose",
+    "token": 744,
+    "text": "The `Emulation` backend type is renamed to `Cpu`: it is not a mode you select but what\nrunning on the CPU means, and a plain `cargo build`/`cargo test` is that build."
+  },
+  {
+    "id": "u0149",
+    "kind": "prose",
+    "token": 749,
+    "text": "Removed"
+  },
+  {
+    "id": "u0150",
+    "kind": "prose",
+    "token": 754,
+    "text": "The `typecheck` backend is gone: the `Typecheck` backend type, its `PhantomStorage`, the\n`--cfg backend=\"typecheck\"` world, and `cargo furiosa-opt --backend typecheck`. Its two jobs\nmoved to their proper homes: mapping and shape validation of a kernel body is\n`cargo furiosa-opt compile` (the translator verifies every selected kernel statically, and\ncatches device constraints phantom execution never could), and value validation is a CPU\ntest. The `backend` cfg is now npu-only: a build without the cfg IS the CPU build, so a\nplain `cargo build`/`cargo test` and a proxy-less invocation are the same build, byte for\nbyte."
+  },
+  {
+    "id": "u0151",
+    "kind": "prose",
+    "token": 759,
+    "text": "Every API that took a raw address is gone: `HbmTensor::from_addr`, `TrfTensor::from_addr`,\n`VrfTensor::from_addr`, the `TrfAddress` enum, and the `*_at` variants (`to_dm_at`,\n`to_dm_pcopy_at`, `dma_gather_scaled_at`, `to_trf_at`, `to_vrf_at`, `commit_at`). An address was\nnever the caller's to pick: the compiler places a kernel's own tensors, the scheduler assigns the\nregister-file regions, and the runtime allocates what the host uploads. Write the address-free\ncall instead, and where a device function needs an output, `HbmTensor::new()` (the HBM peer of\n`DmTensor::new()`) takes an allocation from whichever of the two is in charge."
+  },
+  {
+    "id": "u0152",
+    "kind": "prose",
+    "token": 764,
+    "text": "`f16` is no longer a vISA scalar, and leaves the DMA dtype listing with the rest. RNGD has no\nnative arithmetic on it, only a fetch widen and a cast narrow, so a kernel could name the type but\nnever compute with it."
+  },
+  {
+    "id": "u0153",
+    "kind": "prose",
+    "token": 769,
+    "text": "Changed"
+  },
+  {
+    "id": "u0154",
+    "kind": "prose",
+    "token": 772,
+    "text": "Breaking changes come first, each with what to write instead."
+  },
+  {
+    "id": "u0155",
+    "kind": "prose",
+    "token": 777,
+    "text": "`cargo furiosa-opt compile` refuses a filter that names a generic fn, per fn: a generic fn\nhas no instantiation to compile on its own. Launch it from a target and build that target\n(`cargo furiosa-opt build`/`test`); `compile` stays the direct artifact tool for concrete fns."
+  },
+  {
+    "id": "u0156",
+    "kind": "prose",
+    "token": 782,
+    "text": "`furiosa-opt-examples` now holds only kernels that compile end to end, plus a `negative` module of\nfixtures that must be refused. Legal functions the compiler cannot lower to an EDF yet (`matmul`,\n`attention`, `vrf_add`, the value-form `runtime_if`, and the parallel-copy and shuffle transfers)\nmoved out of the crate, so an example you find here compiles unless it is under `negative`."
+  },
+  {
+    "id": "u0157",
+    "kind": "prose",
+    "token": 787,
+    "text": "A VE operand that applies to only some elements is written through `Branched`, which opens at the kind of hardware slot it drives and can drive several: `Branched::imm(guard, 100).imm(other, 200).rf(rest, &vrf)`. `imm` takes the next of a pass's three immediate registers, `rf` its one register-file port, once and last. An unconditional operand is still written bare (`.vector_fxp(op, 16384i32)`), and `VeOperand` is gone as a name a kernel writes."
+  },
+  {
+    "id": "u0158",
+    "kind": "prose",
+    "token": 792,
+    "text": "`TagFilter` is `TagGuard`, and constrains the execution id bit by bit rather than only by group. Write `TagGuard::all()` for `TagFilter::All` and `TagGuard::group(id)` for `TagFilter::Group { id }`. `TagGuard::matches([BitReq; 4])` and `not_matches` are new, taking one `BitReq` per tag bit: `One`, `Zero` or `Ignore`."
+  },
+  {
+    "id": "u0159",
+    "kind": "prose",
+    "token": 797,
+    "text": "Guards that admit the same execution ids are now the same value, so comparing guards compares predicates: `matches([Ignore; 4])` is `all()`, and `not_matches` of a pattern constraining bit 3 alone is that `group()`."
+  },
+  {
+    "id": "u0160",
+    "kind": "prose",
+    "token": 802,
+    "text": "A comparison is `Cmp<D>`, typed by the stream's scalar and carrying its boundary positionally, replacing `InputCmp` and its `InputCmpI32`/`InputCmpF32` halves: `Cmp::Less(0)` in place of `InputCmp::I32(InputCmpI32::Less { boundary: 0 })`. `TagMode` is `TagMode<D>` to match."
+  },
+  {
+    "id": "u0161",
+    "kind": "prose",
+    "token": 807,
+    "text": "`TagMode::ValidCount` and `TagMode::Vrf` are withheld. Neither ran on the host, and `ValidCount` compiled for the device, so a kernel naming it failed only once it ran."
+  },
+  {
+    "id": "u0162",
+    "kind": "prose",
+    "token": 812,
+    "text": "A guard that could never fire is refused instead of compiled: `not_matches([Ignore; 4])`, which no execution id satisfies, and any slot after an unconditional one, which already claims every element left over."
+  },
+  {
+    "id": "u0163",
+    "kind": "prose",
+    "token": 817,
+    "text": "One `Cast` no longer stands for four hardware conversion sets. `Cast` is the host-side functional model, and each stage names its own set: `FetchCast` for the Fetch Adapter, `CastEngineCast` for the Cast Engine, `CommitCast` for the Commit Adapter. `commit_cast` used to take anything with a `Cast` impl while the commit unit performs exactly `f32 -> bf16`."
+  },
+  {
+    "id": "u0164",
+    "kind": "prose",
+    "token": 822,
+    "text": "`commit_cast` and `commit_cast_relu` are two methods, and the `Activation` argument they shared is gone. The hardware has no mode to select, so the choice is the method name rather than a value the compiler must const-evaluate."
+  },
+  {
+    "id": "u0165",
+    "kind": "prose",
+    "token": 827,
+    "text": "`ContractionCast` is now the seven operand types the multiplier actually accepts: `i4`, `i5`, `i8`, `i9`, `f8e4m3`, `f8e5m2`, `bf16`. `i16`, `u8`, `i32` and `f32` are gone from it; route those through the Vector Engine's Intra-Slice Reduce. The accumulation width moved to its own `ContractionAccumulator` (`i32`, `f32`). On a stream of an unsupported type the contraction method is not offered at all, rather than compiling and failing later."
+  },
+  {
+    "id": "u0166",
+    "kind": "prose",
+    "token": 832,
+    "text": "A DM `reshape` must preserve its `Element` partition, and an HBM `reshape` its whole size. `reshape` relabels axes over an unchanged buffer, and a resize used to slip through under the same name. Where you meant to change an extent, write `pad` / `unpad` or `tile`."
+  },
+  {
+    "id": "u0167",
+    "kind": "prose",
+    "token": 837,
+    "text": "A vector stash is read at the scalar and the way it was written. Reinterpret before the write if you want another scalar, and cross-way stash still needs a buffering split. In pair mode a stash is a compile error rather than a run-time panic under `emulation`."
+  },
+  {
+    "id": "u0168",
+    "kind": "prose",
+    "token": 842,
+    "text": "`dma_tails` reports the largest burst the DMA can actually issue. A packed sub-byte transfer used to come back with a tail of 8 elements where 128 move in one burst."
+  },
+  {
+    "id": "u0169",
+    "kind": "prose",
+    "token": 847,
+    "text": "A `SwitchConfig` that broadcasts one part of a slice while walking an axis in another compiles, where it used to be refused as a whole. A configuration that is still wrong now names the axis at fault instead of failing as one opaque mapping."
+  },
+  {
+    "id": "u0170",
+    "kind": "prose",
+    "token": 852,
+    "text": "An unscaled gather refuses an index tensor larger than the hardware allows, instead of lowering something the engine cannot run. The two ways out are in the examples: switch to the scaled gather, or split the index with a loop into smaller unscaled gathers."
+  },
+  {
+    "id": "u0171",
+    "kind": "prose",
+    "token": 857,
+    "text": "The book is one path for a kernel author: Quick Start is a thin index over Setup and Tooling, Tensor and Contraction, Kernel Design, and Kernel Validation, and the tutorial material lives beside the reference chapter it belongs to."
+  },
+  {
+    "id": "u0172",
+    "kind": "prose",
+    "token": 862,
+    "text": "Added"
+  },
+  {
+    "id": "u0173",
+    "kind": "prose",
+    "token": 867,
+    "text": "`pad` and `unpad` views, the extent re-declaration a tile could not express: the same cells, declared at a wider or narrower extent, on the DM and HBM views alike. Padding an axis boundary is a re-declaration and is allowed; padding an inner digit of a split axis is not, and narrowing is `tile`'s direction rather than a silent drop."
+  },
+  {
+    "id": "u0174",
+    "kind": "prose",
+    "token": 872,
+    "text": "`vector_reinterpret::<D2>()` reads the VE's 32-bit stream as another scalar, bit for bit: `1.0f32` becomes `0x3f80_0000`, not `1`. It costs no hardware, so it goes anywhere in a chain and keeps the stage, `Way`, filter context and stash typestate, on `VectorTensor` and `VectorTensorPair` both. The use is f32 bit manipulation, since shift and the Fxp cluster take only `i32`."
+  },
+  {
+    "id": "u0175",
+    "kind": "prose",
+    "token": 877,
+    "text": "Mapping cells are public. `Cell` says what a position holds, a live index, a padding kind, or out of bounds, and `CellExt` reads them off a mapping."
+  },
+  {
+    "id": "u0176",
+    "kind": "prose",
+    "token": 882,
+    "text": "All four baked table-lookup conversions work: `f4e2m1` to `f8e4m3` or `f8e5m2`, and `f8e4m3` to `bf16` or `f8e5m2` to `f32`. Two of the four used to fail to compile."
+  },
+  {
+    "id": "u0177",
+    "kind": "prose",
+    "token": 887,
+    "text": "`FetchCast` gains `i16 -> i32` and `f32 -> bf16`."
+  },
+  {
+    "id": "u0178",
+    "kind": "prose",
+    "token": 892,
+    "text": "`Tensor::contraction_prewidened`, for writing a host answer key whose operands are already at the accumulator width. `Tensor::contraction` still takes operand-width input and accumulates at `ContractionCast::Output`."
+  },
+  {
+    "id": "u0179",
+    "kind": "prose",
+    "token": 897,
+    "text": "`FURIOSA_VISIBLE_CHIPS` (comma-separated chip ids) restricts which chips a process will acquire, so two runs can pin disjoint chips instead of racing for the lowest free one. Unset or empty keeps every exposed chip a candidate."
+  },
+  {
+    "id": "u0180",
+    "kind": "prose",
+    "token": 902,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0181",
+    "kind": "prose",
+    "token": 907,
+    "text": "A conditional operand's slots fire in the order they are written: an element takes the first slot whose guard it satisfies, so a trailing `TagGuard::all()` is the pass's `else`. Software execution had applied every matching slot in turn, disagreeing with the device."
+  },
+  {
+    "id": "u0182",
+    "kind": "prose",
+    "token": 912,
+    "text": "Unsupported shapes are refused against the kernel's own span instead of panicking inside the compiler: a `TagMode::AxisToggle` pass, a stash read guarded on the group bit alone, and chaining more ops than a VE cluster holds."
+  },
+  {
+    "id": "u0183",
+    "kind": "prose",
+    "token": 917,
+    "text": "A tiled view built on the host arrived at the NPU as tile 0. `tile` recorded its offset in the view's mapping only, and the Npu backend reads the address, so every host-side tile named the base tensor. The offset now rides the address, and it may be a run-time value, which is what a per-token embedding lookup needs. `emulation` was never affected."
+  },
+  {
+    "id": "u0184",
+    "kind": "prose",
+    "token": 922,
+    "text": "An HBM view tile naming an inner digit of an axis windowed the whole axis instead. Tiling an `m![H]` argument with `m![H % 120]` dropped the outer repetition from the view, so the tile read one window spanning all of `H` rather than the digit it named. The window now falls where the tile says, on the `to_hbm_view` write path as well as the read."
+  },
+  {
+    "id": "u0185",
+    "kind": "prose",
+    "token": 927,
+    "text": "`HbmTensor::reshape` freed the device allocation it was supposed to keep alive, so the handle it returned could name freed HBM."
+  },
+  {
+    "id": "u0186",
+    "kind": "prose",
+    "token": 932,
+    "text": "A kernel argument typed `f4e2m1` or `i4` panicked with `size_in_bytes of f4e2m1 should not be used` while loading its EDF, before any tensor was uploaded. The width travels in bits, and a 4-bit tensor keeps its packed size on the device."
+  },
+  {
+    "id": "u0187",
+    "kind": "prose",
+    "token": 937,
+    "text": "An `i4` by `i4` contraction failed to compile to EDF with `unsupported types (input: ..., rf: ...)`. A TRF holds `i4` weights promoted to `i5`, and that promotion was left out of the loads the compiler accepted, so no int4 weight contraction reached the device."
+  },
+  {
+    "id": "u0188",
+    "kind": "prose",
+    "token": 942,
+    "text": "A kernel that scatters into an HBM tensor and then reads it back observed the pre-scatter contents: the read was scheduled before the scatter."
+  },
+  {
+    "id": "u0189",
+    "kind": "prose",
+    "token": 947,
+    "text": "A stash write placed after a `vector_reinterpret` silently moved to the branch stage and stashed the pass input, so `|x| + |x|` gave `0.0` on negative input."
+  },
+  {
+    "id": "u0190",
+    "kind": "prose",
+    "token": 952,
+    "text": "`VectorTensorPair::vector_logic` had no vISA translation and died with `Unknown primitive`."
+  },
+  {
+    "id": "u0191",
+    "kind": "prose",
+    "token": 957,
+    "text": "An operand write to a cluster with no VRF write port, the concat layer for one, was silently moved to another stage instead of being refused."
+  },
+  {
+    "id": "u0192",
+    "kind": "prose",
+    "token": 962,
+    "text": "The host model of `bf16` matches the hardware: RNGD has no subnormal in `f32` or `bf16` and canonicalizes NaN, where the host did plain IEEE. An answer key can now carry subnormals and NaN payloads and still match the device bit for bit."
+  },
+  {
+    "id": "u0193",
+    "kind": "prose",
+    "token": 967,
+    "text": "Known issues"
+  },
+  {
+    "id": "u0194",
+    "kind": "prose",
+    "token": 972,
+    "text": "A stash read guarded on the group bit alone does not lower. A cached read needs two things the compiler keeps apart -- which elements the operand applies to, and which group wrote the slice being read -- and a group-shaped guard cannot be told from a zip's read. Constrain another bit as well, or drop the guard."
+  },
+  {
+    "id": "u0195",
+    "kind": "prose",
+    "token": 977,
+    "text": "`TagMode::AxisToggle` does not lower. `vector_intra_slice_unzip()` is the supported route to a group split."
+  },
+  {
+    "id": "u0196",
+    "kind": "prose",
+    "token": 982,
+    "text": "A DMA cannot place a tile whose padded axis is an inner digit of a split."
+  },
+  {
+    "id": "u0197",
+    "kind": "prose",
+    "token": 987,
+    "text": "An inner-digit tile is supported on an axis the HBM argument names directly. A tile reaching into an axis nested under another is still refused at compile time."
+  },
+  {
+    "id": "u0198",
+    "kind": "prose",
+    "token": 995,
+    "text": "Changed"
+  },
+  {
+    "id": "u0199",
+    "kind": "prose",
+    "token": 1000,
+    "text": "`compile` names the filter that excluded the kernels it skipped, and says nothing when none was given."
+  },
+  {
+    "id": "u0200",
+    "kind": "prose",
+    "token": 1005,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0201",
+    "kind": "prose",
+    "token": 1010,
+    "text": "`cargo-furiosa-opt --version` reported the compiler crate's own version instead of the release it shipped in."
+  },
+  {
+    "id": "u0202",
+    "kind": "prose",
+    "token": 1018,
+    "text": "Changed"
+  },
+  {
+    "id": "u0203",
+    "kind": "prose",
+    "token": 1021,
+    "text": "Breaking changes come first, each with what to write instead."
+  },
+  {
+    "id": "u0204",
+    "kind": "prose",
+    "token": 1026,
+    "text": "Transfers no longer take an address. Call `to_hbm` and `to_dm` without one, and reach for `to_hbm_at` or `to_dm_at` only when the address matters. Build a DM tensor with `DmTensor::new` in place of `DmTensor::from_addr`. The runtime allocator places what `to_hbm` produces."
+  },
+  {
+    "id": "u0205",
+    "kind": "prose",
+    "token": 1031,
+    "text": "Host buffers convert through `from_vec` and `into_vec`, replacing `from_buf` and `into_buf`."
+  },
+  {
+    "id": "u0206",
+    "kind": "prose",
+    "token": 1036,
+    "text": "`Tensor::reshape` consumes the tensor it reshapes, on owned tensors and on views alike, and a size mismatch now fails to compile instead of at run time."
+  },
+  {
+    "id": "u0207",
+    "kind": "prose",
+    "token": 1041,
+    "text": "Reading a vector stash twice no longer compiles. The operand type carries the read-once rule that was previously a convention."
+  },
+  {
+    "id": "u0208",
+    "kind": "prose",
+    "token": 1046,
+    "text": "`furiosa-mapping`: `replace_padding` is gone. Write `padding(_, Top)` for the same result."
+  },
+  {
+    "id": "u0209",
+    "kind": "prose",
+    "token": 1051,
+    "text": "A dense contraction no longer materializes the broadcast of its operands, which dominated wide-output GEMM on the host. Output is byte for byte what it was."
+  },
+  {
+    "id": "u0210",
+    "kind": "prose",
+    "token": 1056,
+    "text": "Host to HBM and HBM to host transfers on the NPU backend go through the DMA heap without a staging copy."
+  },
+  {
+    "id": "u0211",
+    "kind": "prose",
+    "token": 1061,
+    "text": "A binary built for `backend=\"npu\"` carries its compiled kernels, so it runs on a machine that has no compiler installed."
+  },
+  {
+    "id": "u0212",
+    "kind": "prose",
+    "token": 1066,
+    "text": "The vendored device runtime moves to a revision whose `furiosa_kernel_run` and `furiosa_profiled_run` take the runtime by mutable pointer."
+  },
+  {
+    "id": "u0213",
+    "kind": "prose",
+    "token": 1071,
+    "text": "A vISA scalar constant carries its domain, integer or float, instead of one shared representation."
+  },
+  {
+    "id": "u0214",
+    "kind": "prose",
+    "token": 1076,
+    "text": "`tracing-subscriber` is taken with the `fmt`, `std`, `env-filter` and `json` features."
+  },
+  {
+    "id": "u0215",
+    "kind": "prose",
+    "token": 1081,
+    "text": "`x86_64-unknown-linux-gnu` is the only host the published artifacts cover; the README says so and points macOS at a container."
+  },
+  {
+    "id": "u0216",
+    "kind": "prose",
+    "token": 1086,
+    "text": "Added"
+  },
+  {
+    "id": "u0217",
+    "kind": "prose",
+    "token": 1091,
+    "text": "A kernel can return several HBM tensors as a tuple, in the order it returns them."
+  },
+  {
+    "id": "u0218",
+    "kind": "prose",
+    "token": 1096,
+    "text": "Profiling a run on the device. Install a `tracing` subscriber on the `span::npu` target and each launch reports its spans with their cycle windows. Recording is off until `TUC_PROFILE_LEVEL` names `info` or higher, so a subscriber alone sees nothing. `furiosa-opt-examples` has a minimal example."
+  },
+  {
+    "id": "u0219",
+    "kind": "prose",
+    "token": 1101,
+    "text": "Gathering and scattering DRAM rows through an index tensor: `dma_gather_scaled`, `dma_gather_unscaled`, and `dma_scatter`, with the `dma_tails` mapping primitive to describe the burst packet's tail axis."
+  },
+  {
+    "id": "u0220",
+    "kind": "prose",
+    "token": 1106,
+    "text": "Filling a DM tensor view with a typed constant: `memset(value)`."
+  },
+  {
+    "id": "u0221",
+    "kind": "prose",
+    "token": 1111,
+    "text": "Baked table lookup as a fetch adapter, `fetch_table_lookup`, covering paired nibbles and a non-paired `f8e4m3` to `bf16` table, plus `fetch_zero_point_sub` for zero-point subtraction on fetch."
+  },
+  {
+    "id": "u0222",
+    "kind": "prose",
+    "token": 1116,
+    "text": "Device scalar types `i5`, `i9`, and `f8e5m2`. A 4-bit tensor packs two codes per byte."
+  },
+  {
+    "id": "u0223",
+    "kind": "prose",
+    "token": 1121,
+    "text": "A tile offset can be an expression, such as `tile(i * 2)`."
+  },
+  {
+    "id": "u0224",
+    "kind": "prose",
+    "token": 1126,
+    "text": "Engine configurations report what is wrong before a run rather than producing a bad result. `furiosa-opt-lower` publishes the verifications, and the switch engine checks a named `SwitchConfig` and its custom-broadcast snoop bitmap through a structured `SwitchError`."
+  },
+  {
+    "id": "u0225",
+    "kind": "prose",
+    "token": 1131,
+    "text": "The `emulation` backend runs clip, float, floating-point divide, and local reduce vector nodes, which it used to reject."
+  },
+  {
+    "id": "u0226",
+    "kind": "prose",
+    "token": 1136,
+    "text": "The book has an appendix on the `cargo furiosa-opt` CLI."
+  },
+  {
+    "id": "u0227",
+    "kind": "prose",
+    "token": 1141,
+    "text": "A runtime `if` over a non-unrolled loop index, branching on any comparison of runtime scalars. The statement form, where each arm writes its own output, compiles through to EDF; a value `if` that merges a tensor lowers through vISA and runs under `emulation`, but the scheduler cannot lower the merge yet, so it stops at the vISA stage. `furiosa-opt-examples` covers both shapes."
+  },
+  {
+    "id": "u0228",
+    "kind": "prose",
+    "token": 1146,
+    "text": "A kernel per supported chip and PE topology, so a device config wired wrong shows up as a layout mismatch rather than a bad result."
+  },
+  {
+    "id": "u0229",
+    "kind": "prose",
+    "token": 1151,
+    "text": "Removed"
+  },
+  {
+    "id": "u0230",
+    "kind": "prose",
+    "token": 1156,
+    "text": "The `simulation` backend and its `MathStorage` interpreter. `emulation` replaces it and is what a plain `cargo build` or `cargo test` now uses."
+  },
+  {
+    "id": "u0231",
+    "kind": "prose",
+    "token": 1161,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0232",
+    "kind": "prose",
+    "token": 1166,
+    "text": "A `tile` start offset on the fetch path counted bytes instead of elements, so a `bf16` tile that asked for element 16 landed on element 8; it now counts elements, as the commit side and the DMA path always did, and the `commit_view_tile` example guards it."
+  },
+  {
+    "id": "u0233",
+    "kind": "prose",
+    "token": 1171,
+    "text": "A tensor that a nested loop body read or aliased from an enclosing scope produced a wrong result; it now lowers as written."
+  },
+  {
+    "id": "u0234",
+    "kind": "prose",
+    "token": 1176,
+    "text": "A write through an `HbmTensorViewMut` covering a whole parameter never reached the caller's tensor; it now lands in place."
+  },
+  {
+    "id": "u0235",
+    "kind": "prose",
+    "token": 1181,
+    "text": "A valid Time Reducer fold with a `Sequential` accumulator was rejected for exceeding the accumulator buffer; the bound now counts only the axis each mode pads, and the error spells out the product it checked."
+  },
+  {
+    "id": "u0236",
+    "kind": "prose",
+    "token": 1186,
+    "text": "A device call the compiler could not translate, a generic `#[device]` entrypoint, and a scalar cast it could not evaluate each surfaced as an internal compiler error; they now report what is wrong."
+  },
+  {
+    "id": "u0237",
+    "kind": "prose",
+    "token": 1191,
+    "text": "A process could not start while chip 0 was busy, even with every other chip idle; it now takes the first free NPU among the chips the host exposes."
+  },
+  {
+    "id": "u0238",
+    "kind": "prose",
+    "token": 1196,
+    "text": "An indirect DMA rejected a multidimensional `validlen`."
+  },
+  {
+    "id": "u0239",
+    "kind": "prose",
+    "token": 1201,
+    "text": "A DSL tactic context was not materialized on a single-chip device."
+  },
+  {
+    "id": "u0240",
+    "kind": "prose",
+    "token": 1206,
+    "text": "The scheduler allocated provenance tensors statically, spending memory nothing read."
+  },
+  {
+    "id": "u0241",
+    "kind": "prose",
+    "token": 1211,
+    "text": "A scalar DRAM to SRAM bias transfer is staged as an aligned single-cell tail, which the DMA engine accepts."
+  },
+  {
+    "id": "u0242",
+    "kind": "prose",
+    "token": 1219,
+    "text": "Changed"
+  },
+  {
+    "id": "u0243",
+    "kind": "prose",
+    "token": 1224,
+    "text": "HBM, DM, and TU tensors now carry an optional address; explicit-address transfers moved to dedicated `*_at` methods (`to_trf_at`, `to_vrf_at`, `to_dm_at`, `to_hbm_at`, `to_dm_pcopy_at`, `commit_at`)."
+  },
+  {
+    "id": "u0244",
+    "kind": "prose",
+    "token": 1229,
+    "text": "Added"
+  },
+  {
+    "id": "u0245",
+    "kind": "prose",
+    "token": 1234,
+    "text": "`furiosa-mapping`: escaped constant numbers in `m!` and `i!`."
+  },
+  {
+    "id": "u0246",
+    "kind": "prose",
+    "token": 1239,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0247",
+    "kind": "prose",
+    "token": 1244,
+    "text": "Fixed secure boot support."
+  },
+  {
+    "id": "u0248",
+    "kind": "prose",
+    "token": 1252,
+    "text": "Added"
+  },
+  {
+    "id": "u0249",
+    "kind": "prose",
+    "token": 1257,
+    "text": "Added `simulation` and `typecheck` backends."
+  },
+  {
+    "id": "u0250",
+    "kind": "prose",
+    "token": 1262,
+    "text": "Changed"
+  },
+  {
+    "id": "u0251",
+    "kind": "prose",
+    "token": 1267,
+    "text": "Revised some APIs of virtual ISA."
+  },
+  {
+    "id": "u0252",
+    "kind": "prose",
+    "token": 1272,
+    "text": "`Tensor::reshape` reworked as a `RawTensor` primitive in `furiosa-visa-std`."
+  },
+  {
+    "id": "u0253",
+    "kind": "prose",
+    "token": 1277,
+    "text": "Fixed"
+  },
+  {
+    "id": "u0254",
+    "kind": "prose",
+    "token": 1282,
+    "text": "Fixed the binary path to download in `cargo-furiosa-opt`."
+  },
+  {
+    "id": "u0255",
+    "kind": "prose",
+    "token": 1287,
+    "text": "[v0.2.0] - Initial release"
+  }
+]

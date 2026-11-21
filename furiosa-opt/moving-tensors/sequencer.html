@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="furiosa-opt의 한국어 문서. 텐서 매핑, 메모리, 연산 엔진, 커널 설계와 최적화를 문단별 영어 원문과 함께 읽습니다."><title>시퀀서 · furiosa-opt 한국어</title><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../assets/style.css"><link rel="stylesheet" href="../assets/code.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><script>try{if(localStorage.getItem('opt-theme')==='dark')document.documentElement.dataset.theme='dark';}catch(e){}</script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script><script defer src="../assets/app.js"></script></head>
+<body data-root="../" data-page="moving-tensors/sequencer"><a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<header class="topbar"><div class="topbar-start"><button class="icon-button menu-toggle" id="menu-toggle" aria-label="목차 열기" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="wordmark" href="../index.html">furiosa<span>-opt</span><span class="edition">한국어</span></a></div><div class="topbar-end"><span class="community-label">커뮤니티 번역</span><button class="icon-button" id="theme-toggle" aria-label="어두운 테마로 전환"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg></button><a class="github-link" href="https://github.com/smallstep-zzz/furiosa-docs-ko/tree/main/furiosa-opt" aria-label="한국어 문서 GitHub 저장소"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 .9-4-2-6-2m12 4v-3.4a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.2c.2-.9.1-2-.1-2.7 0 0-1-.3-3.3 1.2a11.4 11.4 0 0 0-6 0C6.7 3.1 5.7 3.4 5.7 3.4c-.3.7-.3 1.8-.1 2.7a4.7 4.7 0 0 0-1.3 3.2c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21"/></svg><span>GitHub</span></a></div></header>
+<div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div><div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div><aside class="sidebar" id="sidebar" aria-label="문서 탐색"><a class="sidebar-home" href="../index.html"><span class="mini-mark">F</span><span>furiosa-opt<span class="sidebar-subtitle">한국어 문서</span></span></a><div class="nav-search"><label class="sr-only" for="doc-search">문서 검색</label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.5"/><path d="m16 16 4 4"/></svg><input id="doc-search" type="search" placeholder="문서와 용어 검색" autocomplete="off"><kbd>/</kbd></div><div id="search-results" hidden aria-live="polite"></div><nav id="chapter-nav" aria-label="전체 문서 목차"><details class="nav-group" open><summary>시작하기<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../introduction.html" ><span>소개</span><small>Introduction</small></a></li><li class="nav-depth-0"><a href="../quick-start.html" ><span>빠른 시작</span><small>Quick Start</small></a></li><li class="nav-depth-1"><a href="../quick-start/setup-and-tooling.html" ><span>설치와 개발 도구</span><small>Setup and Tooling</small></a></li><li class="nav-depth-1"><a href="../quick-start/tensor-and-contraction.html" ><span>텐서와 수축 연산</span><small>Tensor and Contraction</small></a></li><li class="nav-depth-1"><a href="../quick-start/kernel-design.html" ><span>커널 설계</span><small>Kernel Design</small></a></li><li class="nav-depth-1"><a href="../quick-start/kernel-validation.html" ><span>커널 검증</span><small>Kernel Validation</small></a></li></ul></details><details class="nav-group" ><summary>텐서 매핑<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../mapping-tensors/index.html" ><span>텐서 매핑</span><small>Mapping Tensors</small></a></li><li class="nav-depth-1"><a href="../mapping-tensors/mapping-expressions.html" ><span>매핑 표현식</span><small>Mapping Expressions</small></a></li><li class="nav-depth-1"><a href="../mapping-tensors/spatial-temporal-dimensions.html" ><span>공간 차원과 시간 차원</span><small>Spatial and Temporal Dimensions</small></a></li><li class="nav-depth-1"><a href="../mapping-tensors/tensor-semantics.html" ><span>텐서의 의미</span><small>Tensor Semantics</small></a></li></ul></details><details class="nav-group" open><summary>텐서 이동과 메모리<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="index.html" ><span>텐서 이동</span><small>Moving Tensors</small></a></li><li class="nav-depth-1"><a href="sequencer.html" aria-current="page"><span>시퀀서</span><small>Sequencer</small></a></li><li class="nav-depth-1"><a href="fetch-engine.html" ><span>읽기 엔진</span><small>Fetch Engine</small></a></li><li class="nav-depth-1"><a href="commit-engine.html" ><span>쓰기 엔진</span><small>Commit Engine</small></a></li><li class="nav-depth-1"><a href="tensor-unit-io.html" ><span>텐서 유닛 입출력</span><small>Tensor Unit I/O</small></a></li><li class="nav-depth-1"><a href="dma-engine.html" ><span>DMA 엔진</span><small>DMA Engine</small></a></li><li class="nav-depth-1"><a href="memory-performance.html" ><span>메모리 성능</span><small>Memory Performance</small></a></li></ul></details><details class="nav-group" ><summary>텐서 연산과 엔진<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../computing-tensors/index.html" ><span>텐서 연산</span><small>Computing Tensors</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/fetch-adapter.html" ><span>읽기 어댑터</span><small>Fetch Adapter</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/switch-engine.html" ><span>교환 엔진</span><small>Switch Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/collect-engine.html" ><span>수집 엔진</span><small>Collect Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/register-files.html" ><span>레지스터 파일</span><small>Register Files</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/contraction-engine/index.html" ><span>수축 연산기</span><small>Contraction Engine</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/outer.html" ><span>확장과 곱셈</span><small>Outer</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/packet-reducer.html" ><span>패킷 축약기</span><small>Packet Reducer</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/time-reducer.html" ><span>시간 축약기</span><small>Time Reducer</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/lane-folder.html" ><span>레인 폴더</span><small>Lane Folder</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/vector-engine/index.html" ><span>벡터 엔진</span><small>Vector Engine</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/intra-slice-chain.html" ><span>슬라이스 내부 연산 체인</span><small>Intra-Slice Chain</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/intra-slice-reduce.html" ><span>슬라이스 내부 축약</span><small>Intra-Slice Reduce</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/vcg.html" ><span>유효 개수 생성기</span><small>Valid Count Generator</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/inter-slice-reducer.html" ><span>슬라이스 간 축약기</span><small>Inter-Slice Reducer</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/cast-engine.html" ><span>자료형 변환 엔진</span><small>Cast Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/transpose-engine.html" ><span>전치 엔진</span><small>Transpose Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/commit-adapter.html" ><span>쓰기 어댑터</span><small>Commit Adapter</small></a></li></ul></details><details class="nav-group" ><summary>전체 실행 예제<span class="chevron"></span></summary><ul><li class="nav-depth-1"><a href="../kernel-examples/chip-cluster-reduce.html" ><span>칩·클러스터 간 축약</span><small>Chip/Cluster Reduction</small></a></li><li class="nav-depth-0"><a href="../kernel-examples/index.html" ><span>전체 실행 예제</span><small>End-to-End Cases</small></a></li><li class="nav-depth-1"><a href="../kernel-examples/transformer.html" ><span>트랜스포머 예제</span><small>Transformer</small></a></li><li class="nav-depth-1"><a href="../kernel-examples/skip-loop-bodies-at-runtime.html" ><span>실행 중 반복문 본문 건너뛰기</span><small>Skip Loop Bodies at Runtime</small></a></li></ul></details><details class="nav-group" ><summary>스케줄링과 도구<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../scheduling/index.html" ><span>스케줄링과 성능 조정</span><small>Scheduling and Tuning</small></a></li><li class="nav-depth-1"><a href="../scheduling/schedule.html" ><span>실행 스케줄</span><small>Schedule</small></a></li><li class="nav-depth-1"><a href="../scheduling/diagnosis.html" ><span>성능 진단</span><small>Diagnosis</small></a></li><li class="nav-depth-1"><a href="../scheduling/tuning.html" ><span>성능 조정</span><small>Tuning</small></a></li><li class="nav-depth-0"><a href="../tools/index.html" ><span>개발 도구</span><small>Tools</small></a></li><li class="nav-depth-1"><a href="../tools/kernel-optimizer.html" ><span>커널 최적화 도구</span><small>Kernel Optimizer</small></a></li><li class="nav-depth-1"><a href="../tools/language-server.html" ><span>언어 서버</span><small>Language Server</small></a></li><li class="nav-depth-1"><a href="../tools/schedule-viewer.html" ><span>스케줄 뷰어</span><small>Schedule Viewer</small></a></li></ul></details><details class="nav-group" ><summary>저장소와 런타임<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../repository.html" ><span>저장소 안내</span><small>Repository Guide</small></a></li><li class="nav-depth-0"><a href="../runtime.html" ><span>런타임 안내</span><small>Runtime Guide</small></a></li><li class="nav-depth-0"><a href="../runtime-bootloader.html" ><span>런타임 부트로더</span><small>Runtime Bootloader</small></a></li><li class="nav-depth-0"><a href="../device-abi.html" ><span>디바이스 함수 ABI</span><small>Device Function ABI</small></a></li><li class="nav-depth-0"><a href="../example-mnist.html" ><span>MNIST 예제 안내</span><small>MNIST Example</small></a></li><li class="nav-depth-0"><a href="../example-transformer.html" ><span>트랜스포머 예제 안내</span><small>Transformer Example</small></a></li><li class="nav-depth-0"><a href="../kernel-authoring.html" ><span>커널 작성 스킬</span><small>Kernel Authoring Skill</small></a></li><li class="nav-depth-0"><a href="../changes.html" ><span>변경 이력</span><small>Release Notes</small></a></li></ul></details></nav><div class="nav-footer"><a href="../about.html">번역 안내·용어집</a><a href="../../index.html">Furiosa 개발자 문서</a><span>한국어로 읽는 TCP · No5</span></div></aside>
+<div class="workspace"><main id="main" class="main-content " tabindex="-1"><div class="page-meta"><span>FURIOSA OPT / 한국어 문서</span><a href="https://github.com/furiosa-ai/furiosa-opt/blob/3d43bc9d20f324af60e3006c3f1541938d7f5097/docs/src/moving-tensors/sequencer.md" target="_blank" rel="noopener noreferrer">원문링크 <span aria-hidden="true">↗</span></a></div><h1 id="sequencer"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0001"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">시퀀서(Sequencer)</span></span></h1>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0002"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">시퀀서(sequencer)는 메모리 버퍼(memory buffer)를 패킷 스트림(packet stream)으로 읽고, 패킷 스트림을 다시 메모리에 씁니다. 커널 작성자는 매핑(mapping)과 패킷 크기(packet size)로 이 동작을 제어합니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0003"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">시퀀서(sequencer)의 동작 원리는 Fetch·Commit·DMA가 공통으로 사용하는 루프(loop), 스트라이드(stride), 접근 크기(access size), 수명(lifetime)을 설명합니다. 의사 타입(pseudo-type) 예제는 모델을 소개하고, 접근 크기와 아키텍처(Architecture) 절은 실제 엔진(engine) 동작을 설명합니다. Fetch와 Commit 엔진은 각각 시퀀서 하나로 DM 주소를 지정합니다. DMA 엔진은 읽기 시퀀서와 쓰기 시퀀서를 연결하여 중간 버퍼(intermediate buffer) 없이 DM과 HBM 사이에서 데이터를 옮깁니다.</span></span></p>
+<h2 id="interface"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0004"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">인터페이스(Interface)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0005"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>MemTensor</code>, <code>StreamTensor</code>는 학습용 의사 타입(pseudo type)입니다. 버퍼(buffer)와 스트림(stream) 사이의 변환 패턴만 분리해, 모든 엔진 타입(engine type)을 소개하지 않고도 시퀀서(sequencer) 원리를 설명할 수 있게 합니다. 실제 엔진 API는 <code>DmTensor</code>, <code>HbmTensor</code>, <code>TuTensor</code> 등 서로 다른 타입을 사용하지만, 각각의 구체적인 타입 쌍은 아래의 동일한 <code>MemTensor</code> → <code>StreamTensor</code> 형태에 대응합니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0006"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>MemTensor</code>는 어떤 메모리 매핑(memory mapping) <code>Buf</code>에 데이터를 담습니다. 공개 API(public API)에서는 DM·SPM·HBM 텐서(tensor)가 이 역할을 맡습니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0007"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">DMA 엔진(engine)은 읽기 시퀀서(read sequencer)와 쓰기 시퀀서(write sequencer)를 연결하여 중간 버퍼(intermediate buffer) 없이 DM·SPM·HBM 사이에서 데이터를 옮깁니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-21" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="sd">/// 버퍼(buffer)에 저장되는 범용 텐서(generic tensor).</span>
+<span class="sd">/// 메모리 `Buf`에 데이터를 담고 스트림(stream)으로 읽거나 쓸 수 있는 대상.</span>
+<span class="cp">#[derive(Debug)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">Scalar</span><span class="p">,</span><span class="w"> </span><span class="n">Buf</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">inner</span><span class="p">:</span><span class="w"> </span><span class="nc">Tensor</span><span class="o">&lt;</span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Buf</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0009"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>StreamTensor</code>는 이동 중인 텐서(tensor in flight)입니다. 수명(lifetime) <code>'l</code>은 스트림(stream)을 원본 버퍼(source buffer)에 연결하므로, 스트림이 데이터보다 오래 존재할 수 없습니다. <code>Time</code>은 시간 매핑(temporal mapping), 즉 시간에 따른 반복이며, <code>Packet</code>은 공간 매핑(spatial mapping), 즉 패킷 하나의 내용입니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-25" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="sd">/// 이동 중인 텐서(tensor in flight)를 스트림(stream)으로 보는 뷰(view).</span>
+<span class="sd">/// `Packet`은 사이클(cycle) 하나의 형상(shape), `Time`은 여러 사이클에 걸친 형상.</span>
+<span class="cp">#[derive(Debug)]</span>
+<span class="k">pub</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">Scalar</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">inner</span><span class="p">:</span><span class="w"> </span><span class="nc">Tensor</span><span class="o">&lt;</span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Pair</span><span class="o">&lt;</span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="o">&gt;&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">_marker</span><span class="p">:</span><span class="w"> </span><span class="nc">PhantomData</span><span class="o">&lt;&amp;'</span><span class="na">l</span><span class="w"> </span><span class="p">()</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0011"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>read</code>는 <code>MemTensor</code>를 <code>StreamTensor</code>로 바꾸고, <code>write</code>는 반대로 바꿉니다. 둘 다 값을 보존합니다. 각 엔진(engine)의 전체 API는 여기에 공간 차원(spatial dimension) <code>Chip</code>, <code>Cluster</code>, <code>Slice</code>를 추가하며, 이는 각 엔진 페이지에서 설명합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-29" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="k">impl</span><span class="o">&lt;</span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">Scalar</span><span class="p">,</span><span class="w"> </span><span class="n">Buf</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="o">&gt;</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Buf</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 주어진 `Time`, `Packet` 매핑(mapping)으로 이 버퍼(buffer)에서 스트림(stream)을 읽음.</span>
+<span class="w">    </span><span class="sd">/// `(Time, Packet)`은 `Buf`의 브로드캐스트(broadcast)일 수 있음(Fetch / Switch / DMA-read 동작과 일치).</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">read</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;'</span><span class="na">l</span><span class="w"> </span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">StreamTensor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">inner</span><span class="p">:</span><span class="w"> </span><span class="nc">self</span><span class="p">.</span><span class="n">inner</span><span class="p">.</span><span class="n">transpose</span><span class="p">(</span><span class="kc">true</span><span class="p">),</span>
+<span class="w">            </span><span class="n">_marker</span><span class="p">:</span><span class="w"> </span><span class="nc">PhantomData</span><span class="p">,</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="sd">/// 스트림(stream)을 이 버퍼(buffer)에 다시 기록.</span>
+<span class="w">    </span><span class="sd">/// 브로드캐스트(broadcast)는 허용하지 않음. 각 `Buf` 슬롯(slot)에 대응하는 `(Time, Packet)`의 원본 위치(source position)는 정확히 하나여야 함(Commit 동작과 일치).</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">write</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="o">&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="k">mut</span><span class="w"> </span><span class="bp">self</span><span class="p">,</span><span class="w"> </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">.</span><span class="n">inner</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">stream</span><span class="p">.</span><span class="n">inner</span><span class="p">.</span><span class="n">transpose</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0012"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">어떤 <code>MemTensor</code>에도 유효한 <code>Time</code>·<code>Packet</code> 조합이 여럿 있을 수 있으며, 각 조합은 다른 <code>StreamTensor</code>를 만듭니다. 유효한 선택지 중에서는 <code>Packet</code> 크기가 클수록 대역폭 활용률(bandwidth utilization)이 좋아집니다. 구체적인 절충 관계(trade-off)는 <a href="memory-performance.html">메모리 성능(Memory Performance)</a>에서 설명합니다.</span></span></p>
+<h2 id="examples"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0013"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">예제(Examples)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0014"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">다음 예제들은 위의 핵심 API로 흔히 쓰는 읽기·쓰기 패턴(pattern)을 보여 줍니다. 아래 <a href="#architecture">아키텍처(Architecture)</a>에서는 컴파일러(compiler)가 각 패턴의 하드웨어 구성(hardware configuration)을 도출하는 방법을 설명합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-39" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+
+<span class="sd">/// 스트라이드 접근(strided access): 8×512 텐서(tensor)를 원소 32개짜리 패킷(packet) 128개로 읽음.</span>
+<span class="sd">/// Time = m![A, B / 32]는 8 * 16 = 128개의 시간 단계(time step)를 생성.</span>
+<span class="sd">/// Packet = m![B % 32]는 패킷(packet)마다 연속 원소(consecutive element) 32개를 전달.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">strided_read</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">32</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">B</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span><span class="w">  </span><span class="c1">// 자동 타입 추론(automatic type inference)</span>
+<span class="p">}</span>
+
+<span class="sd">/// 스트라이드 쓰기(strided write): 원소 32개짜리 패킷(packet) 128개를 8×512 텐서(tensor)에 다시 기록.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">strided_write</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">32</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">B</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="sd">/// 축 순서를 바꾸는 읽기(axis reordering read): 순회(traversal)를 [N, C, H, W]에서 [W, H, C, N]으로 변경.</span>
+<span class="sd">/// Time = m![W, H, C, N]은 축(axis)의 역순으로 반복.</span>
+<span class="sd">/// Packet = m![1]은 원소 하나짜리 패킷(packet)을 전달.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">axis_reordering_read</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="sd">/// 축 순서를 바꾸는 쓰기(axis reordering write): [W, H, C, N] 스트림(stream)을 [N, C, H, W] 버퍼(buffer)에 다시 기록.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">axis_reordering_write</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="sd">/// 타일링 읽기(tiling read): 캐시 효율(cache efficiency)을 위해 축(axis)을 하위 블록(sub-block)으로 분할.</span>
+<span class="sd">/// Time = m![A % 2, B % 4, A / 2, B / 4]는 A를 2 × 4, B를 4 × 128 블록(block)으로 타일링(tiling).</span>
+<span class="sd">/// Packet = m![C # 32]는 C를 패킷(packet)당 원소 32개로 패딩(padding).</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">tiling_read</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="sd">/// 타일링 쓰기(tiling write): 타일로 나뉜 스트림(tiled stream)을 버퍼(buffer)에 다시 기록.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">tiling_write</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="sd">/// 브로드캐스트 읽기(broadcasting read): `Buf`에 없는 축에 대해 원소를 복제.</span>
+<span class="sd">/// Time = m![T, A]는 T를 시간 방향으로 브로드캐스트(broadcast, 같은 데이터를 T번 반복).</span>
+<span class="sd">/// Packet = m![P]는 P를 공간 방향으로 브로드캐스트(broadcast, 같은 원소로 패킷(packet)을 채움).</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">broadcasting_read</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">P</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="sd">/// 브로드캐스트 쓰기(broadcasting write): 브로드캐스트된 스트림(stream)을 버퍼(buffer)에 다시 기록.</span>
+<span class="sd">/// 각 `Buf` 슬롯(slot)에 대응하는 `(Time, Packet)`의 원본 위치(source position)는 정확히 하나여야 하므로 이 동작은 거부됨.</span>
+<span class="sd">/// 이 코드는 실행 시 패닉(panic)을 일으킴.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">broadcasting_write</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">P</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="architecture"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0016"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">아키텍처(Architecture)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0017"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">각 시퀀서(sequencer) 호출은 입력·출력 텐서(tensor)의 매핑(mapping)에서 중첩 루프 구성(nested-loop configuration)으로 컴파일되며, 시퀀서 하드웨어가 이 구성을 실행합니다. 구성 형태는 <code>[size_0 : stride_0, size_1 : stride_1, ...] : packet_size</code>이며, 첨자 0이 가장 바깥 루프(loop)입니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-46" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="k">struct</span><span class="w"> </span><span class="nc">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 각 항목(entry)은 중첩 루프(nested loop)의 한 단계를 정의.</span>
+<span class="w">    </span><span class="n">entries</span><span class="p">:</span><span class="w"> </span><span class="nb">Vec</span><span class="o">&lt;</span><span class="n">Entry</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="sd">/// 패킷(packet)당 원소 수.</span>
+<span class="w">    </span><span class="n">packet_size</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">Entry</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 이 루프 단계(loop level)의 반복 횟수.</span>
+<span class="w">    </span><span class="n">size</span><span class="p">:</span><span class="w"> </span><span class="kt">usize</span><span class="p">,</span>
+<span class="w">    </span><span class="sd">/// 반복(iteration) 후 건너뛸 메모리 주소 간격(memory address distance, 원소 단위).</span>
+<span class="w">    </span><span class="n">stride</span><span class="p">:</span><span class="w"> </span><span class="kt">isize</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0018"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">각 항목(entry)은 텐서 순회(tensor traversal)의 한 차원(dimension)을 표현합니다. <code>size</code> 필드는 해당 루프(loop)의 반복 횟수를, <code>stride</code> 필드는 연속한 반복 사이의 메모리 오프셋(memory offset)을 정합니다.</span></span></p>
+<h3 id="access-size"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0019"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">접근 크기(Access Size)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0020"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>max_access_size = gcd(Packet::SIZE, contiguous_run)</code>은 하드웨어 접근(hardware access) 한 번에 처리하는 원소 수입니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0021"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">여기서 <code>contiguous_run</code>은 <code>Config</code> 항목(entry)의 가장 안쪽부터 이어지는 물리적으로 연속된 구간(physically contiguous run)의 원소 수입니다. <code>max_access_size</code>가 클수록 패킷(packet)당 접근 횟수는 줄어듭니다. 다음은 <code>Config</code>에서 <code>max_access_size</code>를 계산하는 방법입니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-59" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="k">impl</span><span class="w"> </span><span class="n">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">contiguous_run</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 가장 안쪽부터 바깥쪽으로 항목 쌍(pair)을 확인하고, 처음 비연속(non-contiguous) 쌍을 만나면 중단.</span>
+<span class="w">        </span><span class="c1">// 이웃한 두 항목(entry) (n_outer : s_outer), (n_inner : s_inner)는</span>
+<span class="w">        </span><span class="c1">// s_outer == n_inner * s_inner일 때 연속(contiguous)임.</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="k">mut</span><span class="w"> </span><span class="n">contiguous_run</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">last</span><span class="p">().</span><span class="n">map_or</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">|</span><span class="n">e</span><span class="o">|</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="n">size</span><span class="p">);</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">windows</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">rev</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">stride</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">size</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="kt">isize</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">stride</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">contiguous_run</span><span class="w"> </span><span class="o">*=</span><span class="w"> </span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">size</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">break</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">contiguous_run</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">fn</span><span class="w"> </span><span class="nf">max_access_size</span><span class="p">(</span><span class="o">&amp;</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="kt">usize</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">gcd</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">packet_size</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">contiguous_run</span><span class="p">())</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0025"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">대부분의 경우 패킷 배치(packet layout)는 DM에서 완전히 연속(contiguous)이므로 <code>max_access_size == Packet::SIZE</code>입니다. <code>max_access_size &lt; Packet::SIZE</code>인 경우는 <a href="#non-contiguous-packets">비연속 패킷(Non-Contiguous Packets)</a>을 참고하세요.</span></span></p>
+<h3 id="how-it-works"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0026"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">동작 원리(How It Works)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0027"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>m![N, C, H, W]</code> → <code>m![W, H, C, N]</code>의 <code>Config</code>에는 스트림(stream)의 각 축(axis)마다 항목(entry) 하나가 들어갑니다. 각 스트라이드(stride)는 원본 버퍼(source buffer)에서 그 축의 한 단계에 해당하는 간격입니다. <code>Packet = m![1]</code>이므로 <code>Packet::SIZE = max_access_size = 1</code>이며, 시퀀서(sequencer)는 루프(loop)를 한 번 반복할 때마다 DM 접근을 한 번 수행합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-69" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_nchw_whcn</span><span class="p">(</span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span>
+<span class="w">                     </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 컴파일러(compiler)가 생성한 구성(configuration): [8 : 1, 8 : 8, 3 : 64, 4 : 192] : 1</span>
+<span class="w">    </span><span class="kd">let</span><span class="w"> </span><span class="n">config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">entries</span><span class="p">:</span><span class="w"> </span><span class="nc">vec</span><span class="o">!</span><span class="p">[</span>
+<span class="w">            </span><span class="n">Entry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">size</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">stride</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">},</span><span class="w">   </span><span class="c1">// W</span>
+<span class="w">            </span><span class="n">Entry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">size</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">stride</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">},</span><span class="w">   </span><span class="c1">// H</span>
+<span class="w">            </span><span class="n">Entry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">size</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">stride</span><span class="p">:</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="p">},</span><span class="w">  </span><span class="c1">// C</span>
+<span class="w">            </span><span class="n">Entry</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">size</span><span class="p">:</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">stride</span><span class="p">:</span><span class="w"> </span><span class="mi">192</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="c1">// N</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="n">packet_size</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// 하드웨어는 구성을 중첩 루프(nested loop)로 실행:</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">8</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">8</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="c1">// 각 주소(address)를 읽음</span>
+<span class="w">                    </span><span class="kd">let</span><span class="w"> </span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">192</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">                    </span><span class="c1">// yield buf[addr];</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">write_whcn_nchw</span><span class="p">(</span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                  </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="n">bf16</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 컴파일러(compiler)는 쓰기에도 같은 구성(config)을 생성</span>
+<span class="w">    </span><span class="c1">// 하드웨어는 구성을 중첩 루프(nested loop)로 실행:</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">8</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">8</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">3</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">for</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="mi">0</span><span class="o">..</span><span class="mi">4</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="c1">// 각 주소(address)에 기록</span>
+<span class="w">                    </span><span class="kd">let</span><span class="w"> </span><span class="n">addr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">h</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">192</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+<span class="w">                    </span><span class="c1">// buf[addr] = stream.next();</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="configurations"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0036"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">구성(Configurations)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0037"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">다음 패턴(pattern)들은 커널(kernel) 작성자가 만나게 될 대부분의 구성(configuration)을 다룹니다.</span></span></p>
+<h3 id="transposing-axes"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0038"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축 전치(Transposing Axes)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0039"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축(axis)을 전치(transpose)하면 스트림(stream)이 버퍼(buffer)와 다른 순서로 축을 순회할 수 있습니다. 컴파일러(compiler)는 그 순서대로 메모리를 순회하는 데 필요한 스트라이드(stride)를 계산합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-82" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_rearranging</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Buf</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">16</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Time, Packet</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0042"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">컴파일러(compiler)는 합쳐진 매핑(mapping) <code>m![B, A, C # 16]</code>을 항(term)별로 처리하면서 구성 항목(configuration entry)을 만들고, 그 과정에서 <code>Buf</code>를 변환합니다. 각 항목의 크기는 해당 항의 크기이고, 스트라이드(stride)는 현재 <code>Buf</code>에서 그 항의 한 단계가 차지하는 범위(volume)입니다. 항 하나를 처리하면 그 축(axis)을 소비했다는 사실을 반영하여 <code>Buf</code>를 갱신합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0043"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항(Term)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0044"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(Entry)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0045"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">스트라이드의 근거(Stride Source)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0046"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">처리 후 <code>Buf</code></span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>B</code></td>
+<td><code>8 : 32</code></td>
+<td><code>m![C # 32]::SIZE</code></td>
+<td><code>m![A, 1 # 8, C # 32]</code></td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td><code>8 : 256</code></td>
+<td><code>m![1 # 8, C # 32]::SIZE</code></td>
+<td><code>m![1 # 64, C # 32]</code></td>
+</tr>
+<tr>
+<td><code>C # 16</code></td>
+<td><code>16 : 1</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0047"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">연속(contiguous, <code>Packet</code> 차원)</span></span></td>
+<td><code>1 # 2048</code></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0048"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Packet::SIZE = max_access_size = 16</code>입니다. 가장 안쪽 항목(entry) <code>16 : 1</code>은 연속(contiguous)이므로 하드웨어는 접근 한 번으로 패킷(packet) 전체를 전송합니다.</span></span></p>
+<h3 id="splitting-axes"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0049"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축 분할(Splitting Axes)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0050"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">타일링(tiling)은 캐시 효율(cache efficiency)을 높이거나 텐서 유닛(Tensor Unit)의 버퍼 크기에 맞추기 위해 논리 축(logical axis)을 하위 블록(sub-block)으로 나눕니다. 컴파일러(compiler)는 축을 여러 항목(entry)으로 나누어 이를 구현합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-157" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_splitting</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Buf</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">C</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">32</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Time, Packet</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0053"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>A % 2</code>, <code>A / 2</code> 같은 표현식(expression)은 <code>A</code>축(axis)을 별도의 항목(entry)으로 나눕니다. 컴파일러(compiler)는 <code>m![A % 2, B % 4, A / 2, B / 4, C # 32]</code>를 항(term)별로 처리합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0054"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항(Term)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0055"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(Entry)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0056"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">스트라이드의 근거(Stride Source)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0057"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">처리 후 <code>Buf</code></span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A % 2</code></td>
+<td><code>2 : 64</code></td>
+<td><code>m![B, C # 8]::SIZE</code></td>
+<td><code>m![A / 2, 1 # 2, B, C # 8]</code></td>
+</tr>
+<tr>
+<td><code>B % 4</code></td>
+<td><code>4 : 8</code></td>
+<td><code>m![C # 8]::SIZE</code></td>
+<td><code>m![A / 2, 1 # 2, B / 4, 1 # 4, C # 8]</code></td>
+</tr>
+<tr>
+<td><code>A / 2</code></td>
+<td><code>4 : 128</code></td>
+<td><code>m![1 # 2, B / 4, 1 # 4, C # 8]::SIZE</code></td>
+<td><code>m![1 # 8, B / 4, 1 # 4, C # 8]</code></td>
+</tr>
+<tr>
+<td><code>B / 4</code></td>
+<td><code>2 : 32</code></td>
+<td><code>m![1 # 4, C # 8]::SIZE</code></td>
+<td><code>m![1 # 64, C # 8]</code></td>
+</tr>
+<tr>
+<td><code>C # 32</code></td>
+<td><code>32 : 1</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0058"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">연속(contiguous, <code>Packet</code> 차원)</span></span></td>
+<td><code>1 # 512</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Packet::SIZE = max_access_size = 32</code>.</p>
+<h3 id="slicing-axes"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0059"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축의 일부 선택(Slicing Axes)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0060"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">슬라이싱(slicing)은 메모리 배치(memory layout)에서 인덱스(index)의 일부 범위만 읽습니다. 인덱스를 지정한 뷰(indexed view)가 원본 텐서(tensor)의 부분집합을 선택할 때 이런 조건이 생깁니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-260" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_slicing</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Buf</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">C</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Time, Packet</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0063"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>= 3</code> 표기는 <code>A % 4</code>의 반복 횟수를 4회 대신 3회로 제한하여 하드웨어가 텐서(tensor)의 일부 영역(sub-region)만 다루게 합니다. 컴파일러(compiler)는 <code>m![A / 4, A % 4 = 3, B / 4, B % 4 = 2, C]</code>를 항(term)별로 처리합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0064"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항(Term)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0065"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(Entry)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0066"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">스트라이드의 근거(Stride Source)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0067"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">처리 후 <code>Buf</code></span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A / 4</code></td>
+<td><code>4 : 256</code></td>
+<td><code>m![A % 4, B, C]::SIZE</code></td>
+<td><code>m![1 # 4, A % 4, B, C]</code></td>
+</tr>
+<tr>
+<td><code>A % 4 = 3</code></td>
+<td><code>3 : 64</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0068"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>m![B, C]::SIZE</code>(범위를 3으로 제한)</span></span></td>
+<td><code>m![1 # 16, B, C]</code></td>
+</tr>
+<tr>
+<td><code>B / 4</code></td>
+<td><code>2 : 32</code></td>
+<td><code>m![B % 4, C]::SIZE</code></td>
+<td><code>m![1 # 32, B % 4, C]</code></td>
+</tr>
+<tr>
+<td><code>B % 4 = 2</code></td>
+<td><code>2 : 8</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0069"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>m![C]::SIZE</code>(범위를 2로 제한)</span></span></td>
+<td><code>m![1 # 128, C]</code></td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td><code>8 : 1</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0070"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">연속(contiguous, <code>Packet</code> 차원)</span></span></td>
+<td><code>1 # 1024</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Packet::SIZE = max_access_size = 8</code>.</p>
+<h3 id="broadcasting-axes"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0071"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축 브로드캐스트(Broadcasting Axes)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0072"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">브로드캐스트(broadcasting)는 스트림(stream)이 <code>Buf</code>에 없는 축(axis)을 순회할 때 하나의 원소를 여러 패킷(packet)이나 시간 단계(time step)에 걸쳐 반복합니다. 축 전체나 <code>N / 512</code> 같은 축의 일부가 <code>Time</code> 또는 <code>Packet</code>에는 있지만 <code>Buf</code>에는 없을 수 있습니다. 그러면 시퀀서(sequencer)는 브로드캐스트 항목(entry) <code>: 0</code>을 만들어 같은 주소(address)에 다시 접근합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-363" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_broadcasting</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Buf</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">P</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Time, Packet</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0075"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">컴파일러(compiler)는 <code>m![T, A, P]</code>를 항(term)별로 처리합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0076"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항(Term)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0077"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(Entry)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0078"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">스트라이드의 근거(Stride Source)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0079"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">처리 후 <code>Buf</code></span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>T</code></td>
+<td><code>4 : 0</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0080"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Buf</code>에 없음(브로드캐스트, broadcast)</span></span></td>
+<td><code>m![A]</code></td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td><code>16 : 1</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0081"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>m![A]</code> 안의 <code>A</code></span></span></td>
+<td><code>1 # 16</code></td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td><code>4 : 0</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0082"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Buf</code>에 없음(브로드캐스트, broadcast)</span></span></td>
+<td><code>1 # 16</code></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0083"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Packet::SIZE = max_access_size = 4</code>입니다. <code>P</code>가 브로드캐스트(broadcast)되므로 패킷(packet) 전체에 같은 원소가 복제됩니다(공간 브로드캐스트, spatial broadcast). <code>T</code>가 브로드캐스트되므로 여러 시간 단계(time step)에 같은 데이터가 반복됩니다(시간 브로드캐스트, temporal broadcast).</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0084"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Time</code>이나 <code>Packet</code>이 <code>Buf</code>에 없는 축(axis)의 일부를 참조하는 경우에도 같은 규칙이 적용됩니다. 예를 들어 <code>m![N % 512]</code> 버퍼(buffer)를 <code>StreamTensor&lt;m![N / 512], m![N % 512]&gt;</code>로 읽으면 <code>N / 512</code> 시간 항목(time entry)에서 브로드캐스트(broadcast)가 일어납니다. 버퍼의 원소 512개가 바깥쪽 <code>N / 512</code> 반복마다 재사용됩니다.</span></span></p>
+<h3 id="merging-entries"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0085"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목 병합(Merging Entries)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0086"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">하드웨어는 구성(configuration) 하나당 최대 항목(entry) 8개를 지원합니다. 변환 결과가 이보다 많으면 컴파일러(compiler)는 이웃한 항목들을 병합(merge)하여 한계에 맞춥니다. 이웃한 <code>(n1 : s1)</code>, <code>(n2 : s2)</code>가 <code>s1 == n2 * s2</code>를 만족해 물리적으로 연속(physically contiguous)이면 <code>(n1 * n2 : s2)</code>로 병합됩니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-441" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_merging</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Buf</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">16</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">8</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Time, Packet</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0089"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">컴파일러(compiler)는 <code>m![W / 16, H % 2, H / 2, C / 2, C % 2, N / 2, N % 2, W / 8 % 2, W % 8]</code>를 항(term)별로 처리하여 처음에 항목(entry) 9개를 만듭니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0090"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항(Term)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0091"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(Entry)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0092"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">스트라이드의 근거(Stride Source)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>W / 16</code></td>
+<td><code>2 : 16</code></td>
+<td><code>m![W % 16]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>H % 2</code></td>
+<td><code>2 : 32</code></td>
+<td><code>m![W]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>H / 2</code></td>
+<td><code>4 : 64</code></td>
+<td><code>m![H % 2, W]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>C / 2</code></td>
+<td><code>4 : 512</code></td>
+<td><code>m![C % 2, H, W]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>C % 2</code></td>
+<td><code>2 : 256</code></td>
+<td><code>m![H, W]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>N / 2</code></td>
+<td><code>4 : 4096</code></td>
+<td><code>m![N % 2, C, H, W]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>N % 2</code></td>
+<td><code>2 : 2048</code></td>
+<td><code>m![C, H, W]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>W / 8 % 2</code></td>
+<td><code>2 : 8</code></td>
+<td><code>m![W % 8]::SIZE</code></td>
+</tr>
+<tr>
+<td><code>W % 8</code></td>
+<td><code>8 : 1</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0093"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">연속(contiguous, 패킷 차원(packet dimension))</span></span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0094"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(entry) 9개는 하드웨어 한계인 8개를 넘으므로 컴파일러(compiler)는 <code>s1 == n2 * s2</code>인 연속 항목 쌍(contiguous pair)을 병합합니다. <code>H % 2 -&gt; (2 : 32)</code>와 <code>H / 2 -&gt; (4 : 64)</code>는 물리적으로 연속이 아니므로 병합되지 않습니다(<span class="math-source" data-display="false">s_1 \neq n_2 \times s_2 \iff 32 \neq 4 \times 64</span>). 최종 구성(configuration)은 항목 6개를 가집니다. 마지막 병합은 시간/패킷 경계(time/packet boundary)를 가로지릅니다. <code>W/8%2 (2:8)</code>과 <code>W%8 (8:1)</code>이 <code>W%16 (16:1)</code>로 병합됩니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0095"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항(Term)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0096"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항목(Entry)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0097"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">병합된 항목(Merged Entries)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>W / 16</code></td>
+<td><code>2 : 16</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>H % 2</code></td>
+<td><code>2 : 32</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>H / 2</code></td>
+<td><code>4 : 64</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>C</code></td>
+<td><code>8 : 256</code></td>
+<td><code>C / 2 (4 : 512)</code>,<br><code>C % 2 (2 : 256)</code></td>
+</tr>
+<tr>
+<td><code>N</code></td>
+<td><code>8 : 2048</code></td>
+<td><code>N / 2 (4 : 4096)</code>,<br><code>N % 2 (2 : 2048)</code></td>
+</tr>
+<tr>
+<td><code>W % 16</code></td>
+<td><code>16 : 1</code></td>
+<td><code>W / 8 % 2 (2 : 8)</code>,<br><code>W % 8 (8 : 1)</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>Packet::SIZE = max_access_size = 8</code>.</p>
+<h3 id="non-contiguous-packets"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0101"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">비연속 패킷(Non-Contiguous Packets)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0102"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">패킷(packet)이 차지하는 범위 안에서 DM 배치(layout)의 스트라이드(stride)가 불연속이면 <code>max_access_size &lt; Packet::SIZE</code>입니다. 이때 하드웨어는 패킷당 한 번이 아니라 연속된 하위 블록(contiguous sub-block)마다 한 번씩 접근합니다. 다음 예제는 원소 32개짜리 패킷 <code>m![A, B]</code>를 DM에서 각 B행(row)을 16칸(slot)으로 패딩(padding)한 버퍼(buffer)에 씁니다. A의 스트라이드가 8이 아닌 16이므로 패킷 범위가 연속되지 않아 하드웨어는 접근을 1회 대신 4회 수행합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-656" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">write_padded</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="nc">mut</span><span class="w"> </span><span class="n">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="p">#</span><span class="w"> </span><span class="mi">16</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="n">stream</span><span class="p">:</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// 컴파일러(compiler)가 생성한 구성(configuration): [</span>
+<span class="w">    </span><span class="c1">//   A -&gt; 4 : 16,   (16 != 8 * 1, 비연속(non-contiguous) — 각 B행 뒤에 패딩 간격(padding gap))</span>
+<span class="w">    </span><span class="c1">//   B -&gt; 8 : 1,    (연속된 패킷 하위 블록(contiguous packet sub-block))</span>
+<span class="w">    </span><span class="c1">// ] : 32</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">stream</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>Packet::SIZE = 32</code>, <code>contiguous_run = 8</code>, <code>max_access_size = 8</code>.</p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0106"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Packet</code>에 원본 배치(source layout)에서 이웃하지 않은 축(axis)이 들어가도 비연속 스트라이드(non-contiguous stride)가 생깁니다. 다음 예제는 같은 <code>m![N, C, H, W]</code> 버퍼(buffer)를 서로 다른 <code>Packet</code> 선택으로 읽습니다. 가장 안쪽 축 <code>W</code>만 <code>Packet</code>에 넣으면 <code>max_access_size = Packet::SIZE = 8</code>이 되어 패킷당 한 번 접근합니다. <code>m![N, H, W]</code>를 <code>Packet</code>에 넣으면 <code>C</code>를 건너뛰므로 원본에서 N의 스트라이드(96)가 H×W(32)와 같지 않습니다. 따라서 <code>contiguous_run = 32</code>, <code>max_access_size = 32</code>이고 하드웨어는 패킷당 접근을 1회 대신 4회 수행합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-663" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="c1">// 컴파일러(compiler)가 생성한 구성(configuration): [</span>
+<span class="c1">//   N -&gt; 4 : 96,   (96 == 3 × 32, 연속(contiguous))</span>
+<span class="c1">//   C -&gt; 3 : 32,   (32 == 4 × 8,  연속(contiguous))</span>
+<span class="c1">//   H -&gt; 4 : 8,    (8  == 8 × 1,  연속(contiguous))</span>
+<span class="c1">//   W -&gt; 8 : 1,    (패킷 차원(packet dimension))</span>
+<span class="c1">// ] : 8</span>
+<span class="c1">// contiguous_run = 8 (W); ×4 (H): 8==8×1 ✓; ×3 (C): 32==4×8 ✓; ×4 (N): 96==3×32 ✓; 모든 축(axis)이 연속(contiguous)</span>
+<span class="c1">// max_access_size = gcd(packet_size, contiguous_run) = packet_size = 8</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_contiguous</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+
+<span class="c1">// 컴파일러(compiler)가 생성한 구성(configuration): [</span>
+<span class="c1">//   C -&gt; 3 : 32,   (시간 차원(time dimension))</span>
+<span class="c1">//   N -&gt; 4 : 96,   (96 != 4 × 8 = 32, 비연속(non-contiguous) — C축이 사이에 끼어 있음)</span>
+<span class="c1">//   H -&gt; 4 : 8,    (8  == 8 × 1, 연속(contiguous))</span>
+<span class="c1">//   W -&gt; 8 : 1,    (패킷 차원(packet dimension))</span>
+<span class="c1">// ] : 128</span>
+<span class="c1">// contiguous_run = 8 (W); ×4 (H): 8==8×1 ✓ → 32; ×4 (N): 96!=4×8 ✗ 중단 → 32</span>
+<span class="c1">// max_access_size = gcd(128, 32) = 32; 하드웨어는 패킷(packet)당 128/32 = 4회 접근</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_non_contiguous</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">C</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">H</span><span class="p">,</span><span class="w"> </span><span class="n">W</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="constraints"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0121"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">제약(Constraints)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0122"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">RNGD에서는 다음 하드웨어 한계(hardware limit) 중 하나라도 넘으면 컴파일 오류(compilation error)가 발생합니다.</span></span></p>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0123"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>항목 수 한계(Entry limit)</strong>: 최대 항목(entry) 8개이므로, 컴파일러(compiler)는 가능한 경우 이웃한 항목들을 병합합니다(구성 절의 <a href="#merging-entries">항목 병합(Merging Entries)</a> 참고).</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0124"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>반복 횟수 한계(Iteration limit)</strong>: 항목(entry)당 <code>size &lt;= 65,536</code>.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0125"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>패킷 크기(Packet size)</strong>: 1·2·4·8·16·32바이트 중 하나여야 합니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0126"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>패킷 가져오기(Packet fetch)</strong>: 가장 안쪽 항목(entry) <code>n : s</code>는 다음 중 하나를 만족해야 합니다.</span></span>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0127"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">연속 접근(contiguous access, 이웃 원소): <code>(s == 0 || s == 1) &amp;&amp; n % packet_size == 0</code></span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0128"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">불연속 접근(discrete access, 단일 원소 패킷): <code>packet_size == 1</code></span></span></li>
+</ul>
+</li>
+</ul>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0129"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">병합(merging)이 실패하거나 한계를 넘으면 텐서 매핑(tensor mapping)을 다시 설계하거나 연산(operation)을 여러 시퀀서(sequencer) 호출로 나누세요.</span></span></p>
+<h3 id="compatible-axis-decompositions"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0130"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">호환되는 축 분해(Compatible Axis Decompositions)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0131"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Buf</code>와 스트림(stream) 양쪽에 이름이 나오는 각 축(axis)은 같은 분해(decomposition)를 사용해야 합니다. 컴파일러(compiler)는 스트림을 항(term)별로 순회하며 <code>Buf</code>에서 축을 소비합니다(<a href="#architecture">아키텍처(Architecture)</a> 참고). <code>Buf</code>와 스트림이 한 축을 서로 다른 방식으로 나누고, 두 분할을 함께 표현할 더 세밀한 공통 분할(common refinement)도 없다면 어떤 순회 순서(traversal order)도 성립하지 않습니다. 양쪽의 총 원소 수가 같아도 이 구성(configuration)은 거부됩니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-713" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">15</span><span class="p">];</span>
+
+<span class="k">fn</span><span class="w"> </span><span class="nf">read_incompatible</span><span class="o">&lt;'</span><span class="na">l</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">:</span><span class="w"> </span><span class="kp">&amp;</span><span class="o">'</span><span class="na">l</span><span class="w"> </span><span class="nc">MemTensor</span><span class="o">&lt;</span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">5</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span><span class="w">  </span><span class="c1">// Buf</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">StreamTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">%</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">3</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span><span class="w">  </span><span class="c1">// Time, Packet</span>
+<span class="w">    </span><span class="n">buf</span><span class="p">.</span><span class="n">read</span><span class="p">()</span><span class="w"> </span><span class="c1">// 컴파일 오류(compilation error): 호환되지 않는 분해(incompatible decomposition)</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0135"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Buf</code>는 <code>A</code>를 <code>5 × 3</code>으로, 스트림(stream)은 <code>3 × 5</code>로 분해합니다. <code>gcd(5, 3) = 1</code>이므로 어느 쪽도 다른 쪽을 더 세분한 분해(refinement)가 아닙니다. 컴파일러(compiler)는 이미 5블록 분할을 정한 <code>Buf</code>에서 <code>A % 3</code>을 소비할 수 없습니다.</span></span></p>
+<template id="original-u0001">Sequencer</template><template id="original-u0002">A sequencer reads a memory buffer as a packet stream and writes a packet stream back to memory.
+Mappings and packet sizes are the author-facing controls.</template><template id="original-u0003">Sequencer mechanics explain the loops, strides, access sizes, and lifetimes shared by Fetch, Commit, and DMA.
+The pseudo-type examples introduce the model; Access Size and Architecture explain the concrete engine behavior.
+The Fetch and Commit Engines each use one sequencer to address DM.
+The DMA Engine chains a read sequencer and a write sequencer to move data among DM and HBM without intermediate buffers.</template><template id="original-u0004">Interface</template><template id="original-u0005"><code>MemTensor</code> and <code>StreamTensor</code> are teaching-only pseudo types that isolate the buffer-to-stream pattern, so this section can explain sequencer mechanics without introducing every engine type.
+The real engine APIs use different types (<code>DmTensor</code>, <code>HbmTensor</code>, <code>TuTensor</code>, …), but every concrete pair maps onto the same <code>MemTensor</code> → <code>StreamTensor</code> shape illustrated below.</template><template id="original-u0006"><code>MemTensor</code> holds data in some memory mapping <code>Buf</code>.
+DM, SPM, and HBM tensors play this role in the public API.</template><template id="original-u0007">The DMA Engine chains a read sequencer and a write sequencer to move data among DM, SPM, and HBM without intermediate buffers.</template><template id="original-code-21"><pre><code>/// A generic buffer-backed tensor.
+/// Anything that holds data in a memory `Buf` and can be streamed in or out.
+#[derive(Debug)]
+pub struct MemTensor&lt;D: Scalar, Buf: M&gt; {
+    inner: Tensor&lt;D, Buf&gt;,
+}
+</code></pre></template><template id="original-u0009"><code>StreamTensor</code> is a tensor in flight.
+The lifetime <code>'l</code> ties the stream to its source buffer so a stream cannot outlive its data.
+<code>Time</code> is the temporal mapping (iteration over time) and <code>Packet</code> is the spatial mapping (contents of a single packet).</template><template id="original-code-25"><pre><code>/// A streaming view of a tensor in flight.
+/// `Packet` is the per-cycle shape and `Time` is the multi-cycle shape.
+#[derive(Debug)]
+pub struct StreamTensor&lt;&#x27;l, D: Scalar, Time: M, Packet: M&gt; {
+    inner: Tensor&lt;D, Pair&lt;Time, Packet&gt;&gt;,
+    _marker: PhantomData&lt;&amp;&#x27;l ()&gt;,
+}
+</code></pre></template><template id="original-u0011"><code>read</code> converts a <code>MemTensor</code> into a <code>StreamTensor</code> and <code>write</code> reverses it, both preserving values.
+Each engine's full API adds spatial dimensions (<code>Chip</code>, <code>Cluster</code>, <code>Slice</code>) on top, covered in the engine-specific pages.</template><template id="original-code-29"><pre><code>impl&lt;D: Scalar, Buf: M&gt; MemTensor&lt;D, Buf&gt; {
+    /// Reads a stream from this buffer with the supplied `Time` and `Packet` mapping.
+    /// `(Time, Packet)` may be a broadcast of `Buf` (matches Fetch / Switch / DMA-read behavior).
+    pub fn read&lt;&#x27;l, Time: M, Packet: M&gt;(&amp;&#x27;l self) -&gt; StreamTensor&lt;&#x27;l, D, Time, Packet&gt; {
+        StreamTensor {
+            inner: self.inner.transpose(true),
+            _marker: PhantomData,
+        }
+    }
+
+    /// Writes a stream back into this buffer.
+    /// Broadcast is rejected: each `Buf` slot must have exactly one source position in `(Time, Packet)` (matches Commit behavior).
+    pub fn write&lt;&#x27;l, Time: M, Packet: M&gt;(&amp;mut self, stream: StreamTensor&lt;&#x27;l, D, Time, Packet&gt;) {
+        self.inner = stream.inner.transpose(false);
+    }
+}
+</code></pre></template><template id="original-u0012">For any <code>MemTensor</code>, many valid <code>Time</code> and <code>Packet</code> combinations exist, each producing a different <code>StreamTensor</code>.
+Among valid choices, larger <code>Packet</code> sizes improve bandwidth utilization, and <a href="memory-performance.html">Memory Performance</a> covers the trade-offs in detail.</template><template id="original-u0013">Examples</template><template id="original-u0014">The following examples show common read and write patterns using the core API above.
+<a href="#architecture">Architecture</a> below explains how the compiler derives each pattern's hardware configuration.</template><template id="original-code-39"><pre><code>axes![A = 8, B = 512, N = 4, C = 3, H = 8, W = 8, T = 4, P = 4];
+
+/// Strided access: read 8×512 tensor as 128 packets of 32 elements.
+/// Time = m![A, B / 32] produces 8 * 16 = 128 time steps.
+/// Packet = m![B % 32] delivers 32 consecutive elements per packet.
+fn strided_read&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;bf16, m![A, B]&gt;,
+) -&gt; StreamTensor&lt;&#x27;l, bf16, m![A, B / 32], m![B % 32]&gt; {
+    buf.read()  // Automatic type inference
+}
+
+/// Strided write: write 128 packets of 32 elements back to 8×512 tensor.
+fn strided_write(
+    buf: &amp;mut MemTensor&lt;bf16, m![A, B]&gt;,
+    stream: StreamTensor&lt;bf16, m![A, B / 32], m![B % 32]&gt;,
+) {
+    buf.write(stream)
+}
+
+/// Axis reordering read: change traversal from [N, C, H, W] to [W, H, C, N].
+/// Time = m![W, H, C, N] iterates in reversed axis order.
+/// Packet = m![1] delivers single-element packets.
+fn axis_reordering_read&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;bf16, m![N, C, H, W]&gt;,
+) -&gt; StreamTensor&lt;&#x27;l, bf16, m![W, H, C, N], m![1]&gt; {
+    buf.read()
+}
+
+/// Axis reordering write: write [W, H, C, N] stream back to [N, C, H, W] buffer.
+fn axis_reordering_write(
+    buf: &amp;mut MemTensor&lt;bf16, m![N, C, H, W]&gt;,
+    stream: StreamTensor&lt;bf16, m![W, H, C, N], m![1]&gt;,
+) {
+    buf.write(stream)
+}
+
+/// Tiling read: break axes into sub-blocks for cache efficiency.
+/// Time = m![A % 2, B % 4, A / 2, B / 4] tiles A into 2 × 4, B into 4 × 128 blocks.
+/// Packet = m![C # 32] pads C to 32 elements per packet.
+fn tiling_read&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A, B, C # 8]&gt;,
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![A % 2, B % 4, A / 2, B / 4], m![C # 32]&gt; {
+    buf.read()
+}
+
+/// Tiling write: write tiled stream back to buffer.
+fn tiling_write(
+    buf: &amp;mut MemTensor&lt;i8, m![A, B, C # 8]&gt;,
+    stream: StreamTensor&lt;i8, m![A % 2, B % 4, A / 2, B / 4], m![C # 32]&gt;,
+) {
+    buf.write(stream)
+}
+
+/// Broadcasting read: replicate elements absent from `Buf`.
+/// Time = m![T, A] broadcasts T temporally (same data repeated T times).
+/// Packet = m![P] broadcasts P spatially (same element fills packet).
+fn broadcasting_read&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A]&gt;,
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![T, A], m![P]&gt; {
+    buf.read()
+}
+
+/// Broadcasting write: write broadcast stream back to buffer.
+/// This is rejected as each `Buf` slot must have exactly one source position in `(Time, Packet)`
+/// This code will panic when run
+fn broadcasting_write(
+    buf: &amp;mut MemTensor&lt;i8, m![A]&gt;,
+    stream: StreamTensor&lt;i8, m![T, A], m![P]&gt;,
+) {
+    buf.write(stream)
+}
+</code></pre></template><template id="original-u0016">Architecture</template><template id="original-u0017">Each sequencer call is compiled from its input and output tensor mappings into a nested-loop configuration that the sequencer hardware executes.
+Each configuration takes the form <code>[size_0 : stride_0, size_1 : stride_1, ...] : packet_size</code>, where subscript 0 is the outermost loop:</template><template id="original-code-46"><pre><code>struct Config {
+    /// Each entry defines a nested loop level.
+    entries: Vec&lt;Entry&gt;,
+    /// Number of elements per packet.
+    packet_size: usize,
+}
+
+struct Entry {
+    /// Number of iterations for this loop level.
+    size: usize,
+    /// Memory address distance (in elements) to skip after each iteration.
+    stride: isize,
+}
+</code></pre></template><template id="original-u0018">Each entry encodes one dimension of tensor traversal.
+The <code>size</code> field determines how many times this loop iterates, while the <code>stride</code> field determines the memory offset between consecutive iterations.</template><template id="original-u0019">Access Size</template><template id="original-u0020"><code>max_access_size = gcd(Packet::SIZE, contiguous_run)</code> is the number of elements per hardware access.</template><template id="original-u0021">Here, <code>contiguous_run</code> is the element count of the innermost physically contiguous run of <code>Config</code> entries.
+A larger <code>max_access_size</code> means fewer accesses per packet.
+The following shows how <code>max_access_size</code> is computed from a <code>Config</code>:</template><template id="original-code-59"><pre><code>impl Config {
+    fn contiguous_run(&amp;self) -&gt; usize {
+        // Walk pairs from innermost outward; stop at the first non-contiguous pair.
+        // Two adjacent entries (n_outer : s_outer) and (n_inner : s_inner)
+        // are contiguous when s_outer == n_inner * s_inner.
+        let mut contiguous_run = self.entries.last().map_or(1, |e| e.size);
+        for w in self.entries.windows(2).rev() {
+            if w[0].stride == w[1].size as isize * w[1].stride {
+                contiguous_run *= w[0].size;
+            } else {
+                break;
+            }
+        }
+        contiguous_run
+    }
+
+    fn max_access_size(&amp;self) -&gt; usize {
+        gcd(self.packet_size, self.contiguous_run())
+    }
+}
+</code></pre></template><template id="original-u0025">In most cases the packet layout is fully contiguous in DM and <code>max_access_size == Packet::SIZE</code>.
+See <a href="#non-contiguous-packets">Non-Contiguous Packets</a> for a case where <code>max_access_size &lt; Packet::SIZE</code>.</template><template id="original-u0026">How It Works</template><template id="original-u0027">The <code>Config</code> for <code>m![N, C, H, W]</code> → <code>m![W, H, C, N]</code> has one entry per axis in the stream, each with a stride equal to that axis's span in the source buffer.
+Since <code>Packet = m![1]</code>, <code>Packet::SIZE = max_access_size = 1</code> and the sequencer issues one DM access per loop iteration.</template><template id="original-code-69"><pre><code>axes![N = 4, C = 3, H = 8, W = 8];
+
+fn read_nchw_whcn(buf: &amp;MemTensor&lt;bf16, m![N, C, H, W]&gt;) -&gt;
+                     StreamTensor&lt;bf16, m![W, H, C, N], m![1]&gt; {
+    // Compiler-generated configuration: [8 : 1, 8 : 8, 3 : 64, 4 : 192] : 1
+    let config = Config {
+        entries: vec![
+            Entry { size: 8, stride: 1 },   // W
+            Entry { size: 8, stride: 8 },   // H
+            Entry { size: 3, stride: 64 },  // C
+            Entry { size: 4, stride: 192 }, // N
+        ],
+        packet_size: 1,
+    };
+
+    // The hardware executes the configuration as nested loops:
+    for w in 0..8 {
+        for h in 0..8 {
+            for c in 0..3 {
+                for n in 0..4 {
+                    // Read each address
+                    let addr = 1 * w + 8 * h + 64 * c + 192 * n;
+                    // yield buf[addr];
+                }
+            }
+        }
+    }
+
+    buf.read()
+}
+
+fn write_whcn_nchw(buf: &amp;mut MemTensor&lt;bf16, m![N, C, H, W]&gt;,
+                  stream: StreamTensor&lt;bf16, m![W, H, C, N], m![1]&gt;) {
+    // The compiler generates an identical config for writing
+    // The hardware executes the configuration as nested loops:
+    for w in 0..8 {
+        for h in 0..8 {
+            for c in 0..3 {
+                for n in 0..4 {
+                    // Write to each address
+                    let addr = 1 * w + 8 * h + 64 * c + 192 * n;
+                    // buf[addr] = stream.next();
+                }
+            }
+        }
+    }
+}
+</code></pre></template><template id="original-u0036">Configurations</template><template id="original-u0037">The following patterns cover most configurations a kernel writer is likely to encounter.</template><template id="original-u0038">Transposing Axes</template><template id="original-u0039">Axes may be transposed so that the stream visits them in a different order than the buffer, and the compiler computes the strides needed to traverse memory in that order.</template><template id="original-code-82"><pre><code>axes![A = 8, B = 8, C = 8];
+
+fn read_rearranging&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A, B, C # 32]&gt;,  // Buf
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![B, A], m![C # 16]&gt; {  // Time, Packet
+    buf.read()
+}
+</code></pre></template><template id="original-u0042">The compiler generates configuration entries by processing the combined mapping <code>m![B, A, C # 16]</code> term by term, transforming <code>Buf</code> along the way.
+For each term, the entry size equals the term size, and the stride equals the volume that term occupies within the current <code>Buf</code>.
+After processing a term, <code>Buf</code> is updated to reflect that the axis has been consumed:</template><template id="original-u0043">Term</template><template id="original-u0044">Entry</template><template id="original-u0045">Stride Source</template><template id="original-u0046"><code>Buf</code> After</template><template id="original-u0047">contiguous (<code>Packet</code> dimension)</template><template id="original-u0048"><code>Packet::SIZE = max_access_size = 16</code>.
+The innermost entry <code>16 : 1</code> is contiguous, so the hardware transfers the full packet in one access.</template><template id="original-u0049">Splitting Axes</template><template id="original-u0050">Tiling breaks a logical axis into sub-blocks for cache efficiency or to match tensor unit buffer sizes, and the compiler achieves this by splitting the axis into multiple entries.</template><template id="original-code-157"><pre><code>axes![A = 8, B = 8, C = 4];
+
+fn read_splitting&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A, B, C # 8]&gt;,  // Buf
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![A % 2, B % 4, A / 2, B / 4], m![C # 32]&gt; {  // Time, Packet
+    buf.read()
+}
+</code></pre></template><template id="original-u0053">Expressions like <code>A % 2</code> and <code>A / 2</code> split axis <code>A</code> into separate entries.
+The compiler processes <code>m![A % 2, B % 4, A / 2, B / 4, C # 32]</code> term by term:</template><template id="original-u0054">Term</template><template id="original-u0055">Entry</template><template id="original-u0056">Stride Source</template><template id="original-u0057"><code>Buf</code> After</template><template id="original-u0058">contiguous (<code>Packet</code> dimension)</template><template id="original-u0059">Slicing Axes</template><template id="original-u0060">Slicing reads only a partial range of indices from the memory layout, a condition that arises when an indexed view selects a subset of the original tensor.</template><template id="original-code-260"><pre><code>axes![A = 16, B = 8, C = 8];
+
+fn read_slicing&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A, B, C]&gt;,  // Buf
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![A / 4, A % 4 = 3, B / 4, B % 4 = 2], m![C]&gt; {  // Time, Packet
+    buf.read()
+}
+</code></pre></template><template id="original-u0063">The <code>= 3</code> notation limits <code>A % 4</code> to only 3 iterations instead of 4, restricting the hardware to a sub-region of the tensor.
+The compiler processes <code>m![A / 4, A % 4 = 3, B / 4, B % 4 = 2, C]</code> term by term:</template><template id="original-u0064">Term</template><template id="original-u0065">Entry</template><template id="original-u0066">Stride Source</template><template id="original-u0067"><code>Buf</code> After</template><template id="original-u0068"><code>m![B, C]::SIZE</code> (sliced to 3)</template><template id="original-u0069"><code>m![C]::SIZE</code> (sliced to 2)</template><template id="original-u0070">contiguous (<code>Packet</code> dimension)</template><template id="original-u0071">Broadcasting Axes</template><template id="original-u0072">Broadcasting replicates an element across multiple packets or time steps when the stream visits axes that <code>Buf</code> does not carry.
+An axis or partial-axis fragment such as <code>N / 512</code> can appear in <code>Time</code> or <code>Packet</code> but not <code>Buf</code>.
+The sequencer then emits a broadcast entry <code>: 0</code> and revisits the same address.</template><template id="original-code-363"><pre><code>axes![A = 16, T = 4, P = 4];
+
+fn read_broadcasting&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A]&gt;,  // Buf
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![T, A], m![P]&gt; {  // Time, Packet
+    buf.read()
+}
+</code></pre></template><template id="original-u0075">The compiler processes <code>m![T, A, P]</code> term by term:</template><template id="original-u0076">Term</template><template id="original-u0077">Entry</template><template id="original-u0078">Stride Source</template><template id="original-u0079"><code>Buf</code> After</template><template id="original-u0080">not in <code>Buf</code> (broadcast)</template><template id="original-u0081"><code>A</code> in <code>m![A]</code></template><template id="original-u0082">not in <code>Buf</code> (broadcast)</template><template id="original-u0083"><code>Packet::SIZE = max_access_size = 4</code>.
+<code>P</code> is broadcast, so the same element is replicated across the packet (spatial broadcast).
+<code>T</code> is broadcast, so the same data is repeated across time steps (temporal broadcast).</template><template id="original-u0084">The same rule applies when <code>Time</code> or <code>Packet</code> references a fragment of an axis that <code>Buf</code> does not carry.
+For example, a buffer of <code>m![N % 512]</code> read as <code>StreamTensor&lt;m![N / 512], m![N % 512]&gt;</code> broadcasts on the <code>N / 512</code> time entry: the buffer's 512 elements are reused across each of the <code>N / 512</code> outer iterations.</template><template id="original-u0085">Merging Entries</template><template id="original-u0086">The hardware supports at most 8 entries per configuration, so when a transformation produces more, the compiler merges adjacent entries to satisfy that limit.
+Adjacent entries <code>(n1 : s1)</code> and <code>(n2 : s2)</code> merge into <code>(n1 * n2 : s2)</code> when physically contiguous: <code>s1 == n2 * s2</code>.</template><template id="original-code-441"><pre><code>axes![N = 8, C = 8, H = 8, W = 32];
+
+fn read_merging&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![N, C, H, W]&gt;,  // Buf
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![W / 16, H % 2, H / 2, C / 2, C % 2, N / 2, N % 2, W / 8 % 2], m![W % 8]&gt; {  // Time, Packet
+    buf.read()
+}
+</code></pre></template><template id="original-u0089">The compiler processes <code>m![W / 16, H % 2, H / 2, C / 2, C % 2, N / 2, N % 2, W / 8 % 2, W % 8]</code> term by term, producing 9 initial entries:</template><template id="original-u0090">Term</template><template id="original-u0091">Entry</template><template id="original-u0092">Stride Source</template><template id="original-u0093">contiguous (packet dimension)</template><template id="original-u0094">Since 9 entries exceed the hardware limit of 8, the compiler merges contiguous pairs where <code>s1 == n2 * s2</code>.
+The entries for <code>H % 2 -&gt; (2 : 32)</code> and <code>H / 2 -&gt; (4 : 64)</code> are not merged because they are not physically contiguous (<span class="math-source" data-display="false">s_1 \neq n_2 \times s_2 \iff 32 \neq 4 \times 64</span>).
+The final configuration has 6 entries.
+The last merge crosses the time/packet boundary: <code>W/8%2 (2:8)</code> and <code>W%8 (8:1)</code> merge into <code>W%16 (16:1)</code>.</template><template id="original-u0095">Term</template><template id="original-u0096">Entry</template><template id="original-u0097">Merged Entries</template><template id="original-u0101">Non-Contiguous Packets</template><template id="original-u0102">When the DM layout has stride discontinuities within the packet span, <code>max_access_size &lt; Packet::SIZE</code> and the hardware issues one access per contiguous sub-block rather than one per packet.
+The example below writes a packet of 32 elements (<code>m![A, B]</code>) to a buffer where each B row is padded to 16 slots in DM.
+A's stride is 16 rather than 8, so the packet span is not contiguous and the hardware issues 4 accesses instead of 1:</template><template id="original-code-656"><pre><code>axes![A = 4, B = 8];
+
+fn write_padded(
+    buf: &amp;mut MemTensor&lt;i8, m![A, B # 16]&gt;,
+    stream: StreamTensor&lt;i8, m![1], m![A, B]&gt;,
+) {
+    // Compiler-generated configuration: [
+    //   A -&gt; 4 : 16,   (16 != 8 * 1, NOT contiguous — padding gap after each B row)
+    //   B -&gt; 8 : 1,    (packet sub-block, contiguous)
+    // ] : 32
+    buf.write(stream)
+}
+</code></pre></template><template id="original-u0106">Non-contiguous strides also arise when <code>Packet</code> contains non-adjacent axes from the source layout.
+The example below reads the same <code>m![N, C, H, W]</code> buffer with two different <code>Packet</code> choices.
+Placing only the innermost axis <code>W</code> in <code>Packet</code> gives <code>max_access_size = Packet::SIZE = 8</code>, one access per packet.
+Placing <code>m![N, H, W]</code> in <code>Packet</code> skips <code>C</code>, so N's stride in source (96) does not equal H×W (32): <code>contiguous_run = 32</code>, <code>max_access_size = 32</code>, and the hardware issues 4 accesses per packet instead of 1.</template><template id="original-code-663"><pre><code>axes![N = 4, C = 3, H = 4, W = 8];
+
+// Compiler-generated configuration: [
+//   N -&gt; 4 : 96,   (96 == 3 × 32, contiguous)
+//   C -&gt; 3 : 32,   (32 == 4 × 8,  contiguous)
+//   H -&gt; 4 : 8,    (8  == 8 × 1,  contiguous)
+//   W -&gt; 8 : 1,    (packet dimension)
+// ] : 8
+// contiguous_run = 8 (W); ×4 (H): 8==8×1 ✓; ×3 (C): 32==4×8 ✓; ×4 (N): 96==3×32 ✓; all axes contiguous
+// max_access_size = gcd(packet_size, contiguous_run) = packet_size = 8
+fn read_contiguous&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![N, C, H, W]&gt;,
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![N, C, H], m![W]&gt; {
+    buf.read()
+}
+
+// Compiler-generated configuration: [
+//   C -&gt; 3 : 32,   (time dimension)
+//   N -&gt; 4 : 96,   (96 != 4 × 8 = 32, NOT contiguous — C axis interspersed)
+//   H -&gt; 4 : 8,    (8  == 8 × 1, contiguous)
+//   W -&gt; 8 : 1,    (packet dimension)
+// ] : 128
+// contiguous_run = 8 (W); ×4 (H): 8==8×1 ✓ → 32; ×4 (N): 96!=4×8 ✗ stop → 32
+// max_access_size = gcd(128, 32) = 32; hardware issues 128/32 = 4 accesses per packet
+fn read_non_contiguous&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![N, C, H, W]&gt;,
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![C], m![N, H, W]&gt; {
+    buf.read()
+}
+</code></pre></template><template id="original-u0121">Constraints</template><template id="original-u0122">In RNGD, exceeding any of the following hardware limits causes a compilation error:</template><template id="original-u0123"><strong>Entry limit</strong>: Maximum 8 entries, so the compiler merges adjacent entries where possible (see <a href="#merging-entries">Merging Entries</a> in Configurations).</template><template id="original-u0124"><strong>Iteration limit</strong>: <code>size &lt;= 65,536</code> per entry.</template><template id="original-u0125"><strong>Packet size</strong>: Must be 1, 2, 4, 8, 16, or 32 bytes.</template><template id="original-u0126"><strong>Packet fetch</strong>: The innermost entry <code>n : s</code> must satisfy one of:</template><template id="original-u0127">Contiguous access (adjacent elements): <code>(s == 0 || s == 1) &amp;&amp; n % packet_size == 0</code></template><template id="original-u0128">Discrete access (single-element packets): <code>packet_size == 1</code></template><template id="original-u0129">If merging fails or limits are exceeded, redesign the tensor mapping or split the operation across multiple sequencer calls.</template><template id="original-u0130">Compatible Axis Decompositions</template><template id="original-u0131">Each axis named in both <code>Buf</code> and the stream must use the same decomposition.
+The compiler walks the stream term by term and consumes axes from <code>Buf</code> (see <a href="#architecture">Architecture</a>).
+When <code>Buf</code> splits an axis one way and the stream splits it another with no common refinement, no traversal order works and the configuration is rejected, even when both sides have the same total element count.</template><template id="original-code-713"><pre><code>axes![A = 15];
+
+fn read_incompatible&lt;&#x27;l&gt;(
+    buf: &amp;&#x27;l MemTensor&lt;i8, m![A % 5, A / 5]&gt;,  // Buf
+) -&gt; StreamTensor&lt;&#x27;l, i8, m![1], m![A % 3, A / 3]&gt; {  // Time, Packet
+    buf.read() // Compilation error: incompatible decomposition
+}
+</code></pre></template><template id="original-u0135"><code>Buf</code> decomposes <code>A</code> as <code>5 × 3</code> while the stream decomposes it as <code>3 × 5</code>.
+Since <code>gcd(5, 3) = 1</code>, neither decomposition refines the other: the compiler cannot consume <code>A % 3</code> from a <code>Buf</code> that has already committed to a 5-block split.</template><nav class="page-nav" aria-label="이전과 다음 문서"><a href="index.html"><small>이전 문서</small><strong>텐서 이동</strong></a><a href="fetch-engine.html"><small>다음 문서</small><strong>읽기 엔진</strong></a></nav><footer class="page-footer"><div>FuriosaAI 원문 · Apache-2.0<span>한국어 번역·읽기 도움말 · No5</span></div><a href="../about.html">번역 기준 2026-11-21 · 3d43bc9</a></footer></main><aside class="page-toc" aria-label="이 문서의 목차"><div class="toc-sticky"><h2>이 문서에서</h2><nav><ul><li class="toc-level-2"><a href="#interface">인터페이스(Interface)</a></li><li class="toc-level-2"><a href="#examples">예제(Examples)</a></li><li class="toc-level-2"><a href="#architecture">아키텍처(Architecture)</a></li><li class="toc-level-3"><a href="#access-size">접근 크기(Access Size)</a></li><li class="toc-level-3"><a href="#how-it-works">동작 원리(How It Works)</a></li><li class="toc-level-2"><a href="#configurations">구성(Configurations)</a></li><li class="toc-level-3"><a href="#transposing-axes">축 전치(Transposing Axes)</a></li><li class="toc-level-3"><a href="#splitting-axes">축 분할(Splitting Axes)</a></li><li class="toc-level-3"><a href="#slicing-axes">축의 일부 선택(Slicing Axes)</a></li><li class="toc-level-3"><a href="#broadcasting-axes">축 브로드캐스트(Broadcasting Axes)</a></li><li class="toc-level-3"><a href="#merging-entries">항목 병합(Merging Entries)</a></li><li class="toc-level-3"><a href="#non-contiguous-packets">비연속 패킷(Non-Contiguous Packets)</a></li><li class="toc-level-2"><a href="#constraints">제약(Constraints)</a></li><li class="toc-level-3"><a href="#compatible-axis-decompositions">호환되는 축 분해(Compatible Axis Decompositions)</a></li></ul></nav><div class="toc-hint"><span class="hint-badge">EN</span><p>문단에 마우스를 올리면<br>영어 원문이 나타납니다.</p><small>키보드: Tab으로 이동 · Esc로 닫기</small></div></div></aside></div>
+<div class="original-popover" id="original-popover" role="dialog" aria-modal="false" aria-labelledby="original-title" hidden><div class="original-popover-head"><span id="original-title">영어 원문 <small>Original</small></span><button id="close-original" aria-label="원문 닫기">×</button></div><div id="original-content" lang="en"></div></div><div id="toast" role="status" aria-live="polite"></div></body></html>

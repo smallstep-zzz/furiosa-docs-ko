@@ -1,0 +1,152 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Tensor and Contraction"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "A tensor maps each named index in its shape to a value.\nA shape is an unordered set of named axes, so `{ N = 4, C = 3 }` and `{ C = 3, N = 4 }` identify the same tensor.\nAn ordered representation of that shape behaves like a familiar multidimensional array.\nA tensor index supplies one value for every axis, so `{ N = 4, C = 3 }` includes indices such as `{ N: 0, C: 0 }` and `{ N: 0, C: 1 }`."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 10,
+    "text": "Tensor"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 13,
+    "text": "Dimension"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Example"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 19,
+    "text": "Named shape"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "Scalar"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 40,
+    "text": "Vector"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 54,
+    "text": "Matrix"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 60,
+    "text": "a `2 × 4` grid"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 68,
+    "text": "Image batch"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 74,
+    "text": "four RGB images"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 83,
+    "text": "Tensor contraction multiplies two inputs elementwise and reduces every shared axis that is absent from the output.\nEvery contraction consists of broadcast, multiply, and reduce steps."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 89,
+    "text": "Operation"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 92,
+    "text": "Einsum"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 95,
+    "text": "Broadcast"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 98,
+    "text": "Multiply"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 101,
+    "text": "Reduce"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 108,
+    "text": "Dot product"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 114,
+    "text": "None."
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 125,
+    "text": "GEMV"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 131,
+    "text": "$x$ across $I$."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 142,
+    "text": "GEMM"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 148,
+    "text": "$A$ across $J$ and $B$ across $I$."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 160,
+    "text": "This page owns the introductory math only.\nMapping, movement, and engine contracts remain in their respective reference chapters."
+  }
+]

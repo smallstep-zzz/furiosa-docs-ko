@@ -1,0 +1,114 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Packet Reducer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Packet Reducer reduce-adds the innermost contracted axes within a single Packet, with one reduction tree per lane."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "`.contract_packet()` invokes the Packet Reducer.\nEach lane receives a 32 B or 64 B Packet of `i4`, `i8`, `f8`, or `bf16` elements, inherited from the [Outer](./outer.md) stage's `OutPacket`.\nFormally, it computes $\\text{output}[i] = \\sum_{j} \\text{input}[i, j]$, where `i` ranges over the surviving (output) axes and `j` ranges over the contracted axes inside `Packet`."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 631,
+    "length": 47,
+    "text": "primitive(ContractOuterTensor::contract_packet)"
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 12,
+    "offset": 1041,
+    "length": 91,
+    "text": "// Carry the deferred operands forward unreduced: the fused contraction at `contract_lane`\n"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 12,
+    "offset": 1140,
+    "length": 92,
+    "text": "// performs this Packet reduction too. This stage only re-types the carrier to `OutPacket`.\n"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 14,
+    "text": "The kernel below uses all 8 lanes in parallel: tree depth 5 sums over the 32 `bf16` elements of `B`, producing one `f32` per `A` position."
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 16,
+    "offset": 327,
+    "length": 74,
+    "text": "// Spatial reduction: tree depth 5 reduces 32 bf16 elements along B → f32\n"
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 16,
+    "offset": 405,
+    "length": 50,
+    "text": "// Output (Interleaved): Time = [A], Packet = [C]\n"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 18,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 22,
+    "text": "The Packet Reducer first runs an independent [reduction tree](https://en.wikipedia.org/wiki/Reduction_operator) per lane on its input Packet.\nAt depth 0, the tree leaves hold the input Packet's elements, and each subsequent depth sums pairs, halving the element count.\nThe maximum tree depth is `log2(Packet::SIZE)`, so 7 for `i4` (`Packet::SIZE = 128`), 6 for `i8` / `f8` (64), 5 for `bf16` (32).\nGiven the user's `OutPacket`, the compiler derives the tree depth `d`, and the tree consumes the innermost `2^d` elements to produce `ReducePacket`."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 25,
+    "text": "The Packet Reducer then trims `ReducePacket` to `OutPacket`, whose size is capped at 32 elements because the downstream Time Reducer's per-lane accumulator only has 32 columns.\nWhen `ReducePacket::SIZE > 32`, the outer dummy is trimmed and only the innermost 32 elements survive.\nFor example, `i4` arrives as a 128-element Packet, so `d ∈ {0, 1}` produce a 128- or 64-element `ReducePacket`, both trimmed to `OutPacket::SIZE = 32`."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 28,
+    "text": "`ReducePacket` may also carry outermost padding (a padded packet axis), and the Packet Reducer keeps only the live columns, dropping that padding.\nFor example, a `ReducePacket` of `[A # 16]` (`A` live, padded up to 16 columns) reduces to `OutPacket = [A]`.\nSo `OutPacket` may be declared with the padding present (`[A # 16]`) or already removed (`[A]`); both name the same result."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 31,
+    "text": "Performance"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 34,
+    "text": "Latency depends on tree depth: 7 cycles for `i4`, 6 for `i8`/`f8`, 5 for `bf16`.\nWider element types reduce depth because fewer elements fit in each Packet.\nThe adder tree is fully pipelined, so depth adds first-output latency but does not reduce steady-state throughput: one Packet enters and one reduced output emerges every cycle once the pipeline is filled."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 37,
+    "text": "When `Lane < 8`, the inactive lanes' reduction trees are idle, so per-cycle throughput drops proportionally to `Lane::SIZE / 8`."
+  }
+]

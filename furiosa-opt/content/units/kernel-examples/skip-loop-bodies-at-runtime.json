@@ -1,0 +1,160 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Case Study: Skip Loop Bodies at Runtime"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "A kernel can use a runtime scalar to execute only the useful part of a statically bounded workload.\nThe host stores the value in `HbmScalar<T>`, the kernel loads it into SPM with `to_spm`, and a normal `if` guards the operations that may be skipped.\nThe tensor shapes and the loop's maximum trip count remain compile-time constants."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "This pattern fits MoE expert blocks, variable-length batches, and other kernels with a known maximum amount of work and a runtime valid count."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Guard a Static Loop"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "The following tested kernel copies the first `active_experts` groups and leaves the remaining output groups zero."
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 15,
+    "offset": 186,
+    "length": 24,
+    "text": "device(chip = 1, pe = 1)"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 17,
+    "text": "The loop always has the static bound `Group::SIZE`.\nEach iteration compares its `usize` induction variable with the `usize` value loaded from HBM.\nIf `active_experts` is zero, every body is skipped; if it is greater than `Group::SIZE`, every body runs.\nInitialize any output region that skipped iterations must leave with a defined value, as the example does before the loop."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 20,
+    "text": "The same guard can surround Tensor Unit computation.\nThis excerpt from the tested MoE example runs each expert contraction only when its index is below the runtime count:"
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 22,
+    "offset": 264,
+    "length": 24,
+    "text": "device(chip = 1, pe = 1)"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 24,
+    "text": "Pass and Update a Runtime Scalar"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 27,
+    "text": "Create the scalar through the launch context's PDMA queue, then pass it like another kernel argument:"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 31,
+    "text": "`from_host` allocates one scalar value in every chip's local HBM and writes the same value to each copy.\n`write` reuses that allocation for a later launch.\nInside the kernel, `to_spm(&mut device.tdma)` stages the value into an SPM scalar visible to device scalar expressions."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 34,
+    "text": "`HbmScalar` supports `bool`, `i32`, `u32`, `i64`, `u64`, and `usize`.\nUse `bool` for a direct on/off guard and `usize` for loop bounds and tensor indices.\nThe current compiler accepts `usize` runtime scalars only for a 64-bit Rust frontend target and stores them as unsigned 64-bit values."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 37,
+    "text": "Use `if`, Not a Runtime Loop Bound"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 40,
+    "text": "Runtime `if` statements are supported, including statement blocks that return no value.\nGeneral `break` statements and runtime loop bounds are not supported in device functions.\nWrite a static maximum loop with a runtime guard:"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 44,
+    "text": "The following forms are not supported:"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 48,
+    "text": "The supported form schedules the static maximum number of iterations.\nThe guarded Tensor Unit or DMA operations do not run when the condition is false, but evaluating the guard and advancing the outer loop still have a runtime cost."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 51,
+    "text": "Unroll a Small Maximum"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 54,
+    "text": "`#[unroll]` may be applied when the maximum trip count is a small compile-time constant:"
+  },
+  {
+    "id": "u0020",
+    "kind": "comment",
+    "token": 56,
+    "offset": 160,
+    "length": 24,
+    "text": "device(chip = 1, pe = 1)"
+  },
+  {
+    "id": "u0021",
+    "kind": "comment",
+    "token": 56,
+    "offset": 706,
+    "length": 6,
+    "text": "unroll"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 58,
+    "text": "With `Group::SIZE = 4`, `#[unroll]` replaces the loop with four copies of its guarded body. The\nresult behaves like this:"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 62,
+    "text": "`active_experts` is still read at runtime. Unrolling removes the loop control and lets the scheduler\nconsider operations from different groups together; it does not remove the four runtime checks."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 65,
+    "text": "The range must start at zero and end at a nonzero compile-time constant. Add `#[unroll]` to each\nlevel that should be expanded in a nested loop."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 68,
+    "text": "There is no compiler threshold for a “small” loop. Generated code grows with the static bound, so a\nfour-group loop is a reasonable candidate while a 1,024-expert loop should normally remain rolled.\nCompare both forms when the trade-off is unclear.\nSee [Unroll a loop](../scheduling/tuning.md#unroll-a-loop) for the general scheduling trade-offs."
+  }
+]

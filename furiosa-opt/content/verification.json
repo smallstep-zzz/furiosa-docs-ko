@@ -1,0 +1,13 @@
+{
+  "source_commit": "3d43bc9d20f324af60e3006c3f1541938d7f5097",
+  "html_pages": 63,
+  "documents_in_upstream_summary": 47,
+  "appendices": 8,
+  "short_draft_pages": 6,
+  "translation_units": 3731,
+  "rust_documentation_comment_instances": 198,
+  "code_blocks_verified_unchanged_except_comments": 296,
+  "original_text_triggers": 3314,
+  "local_references_checked": 5141,
+  "errors": []
+}

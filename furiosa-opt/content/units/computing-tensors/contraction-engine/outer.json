@@ -1,0 +1,604 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Outer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Outer stage broadcasts the two operands into a matching shape and multiplies them elementwise."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "\"Outer\" comes from the **outer product** of linear algebra.\nFor vectors `u` (length `n`) and `v` (length `m`), `u v^T` is the `n × m` matrix where `(u v^T)[i, j] = u[i] × v[j]`.\nThat matrix is produced by broadcasting `u` along the column axis (length `m`), broadcasting `v` along the row axis (length `n`), and multiplying elementwise.\nThe Outer stage's three sub-stages are the hardware embodiment of this exact semantics, run in series:"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 12,
+    "text": "The [Stream Adapter](#stream-adapter) handles (and broadcasts) the streaming operand from the [Collect Engine](../collect-engine.md)."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 17,
+    "text": "The [TRF Sequencer](#trf-sequencer) handles (and broadcasts) the TRF operand from TRF SRAM."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 22,
+    "text": "The [Multiplier](#multiplier) widens the operand types (`i4` / `i8` to `i32`, `f8` / `bf16` to `f32`) and multiplies the two aligned operands elementwise."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 27,
+    "text": "The output is a single multiplied tensor in the joint mapping `[Chip, Cluster, Slice, Lane, Time, Packet]`, ready for the [Packet Reducer](./packet-reducer.md) to reduce-add."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 30,
+    "text": "Interface"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 33,
+    "text": "`.contract_outer(&trf)` on `CollectTensor` invokes the Outer stage."
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 35,
+    "offset": 775,
+    "length": 35,
+    "text": "primitive(TuTensor::contract_outer)"
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 35,
+    "offset": 1285,
+    "length": 84,
+    "text": "// The weight (TRF) type must form a valid contraction-engine operand pair with the\n"
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 35,
+    "offset": 1377,
+    "length": 69,
+    "text": "// stream type `D`: same type, or a mixed integer precision within a\n"
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 35,
+    "offset": 1454,
+    "length": 69,
+    "text": "// family (i4/i5 x i4/i5, i8/i9 x i8/i9). Both operands widen to the\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 35,
+    "offset": 1531,
+    "length": 42,
+    "text": "// stream's accumulator for the multiply.\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 35,
+    "offset": 1726,
+    "length": 87,
+    "text": "// Skipping the broadcast transpose does not skip its validity contract -- a malformed\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 35,
+    "offset": 1821,
+    "length": 89,
+    "text": "// contraction would otherwise slip past these asserts and panic far downstream instead.\n"
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2106,
+    "length": 94,
+    "text": "// The operands keep their own compact layouts: lhs is `[Chip, Cluster, Slice, Time, Packet]`\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2208,
+    "length": 87,
+    "text": "// (`self.inner`), rhs is `[Chip, Cluster, Slice, Lane, TrfElement]` (`trf_tensor`). A\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2303,
+    "length": 95,
+    "text": "// bare-buffer backend reads its strides from these; `MathStorage` ignores them (its axes live\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2406,
+    "length": 20,
+    "text": "// in the storage).\n"
+  },
+  {
+    "id": "u0021",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2746,
+    "length": 97,
+    "text": "// Widen each operand to the `Out<D>` accumulator up front, at the operand's own (compact) size,\n"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2851,
+    "length": 100,
+    "text": "// not pre_reduce's -- the fold at `contract_lane` then runs entirely in `Out<D>`. Parity-identical\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 35,
+    "offset": 2959,
+    "length": 90,
+    "text": "// to the old per-cell widen (same `Cast::cast` per element), it just never allocates the\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 35,
+    "offset": 3057,
+    "length": 57,
+    "text": "// pre_reduce-shaped broadcast this stage used to build.\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 37,
+    "text": "After their respective adapters (Stream Adapter for the streaming path, TRF Sequencer for the TRF path), both paths feed `Lane` / `Time` / `Packet` of matching shape, and the Multiplier multiplies them elementwise at aligned positions."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 40,
+    "text": "The streaming operand's `Time` / `Packet` map to the output's `OutTime` / `OutPacket`:\n`OutPacket` absorbs the innermost size-1-or-2 factor of `Time` via [Packing](#packing).\n`OutTime` retains the remaining factors of `Time`, with broadcast factors added at its innermost positions via [Broadcast](#broadcast).\nBroadcast factors come from the TRF operand's `Lane` / `Element` (where the streaming operand replicates against the TRF mapping) and from any purely-output axes that appear in `OutTime` / `OutPacket` but in neither the input nor the TRF (e.g. einsum `AB, BC -> ABCD` where `D` is broadcast)."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 43,
+    "text": "The `TrfTensor` has shape `[Chip, Cluster, Slice, Lane, Element]`, with `Chip` / `Cluster` / `Slice` / `Lane` spatially parallel: `Chip` / `Cluster` / `Slice` pass through to the output, and `Lane` partitions per-lane data across 1–8 hardware lanes.\n`Element` (the per-lane layout set by [`.to_trf()`](../register-files.md#tensor-register-file)) is reshaped by the TRF Sequencer to fill `OutTime` / `OutPacket`."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 46,
+    "text": "Stream Adapter"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 49,
+    "text": "The Stream Adapter transforms the streaming `Time` / `Packet` into the computation shape (`Lane` / `OutTime` / `OutPacket`) via two operations: [Packing](#packing) and [Broadcast](#broadcast).\nThe compiler derives the three free variables (`PackSize`, `LaneBroadcast`, `TimeBroadcast`) from the user-supplied `OutTime` / `OutPacket`, the TRF operand, and any purely-output broadcast axes, giving the mapping:"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 53,
+    "text": "Packing"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 56,
+    "text": "The Collect Engine produces 32 B flits, and the Outer stage emits packets of `PackSize × 32` B (32 or 64 on RNGD).\nPacking combines `PackSize ∈ {1, 2}` consecutive flits into one packet:"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 60,
+    "text": "`PackSize` is set by matching `OutPacket` against the input `Packet`: `PackSize = 2` if `OutPacket` absorbs the innermost size-2 factor of `Time`, otherwise `PackSize = 1`.\nEquivalently, `PackSize = OutPacket::SIZE * D::SIZE / 32`, so the user picks `OutPacket` (32 B or 64 B) and Packing's collect-flit count follows."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 63,
+    "text": "Hardware always operates on 64 B packets internally; when `PackSize = 1`, the unused 32 B half holds zeros that do not propagate into the logical `OutPacket` type.\nDownstream stages (Packet Reducer, Lane Folder) therefore see only the `PackSize × 32` B payload, avoiding dummy cycles, see the [Lane Folder Sequential note](./lane-folder.md#sequential)."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 66,
+    "text": "Broadcast"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 69,
+    "text": "After packing, the Stream Adapter broadcasts the data spatially via `LaneBroadcast` (the TRF's `Lane` mapping, ∈ {1, 2, 4, 8}) and temporally via `TimeBroadcast`.\n`TimeBroadcast` covers factors of TRF `Element` not in the input `Time`, and also any purely-output axes in `OutTime` that appear in neither the input nor the TRF: the same broadcast machinery replicates the packet across both.\nEach destination receives the same `OutPacket`:"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 73,
+    "text": "`TimeBroadcast` factors occupy the *innermost* positions of `OutTime`: the same `OutPacket` is re-sent across those factors before iterating any outer `PackTime` factor."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 76,
+    "text": "Examples"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 79,
+    "text": "The example below exercises both operations: Packing absorbs the innermost size-2 factor `L` of `Time` into `Packet` (`PackSize = 2`), Lane Broadcast distributes the resulting packet to `N = 8` lanes, and Time Broadcast tiles the streaming data across a TRF-only `B = 5` axis."
+  },
+  {
+    "id": "u0039",
+    "kind": "comment",
+    "token": 81,
+    "offset": 370,
+    "length": 27,
+    "text": "// Packing (PackSize = 2):\n"
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 81,
+    "offset": 401,
+    "length": 50,
+    "text": "//   L = 2 (innermost Time) absorbed into Packet.\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 81,
+    "offset": 455,
+    "length": 72,
+    "text": "//   PackTime = [M = 32], PackPacket = [L = 2, K = 16] = 32 bf16 = 64B.\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 81,
+    "offset": 531,
+    "length": 51,
+    "text": "// Lane Broadcast: same packet to all N = 8 lanes.\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "comment",
+    "token": 81,
+    "offset": 586,
+    "length": 64,
+    "text": "// Time Broadcast: B = 5 (TRF-only) added at innermost OutTime.\n"
+  },
+  {
+    "id": "u0044",
+    "kind": "comment",
+    "token": 81,
+    "offset": 654,
+    "length": 56,
+    "text": "//   OutTime = [M, B = 5], OutPacket = [L = 2, K = 16].\n"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 83,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 88,
+    "text": "`OutPacket::SIZE * Storage::SIZE ∈ {32, 64}` bytes (on RNGD), where `Storage` is the pre-widen operand dtype (e.g. `bf16` = 2 B, *not* the widened `f32` accumulator the result tensor carries).\nThe size is 32 for `PackSize = 1` and 64 for `PackSize = 2`.\nThe user picks this size and Packing's collect-flit count follows."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 93,
+    "text": "`PackSize ∈ {1, 2}` (see [Packing](#packing))."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 103,
+    "text": "Performance"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 106,
+    "text": "`PackSize` sets MAC utilization.\n`PackSize = 2` fills the full 64 B and uses all MACs.\n`PackSize = 1` fills only 32 B, so the zero-padded half always multiplies by zero and effective throughput halves."
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 109,
+    "text": "`PackSize = 2` takes 2 cycles per Packet (two 32 B flits combine into one 64 B Packet), but this is not a pipeline bottleneck: upstream supplies one 32 B flit every cycle at the full fetch rate, so the Stream Adapter consumes flits as fast as they arrive and emits a Packet every 2 cycles to match downstream consumption."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 112,
+    "text": "Time Broadcasting amortizes fetches.\nBroadcast factors reuse the same streaming packet across cycles without re-fetching, which eliminates bandwidth cost for those factors."
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 115,
+    "text": "Fetch bandwidth (up to 32 B/cycle per fetch) bounds the Stream Adapter overall.\nInterleave fetch patterns across slices to maximize utilization."
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 118,
+    "text": "TRF Sequencer"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 121,
+    "text": "The TRF Sequencer reads a `TrfTensor` and reshapes its `Element` into `OutTime` / `OutPacket` for the [Packet Reducer](./packet-reducer.md).\nSee [Register Files](../register-files.md) for the TRF storage layout (lanes, banks, rows, double-buffering, cache)."
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 124,
+    "text": "The mapping:"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 128,
+    "text": "`OutPacket` is filled each cycle by one TRF read: one full `OutPacket` (640 bits per lane across both banks, or 320 bits when only one bank is read) is generated every cycle.\nSee [To Contraction Engine](../register-files.md#to-contraction-engine) for the per-slice totals across 8 lanes (in bytes).\nThe read pulls the innermost contiguous portion of `Element` and replicates it to fill the 64 B `OutPacket`.\nThe compiler picks the largest `ReadSize` such that `Element % ReadSize == OutPacket % ReadSize` and `ReadSize * D::SIZE ≤ 64` bytes: a wider `ReadSize` spans both TRF banks per lane, a narrower one uses just one bank."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 131,
+    "text": "`OutTime` is filled across cycles by sequencing `Element / ReadSize` (plus optional broadcasts).\nThe TRF Sequencer uses the same nested-loop configuration as all other [sequencers](../../moving-tensors/sequencer.md)."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 134,
+    "text": "Examples"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 137,
+    "text": "In this example, `ReadSize` covers all of `Element` in one 64 B read, so `Element / ReadSize` is trivial and the sequencer iterates only broadcasts:"
+  },
+  {
+    "id": "u0060",
+    "kind": "comment",
+    "token": 139,
+    "offset": 355,
+    "length": 23,
+    "text": "// Element         = K\n"
+  },
+  {
+    "id": "u0061",
+    "kind": "comment",
+    "token": 139,
+    "offset": 382,
+    "length": 24,
+    "text": "// ReadSize        = 32\n"
+  },
+  {
+    "id": "u0062",
+    "kind": "comment",
+    "token": 139,
+    "offset": 410,
+    "length": 23,
+    "text": "// PacketBroadcast = 1\n"
+  },
+  {
+    "id": "u0063",
+    "kind": "comment",
+    "token": 139,
+    "offset": 437,
+    "length": 74,
+    "text": "// OutTime         = M      (sequencing over [K / 32] (= 1), broadcast M)\n"
+  },
+  {
+    "id": "u0064",
+    "kind": "comment",
+    "token": 139,
+    "offset": 515,
+    "length": 44,
+    "text": "// OutPacket       = K      (= [1, K % 32])\n"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 141,
+    "text": "In this example, `ReadSize` covers only part of `Element`, so `Element / ReadSize` is non-trivial and the sequencer iterates the outer `Element` factor alongside a broadcast:"
+  },
+  {
+    "id": "u0066",
+    "kind": "comment",
+    "token": 143,
+    "offset": 374,
+    "length": 28,
+    "text": "// Element         = [O, K]\n"
+  },
+  {
+    "id": "u0067",
+    "kind": "comment",
+    "token": 143,
+    "offset": 406,
+    "length": 24,
+    "text": "// ReadSize        = 16\n"
+  },
+  {
+    "id": "u0068",
+    "kind": "comment",
+    "token": 143,
+    "offset": 434,
+    "length": 23,
+    "text": "// PacketBroadcast = L\n"
+  },
+  {
+    "id": "u0069",
+    "kind": "comment",
+    "token": 143,
+    "offset": 461,
+    "length": 80,
+    "text": "// OutTime         = [O, M]    (sequencing over [O, K] / 16 (= O), broadcast M)\n"
+  },
+  {
+    "id": "u0070",
+    "kind": "comment",
+    "token": 143,
+    "offset": 545,
+    "length": 52,
+    "text": "// OutPacket       = [L, K]    (= [L, [O, K] % 16])\n"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 145,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 150,
+    "text": "**Hardware dimensions**: `Chip::SIZE`, `Cluster::SIZE`, and `Slice::SIZE` must match the hardware configuration (see [Spatial and Temporal Dimensions](../../mapping-tensors/spatial-temporal-dimensions.md#constraints))."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 155,
+    "text": "**Address alignment**: when `Element % ReadSize` covers all 64 B, the read spans both TRF banks per lane, so the sequencer's base address and all strides must align to 64 B."
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 160,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 163,
+    "text": "Across cycles, the sequencer iterates the outer factors of `Element` (i.e.\n`Element / ReadSize`) using the same nested-loop configuration as all other [sequencers](../../moving-tensors/sequencer.md), so a single `TrfTensor` walks `Element / ReadSize` cycles before exhausting its content.\n`PacketBroadcast` factors replicate the same row within a single cycle, filling the 64 B `OutPacket` past the natural `ReadSize` without consuming additional TRF read bandwidth."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 166,
+    "text": "Performance"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 169,
+    "text": "Throughput is one full `OutPacket` per lane per cycle: 640 bits per lane when both banks are read, 320 bits per lane when only one bank is read.\nSee [Register Files: To Contraction Engine](../register-files.md#to-contraction-engine) for the per-slice byte totals.\nThe TRF read cache and bank alternation (see [Register Files: Double Buffering](../register-files.md#double-buffering)) keep the concurrent sub-context store unblocked across broadcast reuse and narrow reads."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 172,
+    "text": "Multiplier"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 175,
+    "text": "The Multiplier consumes the two aligned operands from the Stream Adapter and TRF Sequencer, widens each input element to the contraction output type to keep the downstream accumulator from overflowing, and multiplies them elementwise.\nIts output, a single tensor in the joint mapping `[Chip, Cluster, Slice, Lane, Time, Packet]`, becomes the input to the [Packet Reducer](./packet-reducer.md).\nEach `Time` cycle, every `Lane` produces a full `packet` of products in parallel."
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 178,
+    "text": "Operand types"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 181,
+    "text": "These are the operand pairs the Multiplier accepts, with the type each pair widens to:"
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 187,
+    "text": "Stream (activation)"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 190,
+    "text": "Weight (TRF)"
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 193,
+    "text": "Accumulator"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 200,
+    "text": "`i4` or `i5`"
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 203,
+    "text": "`i4` or `i5`"
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 211,
+    "text": "`i8` or `i9`"
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 214,
+    "text": "`i8` or `i9`"
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 256,
+    "text": "An integer operand may be the raw form (`i4`/`i8`) or its zero-point-subtracted staging (`i5`/`i9`, produced by [Zero-Point Subtraction](../fetch-adapter.md#zero-point-subtraction)), and the two operands need not match within a family.\nThey may not cross families (no `i4` against `i8`) or kinds (no integer against float), and a float pair must match exactly."
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 259,
+    "text": "A contraction over an element type this table does not list runs in the [Vector Engine](../vector-engine/index.md) instead: multiply elementwise, then reduce with [Intra-Slice Reduce](../vector-engine/intra-slice-reduce.md), which computes in `i32` / `f32`."
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "u0001": "형 변환 엔진(Cast Engine)",
+  "u0002": "형 변환 엔진(Cast Engine)은 [쓰기 엔진(Commit Engine)](../moving-tensors/commit-engine.md)이 DM에 기록하기 전에 파이프라인의 `f32`/`i32` 결과를 `bf16` 같은 낮은 정밀도(lower precision)의 타입으로 줄여 저장 비용(storage cost)을 낮춥니다.",
+  "u0003": "인터페이스(Interface)",
+  "u0004": "`CollectTensor`, `ContractTensor`, `VectorFinalTensor`는 모두 같은 의미(semantics)의 `.cast()`를 제공합니다.",
+  "u0005": "// 형 변환 엔진(Cast Engine)은 하드웨어 제약상 `VeScalar` 입력만 받습니다. 따라서\n",
+  "u0006": "// 이 한정(bound)은 더 넓은 트레이트(trait)가 아니라 impl에 둡니다.\n",
+  "u0007": "primitive(TuTensor::cast)",
+  "u0008": "`.cast::<OutD, OutPacket>()`는 각 원소(element)를 `OutD` 타입으로 변환하고, 출력이 다시 32바이트 플릿(flit) 하나가 되도록 패딩(padding)합니다. 커널 작성자는 목표 타입인 `OutD`와 출력 원소 배치(output element layout)인 `OutPacket`을 선택합니다. 나머지는 컴파일러(compiler)가 도출합니다.",
+  "u0009": "형 변환 엔진(Cast Engine)은 [수학적 텐서 이동(mathematical tensor move)](../mapping-tensors/tensor-semantics.md#mathematical-tensor-move)은 아니지만, 텐서의 모양(shape)을 유지하며 원소 타입(element type)만 바꿉니다. 모든 차원(dimension)은 그대로 통과합니다. 다만 `Packet` 배치(layout)는 출력이 여전히 32바이트 플릿(flit) 하나에 들어가도록 다시 패딩(padding)합니다.",
+  "u0010": "아래 예제는 원소(element) 8개의 `i32` 패킷(packet), 즉 8 × 4 = 32바이트를 `i8`로 형 변환(cast)합니다. 변환 후 8개 원소는 8바이트를 차지하므로, `A # 32`로 출력에 패딩(padding)을 더해 다시 32바이트로 맞춥니다.",
+  "u0011": "입력의 실제 데이터가 32바이트를 모두 채우지 않을 수도 있습니다. 아래 예제는 데이터 원소(element) 4개를 8개로 패딩(padding)한 `i32` 입력(`A # 8`, 32바이트)을, 같은 4개 원소를 32개로 패딩한 `i8` 출력(`A # 32`, 역시 32바이트)으로 변환합니다.",
+  "u0012": "지원하는 형 변환(Supported Casts)",
+  "u0013": "각 입력은 32바이트 플릿(flit)입니다. 지원하는 원본 타입(source type)은 `f32`와 `i32`이며, 각각 변환 가능한 목표 타입(target type)이 정해져 있습니다.",
+  "u0014": "입력 타입(Input Type, `D`)",
+  "u0015": "지원하는 출력 타입(Supported Output Types, `OutD`)",
+  "u0016": "성능(Performance)",
+  "u0017": "형 변환 엔진(Cast Engine)은 파이프라인의 병목(bottleneck)이 되지 않습니다. 플릿(flit)에서 유효한 데이터가 차지하는 비율과 관계없이 사이클(cycle)마다 플릿 하나를 처리합니다. 후단의 [쓰기 엔진(Commit Engine)](../moving-tensors/commit-engine.md)은 데이터가 적게 담긴 플릿들을 모아 DM에 빈틈없이 쓰므로 DM 대역폭(bandwidth)을 낭비하지 않습니다."
+}

@@ -1,0 +1,428 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Computing Tensors"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Computing Tensors explains how a valid Tensor Unit stream reaches the Vector or Contraction Engine.\nA stationary operand stays in a register file while the other operand streams through the engine.\nThe Tensor Register File (TRF) stores contraction operands, and the Vector Register File (VRF) stores vector operands.\nThis chapter explains the engine behavior that places operands and preserves stream dimensions."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Selecting a Compute Route"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 13,
+    "text": "Kernel need"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Select"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 19,
+    "text": "Behavior to read next"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "Elementwise operation or reduction"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 29,
+    "text": "Vector Engine"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 32,
+    "text": "Vector stream and reduction contracts"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 37,
+    "text": "Contraction such as matmul or convolution"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 40,
+    "text": "Tensor Register File (TRF) plus Contraction Engine"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 43,
+    "text": "TRF layout and contraction mapping"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 48,
+    "text": "Cross-slice redistribution or reduction"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 51,
+    "text": "Switch Engine or Inter-Slice Reducer"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 54,
+    "text": "Slice movement and reducer contracts"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 59,
+    "text": "Layout or precision change"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 62,
+    "text": "Fetch/Commit Adapter, Cast Engine, or Transpose Engine"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 65,
+    "text": "Adapter stage and output mapping contracts"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 71,
+    "text": "Tensor Unit"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 74,
+    "text": "The Tensor Unit is the on-chip compute pipeline.\nIt reads tensor data from DM, transforms it through ten engines, and writes results back to DM."
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 77,
+    "text": "Each tensor flows through the pipeline as a stream of packets, one packet per cycle.\nThe engines consume and produce these streams, reshaping the per-cycle layout and the iteration order along the way.\nThe Collect Engine normalizes incoming packets to 32-byte *flits*.\nEvery downstream engine operates on these flits.\nThe pipeline includes Contraction, Vector, Cast, Transpose, Commit Adapter, and Commit.\nSee the linked engine pages for [Contraction](./contraction-engine/index.md), [Vector](./vector-engine/index.md), [Cast](./cast-engine.md), [Transpose](./transpose-engine.md), [Commit Adapter](./commit-adapter.md), and [Commit](../moving-tensors/commit-engine.md)."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 84,
+    "text": "Engine"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 87,
+    "text": "Function"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 90,
+    "text": "Key Constraint"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 97,
+    "text": "[Fetch](../moving-tensors/fetch-engine.md)"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 100,
+    "text": "Load data from DM into the pipeline"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 103,
+    "text": "Packet must be 8-byte aligned. `Slice` is preserved unless [axis lifting](../moving-tensors/fetch-engine.md#axis-lifting) replaces a broadcast with an axis from `Time`"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 108,
+    "text": "[Fetch Adapter](./fetch-adapter.md)"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 111,
+    "text": "Per-element transforms after fetch (table lookup, cast)"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 114,
+    "text": "Optional. Identity if skipped"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 119,
+    "text": "[Switching](./switch-engine.md)"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 122,
+    "text": "Move data across slices"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 125,
+    "text": "Ring network, `Slice` can change"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 130,
+    "text": "[Collect](./collect-engine.md)"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 133,
+    "text": "Normalize packets to 32-byte flits"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 136,
+    "text": "Output = exactly one flit"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 141,
+    "text": "[Contraction](./contraction-engine/index.md)"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 144,
+    "text": "Einsum: matmul, convolution, attention"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 147,
+    "text": "One operand resident in TRF. The other streams"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 152,
+    "text": "[Vector](./vector-engine/index.md)"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 155,
+    "text": "Elementwise, binary, reduce operations"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 158,
+    "text": "Only i32/f32 input"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 163,
+    "text": "[Cast](./cast-engine.md)"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 166,
+    "text": "Precision lowering with batching"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 169,
+    "text": "Output = exactly one flit"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 174,
+    "text": "[Transpose](./transpose-engine.md)"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 177,
+    "text": "Reorder elements within a flit"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 180,
+    "text": "Within-flit only"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 185,
+    "text": "[Commit Adapter](./commit-adapter.md)"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 188,
+    "text": "Per-element transforms before commit (cast, ReLU, trim)"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 191,
+    "text": "Optional. Chained before `.commit()`"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 196,
+    "text": "[Commit](../moving-tensors/commit-engine.md)"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 199,
+    "text": "Write results back to DM"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 202,
+    "text": "Flit-aligned writes"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 208,
+    "text": "Each tensor stream inside the Tensor Unit carries five dimensions, `[Chip, Cluster, Slice, Time, Packet]`, that split into two groups.\n`Chip`, `Cluster`, and `Slice` are spatial dimensions: each slice runs its own pipeline instance, with slices grouped by cluster and clusters grouped by chip.\n`Time` and `Packet` describe the per-slice stream (see [Spatial and Temporal Dimensions](../mapping-tensors/spatial-temporal-dimensions.md) for the definitions).\nThe engines above reshape `Time` / `Packet` along the pipeline.\nMost engines preserve the spatial dimensions.\n[Switch](./switch-engine.md) moves data across slices.\nFetch's [axis lifting](../moving-tensors/fetch-engine.md#axis-lifting) assigns different DM read offsets along `Chip`, `Cluster`, or `Slice`, moving an axis out of `Time`.\nThe [Vector inter-slice reducer](./vector-engine/inter-slice-reducer.md) combines the 256 slices in a cluster."
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 211,
+    "text": "The Contraction and Vector Engines each take one operand from the pipeline stream and the other operand from a dedicated per-slice register file.\nTRF (Tensor Register File) feeds the Contraction Engine, and VRF (Vector Register File) feeds the Vector Engine.\nThe Collect Engine writes into TRF via `.to_trf()` and into VRF via `.to_vrf()`.\nFor an end-to-end example using both files, see [Quick Start](../quick-start.md)."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 214,
+    "text": "Fetch reads from DM and Commit writes back to DM.\nTheir detailed sequencer behavior is documented in [Moving Tensors](../moving-tensors/index.md) rather than here."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 217,
+    "text": "Execution Context"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 220,
+    "text": "The [scheduler](../scheduling/schedule.md#execution-contexts) treats each *execution context* as an independent stream of operations.\nThe hardware exposes three:"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 225,
+    "text": "**Main** drives the Tensor Unit pipeline for the kernel's primary computation."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 230,
+    "text": "**Sub** drives a subset of the same pipeline, typically prefetching operands into TRF / VRF while main computes."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 235,
+    "text": "**DMA** drives the DMA Engine alone, external to the Tensor Unit."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 240,
+    "text": "Every Tensor Unit stage is available in both contexts except these, and the type system enforces each row."
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 246,
+    "text": "Stage"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 249,
+    "text": "Context"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 259,
+    "text": "main"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 267,
+    "text": "main"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 275,
+    "text": "main"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 283,
+    "text": "sub"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 289,
+    "text": "`to_trf` and `to_vrf` are available in both contexts.\nBoth write through the sub context, so the main-context form of each takes it as an argument and holds it for the write."
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 292,
+    "text": "Context ordering, overlap, resource conflicts, and memory-rule scheduling are defined in [Schedule](../scheduling/schedule.md)."
+  }
+]

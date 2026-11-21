@@ -1,0 +1,508 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Contraction Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Contraction Engine performs binary tensor contractions such as matmul and convolution.\nRecall from [Quick Start](../../quick-start.md):"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 9,
+    "text": "A tensor contraction takes two input tensors and reduces along their shared (contracted) axes.\nDot product, GEMV, and GEMM are the standard examples."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 14,
+    "text": "A contraction decomposes into three steps: Broadcast, Multiply, Reduce."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 19,
+    "text": "One operand streams from the [Collect Engine](../collect-engine.md), and the other sits in the TRF (Tensor Register File)."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 24,
+    "text": "Contraction runs in the [main context](../../scheduling/schedule.md#execution-contexts).\nTRF preparation runs in the sub context via `.to_trf()`."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 29,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 32,
+    "text": "Four pipeline stages factor the workload: one for Broadcast and Multiply, three for Reduce.\nEach stage handles its own non-overlapping dimension."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 38,
+    "text": "**[Outer](./outer.md)** *(Broadcast and Multiply)*: broadcasts the two operands to a matching shape `[Chip, Cluster, Slice, Lane, Time, Packet]` and multiplies them elementwise into a single product tensor.\n`Chip` / `Cluster` / `Slice` pass through.\n`Lane` indexes the spatial parallelism shared by the TRF and downstream reducers.\n`Time` and `Packet` together represent [packet streams](../../mapping-tensors/spatial-temporal-dimensions.md).\nThree sub-stages run in series: the Stream Adapter broadcasts the streaming operand, the TRF Sequencer broadcasts the TRF operand, and the Multiplier widens to the contraction output type (`i4`/`i8` -> `i32`, `f8`/`bf16` -> `f32`) and multiplies them elementwise."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 43,
+    "text": "**[Packet Reducer](./packet-reducer.md)** *(Reduce within `Packet`)*: reduces along contracted axes mapped to `Packet` via a parallel tree, one tree per lane."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 48,
+    "text": "**[Time Reducer](./time-reducer.md)** *(Reduce across `Time`)*: accumulates per-cycle results in the shared accumulator."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 53,
+    "text": "**[Lane Folder](./lane-folder.md)** *(Fold `Lane`)*: emits the buffer to the output stream, absorbing `Lane` into either `OutPacket` or `OutTime` depending on the mode.\nFor reductions across slices or chips, the [Vector Engine](../vector-engine/index.md) handles the reduction downstream."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 58,
+    "text": "The Outer stage caps `Lane ≤ 8` and `Packet ≤ 64 B` (on RNGD); see [Packet Reducer](./packet-reducer.md) and [Time Reducer](./time-reducer.md) for more details."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 61,
+    "text": "Example: Batched MatMul"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 64,
+    "text": "[Quick Start](../../quick-start.md) walks through dot product, GEMV, and GEMM.\nThis section is the architecture reference for batched-matmul variants and keeps all runnable variant snippets together; Quick Start remains the end-to-end introductory path.\nBatched matmul extends GEMM with a leading batch axis V: $VMK, KN \\rightarrow VMN$.\nFor each of V independent (M × K) inputs and a shared (K × N) weight, the kernel produces the (M × N) product."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 67,
+    "text": "The three variants below classify kernels by which axis sits in `Time`.\nThe remaining axes are exploited as spatial parallelism.\nThey share these axes:"
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 69,
+    "offset": 40,
+    "length": 38,
+    "text": "// V batch, M×N output, K contraction\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 71,
+    "text": "K in Time"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 74,
+    "text": "K (the contraction axis) sits in `Time`.\nM splits across `Cluster` and `Slice`, and V splits as well: `V % 16` joins `Slice` while `V / 16 = 2` joins `Time` alongside K (V × M = 1024 doesn't fit the 512 spatial cells per chip on RNGD, so V's outer chunk must iterate).\n`Packet` pads to `1 # 32` and the reduction proceeds sequentially across cycles instead of via the Packet Reducer's spatial tree, so only 1 of 32 multipliers does useful work per cycle (1/32 MAC utilization for bf16).\nThe result is a degenerate kernel, shown only as an educational baseline."
+  },
+  {
+    "id": "u0020",
+    "kind": "comment",
+    "token": 76,
+    "offset": 40,
+    "length": 38,
+    "text": "// V batch, M×N output, K contraction\n"
+  },
+  {
+    "id": "u0021",
+    "kind": "comment",
+    "token": 76,
+    "offset": 119,
+    "length": 15,
+    "text": "// single chip\n"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 76,
+    "offset": 174,
+    "length": 46,
+    "text": "// outer M split across clusters (M / 16 = 2)\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 76,
+    "offset": 260,
+    "length": 56,
+    "text": "// inner M × inner V = 16 × 16 = 256 slices per cluster\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 76,
+    "offset": 356,
+    "length": 55,
+    "text": "// N (output channels) partitions the 8 hardware lanes\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 76,
+    "offset": 484,
+    "length": 76,
+    "text": "// Streaming operand: V outer + K in Time, with a one-element Packet m![1].\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 76,
+    "offset": 663,
+    "length": 84,
+    "text": "// TRF operand: N in Lane, K in Element. Stored into TRF by a prior .to_trf() call.\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "comment",
+    "token": 76,
+    "offset": 813,
+    "length": 61,
+    "text": "// Output: one (M × N) f32 matrix per (slice, V-outer) pair.\n"
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 76,
+    "offset": 979,
+    "length": 93,
+    "text": "// Outer: Lane = m![N] (inferred from trf), OutTime = m![V / 16, K], OutPacket = m![1 # 32].\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 76,
+    "offset": 1081,
+    "length": 52,
+    "text": "// input: 1 K-element broadcast across all N lanes.\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 76,
+    "offset": 1142,
+    "length": 64,
+    "text": "// trf:   1 K-element per lane, advancing one K-step per cycle.\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "comment",
+    "token": 76,
+    "offset": 1283,
+    "length": 57,
+    "text": "// Packet Reducer: OutPacket = m![1]. Nothing to reduce.\n"
+  },
+  {
+    "id": "u0032",
+    "kind": "comment",
+    "token": 76,
+    "offset": 1386,
+    "length": 95,
+    "text": "// Time Reducer: OutTime = m![V / 16]. K iterates over Time and accumulates; V outer survives.\n"
+  },
+  {
+    "id": "u0033",
+    "kind": "comment",
+    "token": 76,
+    "offset": 1530,
+    "length": 85,
+    "text": "// Lane Folder: Lane folds into OutPacket. Interleaved mode emits 8 lanes per cycle.\n"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 78,
+    "text": "To avoid this pathological case, keep K in `Packet` (parallel reduction via the Packet Reducer's tree) and spread the surviving axes (V, M, N) across `Cluster`, `Slice`, and `Lane` to maximize spatial parallelism.\nThe two strategies below apply this principle, each with one axis per class for simplicity; real kernels may split a single axis across multiple classes when sizes demand."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 81,
+    "text": "M in Time"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 84,
+    "text": "V (batch) distributes across `Cluster` and `Slice` (one batch element per slice).\nM in `Time`, K in `Packet`.\nThis strategy is applicable when (1) the slice count covers the batch, (2) N fits in `Lane`, and (3) K fits in a single `Packet`.\nWhen K is larger than `Packet`, split K across `Packet` (spatial) and `Time` (temporal).\nIt maximizes MAC utilization across lanes."
+  },
+  {
+    "id": "u0037",
+    "kind": "comment",
+    "token": 86,
+    "offset": 40,
+    "length": 38,
+    "text": "// V batch, M×N output, K contraction\n"
+  },
+  {
+    "id": "u0038",
+    "kind": "comment",
+    "token": 86,
+    "offset": 119,
+    "length": 15,
+    "text": "// single chip\n"
+  },
+  {
+    "id": "u0039",
+    "kind": "comment",
+    "token": 86,
+    "offset": 174,
+    "length": 46,
+    "text": "// outer V split across clusters (V / 16 = 2)\n"
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 86,
+    "offset": 260,
+    "length": 57,
+    "text": "// inner V split across slices (V % 16 = 16 per cluster)\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 86,
+    "offset": 357,
+    "length": 77,
+    "text": "// N (output channels) partitions the 8 hardware lanes (N = 8 fills the cap)\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 86,
+    "offset": 527,
+    "length": 46,
+    "text": "// Streaming operand: M in Time, K in Packet.\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "comment",
+    "token": 86,
+    "offset": 577,
+    "length": 89,
+    "text": "// Element type can be i4, i8, f8, or bf16; integers widen to i32 output, floats to f32.\n"
+  },
+  {
+    "id": "u0044",
+    "kind": "comment",
+    "token": 86,
+    "offset": 769,
+    "length": 71,
+    "text": "// TRF operand: N in Lane (one output channel per lane), K in Element.\n"
+  },
+  {
+    "id": "u0045",
+    "kind": "comment",
+    "token": 86,
+    "offset": 844,
+    "length": 65,
+    "text": "// Stored into TRF by a prior .to_trf() call in the sub context.\n"
+  },
+  {
+    "id": "u0046",
+    "kind": "comment",
+    "token": 86,
+    "offset": 975,
+    "length": 45,
+    "text": "// Output: one (M × N) f32 matrix per slice.\n"
+  },
+  {
+    "id": "u0047",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1120,
+    "length": 57,
+    "text": "// Outer: broadcast input and trf, multiply elementwise.\n"
+  },
+  {
+    "id": "u0048",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1186,
+    "length": 73,
+    "text": "// Lane = m![N] (inferred from trf), OutTime = m![M], OutPacket = m![K].\n"
+  },
+  {
+    "id": "u0049",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1268,
+    "length": 51,
+    "text": "// input: K elements broadcast across all N lanes.\n"
+  },
+  {
+    "id": "u0050",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1328,
+    "length": 62,
+    "text": "// trf:   K elements per lane, broadcast across all M cycles.\n"
+  },
+  {
+    "id": "u0051",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1454,
+    "length": 78,
+    "text": "// Packet Reducer: OutPacket = m![1]. Sum K spatially via the reduction tree.\n"
+  },
+  {
+    "id": "u0052",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1578,
+    "length": 53,
+    "text": "// Time Reducer: OutTime = m![M]. Nothing to reduce.\n"
+  },
+  {
+    "id": "u0053",
+    "kind": "comment",
+    "token": 86,
+    "offset": 1675,
+    "length": 85,
+    "text": "// Lane Folder: Lane folds into OutPacket. Interleaved mode emits 8 lanes per cycle.\n"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 88,
+    "text": "V in Time"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 91,
+    "text": "V (batch) in `Time`, K in `Packet`.\nM splits across `Cluster` and `Slice`.\nThis strategy is applicable when (1) the slice count covers M (`M / 16` in `Cluster`, `M % 16` in `Slice`), (2) N fits in `Lane`, and (3) K fits in a single `Packet`.\nUseful when batch is the dominant axis (e.g., batched inference)."
+  },
+  {
+    "id": "u0056",
+    "kind": "comment",
+    "token": 93,
+    "offset": 40,
+    "length": 38,
+    "text": "// V batch, M×N output, K contraction\n"
+  },
+  {
+    "id": "u0057",
+    "kind": "comment",
+    "token": 93,
+    "offset": 119,
+    "length": 15,
+    "text": "// single chip\n"
+  },
+  {
+    "id": "u0058",
+    "kind": "comment",
+    "token": 93,
+    "offset": 174,
+    "length": 46,
+    "text": "// outer M split across clusters (M / 16 = 2)\n"
+  },
+  {
+    "id": "u0059",
+    "kind": "comment",
+    "token": 93,
+    "offset": 260,
+    "length": 57,
+    "text": "// inner M split across slices (M % 16 = 16 per cluster)\n"
+  },
+  {
+    "id": "u0060",
+    "kind": "comment",
+    "token": 93,
+    "offset": 357,
+    "length": 55,
+    "text": "// N (output channels) partitions the 8 hardware lanes\n"
+  },
+  {
+    "id": "u0061",
+    "kind": "comment",
+    "token": 93,
+    "offset": 493,
+    "length": 46,
+    "text": "// Streaming operand: V in Time, K in Packet.\n"
+  },
+  {
+    "id": "u0062",
+    "kind": "comment",
+    "token": 93,
+    "offset": 642,
+    "length": 84,
+    "text": "// TRF operand: N in Lane, K in Element. Stored into TRF by a prior .to_trf() call.\n"
+  },
+  {
+    "id": "u0063",
+    "kind": "comment",
+    "token": 93,
+    "offset": 792,
+    "length": 45,
+    "text": "// Output: one (V × N) f32 matrix per slice.\n"
+  },
+  {
+    "id": "u0064",
+    "kind": "comment",
+    "token": 93,
+    "offset": 937,
+    "length": 80,
+    "text": "// Outer: Lane = m![N] (inferred from trf), OutTime = m![V], OutPacket = m![K].\n"
+  },
+  {
+    "id": "u0065",
+    "kind": "comment",
+    "token": 93,
+    "offset": 1026,
+    "length": 51,
+    "text": "// input: K elements broadcast across all N lanes.\n"
+  },
+  {
+    "id": "u0066",
+    "kind": "comment",
+    "token": 93,
+    "offset": 1086,
+    "length": 62,
+    "text": "// trf:   K elements per lane, broadcast across all V cycles.\n"
+  },
+  {
+    "id": "u0067",
+    "kind": "comment",
+    "token": 93,
+    "offset": 1212,
+    "length": 78,
+    "text": "// Packet Reducer: OutPacket = m![1]. Sum K spatially via the reduction tree.\n"
+  },
+  {
+    "id": "u0068",
+    "kind": "comment",
+    "token": 93,
+    "offset": 1336,
+    "length": 53,
+    "text": "// Time Reducer: OutTime = m![V]. Nothing to reduce.\n"
+  },
+  {
+    "id": "u0069",
+    "kind": "comment",
+    "token": 93,
+    "offset": 1433,
+    "length": 85,
+    "text": "// Lane Folder: Lane folds into OutPacket. Interleaved mode emits 8 lanes per cycle.\n"
+  }
+]

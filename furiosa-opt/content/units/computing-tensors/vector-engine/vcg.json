@@ -1,0 +1,2050 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Valid Count Generator"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The [Intra-Slice Reduce](./intra-slice-reduce.md) stage reduces the axis identified by `REDUCE_LABEL` (e.g., `R`) across its `Time` and `Packet` factors, leaving any `Slice` factor in the output.\nThat axis often needs padding to fit hardware dimensions, and the extra padded positions contain arbitrary data that the reduction must exclude."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "The Valid Count Generator (VCG) solves this.\nThe user places `R` as sub-expressions across `Slice`, `Time`, and/or `Packet` in the mapping.\nThe compiler then configures the VCG to tag each 8-element flit with a `valid_size` count of how many elements are real data.\nEach sub-expression in `Time` or `Slice` maps to a sequencer counter assigned to a time filter.\nEach sub-expression in `Packet` drives the packet clipper."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Throughout this page, capitalized `Slice`, `Time`, `Packet` refer to mapping dimensions; lowercase `slice` and `time step` refer to runtime instances."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "The mapping must express `R` in a specific form for the VCG to work.\n`R` is padded to a hardware-aligned size, written `R # PADDED_SIZE` when discussed in general.\nConcrete examples use the actual padded value (e.g., `R # 16`, `R # 48`).\nEach sub-expression is then a factor of `R # PADDED_SIZE` of the form `R # PADDED_SIZE / n % m` (stride `n`, modulo `m`).\nSee [Stride and Modulo](../../mapping-tensors/mapping-expressions.md#stride-and-modulo) for `/ n` and `% m` semantics.\nEach sub-expression is assigned to one hardware dimension.\nOne possible distribution is `R = 43` padded to `R # 48`, split across all three dimensions:"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 17,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 20,
+    "text": "The VCG assigns a `valid_size(s, t) ∈ {0, 1, ..., 8}` to each flit, where `s` is the slice id (an integer encoding the flit's position across all `Slice` sub-expressions) and `t` is the time step.\nThe first `valid_size` elements of the flit are real data, the rest are padding."
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 22,
+    "offset": 62,
+    "length": 48,
+    "text": "// for R's sub-expressions in Time and/or Slice\n"
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 22,
+    "offset": 153,
+    "length": 37,
+    "text": "// for R's sub-expressions in Packet\n"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 24,
+    "text": "When all timers report valid for flit `(s, t)`, the packet clipper decides how many elements in that flit are real data.\nWhen any timer reports invalid, all elements in the flit are excluded regardless of what the packet clipper would say.\nThe two components, `TimeFilterConfig` and `PacketClipperConfig`, are explained in the sections below."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 27,
+    "text": "Time Filter"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 30,
+    "text": "For each slice `s`, a time filter determines whether each time step `t` carries valid `R` data.\nThe subsections below build up `fn valid()` step by step, starting from the simplest case and adding complexity.\nWhen `R` has no sub-expressions in `Time` or `Slice`, the time filter is disabled by setting `slice_mask = 0` and `slice_thres = 1`.\nThen `s & 0 = 0 < 1` for every `s`, hitting the `Less` arm so `fn valid()` always returns `true`.\nThe choice of `slice_thres = 1` is conventional; any positive value works since `0` is always less than it."
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 32,
+    "offset": 30,
+    "length": 42,
+    "text": "// How R's index is reconstructed from t.\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 32,
+    "offset": 103,
+    "length": 76,
+    "text": "// Slice classification (see `R in Slice and Time`, `R in Time and Slice`).\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 32,
+    "offset": 278,
+    "length": 26,
+    "text": "// SliceMajor | TimeMajor\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 34,
+    "text": "`R` as `Time`"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 37,
+    "text": "In the simplest case, `R` occupies all of `Time` with no other axes.\nEach time step `t` corresponds directly to one `R` index, and is valid when `t < R::SIZE`."
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 39,
+    "offset": 0,
+    "length": 31,
+    "text": "// The compiler emits roughly:\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 39,
+    "offset": 118,
+    "length": 11,
+    "text": "// idx = t\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "comment",
+    "token": 39,
+    "offset": 159,
+    "length": 25,
+    "text": "// no slice partitioning\n"
+  },
+  {
+    "id": "u0021",
+    "kind": "comment",
+    "token": 39,
+    "offset": 214,
+    "length": 50,
+    "text": "// 0 cmp 0 = Equal -> falls to `idx < time_thres`\n"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 39,
+    "offset": 294,
+    "length": 28,
+    "text": "// valid when idx < R::SIZE\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 39,
+    "offset": 352,
+    "length": 40,
+    "text": "// arbitrary; only the Equal arm is hit\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 40,
+    "offset": 409,
+    "length": 30,
+    "text": "//   Slice     = m![X, A / 4]\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 40,
+    "offset": 447,
+    "length": 56,
+    "text": "//   Time      = m![R # 16]     (steps < R::SIZE valid)\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 40,
+    "offset": 511,
+    "length": 27,
+    "text": "//   Packet    = m![A % 4]\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "comment",
+    "token": 40,
+    "offset": 546,
+    "length": 57,
+    "text": "//   OutTime   = m![1]          (R eliminated from Time)\n"
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 40,
+    "offset": 611,
+    "length": 27,
+    "text": "//   OutPacket = m![A % 4]\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 42,
+    "text": "In the example above, the sequencer iterates `R # 16` once with `size 16 : stride 1`, so `idx = t` for every time step.\nWith `time_thres = R::SIZE = 12`, the first 12 time steps (`t = 0..11`) are valid and the remaining 4 (`t = 12..15`) are filtered out.\nThe intra-slice reduce then folds exactly the 12 real `R` elements per slice."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 45,
+    "text": "`R` in `Time`"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 48,
+    "text": "The VCG supports `Time` mappings where `R` shares space with other axes and appears as multiple sub-expressions, in any order.\nThe time filter uses a [Sequencer](../../moving-tensors/sequencer.md) to decompose `t` into per-sub-expression counters; summing `value × stride` over the `R`-assigned counters gives `idx`, which encodes `R`'s index for that time step."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 51,
+    "text": "The following example uses `R = 10` padded to `R # 12`, where `A` sits between `R`'s two sub-expressions in `Time`."
+  },
+  {
+    "id": "u0033",
+    "kind": "comment",
+    "token": 53,
+    "offset": 38,
+    "length": 79,
+    "text": "// R = 10, padded to R # 12, split as (size 3, stride 4) × (size 4, stride 1).\n"
+  },
+  {
+    "id": "u0034",
+    "kind": "comment",
+    "token": 53,
+    "offset": 117,
+    "length": 104,
+    "text": "// time filter sums (R # 12 / 4 value) * 4 + (R # 12 % 4 value) * 1 to recover R index regardless of A.\n"
+  },
+  {
+    "id": "u0035",
+    "kind": "comment",
+    "token": 53,
+    "offset": 608,
+    "length": 29,
+    "text": "//   Slice     = m![X # 256]\n"
+  },
+  {
+    "id": "u0036",
+    "kind": "comment",
+    "token": 53,
+    "offset": 645,
+    "length": 47,
+    "text": "//   Time      = m![R # 12 / 4, A, R # 12 % 4]\n"
+  },
+  {
+    "id": "u0037",
+    "kind": "comment",
+    "token": 53,
+    "offset": 700,
+    "length": 23,
+    "text": "//   Packet    = m![B]\n"
+  },
+  {
+    "id": "u0038",
+    "kind": "comment",
+    "token": 53,
+    "offset": 731,
+    "length": 53,
+    "text": "//   OutTime   = m![A]    (R eliminated; A survives)\n"
+  },
+  {
+    "id": "u0039",
+    "kind": "comment",
+    "token": 53,
+    "offset": 792,
+    "length": 23,
+    "text": "//   OutPacket = m![B]\n"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 55,
+    "text": "The compiler configures the time filter for this placement as follows:"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 57,
+    "offset": 72,
+    "length": 27,
+    "text": "// assigned to time filter\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 57,
+    "offset": 152,
+    "length": 30,
+    "text": "// not assigned (A's OutTime)\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "comment",
+    "token": 57,
+    "offset": 235,
+    "length": 27,
+    "text": "// assigned to time filter\n"
+  },
+  {
+    "id": "u0044",
+    "kind": "comment",
+    "token": 57,
+    "offset": 292,
+    "length": 45,
+    "text": "// no slice partitioning (R is only in Time)\n"
+  },
+  {
+    "id": "u0045",
+    "kind": "comment",
+    "token": 57,
+    "offset": 367,
+    "length": 51,
+    "text": "// every slice falls to the `idx < time_thres` arm\n"
+  },
+  {
+    "id": "u0046",
+    "kind": "comment",
+    "token": 57,
+    "offset": 484,
+    "length": 40,
+    "text": "// arbitrary; only the Equal arm is hit\n"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 59,
+    "text": "The `A` entry has stride 0, so it never contributes to `idx`, which means `A`'s position in `Time` has no effect on validity.\nThe remaining two entries reconstruct `R` as `(R # 12 / 4 value) × 4 + (R # 12 % 4 value)`."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 62,
+    "text": "For example:"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 67,
+    "text": "At `t = 13`, the sequencer state is `(R # 12 / 4, A, R # 12 % 4) = (1, 0, 1)`, giving `idx = 1 × 4 + 0 + 1 × 1 = 5`. `idx < 10`, so valid."
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 72,
+    "text": "At `t = 27`, the sequencer state is `(2, 0, 3)`, giving `idx = 2 × 4 + 0 + 3 × 1 = 11`. `idx ≥ 10`, so invalid (it is one of the two padded `R` positions)."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 77,
+    "text": "`R` in `Slice` and `Time`"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 80,
+    "text": "`SliceMajor` mode allows multiple `R` sub-expressions in both `Slice` and `Time`, with `Slice` sub-expressions more major (larger stride) than `Time` sub-expressions.\nWithin `Slice`, sub-expressions must appear in descending stride order (major before minor), and each must have a power-of-2 size and a power-of-2 stride so that its bits occupy a contiguous run of `slice_mask`.\nWithin `Time`, sub-expressions may appear in any order."
+  },
+  {
+    "id": "u0053",
+    "kind": "comment",
+    "token": 82,
+    "offset": 471,
+    "length": 109,
+    "text": "//   Slice     = m![R # 16 / 8, X, R # 16 / 4 % 2]   (major R sub-exprs, descending R-stride order required)\n"
+  },
+  {
+    "id": "u0054",
+    "kind": "comment",
+    "token": 82,
+    "offset": 588,
+    "length": 87,
+    "text": "//   Time      = m![R # 16 % 2, R # 16 / 2 % 2]      (minor R sub-exprs, any order OK)\n"
+  },
+  {
+    "id": "u0055",
+    "kind": "comment",
+    "token": 82,
+    "offset": 683,
+    "length": 27,
+    "text": "//   Packet    = m![1 # 4]\n"
+  },
+  {
+    "id": "u0056",
+    "kind": "comment",
+    "token": 82,
+    "offset": 718,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0057",
+    "kind": "comment",
+    "token": 82,
+    "offset": 773,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 84,
+    "text": "The example places `R = 11` (padded to `R # 16`) across `Slice` and `Time` with the following sub-expressions."
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 90,
+    "text": "Dimension"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 93,
+    "text": "Sub-expression"
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 96,
+    "text": "Stride"
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 148,
+    "text": "The example divides into 4 slice groups (one per `R` contribution from `Slice`: `0`, `4`, `8`, or `12`) and 4 time iterations per slice.\nThe layout has three regimes: 2 slices are fully valid, 1 slice is partial, and 1 slice is fully invalid."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 154,
+    "text": "`R` contribution from `Slice`"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 157,
+    "text": "`R` values across iterations"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 160,
+    "text": "Valid time steps"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 173,
+    "text": "4 (all `< R::SIZE`)"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 184,
+    "text": "4 (all `< R::SIZE`)"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 195,
+    "text": "3 (`R = 11` invalid)"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 206,
+    "text": "0 (all `≥ R::SIZE`)"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 212,
+    "text": "The compiler emits the time filter config below."
+  },
+  {
+    "id": "u0071",
+    "kind": "comment",
+    "token": 214,
+    "offset": 159,
+    "length": 71,
+    "text": "// bits 0 (R # 16 / 4 % 2) and 6 (R # 16 / 8) carry the R contribution\n"
+  },
+  {
+    "id": "u0072",
+    "kind": "comment",
+    "token": 214,
+    "offset": 259,
+    "length": 56,
+    "text": "// masked id encoding the boundary R contribution (= 8)\n"
+  },
+  {
+    "id": "u0073",
+    "kind": "comment",
+    "token": 214,
+    "offset": 344,
+    "length": 33,
+    "text": "// = R::SIZE - boundary = 11 - 8\n"
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 216,
+    "text": "Each field encodes one part of the validity decision:"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 221,
+    "text": "`sequencer` records each `Time` sub-expression with its `R` stride, so the reconstructed `idx` equals the `R` contribution from `Time` at each time step `t`.\nFor this example `idx` takes values in `{0, 1, 2, 3}` as `t` ranges over `[0, 4)`."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 226,
+    "text": "`slice_mask` extracts the bits of the slice id that carry the `R` contribution from `Slice`.\nFor this example bit `0` carries `R # 16 / 4 % 2` and bit `6` carries `R # 16 / 8`, so `slice_mask = 0b1000001`."
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 231,
+    "text": "`slice_thres` is the bit pattern within `slice_mask` that encodes the partial slice's `R` contribution.\nFrom the table above, the partial slice has `R` contribution `8`, encoded by setting bit `6` (`R # 16 / 8 = 1`) and clearing bit `0` (`R # 16 / 4 % 2 = 0`).\nSo `slice_thres = 64`."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 236,
+    "text": "`time_thres` is `R::SIZE` minus the partial slice's `R` contribution.\nFor this example `time_thres = 11 - 8 = 3`."
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 241,
+    "text": "`fn valid` returns the correct validity for every flit.\nTo verify, decompose the `R` index as `r = r_slice + idx`, where `r_slice` is the `R` contribution from `Slice` (encoded by `s & slice_mask`) and `idx` is the contribution from `Time`, and consider the three cases of the slice comparison."
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 246,
+    "text": "When `(s & slice_mask) < slice_thres`, every time step is valid: `r_slice` is at least one slice spacing below the partial slice's contribution, so `r = r_slice + idx < R::SIZE` for every `idx`."
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 251,
+    "text": "When `(s & slice_mask) = slice_thres`, a time step is valid iff `idx < time_thres`.\nThis is the partial slice, and by definition of `time_thres` its `r_slice = R::SIZE - time_thres`.\nSo `r = r_slice + idx < R::SIZE` exactly when `idx < time_thres`."
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 256,
+    "text": "When `(s & slice_mask) > slice_thres`, no time step is valid: `r_slice` is at least one slice spacing above the partial slice's contribution, so `r_slice ≥ R::SIZE`."
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 261,
+    "text": "`R` in `Time` and `Slice`"
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 264,
+    "text": "`TimeMajor` mode is the dual of [`SliceMajor`](#r-in-slice-and-time): the major/minor roles are flipped, so `Time` sub-expressions carry the larger strides and `Slice` sub-expressions carry the smaller ones.\nThe within-`Slice` and within-`Time` ordering rules and the power-of-2 size/stride requirement on `Slice` sub-expressions carry over unchanged from `SliceMajor`."
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 267,
+    "text": "`TimeMajor` adds one extra constraint on top of these inherited rules.\nRecall that `PADDED_SIZE` decomposes as `slice_span × time_span`, where `slice_span` and `time_span` are the products of sizes of `R`'s sub-expressions in `Slice` and `Time` respectively.\n`TimeMajor` requires `PADDED_SIZE - R::SIZE ≤ slice_span`, meaning at most `slice_span` `R` positions may be over-padded.\nThis constraint is essential, and placements that violate it are not supported by the VCG (see [`R` in `Time` and `Slice`](#r-in-time-and-slice))."
+  },
+  {
+    "id": "u0086",
+    "kind": "comment",
+    "token": 269,
+    "offset": 470,
+    "length": 51,
+    "text": "//   Slice     = m![R # 16 / 2 % 2, X, R # 16 % 2]\n"
+  },
+  {
+    "id": "u0087",
+    "kind": "comment",
+    "token": 269,
+    "offset": 529,
+    "length": 48,
+    "text": "//   Time      = m![R # 16 / 4 % 2, R # 16 / 8]\n"
+  },
+  {
+    "id": "u0088",
+    "kind": "comment",
+    "token": 269,
+    "offset": 585,
+    "length": 27,
+    "text": "//   Packet    = m![1 # 4]\n"
+  },
+  {
+    "id": "u0089",
+    "kind": "comment",
+    "token": 269,
+    "offset": 620,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0090",
+    "kind": "comment",
+    "token": 269,
+    "offset": 675,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 271,
+    "text": "The example places `R = 13` (padded to `R # 16`) across `Slice` and `Time` with the following sub-expressions."
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 277,
+    "text": "Dimension"
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 280,
+    "text": "Sub-expression"
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 283,
+    "text": "Stride"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 335,
+    "text": "These sub-expressions give `slice_span = 4`, `time_span = 4`, and over-padding `PADDED_SIZE - R::SIZE = 3`, which satisfies the constraint `3 ≤ 4`.\nEach of the 4 slices, distinguished by its `R` contribution from `Slice` (`0`, `1`, `2`, or `3`), sweeps through 4 `R` values across the 4 time iterations.\nThe layout has two regimes: 1 slice is fully valid, and 3 are partial (each losing one iteration)."
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 341,
+    "text": "`R` contribution from `Slice`"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 344,
+    "text": "`R` values across iterations"
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 347,
+    "text": "Valid time steps"
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 360,
+    "text": "4 (all `< R::SIZE`)"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 371,
+    "text": "3 (`R = 13` invalid)"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 382,
+    "text": "3 (`R = 14` invalid)"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 393,
+    "text": "3 (`R = 15` invalid)"
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 399,
+    "text": "The compiler emits the time filter config below."
+  },
+  {
+    "id": "u0104",
+    "kind": "comment",
+    "token": 401,
+    "offset": 77,
+    "length": 22,
+    "text": "// 1 = 4 / slice_span\n"
+  },
+  {
+    "id": "u0105",
+    "kind": "comment",
+    "token": 401,
+    "offset": 157,
+    "length": 22,
+    "text": "// 2 = 8 / slice_span\n"
+  },
+  {
+    "id": "u0106",
+    "kind": "comment",
+    "token": 401,
+    "offset": 208,
+    "length": 71,
+    "text": "// bits 0 (R # 16 % 2) and 6 (R # 16 / 2 % 2) carry the R contribution\n"
+  },
+  {
+    "id": "u0107",
+    "kind": "comment",
+    "token": 401,
+    "offset": 308,
+    "length": 34,
+    "text": "// masked id encoding r_slice = 1\n"
+  },
+  {
+    "id": "u0108",
+    "kind": "comment",
+    "token": 401,
+    "offset": 371,
+    "length": 72,
+    "text": "// = time_span - 1 (partial slices drop the over-padded last iteration)\n"
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 403,
+    "text": "The config differs from `SliceMajor` in three fields (`slice_mask` follows the same pattern):"
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 408,
+    "text": "`sequencer`: every `Time` sub-expression stride is divided by `slice_span` first.\nFor this example strides `4` and `8` become `1` and `2`."
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 413,
+    "text": "`slice_thres`: encodes the partial slice's `r_slice = slice_span - (PADDED_SIZE - R::SIZE)`.\nFor this example the target value is `4 - 3 = 1`, encoded with bit `0` set (`R # 16 % 2 = 1`) and bit `6` clear (`R # 16 / 2 % 2 = 0`), giving `slice_thres = 1`."
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 418,
+    "text": "`time_thres`: always `time_span - 1`.\nFor this example `time_thres = 3`."
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 423,
+    "text": "`fn valid` returns the correct validity for every flit.\nTo verify, decompose the `R` index as `r = idx * slice_span + r_slice`, where `r_slice` is the slice's `R` contribution decoded from `s & slice_mask`, and consider the two cases of the slice comparison."
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 428,
+    "text": "When `(s & slice_mask) < slice_thres`, every time step is valid: `r_slice < slice_span - (PADDED_SIZE - R::SIZE)`, so `r ≤ (time_span - 1) * slice_span + r_slice < R::SIZE` for every `idx`."
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 433,
+    "text": "When `(s & slice_mask) ≥ slice_thres`, a time step is valid iff `idx < time_thres = time_span - 1`.\nThe slice's `r_slice ≥ slice_span - (PADDED_SIZE - R::SIZE)`.\nFor `idx ≤ time_span - 2`, `r ≤ (time_span - 2) * slice_span + (slice_span - 1) < (time_span - 1) * slice_span ≤ R::SIZE`.\nFor `idx = time_span - 1`, `r ≥ (time_span - 1) * slice_span + slice_span - (PADDED_SIZE - R::SIZE) = R::SIZE`."
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 438,
+    "text": "Unlike `SliceMajor`, `TimeMajor` has no \"all invalid\" regime.\nThe padding constraint `PADDED_SIZE - R::SIZE ≤ slice_span` caps over-padding tightly enough that no slice becomes fully invalid."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 441,
+    "text": "Packet Clipper"
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 444,
+    "text": "For each flit, the packet clipper computes `valid_size(t)`, which depends only on `t` (not on the slice `s`), so all slices receive the same count at the same time step.\nThis slice-independence constrains which placements the VCG can express.\nThe subsections below build up `fn valid_size()` step by step.\nWhen `R` has no sub-expression in `Packet`, the packet clipper is disabled by setting `axis_size = packet_span = 8` with an empty sequencer, making `fn valid_size()` always return `8` (the full flit)."
+  },
+  {
+    "id": "u0119",
+    "kind": "comment",
+    "token": 446,
+    "offset": 79,
+    "length": 11,
+    "text": "// R::SIZE\n"
+  },
+  {
+    "id": "u0120",
+    "kind": "comment",
+    "token": 446,
+    "offset": 112,
+    "length": 24,
+    "text": "// R positions per flit\n"
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 448,
+    "text": "The packet clipper requires `Packet = m![R # PADDED_SIZE % packet_span # 8]`.\nAny other axis sharing `Packet` with `R`, or `R` being split into multiple sub-expressions within `Packet`, breaks the contiguous-prefix property that `fn valid_size()` relies on (see [Inexpressible Patterns](#inexpressible-patterns))."
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 451,
+    "text": "`R` as `Packet`"
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 454,
+    "text": "In the simplest case, `R` fits in a single flit (`R::SIZE ≤ 8`), so every flit has the same `valid_size = R::SIZE` regardless of time step or slice."
+  },
+  {
+    "id": "u0124",
+    "kind": "comment",
+    "token": 456,
+    "offset": 400,
+    "length": 30,
+    "text": "//   Slice     = m![X, A / 2]\n"
+  },
+  {
+    "id": "u0125",
+    "kind": "comment",
+    "token": 456,
+    "offset": 438,
+    "length": 23,
+    "text": "//   Time      = m![1]\n"
+  },
+  {
+    "id": "u0126",
+    "kind": "comment",
+    "token": 456,
+    "offset": 469,
+    "length": 27,
+    "text": "//   Packet    = m![R # 4]\n"
+  },
+  {
+    "id": "u0127",
+    "kind": "comment",
+    "token": 456,
+    "offset": 504,
+    "length": 23,
+    "text": "//   OutTime   = m![1]\n"
+  },
+  {
+    "id": "u0128",
+    "kind": "comment",
+    "token": 456,
+    "offset": 535,
+    "length": 55,
+    "text": "//   OutPacket = m![1 # 4]  (R eliminated from Packet)\n"
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 458,
+    "text": "The example above places `R = 3` (padded to `R # 8`) entirely in `Packet` with a single sub-expression.\nThe compiler configures the packet clipper as follows:"
+  },
+  {
+    "id": "u0130",
+    "kind": "comment",
+    "token": 460,
+    "offset": 45,
+    "length": 39,
+    "text": "// empty: a single flit holds all of R\n"
+  },
+  {
+    "id": "u0131",
+    "kind": "comment",
+    "token": 460,
+    "offset": 107,
+    "length": 11,
+    "text": "// R::SIZE\n"
+  },
+  {
+    "id": "u0132",
+    "kind": "comment",
+    "token": 460,
+    "offset": 141,
+    "length": 30,
+    "text": "// R fits in 8 flit positions\n"
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 462,
+    "text": "Every flit has `valid_size = clamp(3 - 0, 0, 8) = 3` (constant across time steps and slices)."
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 465,
+    "text": "`R` in `Time` and `Packet`"
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 468,
+    "text": "The VCG supports `R` with sub-expressions in both `Time` and `Packet`."
+  },
+  {
+    "id": "u0136",
+    "kind": "comment",
+    "token": 470,
+    "offset": 424,
+    "length": 30,
+    "text": "//   Slice     = m![X, A / 2]\n"
+  },
+  {
+    "id": "u0137",
+    "kind": "comment",
+    "token": 470,
+    "offset": 462,
+    "length": 32,
+    "text": "//   Time      = m![R # 16 / 4]\n"
+  },
+  {
+    "id": "u0138",
+    "kind": "comment",
+    "token": 470,
+    "offset": 502,
+    "length": 36,
+    "text": "//   Packet    = m![R # 16 % 4 # 8]\n"
+  },
+  {
+    "id": "u0139",
+    "kind": "comment",
+    "token": 470,
+    "offset": 546,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0140",
+    "kind": "comment",
+    "token": 470,
+    "offset": 601,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0141",
+    "kind": "prose",
+    "token": 472,
+    "text": "The example above places `R = 10` (padded to `R # 16`) across `Time` and `Packet`:"
+  },
+  {
+    "id": "u0142",
+    "kind": "prose",
+    "token": 478,
+    "text": "Dimension"
+  },
+  {
+    "id": "u0143",
+    "kind": "prose",
+    "token": 481,
+    "text": "Sub-expression"
+  },
+  {
+    "id": "u0144",
+    "kind": "prose",
+    "token": 484,
+    "text": "Stride"
+  },
+  {
+    "id": "u0145",
+    "kind": "prose",
+    "token": 514,
+    "text": "The compiler configures the packet clipper as follows:"
+  },
+  {
+    "id": "u0146",
+    "kind": "comment",
+    "token": 516,
+    "offset": 97,
+    "length": 11,
+    "text": "// R::SIZE\n"
+  },
+  {
+    "id": "u0147",
+    "kind": "comment",
+    "token": 516,
+    "offset": 131,
+    "length": 77,
+    "text": "// 4 R positions per flit (the trailing 4 flit positions are always padding)\n"
+  },
+  {
+    "id": "u0148",
+    "kind": "prose",
+    "token": 518,
+    "text": "With this config, the sequencer reconstructs `idx(t)`, the `Time` contribution to the `R` index (see [`R` in `Time`](#r-in-time)).\nAfter `Time` covers `idx(t)` of the `axis_size = 10` elements, `axis_size - idx(t)` remain.\nThe packet clipper fits as many of these into the flit as it can, capped at `packet_span = 4`.\nSo `fn valid_size(t) = clamp(10 - idx(t), 0, 4)`, with the trailing 4 flit positions always padding and the last flit carrying a partial count when `R::SIZE` is not a multiple of `packet_span`:"
+  },
+  {
+    "id": "u0149",
+    "kind": "prose",
+    "token": 522,
+    "text": "Putting It All Together"
+  },
+  {
+    "id": "u0150",
+    "kind": "prose",
+    "token": 525,
+    "text": "The previous sections covered a single `R` sub-expression placed in one or two dimensions.\nIn practice, an Intra-Slice Reduce takes a single `REDUCE_LABEL` (`R`) plus extra padded non-reduce axes, and the VCG tracks all of them: each padded axis (whether `R` or another) occupies one time filter slot, and `R`'s `Packet` part occupies the packet clipper.\nThis example builds up from one axis to three, so each dimension's contribution is clear."
+  },
+  {
+    "id": "u0151",
+    "kind": "prose",
+    "token": 528,
+    "text": "Original shape `[H, C, W] = [5, 5, 19]`.\nEach axis is split into slice/time/packet parts depending on its placement:"
+  },
+  {
+    "id": "u0152",
+    "kind": "prose",
+    "token": 534,
+    "text": "Axis"
+  },
+  {
+    "id": "u0153",
+    "kind": "prose",
+    "token": 537,
+    "text": "Padded"
+  },
+  {
+    "id": "u0154",
+    "kind": "prose",
+    "token": 540,
+    "text": "Slice"
+  },
+  {
+    "id": "u0155",
+    "kind": "prose",
+    "token": 543,
+    "text": "Time"
+  },
+  {
+    "id": "u0156",
+    "kind": "prose",
+    "token": 546,
+    "text": "Packet"
+  },
+  {
+    "id": "u0157",
+    "kind": "prose",
+    "token": 559,
+    "text": "`H # 8 / 2` (size 4)"
+  },
+  {
+    "id": "u0158",
+    "kind": "prose",
+    "token": 562,
+    "text": "`H # 8 % 2` (size 2)"
+  },
+  {
+    "id": "u0159",
+    "kind": "prose",
+    "token": 576,
+    "text": "`C # 8 / 2` (size 4)"
+  },
+  {
+    "id": "u0160",
+    "kind": "prose",
+    "token": 579,
+    "text": "`C # 8 % 2` (size 2)"
+  },
+  {
+    "id": "u0161",
+    "kind": "prose",
+    "token": 596,
+    "text": "`W # 24 / 8` (size 3)"
+  },
+  {
+    "id": "u0162",
+    "kind": "prose",
+    "token": 599,
+    "text": "`W # 24 % 8` (size 8)"
+  },
+  {
+    "id": "u0163",
+    "kind": "prose",
+    "token": 605,
+    "text": "For brevity in the following steps, we use `Ho`/`Co`/`Wo` and `Hi`/`Ci`/`Wi` as shorthands: `*o` is the leftmost factor in the table row (slice for `H`/`C`, time for `W`), `*i` is the next one to its right."
+  },
+  {
+    "id": "u0164",
+    "kind": "prose",
+    "token": 608,
+    "text": "Step 1: `W=19` only (packet clipper, no time filters)"
+  },
+  {
+    "id": "u0165",
+    "kind": "prose",
+    "token": 611,
+    "text": "Ignore H and C for now.\nDisable time filters 0 and 1 (`slice_mask=0, slice_thres=1`).\nEvery slice processes 3 flits (`Wo` size 3), and packet clipper produces the sawtooth:"
+  },
+  {
+    "id": "u0166",
+    "kind": "prose",
+    "token": 615,
+    "text": "Since there are no time filters, every slice gets this exact same pattern:"
+  },
+  {
+    "id": "u0167",
+    "kind": "prose",
+    "token": 619,
+    "text": "Step 2: Add `C=5` (packet clipper + time filter 0)"
+  },
+  {
+    "id": "u0168",
+    "kind": "prose",
+    "token": 622,
+    "text": "Now enable the `C`-axis timer (time filter 0).\n`C=5` is split into `Co` (slice, size 4) × `Ci` (time, size 2).\nThe `C` time filter config: `slice_mask=0b0011` (extracts `Co` from `slice_id`), `slice_thres=2`, `time_thres=1`, `SliceMajor`."
+  },
+  {
+    "id": "u0169",
+    "kind": "prose",
+    "token": 625,
+    "text": "Each slice now runs 6 flits: `Ci` size 2 × `Wo` size 3.\nThe `C` time filter classifies slices by their `Co` value:"
+  },
+  {
+    "id": "u0170",
+    "kind": "prose",
+    "token": 634,
+    "text": "Group"
+  },
+  {
+    "id": "u0171",
+    "kind": "prose",
+    "token": 637,
+    "text": "Effect"
+  },
+  {
+    "id": "u0172",
+    "kind": "prose",
+    "token": 647,
+    "text": "below (`< 2`)"
+  },
+  {
+    "id": "u0173",
+    "kind": "prose",
+    "token": 650,
+    "text": "all 6 flits pass packet clipper's pattern"
+  },
+  {
+    "id": "u0174",
+    "kind": "prose",
+    "token": 658,
+    "text": "below (`< 2`)"
+  },
+  {
+    "id": "u0175",
+    "kind": "prose",
+    "token": 661,
+    "text": "same"
+  },
+  {
+    "id": "u0176",
+    "kind": "prose",
+    "token": 669,
+    "text": "boundary (`= 2`)"
+  },
+  {
+    "id": "u0177",
+    "kind": "prose",
+    "token": 672,
+    "text": "valid for `Ci=0`, invalid for `Ci=1`"
+  },
+  {
+    "id": "u0178",
+    "kind": "prose",
+    "token": 680,
+    "text": "above (`> 2`)"
+  },
+  {
+    "id": "u0179",
+    "kind": "prose",
+    "token": 683,
+    "text": "all 6 flits have `valid_size = 0`"
+  },
+  {
+    "id": "u0180",
+    "kind": "prose",
+    "token": 689,
+    "text": "Result per slice (6 flits = `Ci` size 2 × `Wo` size 3):"
+  },
+  {
+    "id": "u0181",
+    "kind": "prose",
+    "token": 693,
+    "text": "Notice the timer's effect.\nSome slices go entirely to zero, and the boundary slice loses its second half.\nBut within the valid flits, the `[8,8,3]` pattern from packet clipper is unchanged."
+  },
+  {
+    "id": "u0182",
+    "kind": "prose",
+    "token": 696,
+    "text": "Step 3: Add `H=5` (packet clipper + time filter 0 + time filter 1)"
+  },
+  {
+    "id": "u0183",
+    "kind": "prose",
+    "token": 699,
+    "text": "Now enable the `H`-axis timer (time filter 1).\n`H=5` is split into `Ho` (slice, size 4) × `Hi` (time, size 2).\nThe `H` time filter config: `slice_mask=0b1100` (extracts `Ho` from `slice_id`), `slice_thres=0b1000`, `time_thres=1`, `SliceMajor`."
+  },
+  {
+    "id": "u0184",
+    "kind": "prose",
+    "token": 702,
+    "text": "The slice id encodes both slice factors as `slice_id = Ho * 4 + Co`, giving 16 slices.\nEach slice now runs 12 flits: `Hi` size 2 × `Ci` size 2 × `Wo` size 3."
+  },
+  {
+    "id": "u0185",
+    "kind": "prose",
+    "token": 708,
+    "text": "Component"
+  },
+  {
+    "id": "u0186",
+    "kind": "prose",
+    "token": 711,
+    "text": "Axis"
+  },
+  {
+    "id": "u0187",
+    "kind": "prose",
+    "token": 714,
+    "text": "Tracks"
+  },
+  {
+    "id": "u0188",
+    "kind": "prose",
+    "token": 717,
+    "text": "Config"
+  },
+  {
+    "id": "u0189",
+    "kind": "prose",
+    "token": 724,
+    "text": "packet clipper"
+  },
+  {
+    "id": "u0190",
+    "kind": "prose",
+    "token": 730,
+    "text": "per-flit `R` count"
+  },
+  {
+    "id": "u0191",
+    "kind": "prose",
+    "token": 733,
+    "text": "`axis_size=19`, `packet_span=8`, sequencer = `[Wo -> size 3 : stride 8]`"
+  },
+  {
+    "id": "u0192",
+    "kind": "prose",
+    "token": 738,
+    "text": "time filter 0"
+  },
+  {
+    "id": "u0193",
+    "kind": "prose",
+    "token": 744,
+    "text": "per-slice `Co` validity"
+  },
+  {
+    "id": "u0194",
+    "kind": "prose",
+    "token": 752,
+    "text": "time filter 1"
+  },
+  {
+    "id": "u0195",
+    "kind": "prose",
+    "token": 758,
+    "text": "per-slice `Ho` validity"
+  },
+  {
+    "id": "u0196",
+    "kind": "prose",
+    "token": 767,
+    "text": "The `H` time filter classifies slices by `Ho`, same logic as `C` time filter by `Co`:"
+  },
+  {
+    "id": "u0197",
+    "kind": "prose",
+    "token": 776,
+    "text": "Group"
+  },
+  {
+    "id": "u0198",
+    "kind": "prose",
+    "token": 779,
+    "text": "Effect"
+  },
+  {
+    "id": "u0199",
+    "kind": "prose",
+    "token": 789,
+    "text": "below"
+  },
+  {
+    "id": "u0200",
+    "kind": "prose",
+    "token": 792,
+    "text": "open"
+  },
+  {
+    "id": "u0201",
+    "kind": "prose",
+    "token": 800,
+    "text": "below"
+  },
+  {
+    "id": "u0202",
+    "kind": "prose",
+    "token": 803,
+    "text": "open"
+  },
+  {
+    "id": "u0203",
+    "kind": "prose",
+    "token": 811,
+    "text": "boundary"
+  },
+  {
+    "id": "u0204",
+    "kind": "prose",
+    "token": 814,
+    "text": "open for `Hi=0`, closed for `Hi=1`"
+  },
+  {
+    "id": "u0205",
+    "kind": "prose",
+    "token": 822,
+    "text": "above"
+  },
+  {
+    "id": "u0206",
+    "kind": "prose",
+    "token": 825,
+    "text": "closed"
+  },
+  {
+    "id": "u0207",
+    "kind": "prose",
+    "token": 831,
+    "text": "The final `valid_size` is the packet clipper's count when both time filters return `true`, or `0` if either returns `false`."
+  },
+  {
+    "id": "u0208",
+    "kind": "prose",
+    "token": 834,
+    "text": "The complete heatmap below has 16 slices (columns, grouped by `Ho`) by 12 flits (rows, grouped by `(Hi, Ci)`).\nRight-side annotations (`H:`, `C:`) label which timers are active for each row: `v` = valid, `>` = boundary, `x` = invalid.\nScan these annotations first to predict which row × column blocks should be all-zero (any timer `x`) versus carry data, then read the cells to confirm the `[8, 8, 3]` packet-dim sawtooth."
+  },
+  {
+    "id": "u0209",
+    "kind": "prose",
+    "token": 840,
+    "text": "`Ho=3` columns (rightmost 4): all 0 (`H` time filter `x`, always closed)."
+  },
+  {
+    "id": "u0210",
+    "kind": "prose",
+    "token": 845,
+    "text": "`Co=3` columns (every 4th): all 0 (`C` time filter `x`)."
+  },
+  {
+    "id": "u0211",
+    "kind": "prose",
+    "token": 850,
+    "text": "`Co=2` columns (`H:v C:>`): `C` time filter is boundary, so only rows with `Ci=0` pass.\nCompare `Co=1` vs `Co=2`."
+  },
+  {
+    "id": "u0212",
+    "kind": "prose",
+    "token": 855,
+    "text": "`Ho=2` columns (`H:> C:v`): `H` time filter is boundary, so only rows with `Hi=0` pass.\nCompare `Ho=1` vs `Ho=2`."
+  },
+  {
+    "id": "u0213",
+    "kind": "prose",
+    "token": 860,
+    "text": "`Ho=2 × Co=2` (both `>`): only `(Hi=0, Ci=0)` rows pass, the intersection of both boundaries."
+  },
+  {
+    "id": "u0214",
+    "kind": "prose",
+    "token": 865,
+    "text": "Within valid cells, the `[8, 8, 3]` sawtooth from packet clipper always appears, the same regardless of slice."
+  },
+  {
+    "id": "u0215",
+    "kind": "prose",
+    "token": 870,
+    "text": "Inexpressible Patterns"
+  },
+  {
+    "id": "u0216",
+    "kind": "prose",
+    "token": 873,
+    "text": "The following placements cannot be expressed by the VCG.\nEach subsection shows the placement and explains why."
+  },
+  {
+    "id": "u0217",
+    "kind": "prose",
+    "token": 876,
+    "text": "`R` in `Slice`, Out of Order"
+  },
+  {
+    "id": "u0218",
+    "kind": "prose",
+    "token": 879,
+    "text": "When `R` has multiple sub-expressions in `Slice`, each outer sub-expression must have a larger stride than the inner ones.\nReversing this order produces non-monotonic per-slice `R` index ranges that a single `slice_thres` cannot capture."
+  },
+  {
+    "id": "u0219",
+    "kind": "comment",
+    "token": 881,
+    "offset": 24,
+    "length": 106,
+    "text": "// NOT supported: inner sub-expression (/ 2 % 4, stride 2) placed outside major (/ 8, stride 8) in Slice.\n"
+  },
+  {
+    "id": "u0220",
+    "kind": "comment",
+    "token": 881,
+    "offset": 130,
+    "length": 95,
+    "text": "// Produces non-monotonic slice validity (S6 valid after S5 partial); VCG cannot express this.\n"
+  },
+  {
+    "id": "u0221",
+    "kind": "comment",
+    "token": 881,
+    "offset": 649,
+    "length": 51,
+    "text": "//   Slice     = m![X, R # 16 / 2 % 4, R # 16 / 8]\n"
+  },
+  {
+    "id": "u0222",
+    "kind": "comment",
+    "token": 881,
+    "offset": 708,
+    "length": 32,
+    "text": "//   Time      = m![R # 16 % 2]\n"
+  },
+  {
+    "id": "u0223",
+    "kind": "comment",
+    "token": 881,
+    "offset": 748,
+    "length": 27,
+    "text": "//   Packet    = m![1 # 8]\n"
+  },
+  {
+    "id": "u0224",
+    "kind": "comment",
+    "token": 881,
+    "offset": 783,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0225",
+    "kind": "comment",
+    "token": 881,
+    "offset": 838,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0226",
+    "kind": "prose",
+    "token": 883,
+    "text": "`R` in `Slice` and `Time`, Interleaved"
+  },
+  {
+    "id": "u0227",
+    "kind": "prose",
+    "token": 886,
+    "text": "When `R`'s sub-expressions are distributed such that a Slice factor falls between two Time factors, different slices end up needing different numbers of valid time steps.\nA single `slice_thres` cannot express this per-slice variation."
+  },
+  {
+    "id": "u0228",
+    "kind": "comment",
+    "token": 888,
+    "offset": 24,
+    "length": 46,
+    "text": "// NOT supported: Time-Slice-Time interleave.\n"
+  },
+  {
+    "id": "u0229",
+    "kind": "comment",
+    "token": 888,
+    "offset": 70,
+    "length": 117,
+    "text": "// Different slices need different valid step counts (e.g., S2: 3/4, S3: 2/4); single threshold cannot express this.\n"
+  },
+  {
+    "id": "u0230",
+    "kind": "comment",
+    "token": 888,
+    "offset": 601,
+    "length": 39,
+    "text": "//   Slice     = m![X, R # 16 / 2 % 4]\n"
+  },
+  {
+    "id": "u0231",
+    "kind": "comment",
+    "token": 888,
+    "offset": 648,
+    "length": 44,
+    "text": "//   Time      = m![R # 16 / 8, R # 16 % 2]\n"
+  },
+  {
+    "id": "u0232",
+    "kind": "comment",
+    "token": 888,
+    "offset": 700,
+    "length": 27,
+    "text": "//   Packet    = m![1 # 8]\n"
+  },
+  {
+    "id": "u0233",
+    "kind": "comment",
+    "token": 888,
+    "offset": 735,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0234",
+    "kind": "comment",
+    "token": 888,
+    "offset": 790,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0235",
+    "kind": "prose",
+    "token": 890,
+    "text": "`R` in `Slice` and `Time`, Over-padded"
+  },
+  {
+    "id": "u0236",
+    "kind": "prose",
+    "token": 893,
+    "text": "`TimeMajor` mode requires `PADDED_SIZE - R::SIZE ≤ slice_span`.\nAt most `slice_span` `R` positions are over-padded."
+  },
+  {
+    "id": "u0237",
+    "kind": "prose",
+    "token": 896,
+    "text": "In the example below, `R = 14`, `Slice = m![X, R # 20 % 4]` (`slice_span = 4`), and `Time = m![A, R # 20 / 4]` with `A = 3` (so `time_span = 5` from `R # 20 / 4`, while `Time::SIZE = A × time_span = 15`).\nThe constraint is on `time_span`, not `Time::SIZE`: non-`R` axes in `Time` like `A` cycle without changing `R`'s index, so they do not affect the constraint.\nThe correct padding is `R # 16` (since `16 - 14 = 2 ≤ slice_span = 4`), giving `time_span = 4`.\nUsing `R # 20` over-pads `R`, making `time_span = 5` and adding an extra `Time` iteration that contains no real data.\nFor slices below `slice_thres` (slice contribution = 0), the sequencer-reconstructed `idx` reaches `4 × 4 = 16` when `R # 20 / 4 = 4`, giving `R` index 16 ≥ `R::SIZE`: padding that shouldn't be reachable.\nThe CPU engine catches exactly this: reducing over the over-padded layout panics (`out x residue must factor the operand`) rather than running with a stale, unreachable `R` index."
+  },
+  {
+    "id": "u0238",
+    "kind": "comment",
+    "token": 898,
+    "offset": 428,
+    "length": 35,
+    "text": "//   Slice     = m![X, R # 20 % 4]\n"
+  },
+  {
+    "id": "u0239",
+    "kind": "comment",
+    "token": 898,
+    "offset": 471,
+    "length": 81,
+    "text": "//   Time      = m![A, R # 20 / 4]   (A is non-R; time_span = 5 from R # 20 / 4)\n"
+  },
+  {
+    "id": "u0240",
+    "kind": "comment",
+    "token": 898,
+    "offset": 560,
+    "length": 27,
+    "text": "//   Packet    = m![1 # 8]\n"
+  },
+  {
+    "id": "u0241",
+    "kind": "comment",
+    "token": 898,
+    "offset": 595,
+    "length": 63,
+    "text": "//   OutTime   = m![A]              (R eliminated; A survives)\n"
+  },
+  {
+    "id": "u0242",
+    "kind": "comment",
+    "token": 898,
+    "offset": 666,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0243",
+    "kind": "comment",
+    "token": 898,
+    "offset": 701,
+    "length": 67,
+    "text": "// NOT supported: R # 20 over-pads (20 - 14 = 6 > slice_span = 4).\n"
+  },
+  {
+    "id": "u0244",
+    "kind": "comment",
+    "token": 898,
+    "offset": 776,
+    "length": 99,
+    "text": "// time_span = 5 > 4. Below-group slices include time steps where R # 20 / 4 = 4 (R = 16 padding).\n"
+  },
+  {
+    "id": "u0245",
+    "kind": "prose",
+    "token": 900,
+    "text": "`R` in `Packet`, Complex"
+  },
+  {
+    "id": "u0246",
+    "kind": "prose",
+    "token": 903,
+    "text": "The packet clipper requires `Packet = m![R # PADDED_SIZE % packet_span # 8]`.\nOther forms break the contiguous-prefix property that `fn valid_size()` relies on."
+  },
+  {
+    "id": "u0247",
+    "kind": "prose",
+    "token": 906,
+    "text": "The first example places `R`'s major part in `Packet` (form `R # 24 / 8` instead of `R # 24 % 8`), so the prefix mixes positions from different `R`-strides rather than holding `R`'s next contiguous run."
+  },
+  {
+    "id": "u0248",
+    "kind": "comment",
+    "token": 908,
+    "offset": 435,
+    "length": 30,
+    "text": "//   Slice     = m![X, A / 2]\n"
+  },
+  {
+    "id": "u0249",
+    "kind": "comment",
+    "token": 908,
+    "offset": 473,
+    "length": 32,
+    "text": "//   Time      = m![R # 24 % 8]\n"
+  },
+  {
+    "id": "u0250",
+    "kind": "comment",
+    "token": 908,
+    "offset": 513,
+    "length": 73,
+    "text": "//   Packet    = m![R # 24 / 8 # 8]   (NOT supported: major R in Packet)\n"
+  },
+  {
+    "id": "u0251",
+    "kind": "comment",
+    "token": 908,
+    "offset": 594,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0252",
+    "kind": "comment",
+    "token": 908,
+    "offset": 649,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0253",
+    "kind": "prose",
+    "token": 910,
+    "text": "The second example has `R` sharing `Packet` with another axis `A`, so `A`'s elements occupy positions that the prefix-based count treats as padding."
+  },
+  {
+    "id": "u0254",
+    "kind": "comment",
+    "token": 912,
+    "offset": 417,
+    "length": 21,
+    "text": "//   at Vector Init:\n"
+  },
+  {
+    "id": "u0255",
+    "kind": "comment",
+    "token": 912,
+    "offset": 446,
+    "length": 23,
+    "text": "//   Slice     = m![X]\n"
+  },
+  {
+    "id": "u0256",
+    "kind": "comment",
+    "token": 912,
+    "offset": 477,
+    "length": 32,
+    "text": "//   Time      = m![R # 24 / 2]\n"
+  },
+  {
+    "id": "u0257",
+    "kind": "comment",
+    "token": 912,
+    "offset": 517,
+    "length": 77,
+    "text": "//   Packet    = m![R # 24 % 2, A]   (NOT supported: A shares Packet with R)\n"
+  },
+  {
+    "id": "u0258",
+    "kind": "comment",
+    "token": 912,
+    "offset": 602,
+    "length": 89,
+    "text": "//   OutTime   = m![1]          (R eliminated; A silently excluded by prefix valid_size)\n"
+  },
+  {
+    "id": "u0259",
+    "kind": "comment",
+    "token": 912,
+    "offset": 699,
+    "length": 23,
+    "text": "//   OutPacket = m![A]\n"
+  },
+  {
+    "id": "u0260",
+    "kind": "prose",
+    "token": 914,
+    "text": "`R` in `Slice` and `Packet`"
+  },
+  {
+    "id": "u0261",
+    "kind": "prose",
+    "token": 917,
+    "text": "`R` splits between `Slice` and `Packet`.\nTo see why this is inexpressible, consider `R = 2045` (padded to `R # 2048`) split as `Slice = m![R # 2048 / 8]` (256 slices) and `Packet = m![R # 2048 % 8]` (8-element flits).\nAt the only time step `t = 0`, `fn valid_size` computes `clamp(2045 - 0, 0, 8) = 8` for every slice.\nBut slice 255's flit holds `R` indices 2040–2047, of which only five are real data:"
+  },
+  {
+    "id": "u0262",
+    "kind": "prose",
+    "token": 920,
+    "text": "At `t = 0`, `slice = 255`:"
+  },
+  {
+    "id": "u0263",
+    "kind": "prose",
+    "token": 926,
+    "text": "flit position"
+  },
+  {
+    "id": "u0264",
+    "kind": "prose",
+    "token": 957,
+    "text": "`R` index"
+  },
+  {
+    "id": "u0265",
+    "kind": "prose",
+    "token": 986,
+    "text": "valid?"
+  },
+  {
+    "id": "u0266",
+    "kind": "prose",
+    "token": 989,
+    "text": "yes"
+  },
+  {
+    "id": "u0267",
+    "kind": "prose",
+    "token": 992,
+    "text": "yes"
+  },
+  {
+    "id": "u0268",
+    "kind": "prose",
+    "token": 995,
+    "text": "yes"
+  },
+  {
+    "id": "u0269",
+    "kind": "prose",
+    "token": 998,
+    "text": "yes"
+  },
+  {
+    "id": "u0270",
+    "kind": "prose",
+    "token": 1001,
+    "text": "yes"
+  },
+  {
+    "id": "u0271",
+    "kind": "prose",
+    "token": 1016,
+    "text": "Slices 0–254 legitimately need `valid_size = 8`, but slice 255 needs `valid_size = 5`.\n`fn valid_size(t)` can only return one value for a given `t`, so no single configuration works."
+  },
+  {
+    "id": "u0272",
+    "kind": "prose",
+    "token": 1019,
+    "text": "The degenerate sub-case where `R::SIZE % packet_span = 0` (every packet is full or empty) reduces to Slice only and is supported."
+  },
+  {
+    "id": "u0273",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 18,
+    "length": 82,
+    "text": "// NOT supported: R = 2045 split across Slice (/ 8, 256 slices) and Packet (% 8).\n"
+  },
+  {
+    "id": "u0274",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 100,
+    "length": 108,
+    "text": "// Slices 0-254 need valid_size = 8; slice 255 needs valid_size = 5. fn valid_size(t) cannot vary by slice.\n"
+  },
+  {
+    "id": "u0275",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 607,
+    "length": 34,
+    "text": "//   Slice     = m![R # 2048 / 8]\n"
+  },
+  {
+    "id": "u0276",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 649,
+    "length": 23,
+    "text": "//   Time      = m![1]\n"
+  },
+  {
+    "id": "u0277",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 680,
+    "length": 34,
+    "text": "//   Packet    = m![R # 2048 % 8]\n"
+  },
+  {
+    "id": "u0278",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 722,
+    "length": 47,
+    "text": "//   OutTime   = m![1]          (R eliminated)\n"
+  },
+  {
+    "id": "u0279",
+    "kind": "comment",
+    "token": 1021,
+    "offset": 777,
+    "length": 27,
+    "text": "//   OutPacket = m![1 # 4]\n"
+  },
+  {
+    "id": "u0280",
+    "kind": "prose",
+    "token": 1023,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0281",
+    "kind": "prose",
+    "token": 1029,
+    "text": "Component"
+  },
+  {
+    "id": "u0282",
+    "kind": "prose",
+    "token": 1032,
+    "text": "Capacity"
+  },
+  {
+    "id": "u0283",
+    "kind": "prose",
+    "token": 1039,
+    "text": "Packet clippers"
+  },
+  {
+    "id": "u0284",
+    "kind": "prose",
+    "token": 1042,
+    "text": "1 instance"
+  },
+  {
+    "id": "u0285",
+    "kind": "prose",
+    "token": 1047,
+    "text": "Time filters"
+  },
+  {
+    "id": "u0286",
+    "kind": "prose",
+    "token": 1050,
+    "text": "3 instances"
+  },
+  {
+    "id": "u0287",
+    "kind": "prose",
+    "token": 1055,
+    "text": "Sequencer entries per time filter / packet clipper"
+  },
+  {
+    "id": "u0288",
+    "kind": "prose",
+    "token": 1058,
+    "text": "8 (see [Sequencer](../../moving-tensors/sequencer.md))"
+  },
+  {
+    "id": "u0289",
+    "kind": "prose",
+    "token": 1064,
+    "text": "Each padded axis that needs validity tracking occupies one time filter or the packet clipper.\nAt most 4 axes can be tracked in one invocation (1 packet clipper + 3 time filters).\nUnpadded axes need no slot (`slice_mask=0, slice_thres=1` disables the time filter, making it always return `true`)."
+  },
+  {
+    "id": "u0290",
+    "kind": "prose",
+    "token": 1067,
+    "text": "Intra-slice reduce takes a single `REDUCE_LABEL`, so \"multi-axis\" means one reduce axis `R` plus extra padded non-reduce axes, not multiple simultaneous reductions."
+  },
+  {
+    "id": "u0291",
+    "kind": "prose",
+    "token": 1070,
+    "text": "Downstream 4-Way Operations"
+  },
+  {
+    "id": "u0292",
+    "kind": "prose",
+    "token": 1073,
+    "text": "The VCG produces `valid_size` per 8-way flit before any narrowing.\nA downstream `Narrow` stage splits each 8-way flit into 4-way halves, and the way the narrow is applied determines how each `valid_size` is split between the halves."
+  },
+  {
+    "id": "u0293",
+    "kind": "prose",
+    "token": 1079,
+    "text": "Operation"
+  },
+  {
+    "id": "u0294",
+    "kind": "prose",
+    "token": 1082,
+    "text": "Input"
+  },
+  {
+    "id": "u0295",
+    "kind": "prose",
+    "token": 1085,
+    "text": "Output"
+  },
+  {
+    "id": "u0296",
+    "kind": "prose",
+    "token": 1088,
+    "text": "Valid Count Transformation"
+  },
+  {
+    "id": "u0297",
+    "kind": "prose",
+    "token": 1098,
+    "text": "8-way flit (`valid_size = v`)"
+  },
+  {
+    "id": "u0298",
+    "kind": "prose",
+    "token": 1101,
+    "text": "two 4-way flits"
+  },
+  {
+    "id": "u0299",
+    "kind": "prose",
+    "token": 1104,
+    "text": "low: `min(v, 4)`, high: `max(v - 4, 0)`"
+  },
+  {
+    "id": "u0300",
+    "kind": "prose",
+    "token": 1112,
+    "text": "8-way flit (`valid_size = v`)"
+  },
+  {
+    "id": "u0301",
+    "kind": "prose",
+    "token": 1115,
+    "text": "one 4-way flit"
+  },
+  {
+    "id": "u0302",
+    "kind": "prose",
+    "token": 1126,
+    "text": "two 4-way flits (`v_low`, `v_high`)"
+  },
+  {
+    "id": "u0303",
+    "kind": "prose",
+    "token": 1129,
+    "text": "8-way flit"
+  },
+  {
+    "id": "u0304",
+    "kind": "prose",
+    "token": 1140,
+    "text": "4-way flit"
+  },
+  {
+    "id": "u0305",
+    "kind": "prose",
+    "token": 1143,
+    "text": "8-way flit"
+  },
+  {
+    "id": "u0306",
+    "kind": "prose",
+    "token": 1146,
+    "text": "unchanged"
+  },
+  {
+    "id": "u0307",
+    "kind": "prose",
+    "token": 1152,
+    "text": "`vector_narrow_split` and `vector_widen_concat` preserve the prefix property.\nFor `vector_narrow_trim`, the mapping must statically guarantee `v <= 4`.\nIf the upper 4 elements could be valid, trimming them would lose data."
+  }
+]

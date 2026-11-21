@@ -1,0 +1,16 @@
+{
+  "u0001": "Furiosa Optimizer 커널 작성(Kernel Authoring)",
+  "u0002": "커널 품질 모델(kernel quality model)과 검증된 패턴(verified pattern)은 `docs/src/quick-start.md`를 따릅니다.",
+  "u0003": "에이전트 작업 절차(Agent Procedure)",
+  "u0004": "릴리스 태그(release tag)와 커밋(commit), 또는 체크아웃한 기여자 커밋(contributor commit)을 기록합니다.",
+  "u0005": "선택한 패턴(pattern), 호스트 정답 기준(host oracle), 실패를 유도하는 까다로운 사례(adversarial case)를 함께 구현합니다.",
+  "u0006": "검증 근거(evidence)를 얻는 다음 순서를 실행합니다.",
+  "u0007": "하드웨어(hardware)가 있으면 NPU 테스트(test)를 실행합니다.",
+  "u0008": "선택한 패턴(pattern), 변경 파일(changed files), 명령 결과(command results), 스케줄 비교(schedule comparison), 아직 확인하지 못한 하드웨어 부분(hardware gap), 새롭게 선택한 데이터 흐름(dataflow)을 보고합니다.",
+  "u0009": "제약 조건(Constraints)",
+  "u0010": "일반 `cargo` 호출은 CPU 빌드(build), `cargo furiosa-opt`는 NPU 빌드로 취급합니다.",
+  "u0011": "커널 컴파일(kernel compile) 통과는 매핑 검증 근거(mapping evidence)이며, 값의 정확성 근거(value evidence)는 아닙니다.",
+  "u0012": "CPU 테스트(test) 통과는 정확성 근거(correctness evidence)이며, 스케줄 검증 근거(schedule evidence)는 아닙니다.",
+  "u0013": "기록한 기준선(baseline)보다 전체 완료 시간(makespan)이 줄지 않았다면 성능 향상(performance improvement)을 주장하지 않습니다.",
+  "u0014": "실패를 없애기 위한 목적으로만 예상값(expected value), 테스트(test), 스케줄(schedule)을 바꾸지 않습니다. 원인이 된 매핑(mapping), 데이터 흐름(dataflow), 스케줄 결정을 진단합니다."
+}

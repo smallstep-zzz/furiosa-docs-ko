@@ -1,0 +1,44 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "MNIST example"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "A minimal fully-connected MNIST classifier (784 → 256 ReLU → 10):"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 9,
+    "text": "`mod.rs` — VISA kernel (`forward`)."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 14,
+    "text": "`../../data/mnist/mnist.safetensors` — trained bf16 weights and ten MNIST test images with their labels."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 19,
+    "text": "`../../tests/mnist_tests.rs` — runs `forward` on each image and checks the predicted digit against its label."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 24,
+    "text": "The kernel works on padded extents: the input is 784 padded to 800 (`X`), and the output is 10 padded to 16 (`C`).\nThe `hw.*` tensors in `mnist.safetensors` hold the padded weights and images."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 27,
+    "text": "Run"
+  }
+]

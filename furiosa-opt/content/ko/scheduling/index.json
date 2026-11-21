@@ -1,0 +1,10 @@
+{
+  "u0001": "스케줄링과 튜닝(Scheduling and Tuning)",
+  "u0002": "스케줄링(scheduling)과 튜닝(tuning)은 올바른 커널(kernel)을 측정 가능한 실행 계획(plan)으로 발전시키는 과정입니다. 스케줄(schedule)을 살펴보고 실행을 제한하는 의존성(dependency)이나 자원(resource)을 찾은 뒤, 지원되는 선택 하나를 바꾸어 같은 조건에서 비교합니다.",
+  "u0003": "스케줄링(scheduling)을 통해 컴파일된 커널(kernel)을 컨텍스트 간 실행 겹침(context overlap), 메모리 의존성(memory dependency), 자원 충돌(resource conflict)에 관한 검증 가능한 가설(hypothesis)로 볼 수 있습니다. 이 장은 다음 과정을 반복합니다.",
+  "u0004": "[스케줄(Schedule)](./schedule.md): 컨텍스트(context), 의존성(dependency), 연산 순서(operation order)를 이해합니다.",
+  "u0005": "[진단(Diagnosis)](./diagnosis.md): 덤프한 스케줄(dumped schedule)을 살펴보고 병목 가설(bottleneck hypothesis)을 세웁니다.",
+  "u0006": "[튜닝(Tuning)](./tuning.md): 변경 하나를 시험하고 같은 지표(metric)를 비교하여 유지할지 되돌릴지 결정합니다.",
+  "u0007": "이 장에서는 매핑(mapping), 텐서 이동(tensor movement), 연산 엔진(compute engine)의 규칙을 다시 설명하지 않습니다. 스케줄링(scheduling) 결정에 해당 지식이 필요하면 관련 장으로 연결합니다.",
+  "u0008": "검증(validation)의 네 가지 의미와 주의점은 [빠른 시작: 커널 검증(Quick Start: Kernel Validation)](../quick-start/kernel-validation.md)을 참고하세요. [진단(Diagnosis)](./diagnosis.md)과 [튜닝(Tuning)](./tuning.md)으로 고정된 스케줄 후보(schedule candidate)를 해석하고 판단합니다."
+}

@@ -1,0 +1,360 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Intra-Slice Reduce"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The `IntraSliceReduce` stage in the [Intra-Slice Chain](./intra-slice-chain.md) reduces dimensions that live in the `Time` and `Packet` of each slice (`Chip`, `Cluster`, and `Slice` pass through unchanged).\nThe [Inter-Slice Reducer](./inter-slice-reducer.md) covers the complementary case of reducing across the 256 slices of a cluster."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "<a id=\"interface\"></a>"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Examples"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "The reduce call's key parameters are below."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 18,
+    "text": "**`REDUCE_LABEL`**: The axis to reduce.\nReduction eliminates every factor in `Time` and `Packet` carrying this axis, so they must not appear in the output shape (`OutTime`, `OutPacket`).\nFor example, if `R` is split as `R / 4` in `Time` and `R % 4` in `Packet`, specifying `REDUCE_LABEL = R` eliminates both."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 23,
+    "text": "**`op`**: The reduce operation. `IntraSliceReduceOpI32` provides `AddSat`, `Max`, `Min`; `IntraSliceReduceOpF32` provides `Add`, `Max`, `Min`."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 28,
+    "text": "**`OutTime`, `OutPacket`**: The output `Time` and `Packet` shape after reduction.\nThese match the input `Time` and `Packet` with every `REDUCE_LABEL` factor removed."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 33,
+    "text": "The call is unavailable in [Pair Mode](./intra-slice-chain.md#pair-mode).\nThe examples below exercise each parameter combination."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 36,
+    "text": "Reduction in `Time`"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 39,
+    "text": "`R` exists only in `Time`, so the stage accumulates across time steps.\nIt computes $output[a] = \\sum_{r \\in R} input[a, r]$ with saturating addition."
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 41,
+    "offset": 25,
+    "length": 60,
+    "text": "// R in Time → temporal accumulation. Packet is non-reduce.\n"
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 41,
+    "offset": 452,
+    "length": 17,
+    "text": "// 8-way → 4-way\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 41,
+    "offset": 477,
+    "length": 26,
+    "text": "// R eliminated from Time\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 43,
+    "text": "Reduction in `Packet`"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 46,
+    "text": "`R` exists only in `Packet`, so the hardware runs a 4-way tree reduce within each flit and skips temporal accumulation.\nIt computes $output[a] = \\sum_{r \\in R} input[a, r]$."
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 48,
+    "offset": 24,
+    "length": 42,
+    "text": "// R in Packet → tree reduce within flit.\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 48,
+    "offset": 433,
+    "length": 17,
+    "text": "// 8-way → 4-way\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 48,
+    "offset": 458,
+    "length": 28,
+    "text": "// R eliminated from Packet\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 50,
+    "text": "Reduction in Both"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 53,
+    "text": "`R` splits across `Packet` and `Time`.\n`R % 4` in `Packet` tree-reduces within each flit, and `R / 4` in `Time` accumulates across time steps.\nIt computes $output[a] = \\max_{r \\in R} input[a, r]$."
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 55,
+    "offset": 25,
+    "length": 41,
+    "text": "// R % 4 in Packet → spatial tree reduce\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 55,
+    "offset": 66,
+    "length": 41,
+    "text": "// R / 4 in Time → temporal accumulation\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 55,
+    "offset": 474,
+    "length": 17,
+    "text": "// 8-way → 4-way\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 55,
+    "offset": 499,
+    "length": 42,
+    "text": "// R eliminated from both Time and Packet\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 57,
+    "text": "Per-Slice Reduction"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 60,
+    "text": "`R` has portions in `Slice`, `Time`, and `Packet`, but the intra-slice reducer only collapses the `Time` and `Packet` portions, so the `Slice` portion of `R` stays in the output.\nHere `R = 13` is padded to 32 to fit the layout (`R # 32`), and `R` is then split across 4 slices (8 `R`-positions per slice).\nOnly positions 0-12 hold real elements, so the slice straddling that boundary (positions 8-15: 5 real followed by 3 pad) is a boundary slice, and slices past it are fully padding.\nThe [VCG](#padding-strategy) drives the per-slice reduction count so each slice reduces only its real elements (see [Valid Count Generator](./vcg.md) for the exact mapping)."
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 62,
+    "offset": 16,
+    "length": 98,
+    "text": "// R split across all three: Slice (groups of 8), Time (pairs within group), Packet (4 elements).\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 62,
+    "offset": 531,
+    "length": 17,
+    "text": "// 8-way → 4-way\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 62,
+    "offset": 556,
+    "length": 69,
+    "text": "// R eliminated from Time and Packet (accumulated within each slice)\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 64,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 67,
+    "text": "The stage runs separate machinery for the `Time` and `Packet` axes."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 70,
+    "text": "Reduction in `Time`"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 73,
+    "text": "The stage applies the [temporal accumulator](../contraction-engine/time-reducer.md#constraints) model with slot capacity 8 (so `InnerTime::SIZE ≤ 8`)."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 76,
+    "text": "For `reduce_time` above, `Time = m![R]` and `OutTime = m![1]`, so `R` is the outermost reduce dimension and `InnerTime = m![1]` (`InnerTime::SIZE = 1`).\nA single slot accumulates all `R` values into the output."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 79,
+    "text": "If `InnerTime::SIZE` exceeds 8, the API rejects the call.\nFor example:"
+  },
+  {
+    "id": "u0037",
+    "kind": "comment",
+    "token": 81,
+    "offset": 409,
+    "length": 35,
+    "text": "// Time      = m![R, A % 3, B % 4]\n"
+  },
+  {
+    "id": "u0038",
+    "kind": "comment",
+    "token": 81,
+    "offset": 452,
+    "length": 32,
+    "text": "// OutTime   = m![A % 3, B % 4]\n"
+  },
+  {
+    "id": "u0039",
+    "kind": "comment",
+    "token": 81,
+    "offset": 492,
+    "length": 66,
+    "text": "// InnerTime = m![A % 3, B % 4], InnerTime::SIZE = 3 × 4 = 12 > 8\n"
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 81,
+    "offset": 685,
+    "length": 70,
+    "text": "// Rejected: 12 accumulator slots required, but only 8 are available.\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 83,
+    "text": "Reduction in `Packet`"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 86,
+    "text": "The 4 Packet elements per flit pick one of two paths:"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 91,
+    "text": "`OutPacket = Packet`: elements pass through unreduced. 4 outputs per cycle, each accumulated independently over `Time`."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 96,
+    "text": "`OutPacket = m![1 # 4]`: elements collapse to a single value via a 2-level tree `op(op(a, b), op(c, d))`. 1 output per cycle plus 3 padding positions."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 101,
+    "text": "<a id=\"padding-strategy\"></a>"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 104,
+    "text": "When a reduce axis is padded to fit hardware dimensions, the padded positions contain arbitrary data that the reduction must exclude.\nTwo strategies handle padding exclusion."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 109,
+    "text": "**VCG (Valid Count Generator)**: Preferred when its axis placement is supported.\nThe compiler configures the VCG automatically from the mapping, and the VCG tags each flit with a `valid_count` so pad elements are excluded automatically.\nNot all axis placements across `Slice`, `Time`, and `Packet` are supported.\nSee [Valid Count Generator](./vcg.md) for details."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 114,
+    "text": "**Identity-element padding**: Fill pad positions with the identity element of the reduce operation before data reaches the [Intra-Slice Chain](./intra-slice-chain.md).\nThe book does not document a usable public masking operation; use a verified identity-producing path before reduction."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 120,
+    "text": "Operation"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 123,
+    "text": "Identity Element"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 155,
+    "text": "This strategy applies only when no non-invertible transformation precedes the reduce operation.\nFor example, with `exp(x) + exp(y) + ...` (sum of exponentials), no value `p` satisfies `exp(p) = 0` (the additive identity).\nIdentity padding does not apply."
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 160,
+    "text": "Performance"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 163,
+    "text": "Throughput stays at one flit per cycle since the tree reduce is fully pipelined within the Intra-Slice Chain, adding no extra per-flit cost."
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 166,
+    "text": "Latency adds a first-output delay of `n` flit cycles where `n` is the number of time steps in the reduce axis, because the stage must accumulate all input flits for a reduction group before emitting the result.\nIn a multi-engine pipeline, this accumulation delay stalls downstream engines waiting for the first flit."
+  }
+]

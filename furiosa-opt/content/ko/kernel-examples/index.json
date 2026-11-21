@@ -1,0 +1,15 @@
+{
+  "u0001": "전체 흐름 사례(End-to-End Cases)",
+  "u0002": "전체 흐름 사례(End-to-End Cases)는 매핑(mapping)·이동(movement)·연산(computation)·스케줄링(scheduling)의 규칙을 연결하여 복합 작업(workload)을 구성합니다. 아래에서 목적에 가장 가까운 사례를 고른 뒤, 매핑을 바꾸기 전에 연결된 API를 확인하세요.",
+  "u0003": "시작점 선택하기(Choose a Starting Point)",
+  "u0004": "필요한 API 동작을 표현할 수 있다면 [빠른 시작(Quick Start)](../quick-start.md)의 패턴(pattern)에서 구현을 시작하세요. 나머지 문서는 설계 결정(design choice)을 설명합니다. 코드를 사용하기 전에 현재 API와 맞는지 검증하세요.",
+  "u0005": "목적(Need)",
+  "u0006": "시작할 문서(Start with)",
+  "u0007": "기술적 초점(Technical focus)",
+  "u0008": "Qwen3 디코더 단계(decoder step)",
+  "u0009": "[사례 연구: 트랜스포머(Transformer)](./transformer.md)",
+  "u0010": "현재 트랜스포머(transformer) 예제의 모델 이해 틀(mental model), 기준 커널 구성(baseline kernel map), 디코딩 전용 경계(decode-only boundaries), 이식 가능한 정답 기준(portable oracle), 스케줄 데이터(schedule data)를 다룹니다.",
+  "u0011": "실행 중 루프 본문 건너뛰기(runtime loop-body skipping)",
+  "u0012": "[사례 연구: 실행 중 루프 본문 건너뛰기](./skip-loop-bodies-at-runtime.md)",
+  "u0013": "HBM 스칼라(scalar)를 읽고, 반복 횟수의 상한이 정적으로 정해진 루프(statically bounded loop) 안의 작업을 조건으로 제어합니다."
+}

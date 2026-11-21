@@ -1,0 +1,80 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "End-to-End Cases"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "End-to-End Cases connect the mapping, movement, computation, and scheduling contracts into composed workloads.\nChoose the nearest case below, then verify its referenced API before adapting mappings."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Choose a Starting Point"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Start implementation from a [Quick Start](../quick-start.md) pattern whenever it can express the required API behavior.\nThe remaining pages explain design choices; verify their code against the current API before using it."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Need"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 19,
+    "text": "Start with"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 22,
+    "text": "Technical focus"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 29,
+    "text": "Qwen3 decoder step"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 32,
+    "text": "[Case Study: Transformer](./transformer.md)"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 35,
+    "text": "Model mental model, baseline kernel map, decode-only boundaries, portable oracle, and schedule data from the current transformer example."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 40,
+    "text": "Runtime loop-body skipping"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 43,
+    "text": "[Case Study: Skip Loop Bodies at Runtime](./skip-loop-bodies-at-runtime.md)"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 46,
+    "text": "Load an HBM scalar and guard work inside a statically bounded loop."
+  }
+]

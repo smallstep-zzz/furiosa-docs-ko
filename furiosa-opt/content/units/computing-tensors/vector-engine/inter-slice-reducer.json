@@ -1,0 +1,332 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Inter-Slice Reducer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Inter-Slice Reducer reduces a tensor across the 256 slices in a cluster.\nIt preserves `Chip`, `Cluster`, and `Packet`, and rewrites `Slice` and `Time` into `OutSlice` and `OutTime`.\nThe output tensor is always `Way8` regardless of the input mode."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "The reducer can be entered right after `vector_init()` (the `InterFirst` path, shown below) or from a [compatible intra-slice stage](./intra-slice-chain.md#transitioning-to-the-inter-slice-reducer) (the `IntraFirst` path, with the same `vector_inter_slice_reduce()` method called on the intra-slice tensor).\nThe signatures shown below are the `VectorInitTensor` variants.\nThe same methods also exist on intra-slice tensors at the stages that support the transition, so the call site looks identical."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "The inter-slice reducer provides separate APIs for `i32` and `f32`."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "`i32` Operations"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 18,
+    "offset": 221,
+    "length": 54,
+    "text": "primitive(VectorInitTensor::vector_inter_slice_reduce)"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 20,
+    "text": "`InterSliceReduceOpI32` operations:"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 26,
+    "text": "Operation"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 29,
+    "text": "Description"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 39,
+    "text": "Wrapping addition"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 47,
+    "text": "Saturating addition"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 55,
+    "text": "Maximum value"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 63,
+    "text": "Minimum value"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 69,
+    "text": "`f32` Operations"
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 71,
+    "offset": 221,
+    "length": 54,
+    "text": "primitive(VectorInitTensor::vector_inter_slice_reduce)"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 73,
+    "text": "`InterSliceReduceOpF32` operations:"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 79,
+    "text": "Operation"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 82,
+    "text": "Description"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 92,
+    "text": "Floating-point addition"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 100,
+    "text": "Maximum value"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 108,
+    "text": "Minimum value"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 116,
+    "text": "Floating-point multiplication"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 122,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 125,
+    "text": "The supported `Slice → OutSlice` and `Time → OutTime` shapes follow four rules:"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 130,
+    "text": "**Reduce from innermost.** The reduced portion of `Slice` must be the innermost factors, contiguous, with stride 1 through the reduction ratio `r`."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 135,
+    "text": "**Replacement on the reduced axis.** Each reduced factor's slot in `OutSlice` is filled by one of: a dummy (`1 # n`), a broadcast over a fresh dimension, or a promotion from `Time`."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 140,
+    "text": "**Replacement kinds mix freely.** Dummy, broadcast, and promotion slots can appear together in `OutSlice` in any order."
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 145,
+    "text": "**Promotion from `Time` to `OutSlice` reorders.** The `Time → OutTime` portion preserves the relative order of surviving factors, but the `Time → OutSlice` promotion path does not preserve order: a promoted factor's position in `OutSlice` is independent of its position in `Time`."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 150,
+    "text": "Examples"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 153,
+    "text": "The math in the examples below uses einsum notation.\nA dimension that appears on the input side but not on the output side is reduced (summed), and a dimension that appears on the output side but not on the input side is broadcast."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 156,
+    "text": "Dummy Replacement"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 159,
+    "text": "This pass sums input across `R` and places the result in a dummy slot.\nThe einsum form is `AR -> A`."
+  },
+  {
+    "id": "u0034",
+    "kind": "comment",
+    "token": 161,
+    "offset": 31,
+    "length": 104,
+    "text": "// When R is reduced and no other dimension fills its slot, the output keeps the slot as a 1 # n dummy.\n"
+  },
+  {
+    "id": "u0035",
+    "kind": "comment",
+    "token": 161,
+    "offset": 135,
+    "length": 78,
+    "text": "// One position holds the reduced value, and the remaining n - 1 are padding.\n"
+  },
+  {
+    "id": "u0036",
+    "kind": "comment",
+    "token": 161,
+    "offset": 213,
+    "length": 75,
+    "text": "// `# n` denotes dimension multiplicity (see the Mapping Expressions doc).\n"
+  },
+  {
+    "id": "u0037",
+    "kind": "comment",
+    "token": 161,
+    "offset": 537,
+    "length": 70,
+    "text": "// sum across R, the freed R-slot becomes the 1 # 4 dummy in OutSlice\n"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 164,
+    "text": "Broadcast Into a New Slice Dimension"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 167,
+    "text": "This pass reduces `R` and broadcasts the result over a fresh dimension `X`.\nThe einsum form is `PRW -> PWX`, with the fresh `X` on the output side broadcasting."
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 169,
+    "offset": 44,
+    "length": 71,
+    "text": "// A fresh non-reduce dimension X takes the slot that R leaves behind.\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 169,
+    "offset": 115,
+    "length": 60,
+    "text": "// The reduced value broadcasts across every position of X.\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 169,
+    "offset": 405,
+    "length": 68,
+    "text": "// sum across R, broadcast result over X (fresh OutSlice dimension)\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 172,
+    "text": "Promotion from `Time` into `OutSlice`"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 175,
+    "text": "This pass reduces `R` and promotes the `Time` dimension `V` into OutSlice.\nThe einsum form is `PRSUVW -> PSUVW`."
+  },
+  {
+    "id": "u0045",
+    "kind": "comment",
+    "token": 177,
+    "offset": 58,
+    "length": 78,
+    "text": "// A dimension from Time (here V) is promoted into OutSlice to fill R's slot.\n"
+  },
+  {
+    "id": "u0046",
+    "kind": "comment",
+    "token": 177,
+    "offset": 136,
+    "length": 65,
+    "text": "// The promoted dimension does not need to be outermost in Time.\n"
+  },
+  {
+    "id": "u0047",
+    "kind": "comment",
+    "token": 177,
+    "offset": 438,
+    "length": 47,
+    "text": "// sum across R, V moves from Time to OutSlice\n"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 180,
+    "text": "For examples that combine the reducer with the intra-slice chain in either order, see the [Vector Engine Examples](./index.md#examples)."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 183,
+    "text": "Performance"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 186,
+    "text": "The reduction ratio `r` (the number of slices in one reduction group) is the main tuning knob.\nInter-slice reduce latency is `O(r)` cycles, approximately one ring traversal of the reduction group.\nTotal time equals the input streaming time plus that ring-sized tail."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 189,
+    "text": "In practice, upstream work (contraction producing partial sums or intra-slice work before `vector_inter_slice_reduce()`) often dominates and hides this ring tail, so the reducer isn't the bottleneck.\nThe reducer becomes visible at large `r` (longer tails) and on small tensors that can't amortize the fixed tail across many packets."
+  }
+]

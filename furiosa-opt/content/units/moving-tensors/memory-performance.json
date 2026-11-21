@@ -1,0 +1,1028 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Memory Performance"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Memory performance often limits kernel throughput.\nCompare fixed schedules before changing compute mappings.\nThe Fetch, Commit, and DMA Engines each expose API choices (such as `Packet` size and access ordering) that map directly to performance outcomes.\nThis section explains the hardware constraints behind those choices and how they affect measured throughput."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Each memory type has a peak bandwidth per chip:"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 13,
+    "text": "Memory"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Peak Bandwidth"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 23,
+    "text": "DM"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "2 TB/s per chip"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 31,
+    "text": "HBM"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 34,
+    "text": "1.5 TB/s per chip"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 40,
+    "text": "Reaching these peaks requires specific access patterns.\nThe following table lists rules whose violation degrades throughput, and the sections below explain each memory type and factor in detail:"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 46,
+    "text": "Memory"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 49,
+    "text": "Issue"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 52,
+    "text": "Rule"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 55,
+    "text": "Penalty"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 62,
+    "text": "DM"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 65,
+    "text": "Bank starvation"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 68,
+    "text": "< 64 consecutive same-bank accesses"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 71,
+    "text": "NoC timeout → hardware reset"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 76,
+    "text": "DM"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 79,
+    "text": "DMN interleaving"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 82,
+    "text": "Alternate across 2 DMNs per cluster"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 85,
+    "text": "50% bandwidth loss"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 90,
+    "text": "DM"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 93,
+    "text": "Slice interleaving"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 96,
+    "text": "Spread across 32 slices per DMN"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 99,
+    "text": "Command queue contention"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 104,
+    "text": "HBM"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 107,
+    "text": "Alignment"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 110,
+    "text": "256-byte aligned access"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 113,
+    "text": "Unaligned read: 2× penalty. Unaligned write: ~50× penalty (RMW)"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 118,
+    "text": "HBM"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 121,
+    "text": "Bank conflicts"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 124,
+    "text": "Avoid row switches within same bank"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 127,
+    "text": "30–40× degradation"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 132,
+    "text": "HBM"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 135,
+    "text": "Channel interleaving"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 138,
+    "text": "Spread across 32 channels"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 141,
+    "text": "Reduced parallelism"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 147,
+    "text": "Use the tables first to choose alignment, interleaving, and packet sizes, then use the detailed sections to diagnose bank starvation or HBM conflicts.\nThe rule table identifies the limiting resource for a candidate mapping, and the DM, SPM, or HBM section explains it."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 150,
+    "text": "Data Memory (DM)"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 153,
+    "text": "Data Memory (DM) holds 256MB per chip, organized hierarchically into clusters, Data Memory Networks (DMNs), slices, and banks.\nThe following table summarizes the geometry:"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 159,
+    "text": "Unit"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 162,
+    "text": "Count"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 169,
+    "text": "Clusters"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 172,
+    "text": "2 / Chip"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 177,
+    "text": "Data Memory Networks (DMNs)"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 180,
+    "text": "8 / Cluster"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 185,
+    "text": "Slices"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 188,
+    "text": "32 / DMN"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 193,
+    "text": "Banks"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 196,
+    "text": "16 / Slice"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 201,
+    "text": "Rows"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 204,
+    "text": "4096 / Bank"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 209,
+    "text": "Bytes"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 212,
+    "text": "8 / Row"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 218,
+    "text": "Clusters can exchange data through the Switch Engine.\nSee [the dedicated section](../computing-tensors/switch-engine.md) for details.\nThe subsections below explain how this structure determines bandwidth and the bank access constraint."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 221,
+    "text": "Bank Structure in a Slice"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 224,
+    "text": "Each slice provides 512KB of SRAM with a dedicated address space.\nThe memory is organized into 16 parallel banks, each with an 8-byte data width, enabling a total data access rate of 128 B/cycle.\nAccess to any individual bank is serialized, but the address space distributes 128 consecutive bytes across all 16 banks (8 bytes per bank) for parallel access.\nThe following bit mapping defines this distribution:"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 230,
+    "text": "Bit #"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 233,
+    "text": "Component"
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 243,
+    "text": "Byte"
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 251,
+    "text": "Bank"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 259,
+    "text": "Row"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 265,
+    "text": "Consecutive addresses map to different banks, enabling parallel access during sequential scans."
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 268,
+    "text": "DMN and Slice Interleaving"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 271,
+    "text": "Each DMN provides only 128 B/cycle bandwidth (its 32 slices share data paths).\nSince the standard 256-byte transfer unit requires two cycles per DMN, pipeline accesses across both DMNs to maintain continuous throughput:"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 277,
+    "text": "cycle"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 280,
+    "text": "DMN #0"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 283,
+    "text": "DMN #1"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 293,
+    "text": "read #0 (1/2)"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 296,
+    "text": "(idle)"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 304,
+    "text": "read #0 (2/2)"
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 307,
+    "text": "read #1 (1/2)"
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 315,
+    "text": "read #2 (1/2)"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 318,
+    "text": "read #1 (2/2)"
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 326,
+    "text": "read #2 (2/2)"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 329,
+    "text": "read #3 (1/2)"
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 348,
+    "text": "read #2n-2 (2/2)"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 351,
+    "text": "read #2n-1 (1/2)"
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 359,
+    "text": "(idle)"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 362,
+    "text": "read #2n-1 (2/2)"
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 369,
+    "text": "[!NOTE]\nWhile command queues theoretically allow some burst access without interleaving, always interleave across DMNs when generating DMA streams, as this is the most natural approach."
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 373,
+    "text": "Slices are shared by the DMA, Fetch, and Commit Engines, so spreading requests across the 32 slices within each DMN reduces contention.\nData Memory Routers connect those slices in a ring topology within each DMN: slice0_in → slice31_out, slice32_in → slice63_out.\nEach Data Memory Slice has a 2-entry command queue for pending DMA requests.\nDistributing requests across M slices reduces required throughput per slice to 1/M, even when priority delays individual slices.\nDMN interleaving every n cycles achieves saturated 256 B/cycle."
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 376,
+    "text": "Bank Starvation"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 379,
+    "text": "Bank starvation occurs when the DMA Engine is indefinitely blocked waiting for a DM bank held by higher-priority engines.\nThe 64-access rule prevents this.\nViolating this rule causes a Network-on-Chip (NoC) timeout and a full cluster reset, losing all computation state."
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 382,
+    "text": "Each DM bank is a shared resource.\nWhen high-priority engines continuously access it, lower-priority requesters are indefinitely blocked, a form of priority inversion.\nThe DM controller prioritizes requests in this order:"
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 387,
+    "text": "Main-context Fetch Engine"
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 392,
+    "text": "Main-context Commit Engine"
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 397,
+    "text": "Sub-context Fetch Engine"
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 402,
+    "text": "Sub-context Commit Engine"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 407,
+    "text": "DMA Engine"
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 412,
+    "text": "DMA has the lowest priority among all memory engines because computation engines must get first access to data during normal operation.\nHigh-priority engines can continuously use the same bank.\nA queued DMA request then waits while those engines retain the bank.\nTensor DMA communicates with DRAM and DMN through a NoC hub where each port (DMA, DRAM, DMN) must acknowledge requests within 4,096 cycles.\nAfter 4,096 cycles without a response, the NoC protocol declares the transaction dead and enters an exception state as a safety mechanism to detect deadlocks and indefinitely hung transactions.\nWhen the timeout triggers, the hardware lacks a graceful recovery mechanism.\nThe only recovery is a full cluster domain reset, losing all computation state and requiring complete reinitialization."
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 415,
+    "text": "The limit is 64 consecutive accesses.\nFetch and Commit must not retain the same bank for 64 or more operations while DMA is active.\nWhy 64?\nThe constraint is `(TDMA_IO_BYTE / DMN_IO_BYTE) * Max_Consecutive_Access * DMN_SIZE < 4096` (with `TDMA_IO_BYTE = 256`, `DMN_IO_BYTE = 128`, `DMN_SIZE = 32`), which yields `Max_Consecutive_Access < 64`.\nThis ensures DMA requests complete before the NoC timeout even in the worst case."
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 418,
+    "text": "For example, suppose the DMA Engine issues a request to bank 0 (along with 15 other banks), but the main-context's Fetch Engine continuously requests bank 0.\nThe DMA request stalls, and if this exceeds 4,096 cycles, a NoC timeout forces a hardware reset."
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 421,
+    "text": "See [Scheduling: Resource and bank contention](../scheduling/schedule.md#resource-and-bank-contention) for context occupancy, the 64-access rule, and main/sub bank contention.\nSee [Schedule Viewer](../tools/schedule-viewer.md) for a scheduling visualization utility that shows which operations run in parallel and verifies actual context assignments."
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 424,
+    "text": "High-Bandwidth Memory (HBM)"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 427,
+    "text": "HBM holds 48GB per chip and delivers 1.5 TB/s aggregate bandwidth, but reaching that peak requires 256-byte-aligned access and channel interleaving across all 32 channels.\nMisaligned writes and bank conflicts can degrade throughput by 30–50×.\nThe following table summarizes the HBM geometry:"
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 433,
+    "text": "Unit"
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 436,
+    "text": "Count"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 443,
+    "text": "Stacks"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 446,
+    "text": "2 / Chip"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 451,
+    "text": "Channels"
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 454,
+    "text": "16 / Stack"
+  },
+  {
+    "id": "u0104",
+    "kind": "prose",
+    "token": 459,
+    "text": "Slices"
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 462,
+    "text": "3 / Channel"
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 467,
+    "text": "Bank Groups"
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 470,
+    "text": "4 / Slice"
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 475,
+    "text": "Banks"
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 478,
+    "text": "4 / Bank Group"
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 483,
+    "text": "Rows"
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 486,
+    "text": "16K / Bank"
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 491,
+    "text": "Bytes"
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 494,
+    "text": "2K / Row"
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 500,
+    "text": "Peak Bandwidth"
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 503,
+    "text": "Saturating a single DMA Engine (256GB/s capacity) requires interleaving accesses across multiple channels.\nPeak HBM bandwidth reaches 1.5TB/s per chip through parallel operation of stacks and channels.\nThe channel controller transfers 64B/cycle at 0.75GHz,[^HBM] yielding 48GB/s per channel (0.75GHz x 64B/cycle) or 1.5TB/s per chip (48GB/s x 32 channels).\nThe fundamental transfer unit is 256 bytes, requiring 4 clock cycles per channel."
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 506,
+    "text": "[^HBM]: Although the channel controller operates at a frequency of 0.75GHz, it performs eight bursts per cycle, leading to an effective frequency of 0.75×8=6GHz."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 509,
+    "text": "Peak bandwidth is sensitive to access patterns.\nMisalignment, bank conflicts, and resource sharing can each severely degrade throughput.\nEach channel controller has a 64-entry command queue that interleaves accesses to minimize penalties, but pathological cases can still cause severe degradation.\nThe following sections describe causes of performance degradation and how to avoid them."
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 512,
+    "text": "Address Space in a Chip"
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 515,
+    "text": "The HBM address space uses a non-linear bit mapping optimized for parallel sequential access.\nThis design maximizes parallelism and minimizes overhead:"
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 521,
+    "text": "Bit #"
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 524,
+    "text": "Main Component"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 527,
+    "text": "Additional Components"
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 537,
+    "text": "Byte"
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 548,
+    "text": "Stack"
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 559,
+    "text": "Channel"
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 570,
+    "text": "Bank Group"
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 573,
+    "text": "Channel"
+  },
+  {
+    "id": "u0128",
+    "kind": "prose",
+    "token": 581,
+    "text": "Byte"
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 584,
+    "text": "Channel"
+  },
+  {
+    "id": "u0130",
+    "kind": "prose",
+    "token": 592,
+    "text": "Bank"
+  },
+  {
+    "id": "u0131",
+    "kind": "prose",
+    "token": 595,
+    "text": "Channel"
+  },
+  {
+    "id": "u0132",
+    "kind": "prose",
+    "token": 603,
+    "text": "Bank Group"
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 606,
+    "text": "Channel"
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 614,
+    "text": "Slice"
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 617,
+    "text": "Channel"
+  },
+  {
+    "id": "u0136",
+    "kind": "prose",
+    "token": 625,
+    "text": "Row"
+  },
+  {
+    "id": "u0137",
+    "kind": "prose",
+    "token": 628,
+    "text": "Channel (21–28)"
+  },
+  {
+    "id": "u0138",
+    "kind": "prose",
+    "token": 636,
+    "text": "Slice"
+  },
+  {
+    "id": "u0139",
+    "kind": "prose",
+    "token": 639,
+    "text": "Row"
+  },
+  {
+    "id": "u0140",
+    "kind": "prose",
+    "token": 647,
+    "text": "Row"
+  },
+  {
+    "id": "u0141",
+    "kind": "prose",
+    "token": 656,
+    "text": "The bit assignment for each component corresponds to the physical memory geometry.\nFor instance, the byte component occupies 11 bits (bits 0-7, 14-16) to represent 2K (2^11) bytes per row.\nThree exceptions exist:"
+  },
+  {
+    "id": "u0142",
+    "kind": "prose",
+    "token": 661,
+    "text": "**Slice representation**: Two bits (20 and 34) represent slice, even though there are only three slices."
+  },
+  {
+    "id": "u0143",
+    "kind": "prose",
+    "token": 666,
+    "text": "**Contiguous address space**: Bit 34 is influenced by the row component to ensure bits 34 and 35 are never both 1, guaranteeing a contiguous 48GB address space."
+  },
+  {
+    "id": "u0144",
+    "kind": "prose",
+    "token": 671,
+    "text": "**Channel XOR mapping**: The channel component equals the XOR of bits 9-12 and 13-28 (e.g., the channel's first bit equals the XOR of bits 9, 13, 21, and 25)."
+  },
+  {
+    "id": "u0145",
+    "kind": "prose",
+    "token": 676,
+    "text": "This bit ordering ensures that sequential accesses are spread across stacks, channels, bank groups, and banks simultaneously, keeping multiple memory resources busy in parallel."
+  },
+  {
+    "id": "u0146",
+    "kind": "prose",
+    "token": 679,
+    "text": "Misaligned Access"
+  },
+  {
+    "id": "u0147",
+    "kind": "prose",
+    "token": 682,
+    "text": "Misaligned access degrades HBM performance substantially.\nReads crossing a 256-byte boundary require two transfers (2x penalty), and unaligned writes require a Read-Modify-Write (RMW) operation (roughly 50x penalty).\nThe 256-byte minimum access unit is defined by bits 0-7 (the eight LSBs), so data that crosses this boundary incurs these penalties."
+  },
+  {
+    "id": "u0148",
+    "kind": "prose",
+    "token": 687,
+    "text": "**Unaligned Read**: Read requests crossing a 256-byte boundary require two NoC transfers, effectively halving bandwidth."
+  },
+  {
+    "id": "u0149",
+    "kind": "prose",
+    "token": 692,
+    "text": "**Unaligned or Partial Write**: An unaligned write arises because DMA packets are internally segmented into 256-byte transactions.\nWhen a packet's size is not 256-byte aligned (e.g., a 2,800-byte packet splits into ten 256-byte requests plus one 240-byte request), the final \"leftover\" transaction requires an RMW operation.\nRMW reads the entire 256-byte unit, updates the requested bytes, then writes the entire unit back.\nRMW can slow writes by roughly 50× compared to aligned writes."
+  },
+  {
+    "id": "u0150",
+    "kind": "prose",
+    "token": 697,
+    "text": "Bank Conflict"
+  },
+  {
+    "id": "u0151",
+    "kind": "prose",
+    "token": 700,
+    "text": "HBM banks hold one open row at a time.\nSwitching to a different row within the same bank requires closing the current row and opening the new one.\nThis adds 40-50 ns (60-75 cycles at 1.5 GHz) of latency, which is 30-40x slower than accessing an already-open row.\nThis penalty occurs whenever consecutive accesses target different rows within the same bank.\nAll rows start closed, so the first access to any row always pays the open-row cost."
+  },
+  {
+    "id": "u0152",
+    "kind": "prose",
+    "token": 703,
+    "text": "Channel interleaving mitigates bank conflicts.\nInterleaving accesses across all 32 channels distributes load and reduces conflicts.\nBits 8-12 (the next five LSBs) represent independent stacks and channels.\nPlacing these at low addresses prevents interference between adjacent accesses, which is vital for parallelizing contiguous operations.\nNon-contiguous operations often benefit from natural channel interleaving because the channel component spans bits 9-28.\nHowever, the stack component corresponds only to bit 8, so the programmer must explicitly ensure accesses alternate between the two stacks to achieve full stack interleaving."
+  },
+  {
+    "id": "u0153",
+    "kind": "prose",
+    "token": 706,
+    "text": "The controller hides row-switch latency through command interleaving.\nWithin each channel, the controller automatically interleaves commands across banks, enabling useful transfers while other banks perform row switches.\nThe controller manages bank states using its command queue.\nIt employs FR-FCFS (First Ready-First Come First Served) scheduling, prioritizing commands targeting already-open rows."
+  },
+  {
+    "id": "u0154",
+    "kind": "prose",
+    "token": 709,
+    "text": "Despite this sophisticated scheduling, access patterns that continuously switch rows within the same bank still degrade performance significantly.\nCompilers and programmers should estimate row-switch costs when generating code."
+  },
+  {
+    "id": "u0155",
+    "kind": "prose",
+    "token": 712,
+    "text": "Column-to-Column Delay"
+  },
+  {
+    "id": "u0156",
+    "kind": "prose",
+    "token": 715,
+    "text": "`tCCD` (Column-to-Column Delay) is the minimum time between consecutive read or write commands on the same channel, which determines the maximum command issue rate.\nIn most access patterns, bank conflicts or channel interleaving dominate before `tCCD` becomes the bottleneck.\nVendor specifications set `tCCD` values based on analog constraints for accessing `DRAM` stack layers and shared resources."
+  },
+  {
+    "id": "u0157",
+    "kind": "prose",
+    "token": 718,
+    "text": "The `tCCD` value depends on which memory resources consecutive commands target:"
+  },
+  {
+    "id": "u0158",
+    "kind": "prose",
+    "token": 724,
+    "text": "Command Relation"
+  },
+  {
+    "id": "u0159",
+    "kind": "prose",
+    "token": 727,
+    "text": "`tCCD` (cycles @ `1.5GHz`)"
+  },
+  {
+    "id": "u0160",
+    "kind": "prose",
+    "token": 730,
+    "text": "Relative Performance"
+  },
+  {
+    "id": "u0161",
+    "kind": "prose",
+    "token": 733,
+    "text": "Reason for Penalty"
+  },
+  {
+    "id": "u0162",
+    "kind": "prose",
+    "token": 740,
+    "text": "Same Slice, Different Bank Group"
+  },
+  {
+    "id": "u0163",
+    "kind": "prose",
+    "token": 749,
+    "text": "Ideal interleaving of bank groups"
+  },
+  {
+    "id": "u0164",
+    "kind": "prose",
+    "token": 754,
+    "text": "Different Slice"
+  },
+  {
+    "id": "u0165",
+    "kind": "prose",
+    "token": 763,
+    "text": "Data path switching"
+  },
+  {
+    "id": "u0166",
+    "kind": "prose",
+    "token": 768,
+    "text": "Same Slice, Same Bank Group"
+  },
+  {
+    "id": "u0167",
+    "kind": "prose",
+    "token": 777,
+    "text": "Shared I/O buffer among four banks"
+  },
+  {
+    "id": "u0168",
+    "kind": "prose",
+    "token": 783,
+    "text": "Interleaving bank groups within one slice gives `tCCD = 2` cycles at `1.5GHz`.\nIt allows a new `64B` command each `0.75GHz` cycle and reaches full channel speed.\nAny `tCCD` greater than `2` reduces the command rate and channel utilization."
+  },
+  {
+    "id": "u0169",
+    "kind": "prose",
+    "token": 786,
+    "text": "Compared to bank conflicts, `tCCD` degradation is less severe because the worst-case patterns either coincide with bank conflicts (making `tCCD` the secondary effect) or are masked by channel interleaving:"
+  },
+  {
+    "id": "u0170",
+    "kind": "prose",
+    "token": 791,
+    "text": "Different Slice (`tCCD = 3`): Slice ID corresponds to bit `20`, and bit `21` corresponds to the row.\nInterleaving across slices therefore likely causes bank conflicts simultaneously."
+  },
+  {
+    "id": "u0171",
+    "kind": "prose",
+    "token": 796,
+    "text": "Same Slice, Same Bank Group (`tCCD = 4`): This pattern interleaves bits `8-35` except bits `13`, `19`, `20`, and `34`.\nBits `29-35` relate to bank conflicts.\nBits `8-28` relate to channel interleaving."
+  }
+]

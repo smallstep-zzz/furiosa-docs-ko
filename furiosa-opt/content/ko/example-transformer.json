@@ -1,0 +1,9 @@
+{
+  "u0001": "Qwen3 예제(example)",
+  "u0002": "Qwen3-0.6B(층 28개, 은닉 크기 1024)의 디코딩 전용 추론(decode-only inference)입니다.",
+  "u0003": "`kernel/` + `mod.rs`: VISA 커널(kernel)과 토큰 한 단계(token step)가 실행하는 여섯 `#[device]` 진입점(entry point)—`embedding`, `projection`, `attention_forward_first`, `attention_forward`, `decoder`, `final_layer`—이 있습니다. `axes.rs`에는 해당 자료형 시그니처(type signature)에서 사용하는 크기(extent)가 정의되어 있습니다.",
+  "u0004": "`../../tests/transformer_tests.rs`: 모든 진입점(entry point)의 기본 동작 검사(smoke test), 투영(projection)·청크 단위 어텐션(chunked attention)·디코더(decoder)·최종 층(final layer)·연결된 디코더 한 단계에 대한 스칼라 정답 기준 테스트(scalar-oracle test)가 있습니다.",
+  "u0005": "모델(Model)",
+  "u0006": "모든 커널(kernel)이 정확히 토큰(token) 하나를 처리하므로 프롬프트 토큰(prompt token)도 생성 토큰(generated token)과 같은 방식으로 입력됩니다. 배치 프리필(batched prefill) 단계는 없습니다. 각 층(layer)은 `projection`(입력 rmsnorm + q/k/v 투영(proj) + q/k 정규화(norm) + RoPE) → `attention`(KV 캐시 청크 `0..=chunk`에 대한 온라인 소프트맥스(online softmax)) → `decoder`(o_proj + 잔차(residual) + MLP + 잔차) 순서로 실행됩니다.",
+  "u0007": "실행(Run)"
+}

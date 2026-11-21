@@ -1,0 +1,274 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Furiosa Optimizer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "[![Build](https://github.com/furiosa-ai/furiosa-opt/actions/workflows/build.yml/badge.svg)](https://github.com/furiosa-ai/furiosa-opt/actions/workflows/build.yml)\n[![Deploy](https://github.com/furiosa-ai/furiosa-opt/actions/workflows/deploy.yml/badge.svg)](https://github.com/furiosa-ai/furiosa-opt/actions/workflows/deploy.yml)\n[![Book](https://img.shields.io/badge/docs-book-blue)](https://developer.furiosa.ai/furiosa-opt/book/)\n[![docs.rs](https://img.shields.io/docsrs/furiosa-opt-std)](https://docs.rs/furiosa-opt-std)"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Crates for the Furiosa NPU optimizer."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Repository Structure"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 14,
+    "text": "Setup"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 17,
+    "text": "Prerequisites"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 20,
+    "text": "`x86_64-unknown-linux-gnu` is the only supported host, for every backend. The\n`cargo-furiosa-opt` binary and the static libraries that `furiosa-mapping` and\n`furiosa-opt-lower` fetch during build are published for that target alone."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 23,
+    "text": "Ubuntu (jammy / noble / resolute)"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 26,
+    "text": "22.04 is the oldest usable release: `cargo-furiosa-opt` and `furiosa-opt-driver` need `GLIBC_2.34`,\nand 20.04 ships 2.31, so they do not start there."
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 28,
+    "offset": 48,
+    "length": 16,
+    "text": "# every backend\n"
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 28,
+    "offset": 112,
+    "length": 45,
+    "text": "# only for the NPU build (cargo furiosa-opt)\n"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 32,
+    "text": "`build-essential` — rustc links host binaries with the system `cc`, which the Rust toolchain does not supply."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 37,
+    "text": "`libclang-dev` — the compiler toolchain loads `libclang.so`."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 42,
+    "text": "`gcc-aarch64-linux-gnu` — `aarch64-linux-gnu-{gcc,as,ld,objcopy}` produce NPU ELF programs."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 47,
+    "text": "macOS (Apple silicon)"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 50,
+    "text": "macOS is not yet supported. Work inside a Linux **x86-64** container; arm64\ncontainers are not supported either, as artifacts are published for x86-64 only."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 54,
+    "text": "On Apple silicon, enable the container runtime's Rosetta backend for near-native\nx86-64 speed. Then follow the Ubuntu steps inside the container."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 57,
+    "text": "Install"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 60,
+    "text": "`cargo-furiosa-opt` is a [rustc driver](https://rustc-dev-guide.rust-lang.org/rustc-driver/intro.html) and is ABI-locked to a specific rustc nightly. Install the matching toolchain (also pinned in [`rust-toolchain.toml`](rust-toolchain.toml)) and the binary via [`cargo-binstall`](https://github.com/cargo-bins/cargo-binstall):"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 64,
+    "text": "Run as a cargo subcommand:"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 68,
+    "text": "Build and Test"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 70,
+    "offset": 14,
+    "length": 40,
+    "text": "# cargo check --workspace --all-targets\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 70,
+    "offset": 68,
+    "length": 29,
+    "text": "# cargo fmt --all -- --check\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 70,
+    "offset": 111,
+    "length": 56,
+    "text": "# cargo clippy --workspace --all-targets -- -D warnings\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 70,
+    "offset": 181,
+    "length": 35,
+    "text": "# cargo test --workspace --release\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 72,
+    "text": "Runtime"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 75,
+    "text": "See the [`furiosa-opt-rt` runtime guide](furiosa-opt-rt/README.md) for the runtime implementation."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 78,
+    "text": "Documentation"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 80,
+    "offset": 22,
+    "length": 27,
+    "text": "# install mdbook + plugins\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 80,
+    "offset": 71,
+    "length": 21,
+    "text": "# serve docs locally\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "comment",
+    "token": 80,
+    "offset": 114,
+    "length": 20,
+    "text": "# build static HTML\n"
+  },
+  {
+    "id": "u0032",
+    "kind": "comment",
+    "token": 80,
+    "offset": 156,
+    "length": 29,
+    "text": "# test code blocks in mdbook\n"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 82,
+    "text": "Tooling"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 85,
+    "text": "Language Server"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 88,
+    "text": "`furiosa-rust-analyzer-proxy` is a proxy for `rust-analyzer` that provides standard Rust IDE features with enhanced support for mapping expressions.\nIt delegates regular Rust language-server behavior to `rust-analyzer` and rewrites editor-facing results so verbose types like `Stride<Symbol<A>, 8>` appear as readable mapping expressions like `m![A / 8]`."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 91,
+    "text": "![furiosa-rust-analyzer-proxy demo](assets/furiosa-rust-analyzer-proxy-demo.png)"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 94,
+    "text": "For installation and configuration, see the [Language Server documentation](https://developer.furiosa.ai/furiosa-opt/book/tools/language-server.html)."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 97,
+    "text": "Schedule Viewer"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 100,
+    "text": "The Schedule Viewer visualizes the execution timeline to help identify performance bottlenecks.\nUse `furiosa-opt` to export a schedule JSON file, then open it with `furiosa-schedule-viewer`."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 103,
+    "text": "For installation and usage, see the [Schedule Viewer documentation](https://developer.furiosa.ai/furiosa-opt/book/tools/schedule-viewer.html)."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 106,
+    "text": "License"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 109,
+    "text": "Apache 2.0 — see [LICENSE](LICENSE) and [NOTICE](NOTICE)."
+  }
+]

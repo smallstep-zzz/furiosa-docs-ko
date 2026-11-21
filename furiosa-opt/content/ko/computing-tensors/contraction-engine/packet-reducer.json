@@ -1,0 +1,19 @@
+{
+  "u0001": "패킷 축약기(Packet Reducer)",
+  "u0002": "패킷 축약기(Packet Reducer)는 각 레인(lane)의 축약 트리(reduction tree)를 사용해, 패킷(Packet) 하나 안의 가장 안쪽 수축 축(contracted axis)을 따라 값을 더해 축약(reduce-add)합니다.",
+  "u0003": "인터페이스(Interface)",
+  "u0004": "`.contract_packet()`은 패킷 축약기(Packet Reducer)를 호출합니다. 각 레인(lane)은 [외적 단계(Outer)](./outer.md)의 `OutPacket`에서 이어받은 32 B 또는 64 B 패킷을 받으며, 원소 타입은 `i4`, `i8`, `f8`, `bf16` 중 하나입니다. 수식으로는 $\\text{output}[i] = \\sum_{j} \\text{input}[i, j]$를 계산합니다. 여기서 `i`는 남아 있는 출력 축(output axis)을, `j`는 `Packet` 안에서 수축하는 축을 순회합니다.",
+  "u0005": "primitive(ContractOuterTensor::contract_packet)",
+  "u0006": "// 지연된 피연산자(deferred operand)를 아직 축약하지 않고 전달합니다. `contract_lane`의 결합 수축(fused contraction)이\n",
+  "u0007": "// 이 Packet 축약도 수행합니다. 이 단계에서는 전달 객체(carrier)의 타입만 `OutPacket`으로 바꿉니다.\n",
+  "u0008": "아래 커널(kernel)은 8개 레인(lane)을 모두 병렬로 사용합니다. 깊이(depth) 5의 트리가 `B`의 `bf16` 원소 32개를 더하여, `A`의 각 위치(position)마다 `f32` 하나를 만듭니다.",
+  "u0009": "// 공간 축약(spatial reduction): 깊이 5의 트리가 B의 bf16 원소 32개를 합쳐 f32를 만듭니다.\n",
+  "u0010": "// 출력(Interleaved): Time = [A], Packet = [C]\n",
+  "u0011": "구조(Architecture)",
+  "u0012": "패킷 축약기(Packet Reducer)는 먼저 레인(lane)마다 독립된 [축약 트리(reduction tree)](https://en.wikipedia.org/wiki/Reduction_operator)를 실행합니다. 깊이(depth) 0의 리프(leaf)는 입력 패킷(Packet)의 원소를 보유합니다. 다음 깊이로 갈 때마다 두 값씩 더하여 원소 수를 절반으로 줄입니다. 최대 트리 깊이는 `log2(Packet::SIZE)`입니다. 따라서 `i4`는 7(`Packet::SIZE = 128`), `i8` / `f8`는 6(64), `bf16`은 5(32)입니다. 컴파일러(compiler)는 사용자가 지정한 `OutPacket`에서 트리 깊이 `d`를 도출합니다. 트리는 가장 안쪽의 `2^d`개 원소를 소비하여 `ReducePacket`을 만듭니다.",
+  "u0013": "이후 패킷 축약기(Packet Reducer)는 `ReducePacket`을 `OutPacket` 크기로 잘라냅니다(trim). 후단 시간 축약기(Time Reducer)의 레인별 누산기(per-lane accumulator)에는 열(column)이 32개뿐이므로 출력은 최대 32개 원소입니다. `ReducePacket::SIZE > 32`이면 바깥쪽 더미(dummy)를 제거하고 가장 안쪽 32개 원소만 유지합니다. 예를 들어 `i4`는 128개 원소의 패킷으로 들어오므로 `d ∈ {0, 1}`이면 128개 또는 64개 원소의 `ReducePacket`이 만들어집니다. 둘 다 `OutPacket::SIZE = 32`로 잘라냅니다.",
+  "u0014": "`ReducePacket`에는 가장 바깥쪽 패딩(padding), 즉 패딩된 패킷 축(packet axis)이 있을 수도 있습니다. 패킷 축약기(Packet Reducer)는 실제 값이 있는 열(live column)만 남기고 이 패딩을 제거합니다. 예를 들어 `[A # 16]`인 `ReducePacket`은 실제 `A`개 열을 16개 열까지 패딩한 것이며, `OutPacket = [A]`로 줄어듭니다. 따라서 `OutPacket`은 패딩을 포함한 `[A # 16]`으로 선언해도, 제거한 `[A]`로 선언해도 됩니다. 두 표현은 같은 결과를 가리킵니다.",
+  "u0015": "성능(Performance)",
+  "u0016": "지연(latency)은 트리 깊이(tree depth)에 따라 달라집니다. `i4`는 7사이클(cycle), `i8`/`f8`는 6사이클, `bf16`은 5사이클입니다. 원소 타입(element type)이 넓을수록 패킷(Packet)에 들어가는 원소가 적어 깊이가 줄어듭니다. 덧셈 트리(adder tree)는 완전히 파이프라인화되어 있으므로 깊이는 첫 출력까지의 지연만 늘리고, 정상 상태 처리량(steady-state throughput)은 줄이지 않습니다. 파이프라인을 채우고 나면 매 사이클 패킷 하나가 들어가고 축약된 출력 하나가 나옵니다.",
+  "u0017": "`Lane < 8`이면 비활성 레인(inactive lane)의 축약 트리(reduction tree)는 쉬게 됩니다. 따라서 사이클당 처리량(per-cycle throughput)은 `Lane::SIZE / 8`에 비례하여 줄어듭니다."
+}

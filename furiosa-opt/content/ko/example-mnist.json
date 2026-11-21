@@ -1,0 +1,9 @@
+{
+  "u0001": "MNIST 예제(example)",
+  "u0002": "최소 구성의 완전연결 MNIST 분류기(fully-connected MNIST classifier)입니다. 구조는 784 → 256 ReLU → 10입니다.",
+  "u0003": "`mod.rs`: VISA 커널(kernel)인 `forward`가 있습니다.",
+  "u0004": "`../../data/mnist/mnist.safetensors`: 학습된 bf16 가중치(weight), MNIST 테스트 이미지 10개와 각 정답 레이블(label)이 있습니다.",
+  "u0005": "`../../tests/mnist_tests.rs`: 각 이미지에 `forward`를 실행하고 예측한 숫자가 정답 레이블(label)과 같은지 확인합니다.",
+  "u0006": "커널(kernel)은 패딩된 크기(padded extent)를 사용합니다. 입력 784개를 800(`X`)까지, 출력 10개를 16(`C`)까지 패딩(padding)합니다. `mnist.safetensors`의 `hw.*` 텐서(tensor)가 패딩된 가중치와 이미지를 담고 있습니다.",
+  "u0007": "실행(Run)"
+}

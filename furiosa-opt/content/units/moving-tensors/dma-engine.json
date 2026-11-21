@@ -1,0 +1,1938 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "DMA Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The DMA Engine moves tensors directly between memory tiers without engaging the Tensor Unit pipeline, so use it for residency or layout changes that require no compute stage."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Choose DMA for HBM↔HBM, HBM↔DM, DM↔DM, or DM↔SPM movement when no Fetch, compute, or Commit stage is needed.\nThe Interface examples show how source tensors, destination mappings, and `tdma` or `pdma` contexts combine.\nEach transfer pairs two coordinated stages:"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 12,
+    "text": "**[Read Sequencer](#architecture)**: Reads from the source tier."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 17,
+    "text": "**[Write Sequencer](#architecture)**: Writes to the destination tier, possibly with a layout transformation."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 22,
+    "text": "A DMA transfer is a [mathematical tensor move](../mapping-tensors/tensor-semantics.md#mathematical-tensor-move): the output holds the same mathematical tensor as the input even when the layouts differ.\nTensor DMA spans cross-DMN, cross-cluster, and cross-chip transfers, with chip IDs globally agreed across the system."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 25,
+    "text": "See [Optimizations](#optimizations) for transfer throughput considerations."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 28,
+    "text": "Interface"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 31,
+    "text": "A DMA transfer takes a tensor in one memory tier and produces a tensor in another (or the same) tier.\nThe kernel writer calls `.to_dm()`, `.to_hbm()`, or related methods on the source tensor, passing in a `DmaContext`:"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 36,
+    "text": "`Device::tdma`: Tensor DMA context for on-chip transfers (HBM ↔ HBM, HBM ↔ DM, DM ↔ DM, DM ↔ SPM)."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 41,
+    "text": "`Device::pdma`: PCIe DMA context for host ↔ HBM transfers (see [PCIe DMA](#pcie-dma))."
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 45,
+    "offset": 1017,
+    "length": 29,
+    "text": "primitive(HbmTensor::reshape)"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 47,
+    "text": "The compiler derives the read and write sequencer configurations from the source and destination tensor types.\nAn HBM-to-DM transfer keeps the HBM `Chip` dimension and specifies the destination `Cluster`, `Slice`, and `Element` dimensions.\nA DM-to-DM transfer may specify new `Chip`, `Cluster`, `Slice`, and `Element` dimensions, while an HBM destination specifies `Chip` and `Element`."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 50,
+    "text": "The example below transposes a tensor from `[A, B, C]` to `[C, A, B]` using two HBM-to-HBM transfers:"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 52,
+    "offset": 171,
+    "length": 33,
+    "text": "// Step 1: [A, B, C] → [A, C, B]\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 52,
+    "offset": 300,
+    "length": 33,
+    "text": "// Step 2: [A, C, B] → [C, A, B]\n"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 54,
+    "text": "A transfer that crosses tiers also takes a layout transformation through the destination type's mapping.\nFor an HBM-to-DM transfer, the destination DM tensor adds `Cluster` and `Slice` axes that distribute and broadcast the tensor across hardware partitions."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 58,
+    "text": "Here the 2,048-element vector is distributed as 256 elements per slice (`Slice = m![A / 8]`) with 8 elements per slice (`Element = m![A % 8]`), spread across 2 clusters."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 61,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 64,
+    "text": "Each RNGD chip holds 8 DMA Engines, one per pair of DMNs, running up to 8 independent transfers in parallel.\nA single DMA Engine runs paired read and write sequencers, and a tensor move spreads across multiple engines through an aggregate.\nThe subsections below describe its static structure, sequencer representation, dynamic behavior, compiler derivation, and aggregate operations."
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 68,
+    "text": "[!NOTE]\nThe Tensor Unit (via [Fetch](./fetch-engine.md) and [Commit](./commit-engine.md) Engines) is often more efficient than DMA for SRAM-to-SRAM transfers, since DMA may underutilize SRAM slice bandwidth.\nHBM bandwidth, however, is typically the bottleneck in practice, making this gap less critical for HBM ↔ DM transfers."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 72,
+    "text": "Static Structure"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 75,
+    "text": "`Chip`, `Cluster`, and `Slice` are the hardware spatial parallelism dimensions.\nThe 8 DMA Engines per chip transfer between different memory components in parallel (e.g., engine #0 handles HBM ↔ DM while engine #1 handles DM ↔ DM)."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 78,
+    "text": "Each DMA Engine runs paired read and write sequencers in lockstep.\nThe read sequencer traverses source addresses, the write sequencer traverses destination addresses.\nBoth share the same loop count but use different strides and base addresses, since the layout transformation reorders how the same logical elements appear in source vs. destination memory.\nThe compiler represents the pair compactly as a single sequencer with paired strides per loop entry, exploiting the matched read and write counts."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 81,
+    "text": "The compiler distributes a single tensor move across the available DMA Engines, partitioning the work along chip, cluster, and slice dimensions and assigning each partition to a DMA Engine.\nAny DMA Engine handles any transfer.\nBy default the compiler picks the source DM's local DMA Engine, since local DMN access is faster than cross-DMN access.\nThe kernel writer can also specify an engine explicitly."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 84,
+    "text": "A homogeneous aggregate uses one descriptor template parameterized across all participating DMA Engines.\nA heterogeneous aggregate uses a `HashMap<DmnIndex, DmaDescriptor>` that pairs each DMN with its specific descriptor.\nDM tensor specifications must include chip, cluster, and slice in the mapping expression to identify the exact memory location."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 87,
+    "text": "Dynamic Behavior"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 90,
+    "text": "Each loop in the `DmaSequencer` advances a counter in row-major order, deriving the read and write addresses from the paired strides.\nFor the sequencer below with `base = (0, 256³)`:"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 97,
+    "text": "iteration `i`"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 100,
+    "text": "counters"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 103,
+    "text": "read addr"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 106,
+    "text": "write addr"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 198,
+    "text": "With `stride0 = 256`, the hardware reads and writes 256 bytes per iteration, so iteration 0 processes all values for `(A, B, C) = (0, 0, 0..255)` as a single packet.\nThe transfer completes in approximately 500 cycles of startup latency plus 256 × 256 cycles of data transfer."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 201,
+    "text": "Compiler Derivation"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 204,
+    "text": "Given source and destination tensor mappings (`In`, `Out`) and a stream shape (`Stream`), the compiler derives the read and write sequencers:"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 209,
+    "text": "**Read sequencer**: Projects `In` onto the stream shape, producing per-loop strides into the source tier."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 214,
+    "text": "**Write sequencer**: Projects `Out` onto the stream shape, producing per-loop strides into the destination tier."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 219,
+    "text": "**Unified sequencer**: Merges the two so each entry pairs the read and write strides."
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 224,
+    "text": "**Packet size**: Infers `stride0` from the consecutive read/write volume.\nWhen both read and write access 256 consecutive bytes, the optimal `stride0` is 256."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 229,
+    "text": "For `m![A, B, C] → m![B, A, C]` with `A=B=C=256`, the stream is `m![A, B, C]`.\nThe compiler maps each linear index to A, B, and C using the relation below.\nIt then derives the paired strides."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 232,
+    "text": "The relation is `m![A, B, C]::map(i) = i![A: i / 65,536, B: (i % 65,536) / 256, C: i % 256]` (see [Mapping Expressions](../mapping-tensors/mapping-expressions.md) for the notation):"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 236,
+    "text": "These combine into a single `DmaSequencer` with paired strides per entry.\nEach side of the unified `DmaSequencer` (read or write) can be displayed as a single-stride sequencer for that direction, omitting the paired-stride bracket for clarity."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 239,
+    "text": "Aggregate Operations"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 242,
+    "text": "The aggregate takes one of two forms based on whether tensor shapes divide evenly across DMNs."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 245,
+    "text": "When shapes divide evenly, all participating engines run a *homogeneous* aggregate.\nEvery DMA Engine uses the same parametric stream environment (`Stream = { chip, cluster, slice, time, packet }`), differing only by base address."
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 248,
+    "text": "When shapes do not divide evenly, the compiler falls back to a *heterogeneous* aggregate.\nEach DMN gets its own stream environment via `StreamFn(chip, cluster, slice)`, and boundary DMNs split their work across multiple DMA commands to avoid writing past the valid region.\nThe input and output mapping environments (`In` and `Out`) remain structurally identical to the homogeneous case, so the overall logical tensor move is well-defined."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 251,
+    "text": "Two correctness invariants apply across both forms:"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 256,
+    "text": "**Same media types**: All participating DMA Engines must use the same source and destination media."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 261,
+    "text": "**Single unified mapping**: One input and one output tensor mapping govern the overall transfer."
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 266,
+    "text": "Each command incurs its own startup latency, so prefer tensor shapes that divide evenly across DMNs to keep the aggregate homogeneous."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 269,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 272,
+    "text": "The DMA Engine enforces hardware-level alignment and packet-size rules.\nViolations cause correctness errors or hardware exceptions, not just performance degradation."
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 277,
+    "text": "**Address alignment**:"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 283,
+    "text": "Tier"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 286,
+    "text": "Read"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 289,
+    "text": "Write"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 296,
+    "text": "HBM"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 299,
+    "text": "1 byte"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 302,
+    "text": "1 byte"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 307,
+    "text": "DM (SRAM)"
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 310,
+    "text": "1 byte"
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 313,
+    "text": "8 bytes"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 318,
+    "text": "SPM"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 321,
+    "text": "1 byte"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 324,
+    "text": "1 byte"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 330,
+    "text": "HBM ↔ DM transfers additionally require 8-byte alignment for the read address, write address, and packet size, regardless of the table above.\nThe asymmetric DM rule reflects asymmetric SRAM hardware.\nRead ports use byte-select logic to extract arbitrary byte ranges, but write ports operate on full 8-byte bank-width units.\nMisaligned DM writes therefore trigger a Read-Modify-Write operation that triples the write time and blocks other operations on the affected bank."
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 333,
+    "text": "The compiler enforces these constraints as hardware invariants."
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 338,
+    "text": "**Packet size**: The maximum packet size is 4,096 bytes, set by the AXI protocol constraint that transactions cannot exceed 256 beats × 16-byte data width."
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 343,
+    "text": "Optimizations"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 346,
+    "text": "Three factors determine DMA throughput: memory bandwidth, channel and DMN interleaving, and startup latency with packet splitting."
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 349,
+    "text": "Memory Bandwidth"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 352,
+    "text": "Each tier has a peak bandwidth that bounds achievable throughput, and the actual rate is limited by the slowest component on the streaming path."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 358,
+    "text": "Tier"
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 361,
+    "text": "Peak bandwidth"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 368,
+    "text": "HBM"
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 371,
+    "text": "1.5 TB/s per chip (32 channels × 48 GB/s per channel at 0.75 GHz)"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 376,
+    "text": "DM"
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 379,
+    "text": "256 B/cycle per cluster (with DMN interleaving, 128 B/cycle per DMN)"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 384,
+    "text": "SPM"
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 387,
+    "text": "128 B/cycle per cluster (same-chip only)"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 392,
+    "text": "PCIe"
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 395,
+    "text": "30 B/cycle for both reads and writes (see [PCIe DMA](#pcie-dma))"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 401,
+    "text": "Each DMA Engine moves up to 256 B/cycle on its own.\nHBM bandwidth is shared across all engines transferring HBM data, so an aggregate saturating HBM is bounded by the 1.5 TB/s HBM peak rather than by any per-engine sum."
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 404,
+    "text": "Same-cluster DM-to-DM transfers serialize their reads and writes, since both phases contend for the same DM bank access.\nCross-tier transfers like HBM ↔ DM pipeline the read and write phases."
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 408,
+    "text": "[!NOTE]\nThe Tensor Unit (via [Fetch](./fetch-engine.md) and [Commit](./commit-engine.md) Engines) is often more efficient than DMA for SRAM-to-SRAM transfers, since DMA may underutilize SRAM slice bandwidth.\nHBM bandwidth, however, is typically the bottleneck in practice, making this gap less critical for HBM ↔ DM transfers."
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 412,
+    "text": "Channel and DMN Interleaving"
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 415,
+    "text": "Sustaining peak bandwidth requires interleaving access patterns across the underlying memory partitions."
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 418,
+    "text": "HBM channel selection uses address bits 9 to 28, and address bit 8 is the stack bit.\nAccess patterns must toggle all of these bits to spread requests across all 32 channels.\nMissing the stack bit (address bit 8) alone halves effective bandwidth by routing all requests to only 16 of the 32 channels.\nRepeated access to the same HBM bank can toggle row-address bits 21 and above.\nEach conflict costs about 40 cycles and can reduce bandwidth by an order of magnitude.\nFR-FCFS memory scheduling recovers some throughput, but the fundamental cost remains severe."
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 421,
+    "text": "DM bandwidth requires alternating between both DMNs (each 128 B/cycle), so a single-DMN access pattern halves DM bandwidth."
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 424,
+    "text": "Startup Latency and Packet Splitting"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 427,
+    "text": "Each DMA command incurs approximately 500 cycles of fixed startup latency before data transfer begins.\nCombining multiple transfers into fewer commands amortizes this cost, while heterogeneous aggregates split into per-DMN commands and pay the latency on each command."
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 430,
+    "text": "Within a single command, the hardware splits each packet into 256-byte units, so an n-byte packet becomes `ceil(n / 256)` AXI requests.\nA 4,095-byte packet therefore costs 16 requests, while a 4,099-byte packet (a prime length, awkwardly placed past the 4,096-byte limit) requires splitting into multiple commands.\nThe innermost-loop stride (`stride0`) determines packet alignment: when `stride0` is 256-byte aligned, the cycle count is `ceil(stride0 / 256)`.\nWhen `stride0` is not 256-byte aligned, HBM writes additionally pay a Read-Modify-Write penalty for the partial 256-byte block.\nHBM reads incur only the `ceil` overhead, and DM operations are largely unaffected by this kind of misalignment."
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 433,
+    "text": "DMA has the lowest DM bank-access priority, so 64+ consecutive same-bank accesses from the Fetch or Commit Engine can starve it and trigger a NoC timeout.\nSee [DM Bank Starvation](./memory-performance.md#bank-starvation) for details."
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 436,
+    "text": "Detailed Examples"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 439,
+    "text": "The examples below give concrete sequencer configurations and cycle estimates for representative transfer patterns.\nExamples 1 to 3 cover well-tuned single-engine cases for each tier pair.\nExamples 4 and 5 contrast pathological access patterns that lose 10x or more.\nExample 6 illustrates heterogeneous segmentation when shapes do not divide evenly across DMNs."
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 442,
+    "text": "The sequencer configurations use two address-stride symbols:"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 447,
+    "text": "`slice_stride`: The virtual address span of one in-slice DM partition (4 MB)."
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 452,
+    "text": "`DMN_stride`: The address span between two DMNs within the same cluster."
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 457,
+    "text": "Example 1: HBM ↔ HBM Layout Transformation"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 460,
+    "text": "Arguments:"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 475,
+    "text": "Source: HBM at offset `0`, mapping `m![A, B, C]`"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 480,
+    "text": "Destination: HBM at offset `16,384`, mapping `m![B, A, C]`"
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 485,
+    "text": "Stream: time `m![A, B]`, packet `m![C]`"
+  },
+  {
+    "id": "u0104",
+    "kind": "prose",
+    "token": 490,
+    "text": "Generated sequencers:"
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 494,
+    "text": "The non-innermost strides (256 and 2,048) toggle HBM address bits 8 (stack) and 11 (channel), spreading every request across distinct HBM channels for parallel execution.\nA single 256-byte transfer takes 4 cycles per channel at 0.75 GHz, but parallel channel distribution sustains near-peak bandwidth.\nTotal time: approximately 64 read requests + 64 write requests at 1 GHz, plus 500 cycles startup ≈ 628 cycles."
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 497,
+    "text": "When 4 DMA Engines share HBM ↔ HBM traffic, each gets approximately 0.1875 TB/s out of the 0.75 TB/s read bandwidth.\nEven with `stride0 = 256`, no single engine completes one request per cycle under that share."
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 500,
+    "text": "Example 2: HBM → DM with Full Bandwidth"
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 503,
+    "text": "This cross-tier transfer pipelines reads and writes by interleaving across HBM channels and both DMNs."
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 506,
+    "text": "Arguments:"
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 521,
+    "text": "Source: HBM at chip 0, mapping `m![B, A, C]`"
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 526,
+    "text": "Destination: DM at chip 0, cluster 0, slice 0. Slice mapping `m![A / 4]`, element mapping `m![A % 4, B, C]`"
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 531,
+    "text": "Stream: time `m![B, A % 4, A / 4 % 32, A / 128]`, packet `m![C]`"
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 536,
+    "text": "Generated sequencers:"
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 540,
+    "text": "On the HBM side, the 32,768-stride on `A/128=2` interleaves access across channels, and the hardware command queue keeps all 65,536 requests (256 × 4 × 32 × 2) flowing.\nOn the DM side, `slice_stride` and `DMN_stride` interleave consecutive 256-byte writes across the two DMNs, keeping both at one request per cycle.\nReads and writes pipeline across tiers, so total time is approximately max(65,536 read cycles, 65,536 write cycles) + 500 startup ≈ 66,036 cycles."
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 543,
+    "text": "Example 3: DM → DM Within One Cluster"
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 546,
+    "text": "Same-cluster DM-to-DM transfers serialize reads and writes, since both contend for the same DM bank access."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 549,
+    "text": "Arguments:"
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 564,
+    "text": "Source: DM at chip 0, cluster 0, slice 0, element offset `0`. Slice mapping `m![A / 4]`, element mapping `m![A % 4, B, C]`"
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 569,
+    "text": "Destination: DM at chip 0, cluster 0, slice 0, element offset `4·256·256`. Slice mapping `m![A / 4]`, element mapping `m![B, A % 4, C]`"
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 574,
+    "text": "Stream: time `m![B, A % 4, A / 4 % 32, A / 128]`, packet `m![C]`"
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 579,
+    "text": "Generated sequencers:"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 583,
+    "text": "DMN and slice interleaving give each phase the full 256 B/cycle, but the two phases serialize.\nTotal time: approximately 131,072 cycles (65,536 reads + 65,536 writes) + 500 startup."
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 587,
+    "text": "[!NOTE]\nChoose `C` to be a multiple of 256 when possible.\nFor `C = 256n + r` with `0 < r < 256`, the cycle count grows by a factor of `n+1` because each access splits into more requests, even though the total data volume changes only slightly."
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 591,
+    "text": "Example 4: HBM Bank-Conflict Pathology"
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 594,
+    "text": "DM interleaving is healthy here, but a pathological HBM access pattern costs roughly 10x the well-tuned cycle count."
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 597,
+    "text": "Arguments:"
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 602,
+    "text": "1 chip (8 DMNs)"
+  },
+  {
+    "id": "u0128",
+    "kind": "prose",
+    "token": 617,
+    "text": "Source: HBM, with cluster mapping `m![B / 1024]`, slice mapping `m![B / 256 % 4, A]`, element mapping `m![B % 256, C]`"
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 622,
+    "text": "Destination: DM, with slice mapping `m![A / 4]`, element mapping `m![B, A % 4, C]`"
+  },
+  {
+    "id": "u0130",
+    "kind": "prose",
+    "token": 627,
+    "text": "Stream: cluster `m![B / 1024]`, slice `m![B / 256 % 4]`, time `m![B % 256, C / 256, A % 32, A / 32]`, packet `m![C % 256]`"
+  },
+  {
+    "id": "u0131",
+    "kind": "prose",
+    "token": 632,
+    "text": "Generated sequencers per `(cluster_i, dmn_j)`:"
+  },
+  {
+    "id": "u0132",
+    "kind": "prose",
+    "token": 636,
+    "text": "The strides on `A%32` and `A/32` toggle HBM address bits 21 and 26, which select the row within an HBM bank.\nConsecutive accesses within each channel therefore close one row and open the next on nearly every request, paying approximately 40 cycles per access.\nChannel interleaving via `C / 256 = 4` (stride 256) does spread requests across all 32 channels, but cannot hide the row-conflict cost within each channel."
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 639,
+    "text": "Performance breakdown:"
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 644,
+    "text": "HBM reads: 524,288 total requests across 32 channels = 16,384 per channel × ~40 cycles ≈ 655,360 cycles."
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 649,
+    "text": "DM writes: 65,536 requests per DMN at one per cycle, hidden under the read latency."
+  },
+  {
+    "id": "u0136",
+    "kind": "prose",
+    "token": 654,
+    "text": "Total time: approximately 655,360 cycles + 500 startup ≈ 655,860 cycles.\nFR-FCFS scheduling recovers some throughput, but the order-of-magnitude penalty remains."
+  },
+  {
+    "id": "u0137",
+    "kind": "prose",
+    "token": 657,
+    "text": "Example 5: Missing Stack Bit Pathology"
+  },
+  {
+    "id": "u0138",
+    "kind": "prose",
+    "token": 660,
+    "text": "The access pattern fails to interleave across HBM's stack dimension (address bit 8), routing all traffic to half the channels and halving effective bandwidth."
+  },
+  {
+    "id": "u0139",
+    "kind": "prose",
+    "token": 663,
+    "text": "Arguments:"
+  },
+  {
+    "id": "u0140",
+    "kind": "prose",
+    "token": 668,
+    "text": "1 chip (8 DMNs)"
+  },
+  {
+    "id": "u0141",
+    "kind": "prose",
+    "token": 683,
+    "text": "Source: HBM, mapping `m![A, B, C, D]`"
+  },
+  {
+    "id": "u0142",
+    "kind": "prose",
+    "token": 688,
+    "text": "Destination: DM, with cluster mapping `m![A / 4]`, slice mapping `m![A % 4, B]`, element mapping `m![C, D % 256]`"
+  },
+  {
+    "id": "u0143",
+    "kind": "prose",
+    "token": 693,
+    "text": "Stream: cluster `m![A / 4]`, slice `m![A % 4]`, time `m![C, B % 32, B / 32]`, packet `m![D % 256]`"
+  },
+  {
+    "id": "u0144",
+    "kind": "prose",
+    "token": 698,
+    "text": "Generated sequencers per `(cluster_i, dmn_j)`:"
+  },
+  {
+    "id": "u0145",
+    "kind": "prose",
+    "token": 702,
+    "text": "The `C` stride of 512 never toggles HBM address bit 8 (the stack bit), so the eight DMNs concentrate on 16 of the 32 HBM channels."
+  },
+  {
+    "id": "u0146",
+    "kind": "prose",
+    "token": 705,
+    "text": "Performance breakdown:"
+  },
+  {
+    "id": "u0147",
+    "kind": "prose",
+    "token": 710,
+    "text": "HBM reads (bottleneck): 4,096 total requests across 16 channels = 256 per channel × ~5.3 cycles per request at 1 GHz ≈ 1,357 cycles."
+  },
+  {
+    "id": "u0148",
+    "kind": "prose",
+    "token": 715,
+    "text": "DM writes: 512 requests per DMN, pipelined under the reads."
+  },
+  {
+    "id": "u0149",
+    "kind": "prose",
+    "token": 720,
+    "text": "Total time: approximately 1,357 cycles + 500 startup ≈ 1,857 cycles.\nRestoring stack-bit interleaving across all 32 channels would halve the HBM cycle count."
+  },
+  {
+    "id": "u0150",
+    "kind": "prose",
+    "token": 723,
+    "text": "Example 6: Heterogeneous DMN Segmentation"
+  },
+  {
+    "id": "u0151",
+    "kind": "prose",
+    "token": 726,
+    "text": "When tensor shapes do not divide evenly across DMNs, the compiler segments the boundary DMN's work into multiple commands, each paying its own startup latency."
+  },
+  {
+    "id": "u0152",
+    "kind": "prose",
+    "token": 729,
+    "text": "Arguments:"
+  },
+  {
+    "id": "u0153",
+    "kind": "prose",
+    "token": 734,
+    "text": "4 chips"
+  },
+  {
+    "id": "u0154",
+    "kind": "prose",
+    "token": 749,
+    "text": "Source: DM, with (writing `A' = A + 1#`) chip mapping `m![D / 2]`, cluster mapping `m![D % 2]`, slice mapping `m![A' / 4, A' / 2 % 2, B]`, element mapping `m![A' % 2, C]`"
+  },
+  {
+    "id": "u0155",
+    "kind": "prose",
+    "token": 754,
+    "text": "Destination: HBM, with chip mapping `m![D / 2]`, element mapping `m![D % 2, B, A, C]`"
+  },
+  {
+    "id": "u0156",
+    "kind": "prose",
+    "token": 759,
+    "text": "Stream (per-DMN, expressed as `StreamFn(chip_i, cluster_j, slice_k)`):"
+  },
+  {
+    "id": "u0157",
+    "kind": "prose",
+    "token": 765,
+    "text": "The dimension `A = 15` does not divide across 4 DMNs (15 = 3·4 + 3), so DMNs 0 to 2 each handle 4 elements while DMN 3 handles only 3.\nA single descriptor on DMN 3 would write a fourth element past the valid region, so the compiler segments DMN 3's work into two commands that together cover exactly 3 elements."
+  },
+  {
+    "id": "u0158",
+    "kind": "prose",
+    "token": 768,
+    "text": "Performance breakdown:"
+  },
+  {
+    "id": "u0159",
+    "kind": "prose",
+    "token": 773,
+    "text": "DMNs 0 to 2 (one command each): ~256 cycles + 500 startup ≈ 756 cycles."
+  },
+  {
+    "id": "u0160",
+    "kind": "prose",
+    "token": 778,
+    "text": "DMN 3 (two commands): ~192 data cycles + 1,000 startup (500 each) ≈ 1,192 cycles."
+  },
+  {
+    "id": "u0161",
+    "kind": "prose",
+    "token": 783,
+    "text": "Total time: approximately 1,192 cycles, gated by DMN 3.\nChoose tensor shapes that divide evenly across DMNs to avoid this segmentation cost."
+  },
+  {
+    "id": "u0162",
+    "kind": "prose",
+    "token": 786,
+    "text": "Redistribution Operations"
+  },
+  {
+    "id": "u0163",
+    "kind": "prose",
+    "token": 789,
+    "text": "SRAM redistribution builds a redistribution plan from `DmTensor` or `DmTensorView` and executes it with `to_dm` or `to_dm_view`.\nEvery stage before the terminal method is fused into one DMA operation.\nThese operations route partial values between chips or clusters and select the shard needed by each target.\nSee [Chip and Cluster Reduction](../kernel-examples/chip-cluster-reduce.md) for complete reduction examples that use these operations to route and select partial values."
+  },
+  {
+    "id": "u0164",
+    "kind": "prose",
+    "token": 792,
+    "text": "Interface Summary"
+  },
+  {
+    "id": "u0165",
+    "kind": "prose",
+    "token": 795,
+    "text": "Choose an operation by the dimension that supplies the source or the selected `Element` coordinate:"
+  },
+  {
+    "id": "u0166",
+    "kind": "prose",
+    "token": 801,
+    "text": "API"
+  },
+  {
+    "id": "u0167",
+    "kind": "prose",
+    "token": 804,
+    "text": "Meaning"
+  },
+  {
+    "id": "u0168",
+    "kind": "prose",
+    "token": 807,
+    "text": "Shape effect"
+  },
+  {
+    "id": "u0169",
+    "kind": "prose",
+    "token": 810,
+    "text": "Execution"
+  },
+  {
+    "id": "u0170",
+    "kind": "prose",
+    "token": 820,
+    "text": "Select one source chip for each target chip"
+  },
+  {
+    "id": "u0171",
+    "kind": "prose",
+    "token": 823,
+    "text": "None"
+  },
+  {
+    "id": "u0172",
+    "kind": "prose",
+    "token": 826,
+    "text": "Deferred Tensor DMA"
+  },
+  {
+    "id": "u0173",
+    "kind": "prose",
+    "token": 834,
+    "text": "Exchange source clusters 0 and 1 within each chip"
+  },
+  {
+    "id": "u0174",
+    "kind": "prose",
+    "token": 837,
+    "text": "None"
+  },
+  {
+    "id": "u0175",
+    "kind": "prose",
+    "token": 840,
+    "text": "Deferred Tensor DMA"
+  },
+  {
+    "id": "u0176",
+    "kind": "prose",
+    "token": 848,
+    "text": "Select one `Axis` coordinate for each target chip"
+  },
+  {
+    "id": "u0177",
+    "kind": "prose",
+    "token": 851,
+    "text": "Change `Element` to `Output`"
+  },
+  {
+    "id": "u0178",
+    "kind": "prose",
+    "token": 854,
+    "text": "Deferred Tensor DMA"
+  },
+  {
+    "id": "u0179",
+    "kind": "prose",
+    "token": 862,
+    "text": "Select one `Axis` coordinate for each target cluster"
+  },
+  {
+    "id": "u0180",
+    "kind": "prose",
+    "token": 865,
+    "text": "Change `Element` to `Output`"
+  },
+  {
+    "id": "u0181",
+    "kind": "prose",
+    "token": 868,
+    "text": "Deferred Tensor DMA"
+  },
+  {
+    "id": "u0182",
+    "kind": "prose",
+    "token": 876,
+    "text": "Select one local `Axis` coordinate for each chip"
+  },
+  {
+    "id": "u0183",
+    "kind": "prose",
+    "token": 879,
+    "text": "Remove `Axis` from `Element`"
+  },
+  {
+    "id": "u0184",
+    "kind": "prose",
+    "token": 882,
+    "text": "Immediate sub-context parallel copy"
+  },
+  {
+    "id": "u0185",
+    "kind": "prose",
+    "token": 890,
+    "text": "Select one local `Axis` coordinate for each cluster"
+  },
+  {
+    "id": "u0186",
+    "kind": "prose",
+    "token": 893,
+    "text": "Remove `Axis` from `Element`"
+  },
+  {
+    "id": "u0187",
+    "kind": "prose",
+    "token": 896,
+    "text": "Immediate sub-context parallel copy"
+  },
+  {
+    "id": "u0188",
+    "kind": "prose",
+    "token": 904,
+    "text": "Select one source chip for each target HBM chip"
+  },
+  {
+    "id": "u0189",
+    "kind": "prose",
+    "token": 907,
+    "text": "None"
+  },
+  {
+    "id": "u0190",
+    "kind": "prose",
+    "token": 910,
+    "text": "Immediate HBM DMA"
+  },
+  {
+    "id": "u0191",
+    "kind": "prose",
+    "token": 916,
+    "text": "In this table, `source` may be a tensor or a view.\nAn SRAM view may contain an `Element` tile, while `Chip` and `Cluster` tiles are not supported as redistribution inputs.\nThe four SRAM methods return a deferred redistribution plan, so they can be chained before one terminal call.\n`to_dm` materializes that plan into a fresh destination tensor, while `to_dm_view` writes the same logical result into an existing destination view such as a tile.\nAxis permutation comes from the destination mapping and is independent of which terminal is used.\nThe result mapping describes the destination layout, but does not record which source placement or slice coordinate supplied each value.\nRead the redistribution stages and their arrays to determine those value semantics.\nThe compiler derives synchronization from the completed plan: a source chip change inserts `ChipSync`, a source cluster change inserts `ClusterSync`, and a plan containing both inserts both.\nA plan that only slices local data inserts neither synchronization."
+  },
+  {
+    "id": "u0192",
+    "kind": "prose",
+    "token": 919,
+    "text": "Tensor DMA Semantics"
+  },
+  {
+    "id": "u0193",
+    "kind": "prose",
+    "token": 922,
+    "text": "The examples below use four chips, two clusters, 256 slices, and a local `[B, C, D]` element shape:"
+  },
+  {
+    "id": "u0194",
+    "kind": "prose",
+    "token": 926,
+    "text": "In the tables, `in[p, k, b, c, d]` denotes the input value on source chip `p`, source cluster `k`, at local `Element` coordinate `[b, c, d]`.\nThe result is named `out`, and all rows refer to the same live slice."
+  },
+  {
+    "id": "u0195",
+    "kind": "prose",
+    "token": 929,
+    "text": "Chip Shuffle"
+  },
+  {
+    "id": "u0196",
+    "kind": "prose",
+    "token": 932,
+    "text": "`chip_shuffle(sources)` routes each target chip from the source chip at the same position in `sources`.\nThe pattern below means that target chips 0, 1, 2, and 3 read source chips 1, 2, 3, and 0 respectively.\nIt changes which chip supplies each value without changing the tensor shape."
+  },
+  {
+    "id": "u0197",
+    "kind": "prose",
+    "token": 935,
+    "text": "For either target cluster `k` and every local coordinate `[b, c, d]`:"
+  },
+  {
+    "id": "u0198",
+    "kind": "prose",
+    "token": 941,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0199",
+    "kind": "prose",
+    "token": 944,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0200",
+    "kind": "prose",
+    "token": 947,
+    "text": "Output element"
+  },
+  {
+    "id": "u0201",
+    "kind": "prose",
+    "token": 950,
+    "text": "Source chip"
+  },
+  {
+    "id": "u0202",
+    "kind": "prose",
+    "token": 953,
+    "text": "Source cluster"
+  },
+  {
+    "id": "u0203",
+    "kind": "prose",
+    "token": 956,
+    "text": "Source element"
+  },
+  {
+    "id": "u0204",
+    "kind": "prose",
+    "token": 959,
+    "text": "Output value"
+  },
+  {
+    "id": "u0205",
+    "kind": "prose",
+    "token": 1060,
+    "text": "HBM Chip Shuffle"
+  },
+  {
+    "id": "u0206",
+    "kind": "prose",
+    "token": 1063,
+    "text": "`HbmTensor::hbm_chip_shuffle` and `HbmTensorView::hbm_chip_shuffle` copy each target chip slot from the source chip selected by `sources` and return a fresh `HbmTensor` with the same `Chip` and `Element` mappings.\nThe source list follows `sources[target_chip] = source_chip` and must be a permutation of every position in `Chip`.\nInter-chip shuffles use the system-wide global chip IDs."
+  },
+  {
+    "id": "u0207",
+    "kind": "prose",
+    "token": 1066,
+    "text": "For every element coordinate `e`, the pattern `[1, 2, 3, 0]` has the following value semantics:\nHere, `in[p, e]` is the input on source chip `p`, and `out[t, e]` is the result on target chip `t`."
+  },
+  {
+    "id": "u0208",
+    "kind": "prose",
+    "token": 1072,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0209",
+    "kind": "prose",
+    "token": 1075,
+    "text": "Source chip"
+  },
+  {
+    "id": "u0210",
+    "kind": "prose",
+    "token": 1078,
+    "text": "Output value"
+  },
+  {
+    "id": "u0211",
+    "kind": "prose",
+    "token": 1131,
+    "text": "The DMA argument may be either `tdma` or `pdma` because both engines support HBM-to-HBM transfers."
+  },
+  {
+    "id": "u0212",
+    "kind": "prose",
+    "token": 1134,
+    "text": "Cluster Swap"
+  },
+  {
+    "id": "u0213",
+    "kind": "prose",
+    "token": 1137,
+    "text": "`cluster_swap()` exchanges source clusters 0 and 1 within every chip.\nIt changes which cluster supplies each value without changing the tensor shape."
+  },
+  {
+    "id": "u0214",
+    "kind": "prose",
+    "token": 1140,
+    "text": "For every target chip `p` and local coordinate `[b, c, d]`:"
+  },
+  {
+    "id": "u0215",
+    "kind": "prose",
+    "token": 1146,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0216",
+    "kind": "prose",
+    "token": 1149,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0217",
+    "kind": "prose",
+    "token": 1152,
+    "text": "Output element"
+  },
+  {
+    "id": "u0218",
+    "kind": "prose",
+    "token": 1155,
+    "text": "Source chip"
+  },
+  {
+    "id": "u0219",
+    "kind": "prose",
+    "token": 1158,
+    "text": "Source cluster"
+  },
+  {
+    "id": "u0220",
+    "kind": "prose",
+    "token": 1161,
+    "text": "Source element"
+  },
+  {
+    "id": "u0221",
+    "kind": "prose",
+    "token": 1164,
+    "text": "Output value"
+  },
+  {
+    "id": "u0222",
+    "kind": "prose",
+    "token": 1219,
+    "text": "Chip Slice"
+  },
+  {
+    "id": "u0223",
+    "kind": "prose",
+    "token": 1222,
+    "text": "`chip_slice::<Axis, Output>(indices)` selects one live `Axis` position for each target chip and declares the remaining `Element` mapping as `Output`.\nWith `[0, 1, 2, 3]`, target chip `t` keeps position `t` of `B`, and the result removes `B` from `Element`."
+  },
+  {
+    "id": "u0224",
+    "kind": "prose",
+    "token": 1225,
+    "text": "For either target cluster `k` and every result coordinate `[c, d]`:"
+  },
+  {
+    "id": "u0225",
+    "kind": "prose",
+    "token": 1231,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0226",
+    "kind": "prose",
+    "token": 1234,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0227",
+    "kind": "prose",
+    "token": 1237,
+    "text": "Output element"
+  },
+  {
+    "id": "u0228",
+    "kind": "prose",
+    "token": 1240,
+    "text": "Source chip"
+  },
+  {
+    "id": "u0229",
+    "kind": "prose",
+    "token": 1243,
+    "text": "Source cluster"
+  },
+  {
+    "id": "u0230",
+    "kind": "prose",
+    "token": 1246,
+    "text": "Source element"
+  },
+  {
+    "id": "u0231",
+    "kind": "prose",
+    "token": 1249,
+    "text": "Output value"
+  },
+  {
+    "id": "u0232",
+    "kind": "prose",
+    "token": 1350,
+    "text": "Cluster Slice"
+  },
+  {
+    "id": "u0233",
+    "kind": "prose",
+    "token": 1353,
+    "text": "`cluster_slice::<Axis, Output>(indices)` selects one live `Axis` position for each target cluster and declares the remaining `Element` mapping as `Output`.\nWith `[1, 0]`, target clusters 0 and 1 keep positions 1 and 0 of `B` respectively, and the result removes `B` from `Element`."
+  },
+  {
+    "id": "u0234",
+    "kind": "prose",
+    "token": 1356,
+    "text": "For every target chip `p` and result coordinate `[c, d]`:"
+  },
+  {
+    "id": "u0235",
+    "kind": "prose",
+    "token": 1362,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0236",
+    "kind": "prose",
+    "token": 1365,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0237",
+    "kind": "prose",
+    "token": 1368,
+    "text": "Output element"
+  },
+  {
+    "id": "u0238",
+    "kind": "prose",
+    "token": 1371,
+    "text": "Source chip"
+  },
+  {
+    "id": "u0239",
+    "kind": "prose",
+    "token": 1374,
+    "text": "Source cluster"
+  },
+  {
+    "id": "u0240",
+    "kind": "prose",
+    "token": 1377,
+    "text": "Source element"
+  },
+  {
+    "id": "u0241",
+    "kind": "prose",
+    "token": 1380,
+    "text": "Output value"
+  },
+  {
+    "id": "u0242",
+    "kind": "prose",
+    "token": 1435,
+    "text": "Combining Stages"
+  },
+  {
+    "id": "u0243",
+    "kind": "prose",
+    "token": 1438,
+    "text": "Redistribution stages follow their physical order: an optional chip shuffle, an optional cluster swap, zero or more chip slices, and then zero or more cluster slices.\nBoth terminals combine the completed plan into one DMA operation.\n`to_dm` creates a fresh destination tensor, while `to_dm_view` writes into the supplied destination view.\nCalling a slice method more than once removes multiple axes in that same DMA."
+  },
+  {
+    "id": "u0244",
+    "kind": "prose",
+    "token": 1441,
+    "text": "The fused example below produces the following placement and element-coordinate mapping for every remaining `d`:"
+  },
+  {
+    "id": "u0245",
+    "kind": "prose",
+    "token": 1447,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0246",
+    "kind": "prose",
+    "token": 1450,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0247",
+    "kind": "prose",
+    "token": 1453,
+    "text": "Output element"
+  },
+  {
+    "id": "u0248",
+    "kind": "prose",
+    "token": 1456,
+    "text": "Source chip"
+  },
+  {
+    "id": "u0249",
+    "kind": "prose",
+    "token": 1459,
+    "text": "Source cluster"
+  },
+  {
+    "id": "u0250",
+    "kind": "prose",
+    "token": 1462,
+    "text": "Source element"
+  },
+  {
+    "id": "u0251",
+    "kind": "prose",
+    "token": 1465,
+    "text": "Output value"
+  },
+  {
+    "id": "u0252",
+    "kind": "prose",
+    "token": 1658,
+    "text": "Sub-Context Chip and Cluster Slice"
+  },
+  {
+    "id": "u0253",
+    "kind": "prose",
+    "token": 1661,
+    "text": "`asymmetric_chip_slice` and `asymmetric_cluster_slice` operate directly on `DmTensor` through the sub-context:"
+  },
+  {
+    "id": "u0254",
+    "kind": "prose",
+    "token": 1665,
+    "text": "Each operation selects one axis through parallel copy without moving data along the `Chip` or `Cluster` dimensions."
+  },
+  {
+    "id": "u0255",
+    "kind": "prose",
+    "token": 1668,
+    "text": "Redistribution Constraints"
+  },
+  {
+    "id": "u0256",
+    "kind": "prose",
+    "token": 1671,
+    "text": "`cluster_swap()` requires exactly two clusters.\nThe source chip list must be a permutation, and every live target must read a live source chip or cluster index.\nSlice arrays must have one live index per target chip or cluster.\nA fused plan must select one source chip per destination chip and one source cluster per destination cluster, matching the available synchronization protocols.\n`chip_slice::<m![B, C]>` treats `m![B, C]` as one contiguous mapping with one linear index.\nTo slice separately located axes, chain one method call per axis."
+  },
+  {
+    "id": "u0257",
+    "kind": "prose",
+    "token": 1674,
+    "text": "Performance"
+  },
+  {
+    "id": "u0258",
+    "kind": "prose",
+    "token": 1677,
+    "text": "SRAM redistribution follows the DMA [alignment and packet constraints](#constraints).\nAs a rule of thumb, choose an `Element` mapping with aligned DM writes and long contiguous runs so the compiler can form efficient packets.\nUse a sub-context slice for one local axis, or use the `DmTensorView` chain when a slice must be fused with a shuffle or when several axes must be sliced in one DMA."
+  },
+  {
+    "id": "u0259",
+    "kind": "prose",
+    "token": 1680,
+    "text": "Gather and Scatter"
+  },
+  {
+    "id": "u0260",
+    "kind": "prose",
+    "token": 1683,
+    "text": "Gather reads HBM values at positions named by an index list; scatter writes HBM values at those positions.\nIn the examples below, `I` is the indexed axis, `D` is the domain the index is defined over, and `P` is the payload.\nThe lowercase `d` and `p` are positions on `D` and `P`; `position[d]` is a position on `I`."
+  },
+  {
+    "id": "u0261",
+    "kind": "prose",
+    "token": 1686,
+    "text": "Each row lists the operands in the order the chain takes them, starting at the HBM tensor the index addresses."
+  },
+  {
+    "id": "u0262",
+    "kind": "prose",
+    "token": 1692,
+    "text": "Operation"
+  },
+  {
+    "id": "u0263",
+    "kind": "prose",
+    "token": 1695,
+    "text": "Operands"
+  },
+  {
+    "id": "u0264",
+    "kind": "prose",
+    "token": 1698,
+    "text": "Meaning"
+  },
+  {
+    "id": "u0265",
+    "kind": "prose",
+    "token": 1705,
+    "text": "Gather"
+  },
+  {
+    "id": "u0266",
+    "kind": "prose",
+    "token": 1708,
+    "text": "table `[I,P]`, index `[D]`, result `[D,P]`"
+  },
+  {
+    "id": "u0267",
+    "kind": "prose",
+    "token": 1711,
+    "text": "`result[d, p] = table[position[d], p]`, `position[d]` in `0..I::SIZE`"
+  },
+  {
+    "id": "u0268",
+    "kind": "prose",
+    "token": 1716,
+    "text": "Scatter"
+  },
+  {
+    "id": "u0269",
+    "kind": "prose",
+    "token": 1719,
+    "text": "destination `[I,P]`, index `[D]`, updates `[D,P]`"
+  },
+  {
+    "id": "u0270",
+    "kind": "prose",
+    "token": 1722,
+    "text": "`destination[position[d], p] = updates[d, p]`, `position[d]` in `0..I::SIZE`"
+  },
+  {
+    "id": "u0271",
+    "kind": "prose",
+    "token": 1728,
+    "text": "`by_positions` takes that position directly from an SPM index.\n`by_byte_offsets` takes an HBM index whose value is the position multiplied by the byte stride of `I`.\nThat offset is relative to the table or destination HBM view's base, and must be a whole multiple of the stride.\nFor `[I,P]` with `bf16` elements and `P = 128`, the stride is 256 bytes, so position 3 is byte offset 768."
+  },
+  {
+    "id": "u0272",
+    "kind": "prose",
+    "token": 1731,
+    "text": "An index is a map `position: D -> I`, and the type parameters name its parts.\nThe domain is what it is defined over, `IndexedAxis` is where its values land, and `Payload` rides along a position it does not touch."
+  },
+  {
+    "id": "u0273",
+    "kind": "prose",
+    "token": 1734,
+    "text": "On a gather, `IndexedAxis` names `I` in the table and `Payload` names `P`; `D` is the index's own mapping, so nothing declares it.\nOn a scatter, the same two are declared on the destination, where `IndexedAxis` names `I`; `Domain` is the index's own mapping there too.\nBoth chains start at the tensor the index addresses, so the index has its unit before any value is supplied: a gather reads the table, a scatter writes the destination."
+  },
+  {
+    "id": "u0274",
+    "kind": "prose",
+    "token": 1740,
+    "text": "Operation"
+  },
+  {
+    "id": "u0275",
+    "kind": "prose",
+    "token": 1743,
+    "text": "Index source"
+  },
+  {
+    "id": "u0276",
+    "kind": "prose",
+    "token": 1746,
+    "text": "API chain"
+  },
+  {
+    "id": "u0277",
+    "kind": "prose",
+    "token": 1753,
+    "text": "Gather"
+  },
+  {
+    "id": "u0278",
+    "kind": "prose",
+    "token": 1756,
+    "text": "HBM byte offsets"
+  },
+  {
+    "id": "u0279",
+    "kind": "prose",
+    "token": 1764,
+    "text": "Gather"
+  },
+  {
+    "id": "u0280",
+    "kind": "prose",
+    "token": 1767,
+    "text": "SPM positions"
+  },
+  {
+    "id": "u0281",
+    "kind": "prose",
+    "token": 1775,
+    "text": "Scatter"
+  },
+  {
+    "id": "u0282",
+    "kind": "prose",
+    "token": 1778,
+    "text": "HBM byte offsets"
+  },
+  {
+    "id": "u0283",
+    "kind": "prose",
+    "token": 1786,
+    "text": "Scatter"
+  },
+  {
+    "id": "u0284",
+    "kind": "prose",
+    "token": 1789,
+    "text": "SPM positions"
+  },
+  {
+    "id": "u0285",
+    "kind": "prose",
+    "token": 1798,
+    "text": "The following calls cover both operations with both index sources."
+  },
+  {
+    "id": "u0286",
+    "kind": "prose",
+    "token": 1802,
+    "text": "Mapping requirements"
+  },
+  {
+    "id": "u0287",
+    "kind": "prose",
+    "token": 1805,
+    "text": "One rule separates the three.\n`IndexedAxis` has to be one consecutive region; `Domain` and `Payload` do not, and the two may be interleaved with each other."
+  },
+  {
+    "id": "u0288",
+    "kind": "prose",
+    "token": 1808,
+    "text": "`IndexedAxis` names one consecutive region.\nThe region may be several declared axes: `m![I]` in the gather example, `m![I, F]` in the scatter.\nRemoving the region leaves `Payload`, padding included.\nAn index value for `m![I, F]` runs over `0..(I::SIZE * F::SIZE)`.\nOne step spans one payload.\nThis one is a hardware rule: a descriptor advances the indexed axis by a single stride, so a region it holds in pieces has no stride to advance by."
+  },
+  {
+    "id": "u0289",
+    "kind": "prose",
+    "token": 1811,
+    "text": "`Domain` and `Payload` carry no such rule.\nThe sequencer places them in the tensor the values come from or go to.\nEither may be several runs with the other between them, and either may reach across that tensor's `Cluster`, `Slice` and `Element`."
+  },
+  {
+    "id": "u0290",
+    "kind": "prose",
+    "token": 1814,
+    "text": "Neither list may have padding: every domain position holds a value."
+  },
+  {
+    "id": "u0291",
+    "kind": "prose",
+    "token": 1817,
+    "text": "A gather's domain, from an HBM index"
+  },
+  {
+    "id": "u0292",
+    "kind": "prose",
+    "token": 1820,
+    "text": "The index is `HbmTensor<i32, Chip, Domain>`, which has no `Cluster` or `Slice`.\nIts element mapping is the domain.\n`by_byte_offsets` infers `Domain` from the index and also accepts it as an annotation.\nThe annotation names the index's own type, so it must be spelled the way the index is."
+  },
+  {
+    "id": "u0293",
+    "kind": "prose",
+    "token": 1823,
+    "text": "A gather's domain, from an SPM index"
+  },
+  {
+    "id": "u0294",
+    "kind": "prose",
+    "token": 1826,
+    "text": "The index is `SpmTensor<i32, Chip, IdxCluster, IdxPe, IdxElement>`.\nTwo of those compose the domain.\n`IdxCluster` contributes its named axes, in front.\n`IdxElement` contributes the list one cluster holds.\n`IdxPe` never contributes, because the list has to sit on PE 0, spelled `m![1 # 4]`."
+  },
+  {
+    "id": "u0295",
+    "kind": "prose",
+    "token": 1829,
+    "text": "No single type carries the result.\n`by_positions::<Domain>` declares it, and the declaration is checked."
+  },
+  {
+    "id": "u0296",
+    "kind": "prose",
+    "token": 1832,
+    "text": "`gather_spm` above reads `SpmTensor<i32, m![1], m![CL], m![1 # 4], m![D]>`.\n`IdxCluster = m![CL]` contributes `CL`, `IdxPe = m![1 # 4]` contributes nothing, and `IdxElement = m![D]` contributes the list, so the domain is `m![CL, D]`.\n`IdxCluster = m![2]` or `m![1 # 2]` names no axis; every cluster then holds the same list and the domain is `m![D]`."
+  },
+  {
+    "id": "u0297",
+    "kind": "prose",
+    "token": 1835,
+    "text": "The same domain can come from a different placement.\n`SpmTensor<i32, m![1], m![2], m![1 # 4], m![CL, D]>` broadcasts one list to every cluster and carries `CL` in its element mapping instead, and `by_positions::<m![CL, D]>` is still what names it.\nThe two differ in where the list sits, not in what the entries key."
+  },
+  {
+    "id": "u0298",
+    "kind": "prose",
+    "token": 1838,
+    "text": "What a gather's DM output must hold"
+  },
+  {
+    "id": "u0299",
+    "kind": "prose",
+    "token": 1841,
+    "text": "The payload comes off the table's `Element` alone, since an HBM tensor has no `Slice`.\nThe `to_dm` output is then checked over `Cluster`, `Slice` and `Element` together.\nThe output only has to hold that payload once per domain position, and may split and reorder both.\nThe example output splits `D` across `Slice = m![D / 2]` and `Element = m![D % 2, P]`."
+  },
+  {
+    "id": "u0300",
+    "kind": "prose",
+    "token": 1844,
+    "text": "What a scatter's DM updates must hold"
+  },
+  {
+    "id": "u0301",
+    "kind": "prose",
+    "token": 1847,
+    "text": "The updates hold the same place a gather's output does, under the same rule.\n`Payload` is declared, and the updates are checked over `Cluster`, `Slice` and `Element` together.\nThey only have to hold that payload once per domain position, and may split and reorder both."
+  },
+  {
+    "id": "u0302",
+    "kind": "prose",
+    "token": 1850,
+    "text": "`scatter_split_domain` above holds its updates as `DmTensor<bf16, m![1], m![1 # 2], m![D / 2], m![F, D % 2, P]>`.\nIts `Slice` is `m![D / 2]` and its `Element` is `m![F, D % 2, P]`, so the domain `m![D]` is the first and third runs while the payload `m![F, P]` is the second and fourth.\nA domain may also reach into the DM tensor's `Cluster`.\n`DmTensor<bf16, m![1], m![CL], m![D / 2], m![D % 2, P]>` carries the domain `m![CL, D]` across all three placement mappings, one index list per cluster."
+  },
+  {
+    "id": "u0303",
+    "kind": "prose",
+    "token": 1853,
+    "text": "Sparse gather"
+  },
+  {
+    "id": "u0304",
+    "kind": "prose",
+    "token": 1856,
+    "text": "A byte-offset gather can call `sparse_prefix(valid_length)` to execute a runtime prefix of its index list.\nThe prefix counts positions in `Domain`, the index tensor's own mapping.\nIf `Domain` has several axes, they are flattened in the original index mapping order into one list whose entries `valid_length` counts.\n`IndexedAxis` names the table region addressed by each index value; `valid_length` does not restrict the positions those values may address.\nThe index list's full length is its capacity.\nThe runtime `i32` length is clamped to `0..=capacity`; call the clamped length `requested`."
+  },
+  {
+    "id": "u0305",
+    "kind": "prose",
+    "token": 1859,
+    "text": "The device stops at a coarser boundary than `requested`, so it executes at least that many positions and often more.\nHow much more depends on the skip unit lowering finds for the placement, which the kernel cannot predict; compiling the kernel is what tells you."
+  },
+  {
+    "id": "u0306",
+    "kind": "prose",
+    "token": 1862,
+    "text": "Two rules follow, and neither needs that number.\nEvery position in the index list must hold a valid byte offset, `requested` or not, because the device may read any of them.\nResults are defined up to `requested`; past it they are unspecified until the executed length, and zero after that.\nA `requested` of zero executes nothing and reads no index."
+  },
+  {
+    "id": "u0307",
+    "kind": "prose",
+    "token": 1865,
+    "text": "Here `IndexedAxis` is `m![I]` and `Domain` is `m![D]`: the host requests the first five index entries along `D`, each carrying the full payload `m![P]`, but initializes all 512 index positions.\nZero is a valid byte offset when the table has a first row."
+  },
+  {
+    "id": "u0308",
+    "kind": "prose",
+    "token": 1869,
+    "text": "The device shortens the index list along one axis of the placement, so the `to_dm` placement decides how coarse the stepping is.\nThe runtime length steps over the outermost of the consecutive axes the index list occupies.\nThe axes below the stepped one ride along whole, and their size is the skip unit."
+  },
+  {
+    "id": "u0309",
+    "kind": "prose",
+    "token": 1872,
+    "text": "A digit in `Slice` does not keep its size, though.\nDMA compilation cuts a slice axis into DMN units, which splits the index list across descriptors and coarsens the unit."
+  },
+  {
+    "id": "u0310",
+    "kind": "prose",
+    "token": 1875,
+    "text": "Take `A = 512` split into the digits `A / 2` and `A % 2`, over a `QP` by `QD` payload.\n`A / 2` is the outer digit, so it is the stepped axis in either placement, and the rule leaves `512 / 256 = 2` below it.\nOn the default one-chip 8PE configuration:"
+  },
+  {
+    "id": "u0311",
+    "kind": "prose",
+    "token": 1887,
+    "text": "By the rule"
+  },
+  {
+    "id": "u0312",
+    "kind": "prose",
+    "token": 1890,
+    "text": "Compiled"
+  },
+  {
+    "id": "u0313",
+    "kind": "prose",
+    "token": 1926,
+    "text": "Only the placement that puts `A / 2` in `Slice` pays the cut, because only there does the stepped axis get split."
+  },
+  {
+    "id": "u0314",
+    "kind": "prose",
+    "token": 1929,
+    "text": "The compiled unit is not reported today.\nA build that succeeds does not say which unit it got, and the tooling to surface it is still to come."
+  },
+  {
+    "id": "u0315",
+    "kind": "prose",
+    "token": 1932,
+    "text": "PCIe DMA"
+  },
+  {
+    "id": "u0316",
+    "kind": "prose",
+    "token": 1935,
+    "text": "PCIe DMA (`Device::pdma`) moves tensors between host system memory and device HBM.\nIt is a separate physical engine from the on-chip Tensor DMA.\nPCIe DMA handles only host ↔ HBM, while Tensor DMA handles all on-chip transfers."
+  },
+  {
+    "id": "u0317",
+    "kind": "prose",
+    "token": 1938,
+    "text": "The kernel writer calls `.to_hbm()` on a `HostTensor` (host → device) or `.to_host()` on an `HbmTensor` (device → host).\nBoth are async operations."
+  },
+  {
+    "id": "u0318",
+    "kind": "comment",
+    "token": 1940,
+    "offset": 217,
+    "length": 43,
+    "text": "// Host → HBM (allocator-assigned address)\n"
+  },
+  {
+    "id": "u0319",
+    "kind": "comment",
+    "token": 1940,
+    "offset": 346,
+    "length": 38,
+    "text": "// HBM → host (back to system memory)\n"
+  },
+  {
+    "id": "u0320",
+    "kind": "prose",
+    "token": 1942,
+    "text": "`HostTensor` carries only an `Element` mapping (host memory has no chip/cluster/slice partitioning), while the destination `HbmTensor` adds the `Chip` axis to distribute across chips.\nThe destination element layout in HBM may differ from the host layout, since `to_hbm` accepts new `Chip` and `Element` type parameters."
+  },
+  {
+    "id": "u0321",
+    "kind": "prose",
+    "token": 1945,
+    "text": "PCIe DMA bandwidth is 30 B/cycle, an order of magnitude slower than on-chip Tensor DMA (256 B/cycle).\nAlgorithms should minimize host ↔ device traffic, uploading data once and reusing it across many on-chip operations."
+  }
+]

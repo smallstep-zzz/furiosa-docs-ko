@@ -1,0 +1,210 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Setup and Tooling"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Installation and First Program"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "This chapter owns the installation and first-project command path.\nRun it before reading the kernel patterns."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Host Requirements"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "The host must be `x86_64-unknown-linux-gnu` on Ubuntu 22.04 or newer, since the published binaries need `GLIBC_2.34` and 20.04 ships 2.31.\nOn macOS or arm64, run everything inside a `linux/amd64` container."
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 15,
+    "offset": 48,
+    "length": 14,
+    "text": "# every build\n"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 15,
+    "offset": 110,
+    "length": 45,
+    "text": "# only for the NPU build (cargo furiosa-opt)\n"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 17,
+    "text": "Install these before the toolchain below, which does not cover them: rustc links host binaries with the system `cc`, and `furiosa-opt-std`'s build script loads `libclang.so`."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 20,
+    "text": "Install and Run the Starter"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 23,
+    "text": "The Furiosa optimizer is a rustc driver and is ABI-locked to the pinned nightly.\nInstall the toolchain and host tools, create the standard starter, then run it on the CPU and\ncompile its kernels:"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 27,
+    "text": "`rust-toolchain.toml` pins the same channel in the generated project.\nCargo activates it automatically in that directory."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 30,
+    "text": "A plain `cargo` invocation builds and runs on the CPU. `cargo furiosa-opt` builds for the NPU and\npre-compiles the kernels."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 33,
+    "text": "NPU Requirements"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 36,
+    "text": "The NPU build also requires the Furiosa SDK and a physical NPU.\nIt dispatches through the SDK kernel driver and PE runtime (`furiosa-driver-rngd`, `furiosa-smi`, and related components).\nSee the [SDK documentation](https://developer.furiosa.ai/latest/en/)."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 39,
+    "text": "The CPU build does not require the SDK; it runs host-side with no NPU dependency."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 42,
+    "text": "The Generated Project"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 45,
+    "text": "The command path scaffolds the `base-template` starter.\nThe template is the standard executable example, and continuous integration (CI) generates the current source under an arbitrary name before testing it on the CPU.\nRead [Tensor and Contraction](./tensor-and-contraction.md) and [Kernel Validation](./kernel-validation.md) before adapting the generated template.\nUse the Kernel Authoring Skill when an agent implements the change."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 48,
+    "text": "Template Layout"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 51,
+    "text": "The generated `Cargo.toml` declares `[package.metadata.furiosa-opt]`, which marks the package for kernel compilation.\n`src/kernel/` contains each `#[device]` function and `src/kernel/mod.rs` re-exports those kernel modules.\nDirect `src/*.rs` files are host binaries that call `launch(kernel, ...)` and contain their host-oracle tests.\nEach host binary has an explicit `[[bin]]` entry with `path = \"src/<name>.rs\"` in `Cargo.toml`.\nDo not move host binaries into `src/bin/`, `examples/`, or `tests/`, because the compiler plugin scans cargo targets rooted at `src/`."
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 55,
+    "text": "Add a Kernel"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 60,
+    "text": "Add `src/kernel/<name>_kernel.rs` with a `#[device(...)] pub fn <name>_kernel(...)` function."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 65,
+    "text": "Re-export it from `src/kernel/mod.rs`."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 70,
+    "text": "Add `src/<name>.rs` with the host program, host oracle, and a call to `launch(<name>_kernel, ...)`."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 75,
+    "text": "Register the host program as a `[[bin]]` target in `Cargo.toml`."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 80,
+    "text": "Run the kernel with the Kernel Optimizer command reference."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 85,
+    "text": "Development Tools"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 88,
+    "text": "The Furiosa IR Optimizer complements the [Furiosa SDK compiler](https://developer.furiosa.ai/latest/en/overview/software_stack.html#furiosa-compiler).\nIt gives programmers fine-grained control when they write vISA by hand or generate it from another compiler."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 91,
+    "text": "Kernel Optimizer"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 94,
+    "text": "The [Kernel Optimizer tool reference](../tools/kernel-optimizer.md) owns CLI syntax and compilation behavior."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 97,
+    "text": "Language Server"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 100,
+    "text": "`furiosa-rust-analyzer-proxy` provides standard Rust IDE features with readable Furiosa mapping expressions.\nIt renders verbose mapping types such as `Stride<Symbol<A>, 8>` as `m![A / 8]`.\nSee the [Language Server tool reference](../tools/language-server.md) for installation and configuration."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 103,
+    "text": "Schedule Viewer"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 106,
+    "text": "The Schedule Viewer visualizes the execution timeline to help identify performance bottlenecks.\nUse `furiosa-opt` to export a schedule JSON file, then open it with `furiosa-schedule-viewer`."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 109,
+    "text": "For installation and usage, see the [Schedule Viewer tool reference](../tools/schedule-viewer.md)."
+  }
+]

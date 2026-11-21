@@ -1,0 +1,214 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "furiosa-opt-rt"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Runs compiled `#[device]` functions on Furiosa NPUs.\n`furiosa-opt-std` calls it for you; use it directly to drive images from your own host code."
+  },
+  {
+    "id": "u0003",
+    "kind": "comment",
+    "token": 6,
+    "offset": 405,
+    "length": 65,
+    "text": "// SAFETY: the entry holds the compiler's image of its function.\n"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 8,
+    "text": "Guarantees"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "**Submitted work runs to completion.** Dropping or forgetting the future of a launch or a transfer\ncancels nothing; its memory stays held until the device answers."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 18,
+    "text": "**Conflicting work waits or is refused, never races.** A launch that needs bytes other work holds\nfails with `Error::Busy`; a transfer waits for the work admitted before it on its bytes. A launch\nis admitted when it is called, a transfer when it is first polled. Launches on one device run in\nsubmission order."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 23,
+    "text": "**A device failure is sticky.** Once submitted work fails on the device, the device refuses all\nlater work with that error, and every allocation the failed work could have written is\n`Error::Poisoned`. A failure answer does not say whether device code ran, so even a refused\nlaunch counts. Work refused before it is submitted, such as `Error::Busy`, leaves the device as\nit was."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 28,
+    "text": "**Launching allocates nothing on the host.** A model step is hundreds of launches of a few\nmicroseconds each, so the runtime's cost per launch is the latency floor."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 33,
+    "text": "Layers"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 36,
+    "text": "Each layer talks only to its neighbours, and a name means the same thing on the host and in the\nfirmware."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 42,
+    "text": "Layer"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 45,
+    "text": "Contract"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 48,
+    "text": "Host"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 51,
+    "text": "Firmware"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 58,
+    "text": "Program"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 61,
+    "text": "`#[device]` fn, `launch(f, args)`"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 72,
+    "text": "Image"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 75,
+    "text": "compiler image, registry entry"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 86,
+    "text": "Runtime"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 92,
+    "text": "this crate"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 100,
+    "text": "Application"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 103,
+    "text": "calls and their answers"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 114,
+    "text": "Mailbox"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 117,
+    "text": "matches each answer to its call"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 128,
+    "text": "Message"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 131,
+    "text": "`Request`, `Answer`, tagged options"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 142,
+    "text": "Frame"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 145,
+    "text": "header and words; its revision"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 156,
+    "text": "Link"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 159,
+    "text": "rings and doorbells"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 170,
+    "text": "Device ABI"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 173,
+    "text": "executable, bootloader, ring layout"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 185,
+    "text": "The firmware ships as a prebuilt image this crate embeds; a signed bootloader verifies and starts\nit on each PE cluster."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 188,
+    "text": "Kernel driver"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 191,
+    "text": "Transfers of pinned memory mapped to a device, and DMA issued by device code, need a kernel driver\nthat reserves PDMA channels for the firmware. On a driver without that support the device still\nopens: every host transfer takes the driver's own channels, and a launch that needs firmware DMA\nfails with `Error::Unsupported`."
+  }
+]

@@ -1,0 +1,2314 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Intra-Slice Chain"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Intra-Slice Chain performs elementwise, binary, and intra-slice reduce operations on each slice's data independently.\nIt handles post-contraction processing such as activation and normalization.\nFor example, computing $\\operatorname{sigmoid}(XW + b)$ runs $XW$ on the [Contraction Engine](../contraction-engine/index.md), and the addition plus sigmoid activation in the Intra-Slice Chain."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "The example below applies a fixed-point bias, runs sigmoid on the float path (narrowing to 4-way and widening back), and finishes with a ReLU clip.\nIt computes $output[a, b] = \\max(\\operatorname{sigmoid}(input[a, b] + 100), 0)$."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 306,
+    "length": 15,
+    "text": "// input + 100\n"
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 12,
+    "offset": 367,
+    "length": 43,
+    "text": "// i32 → f32 (fixed-point, int_width = 31)\n"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 12,
+    "offset": 440,
+    "length": 34,
+    "text": "// Way8 → Way4 for the float path\n"
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 12,
+    "offset": 521,
+    "length": 24,
+    "text": "// sigmoid(input + 100)\n"
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 12,
+    "offset": 590,
+    "length": 15,
+    "text": "// Way4 → Way8\n"
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 12,
+    "offset": 693,
+    "length": 32,
+    "text": "// max(sigmoid(input + 100), 0)\n"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 14,
+    "text": "Pipeline"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 17,
+    "text": "The chain starts (as shown above) with `vector_intra_slice_tag()` (right after [`vector_init()`](./index.md#interface) or on the inter-slice reducer's output), or with `vector_intra_slice_unzip()` directly after `vector_init()` for [Pair Mode](#pair-mode) (see below)."
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 19,
+    "offset": 6,
+    "length": 51,
+    "text": "primitive(VectorInitTensor::vector_intra_slice_tag)"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 19,
+    "offset": 251,
+    "length": 53,
+    "text": "primitive(VectorInitTensor::vector_intra_slice_unzip)"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 21,
+    "text": "After entry, the chain steps through the pipeline stages below in a fixed order; software chains the relevant ones and skips the rest, as the example skips `Logic`, `FpDiv`, and `Filter`.\nEach row lists the stage's position in the chain (`#`), its name (`Stage`), the API method that triggers it (`Method`), the way it runs in (`Way`, either 8 or 4 elements per cycle), and whether it accepts an operand (`Operand`).\nThe type system enforces every stage transition at compile time, so methods become callable only after the preceding chain reaches a compatible state.\nPer-stage detail is in [Stages](#stages) below."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 30,
+    "text": "Stage"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 33,
+    "text": "Method"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 36,
+    "text": "Way"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 39,
+    "text": "Operand"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 42,
+    "text": "→ Inter-Slice Reducer"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 52,
+    "text": "Entry"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 58,
+    "text": "Way8"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 72,
+    "text": "Logic"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 78,
+    "text": "Way8"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 81,
+    "text": "yes"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 84,
+    "text": "yes"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 92,
+    "text": "Fxp"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 98,
+    "text": "Way8"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 101,
+    "text": "yes"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 104,
+    "text": "yes"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 112,
+    "text": "FxpToFp"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 118,
+    "text": "Way8"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 124,
+    "text": "yes"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 132,
+    "text": "Narrow"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 138,
+    "text": "Way8 → Way4"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 152,
+    "text": "Float"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 158,
+    "text": "Way4"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 161,
+    "text": "yes"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 172,
+    "text": "IntraSliceReduce"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 178,
+    "text": "Way4"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 192,
+    "text": "FpDiv"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 198,
+    "text": "Way4"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 201,
+    "text": "yes"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 212,
+    "text": "Widen"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 218,
+    "text": "Way4 → Way8"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 224,
+    "text": "yes"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 232,
+    "text": "FpToFxp"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 238,
+    "text": "Way8"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 244,
+    "text": "yes"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 252,
+    "text": "Clip"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 258,
+    "text": "Way8"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 261,
+    "text": "yes"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 264,
+    "text": "yes"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 272,
+    "text": "Filter"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 278,
+    "text": "Way8"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 290,
+    "text": "`vector_reinterpret()` is deliberately absent from the table: it occupies no stage and can sit between any two of them (see [Reinterpret](#reinterpret))."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 293,
+    "text": "Stages run either 8-way (8 elements per cycle) or 4-way (4 elements per cycle).\nThe floating-point cluster runs 4-way to amortize its half-throughput ALUs against the rest of the chain.\nA chain that uses the float path therefore enters 8-way, calls `Narrow` (`vector_narrow_split` or `vector_narrow_trim`) before the float stages, and calls `Widen` (`vector_widen_concat` or `vector_widen_pad`) afterward to return to 8-way.\nThe example does exactly this: `vector_narrow_trim` then `vector_fp_unary(Sigmoid)` then `vector_widen_pad`."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 296,
+    "text": "<a id=\"transitioning-to-the-inter-slice-reducer\"></a>"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 299,
+    "text": "The chain exits via `vector_final()` (as in the example) or `vector_inter_slice_reduce()` (handing off to the [Inter-Slice Reducer](./inter-slice-reducer.md)).\nBoth exits require 8-way, so any active 4-way stage must pass through `Widen` first."
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 302,
+    "text": "Operands"
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 305,
+    "text": "Binary and ternary ops have two slot kinds: a **stream** (the running tensor, i.e., the `self` of the method chain, fixed by the chain) and one or two **operands** (the extra inputs).\nEach operand comes from one of three sources."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 311,
+    "text": "Source"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 314,
+    "text": "Example"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 317,
+    "text": "Description"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 324,
+    "text": "Constant"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 330,
+    "text": "Scalar broadcast to all elements"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 335,
+    "text": "VRF tensor"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 341,
+    "text": "Pre-loaded via `.to_vrf()` before entering the Vector Engine"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 346,
+    "text": "Stash"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 352,
+    "text": "Snapshot of an earlier chain step, described below"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 358,
+    "text": "Ternary ops (`FmaF`) take a pair `(operand0, operand1)`."
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 361,
+    "text": "A VRF operand is read per slice by an indexer, which puts three rules on it."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 364,
+    "text": "First, its `Chip` / `Cluster` / `Slice` are the stream's own: at slice `s` the op reads what slice `s` holds, so an operand under a different partition is a compile error instead of a silent read of another slice's data.\n[`VrfTensor::reshape`](../register-files.md#vector-register-file) restates one under the stream's partition when the two describe the same slices, e.g. an operand replicated under an anonymous `m![256]` feeding a stream partitioned by a named axis."
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 367,
+    "text": "Second, one access (the `Packet`: 8 lanes in 8-way, 4 in 4-way) is one indexer step, and the indexer offers just two read options.\n**Broadcast** feeds every lane from one address; **contiguous** reads `Packet` consecutive `Element` cells.\nSo the packet axes must be the operand's innermost, contiguous ones, or absent from it entirely; a packet that walks an outer axis of the operand, or mixes broadcast and live lanes inside one access, has no encoding and is rejected."
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 370,
+    "text": "Third, the two directions of an axis mismatch are not the same.\nAn axis the operand has and the stream does not is refused, with `the stream leaves operand axes unmatched`, because the cells it indexes would never be read.\nAn axis the stream has and the operand does not is a broadcast, which is how one operand feeds every row of the stream."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 373,
+    "text": "The same op method picks up different sources by the argument type:"
+  },
+  {
+    "id": "u0077",
+    "kind": "comment",
+    "token": 375,
+    "offset": 46,
+    "length": 25,
+    "text": "// operand from constant\n"
+  },
+  {
+    "id": "u0078",
+    "kind": "comment",
+    "token": 375,
+    "offset": 117,
+    "length": 27,
+    "text": "// operand from VRF tensor\n"
+  },
+  {
+    "id": "u0079",
+    "kind": "comment",
+    "token": 375,
+    "offset": 190,
+    "length": 36,
+    "text": "// operand from stash (set earlier)\n"
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 377,
+    "text": "The `Stash` source comes from `vector_stash()`, which snapshots the running tensor so a later binary or ternary op can read it back as the `Stash` operand.\nThe typical use is a residual or skip-connection like `max(f(x), x)`, where the original `x` must survive across intermediate stages.\nAlthough stash is presented as a separate operand source, it is backed by the VRF: part of the current running tensor is stored in the VRF and read back from there.\nWhenever a Tensor Unit invocation uses stash, the compiler conservatively reserves 1,024 B of VRF capacity per slice for it, regardless of the actual amount of data stashed.\nIf that invocation also reads a pre-loaded VRF tensor as an RHS operand, size the operand with this reservation in mind: stash and the RHS share the 8 KiB VRF, so at most 7 KiB per slice remains for the RHS.\nCall `vector_stash()` at any `Stashable` stage (`Branch`, `Logic`, `Fxp`, `Narrow`, `Fp`, `FpDiv`, `Clip`); the snapshot stays live until the Tensor Unit invocation ends and feeds any later binary or ternary call that takes `Stash`.\nThe slot is single-use (a second `vector_stash()` is a compile-time error) and typed, so an `f32` stash only feeds `f32` ops: a conversion or reinterpret between the write and the read has to be undone first.\nThe stash is also read-once: it feeds exactly one later op (reading it moves the slot past `Occupied`, so a second `Stash` read is a compile-time error).\nA value that must be read more than once is not a stash: put it in a read-many VRF, passed as `&vrf`.\nThe mapping follows the running tensor, so a stash taken before `Narrow` is still usable after `Widen`.\nThose seven stages are the seven chain steps that own a VRF write port, which is why `Widen` is not one of them: the operand register cannot be written from the widen's output at all.\nA value computed in the 4-way region therefore reaches the stash by widening first and stashing at a `Clip` op, which puts both the write and the read on the 8-way side.\nStash is unavailable in [Pair Mode](#pair-mode), and the `IntraFirst` transition to the [inter-slice reducer](./inter-slice-reducer.md) drops it, so anything stashed before `vector_inter_slice_reduce()` is gone afterward."
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 380,
+    "text": "An **argument mode** then picks which slots hold the stream versus the operands so the same op can compute, e.g., `stream + operand` or `operand - stream`.\nFor example, `BinaryArgMode::Mode10` swaps the slots so `SubFxp` computes `operand - stream`:"
+  },
+  {
+    "id": "u0082",
+    "kind": "comment",
+    "token": 382,
+    "offset": 70,
+    "length": 23,
+    "text": "// computes 7 - stream\n"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 384,
+    "text": "`BinaryArgMode` picks which two of a binary op's slots are stream vs operand (unary ops have no mode and always run as `op(stream)`):"
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 387,
+    "text": "<a id=\"argument-modes\"></a>"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 393,
+    "text": "BinaryArgMode"
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 396,
+    "text": "Slots"
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 399,
+    "text": "Computation"
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 409,
+    "text": "stream / stream"
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 420,
+    "text": "stream / operand"
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 423,
+    "text": "`op(stream, operand)` (default)"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 431,
+    "text": "operand / stream"
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 442,
+    "text": "operand / operand"
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 451,
+    "text": "`TernaryArgMode` does the same for ternary ops:"
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 457,
+    "text": "TernaryArgMode"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 460,
+    "text": "Slots"
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 463,
+    "text": "Computation"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 473,
+    "text": "stream / operand0 / operand1"
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 476,
+    "text": "`op(stream, operand0, operand1)` (default)"
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 484,
+    "text": "stream / stream / operand1"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 495,
+    "text": "operand0 / stream / operand1"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 506,
+    "text": "operand0 / operand0 / operand1"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 517,
+    "text": "stream / operand1 / stream"
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 528,
+    "text": "stream / operand1 / operand0"
+  },
+  {
+    "id": "u0104",
+    "kind": "prose",
+    "token": 539,
+    "text": "operand0 / operand1 / stream"
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 548,
+    "text": "Pair Mode"
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 551,
+    "text": "Pair mode runs the chain on a tensor whose elements split into two interleaved groups, so an op can relate the two groups (e.g., pair-wise add, asymmetric scale).\nEntry is `vector_intra_slice_unzip()` directly after `vector_init()`, applied to a collected tensor that carries a 2-way grouping axis.\nStarting the chain with `vector_intra_slice_unzip()` precludes the [Filter](#filter) stage downstream.\nUnder the hood, `vector_intra_slice_unzip()` derives each element's `GroupId` from its position along the 2-way grouping axis, driving the branch unit's count augmenter rather than any `TagMode`.\nThe tag the chain was started with is untouched, which is why this is the supported route to a group split and `TagMode::AxisToggle` is not."
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 554,
+    "text": "The flow has four steps:"
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 559,
+    "text": "`vector_intra_slice_unzip()` splits the input into two parallel streams (group 0 and group 1)."
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 564,
+    "text": "The chain runs through stages with both groups in lock-step (the **paired** phase)."
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 569,
+    "text": "A `_zip` op fuses the two streams back into one (the **merged** phase)."
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 574,
+    "text": "The merged stream continues to `vector_final()` like a normal chain."
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 579,
+    "text": "Stages during the paired phase fall into two flavors:"
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 584,
+    "text": "**Common stages** (`vector_fxp_to_fp`, `vector_narrow_split`, `vector_widen_concat`, `vector_fp_to_fxp`) act on both groups uniformly.\n`vector_narrow_trim` and `vector_widen_pad` are not available on pairs; use the `_split` / `_concat` variants instead."
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 589,
+    "text": "**Per-group ops** take one argument per group:"
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 594,
+    "text": "Binary and ternary (`vector_fxp`, `vector_fp_binary`, `vector_fp_ternary`, `vector_clip`, etc.) accept `()` on a side to skip it, or different operands on each side."
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 599,
+    "text": "Unary (`vector_fp_unary`) is the exception: it takes flags `(op, group0_apply, group1_apply)` and `false` skips that group."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 606,
+    "text": "Pair mode reinterprets [`BinaryArgMode`](#argument-modes) depending on the op: per-group ops (`vector_fxp_with_mode`, `vector_fp_binary_with_mode`, etc.) apply the mode inside each group independently (`0` is that group's stream, `1` is that group's operand), while `_zip` ops (`vector_fxp_zip_with_mode`, etc.) take the two slots as the two grouped streams (`0` is Group 0's stream, `1` is Group 1's stream):"
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 615,
+    "text": "Slots"
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 618,
+    "text": "Computation"
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 628,
+    "text": "group0 / group0"
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 639,
+    "text": "group0 / group1"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 642,
+    "text": "`op(group0, group1)` (default)"
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 650,
+    "text": "group1 / group0"
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 661,
+    "text": "group1 / group1"
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 670,
+    "text": "Pair-mode constraints:"
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 675,
+    "text": "`stash()` and `filter()` are unavailable throughout pair mode (both paired and merged phases)."
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 680,
+    "text": "[`vector_intra_slice_reduce()`](./intra-slice-reduce.md) is unavailable throughout pair mode as well, before and after the `_zip`: the reducer takes no group condition."
+  },
+  {
+    "id": "u0128",
+    "kind": "prose",
+    "token": 685,
+    "text": "Before `_zip` (the paired phase), the chain cannot transition to the [inter-slice reducer](./inter-slice-reducer.md), since `vector_inter_slice_reduce()` is not available on per-group tensors.\nAfter `_zip` (the merged phase), the result is `Commitable` again and can call `vector_inter_slice_reduce()` if the current stage supports the transition."
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 690,
+    "text": "ALU usage is shared across the two groups: an ALU used in either group counts as consumed for both."
+  },
+  {
+    "id": "u0130",
+    "kind": "prose",
+    "token": 695,
+    "text": "Stages"
+  },
+  {
+    "id": "u0131",
+    "kind": "prose",
+    "token": 698,
+    "text": "Within a stage, each ALU runs at most once per Tensor Unit invocation.\nThis matters mainly in `Logic`, `Fxp`, `Fp`, and `Clip`, where multiple operators share a stage-local ALU pool.\nFor example, `tanh(sqrt(x))` cannot fit in a single Tensor Unit invocation because both `tanh` and `sqrt` consume the `FpFpu` ALU."
+  },
+  {
+    "id": "u0132",
+    "kind": "prose",
+    "token": 701,
+    "text": "Tag"
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 704,
+    "text": "The Tag stage is the chain's entry point and assigns each 32-bit element in a flit a 4-bit `Tag` (0-15), which later stages use to apply conditional operations.\nBit 3 (the MSB) is `GroupId`, used by Filter and pair mode to split elements into Group 0 / Group 1.\nBits 0..2 are general-purpose flag bits filled by comparison results."
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 707,
+    "text": "The `TagMode` selects how the 4 bits are computed for each element.\nOnly `Zero` and `Comparison` are available today. `AxisToggle` is declared but not compilable, as\nthe last column records; `ValidCount` and `Vrf` are withheld from the enum entirely until they run on\nboth paths."
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 716,
+    "text": "How each tag bit is filled"
+  },
+  {
+    "id": "u0136",
+    "kind": "prose",
+    "token": 719,
+    "text": "Status"
+  },
+  {
+    "id": "u0137",
+    "kind": "prose",
+    "token": 729,
+    "text": "All four bits are 0. Every element has tag = 0."
+  },
+  {
+    "id": "u0138",
+    "kind": "prose",
+    "token": 732,
+    "text": "Works"
+  },
+  {
+    "id": "u0139",
+    "kind": "prose",
+    "token": 740,
+    "text": "For each element `x`, bit `i` = `1` iff `cmp_i(x)` holds. Each `cmp_i` is a `Cmp<D>` carrying the boundary it compares against, typed by the stream's scalar so the boundary is checked against it: `Equal`, `Less`, `Greater`, `LessUnsigned`, `GreaterUnsigned`, `True`, `False`. The `*Unsigned` pair compares raw bit patterns."
+  },
+  {
+    "id": "u0140",
+    "kind": "prose",
+    "token": 743,
+    "text": "Works"
+  },
+  {
+    "id": "u0141",
+    "kind": "prose",
+    "token": 751,
+    "text": "Bit 3 (`GroupId`) = `axis_index % 2` along `axis`. Bits 0..2 stay 0."
+  },
+  {
+    "id": "u0142",
+    "kind": "prose",
+    "token": 754,
+    "text": "**Not compilable.** Runs on the host, but rejected with a kernel compile error when lowered. `vector_intra_slice_unzip()` is the supported way to get this grouping."
+  },
+  {
+    "id": "u0143",
+    "kind": "prose",
+    "token": 760,
+    "text": "For example, with `i32` data and `Comparison([Cmp::Less(0), Cmp::Equal(5), Cmp::Greater(100), Cmp::True])`, an element `x = 7` yields bits `0/0/0/1` (LSB first), so its tag is `0b1000 = 8`."
+  },
+  {
+    "id": "u0144",
+    "kind": "prose",
+    "token": 763,
+    "text": "Once tags are assigned, later binary and ternary ops can condition an operand on the tag, so\ndifferent elements see different values.\nThe rule is one sentence: with no condition write the operand bare, and with a condition name the\nhardware slot it drives, through `Branched`. `ve_elementwise_branched` in `furiosa-opt-examples` is a\ncompiled kernel doing exactly that -- a guarded immediate with a trailing unconditional rf read -- and\n`ve_branch_bit_order` adds three immediates and a guarded stash read. Both are read here rather than\nrestated, so an API change breaks them instead of leaving prose behind."
+  },
+  {
+    "id": "u0145",
+    "kind": "prose",
+    "token": 766,
+    "text": "A `TagGuard` is `TagGuard::all()`, `TagGuard::group(id)` for one group, or `matches`/`not_matches` of a\n`[BitReq; 4]` pattern written LSB first, one `BitReq` per tag bit: `One` where the bit must be 1,\n`Zero` where it must be 0, `Ignore` where it does not matter. The requirement is on the bit's value,\nwhatever the tag mode filled it from."
+  },
+  {
+    "id": "u0146",
+    "kind": "prose",
+    "token": 769,
+    "text": "A pass has four operand slots: three immediate registers and the register-file port, which reads either\na VRF register or the stash.\nA conditional operand says which *kind* of slot it drives — `Branched::imm` for an immediate,\n`Branched::rf` for the port — and gets back a builder offering only what may still follow.\n`imm` may be called three times and `rf` once, last; a fourth `imm`, or an `imm` after `rf`, does not\ncompile."
+  },
+  {
+    "id": "u0147",
+    "kind": "prose",
+    "token": 772,
+    "text": "The kernel does not pick *which* immediate register: `imm` takes the next one, and which physical\nregister a value ends up in is command generation's choice.\nWhat is preserved is **call order** — the slots reach the hardware in the order they were filled, and\nthat order is match priority, so an element takes the first slot whose guard it satisfies and an\nunconditional slot is the pass's `else` with nothing after it."
+  },
+  {
+    "id": "u0148",
+    "kind": "prose",
+    "token": 775,
+    "text": "Two guards are rejected outright, because a slot carrying one is filled and inert while a pass has only\nfour: `TagGuard::not_matches([Ignore, Ignore, Ignore, Ignore])`, which no execution id satisfies, and any slot placed\nafter an unconditional one. `TagGuard::matches([Ignore, Ignore, Ignore, Ignore])` is accepted and stored as\n`TagGuard::all()`, the same predicate spelled shorter."
+  },
+  {
+    "id": "u0149",
+    "kind": "prose",
+    "token": 778,
+    "text": "Helpers that build a layout and hand it back are ordinary functions, so a kernel library can wrap\nwhatever combinations it uses often.\nTwo things such a helper cannot do, both of which the `operand` module documents in full: it cannot\nintroduce a *new* operand type (an operand carries a claim about what it does to the stash, so the\ntraits that say so are closed), and it cannot fill a slot conditionally, because how many slots are\nspoken for is part of the builder's type and the two arms of an `if` would disagree.\nVary the payload or the guard instead of the slot count, or branch around the whole op."
+  },
+  {
+    "id": "u0150",
+    "kind": "prose",
+    "token": 781,
+    "text": "Logic Cluster"
+  },
+  {
+    "id": "u0151",
+    "kind": "prose",
+    "token": 784,
+    "text": "The Logic Cluster performs bitwise operations on `i32` or `f32` (bit-level).\nIt runs 8-way."
+  },
+  {
+    "id": "u0152",
+    "kind": "prose",
+    "token": 787,
+    "text": "The stage exposes five ALU classes (`LogicAnd`, `LogicOr`, `LogicXor`, `LogicLshift`, `LogicRshift`), each runnable once per Tensor Unit invocation.\nOperators sharing the same class cannot fuse into one invocation."
+  },
+  {
+    "id": "u0153",
+    "kind": "prose",
+    "token": 790,
+    "text": "`i32` operations:"
+  },
+  {
+    "id": "u0154",
+    "kind": "prose",
+    "token": 796,
+    "text": "Op"
+  },
+  {
+    "id": "u0155",
+    "kind": "prose",
+    "token": 799,
+    "text": "ALU"
+  },
+  {
+    "id": "u0156",
+    "kind": "prose",
+    "token": 802,
+    "text": "Note"
+  },
+  {
+    "id": "u0157",
+    "kind": "prose",
+    "token": 815,
+    "text": "bitwise and"
+  },
+  {
+    "id": "u0158",
+    "kind": "prose",
+    "token": 826,
+    "text": "bitwise or"
+  },
+  {
+    "id": "u0159",
+    "kind": "prose",
+    "token": 837,
+    "text": "bitwise xor"
+  },
+  {
+    "id": "u0160",
+    "kind": "prose",
+    "token": 848,
+    "text": "logical left shift"
+  },
+  {
+    "id": "u0161",
+    "kind": "prose",
+    "token": 859,
+    "text": "logical right shift"
+  },
+  {
+    "id": "u0162",
+    "kind": "prose",
+    "token": 870,
+    "text": "arithmetic right shift"
+  },
+  {
+    "id": "u0163",
+    "kind": "prose",
+    "token": 876,
+    "text": "`f32` operations:"
+  },
+  {
+    "id": "u0164",
+    "kind": "prose",
+    "token": 882,
+    "text": "Op"
+  },
+  {
+    "id": "u0165",
+    "kind": "prose",
+    "token": 885,
+    "text": "ALU"
+  },
+  {
+    "id": "u0166",
+    "kind": "prose",
+    "token": 888,
+    "text": "Note"
+  },
+  {
+    "id": "u0167",
+    "kind": "prose",
+    "token": 901,
+    "text": "bitwise and on fp bit patterns"
+  },
+  {
+    "id": "u0168",
+    "kind": "prose",
+    "token": 912,
+    "text": "bitwise or on fp bit patterns"
+  },
+  {
+    "id": "u0169",
+    "kind": "prose",
+    "token": 923,
+    "text": "bitwise xor on fp bit patterns"
+  },
+  {
+    "id": "u0170",
+    "kind": "prose",
+    "token": 929,
+    "text": "Fxp Cluster"
+  },
+  {
+    "id": "u0171",
+    "kind": "prose",
+    "token": 932,
+    "text": "The Fxp Cluster performs integer and fixed-point arithmetic on `i32`.\nIt runs 8-way."
+  },
+  {
+    "id": "u0172",
+    "kind": "prose",
+    "token": 935,
+    "text": "The stage exposes four ALU classes (`FxpAdd`, `FxpLshift`, `FxpMul`, `FxpRshift`), each runnable once per Tensor Unit invocation.\nOperators sharing the same class cannot fuse into one invocation."
+  },
+  {
+    "id": "u0173",
+    "kind": "prose",
+    "token": 941,
+    "text": "Op"
+  },
+  {
+    "id": "u0174",
+    "kind": "prose",
+    "token": 944,
+    "text": "ALU"
+  },
+  {
+    "id": "u0175",
+    "kind": "prose",
+    "token": 947,
+    "text": "Note"
+  },
+  {
+    "id": "u0176",
+    "kind": "prose",
+    "token": 960,
+    "text": "wrapping add"
+  },
+  {
+    "id": "u0177",
+    "kind": "prose",
+    "token": 971,
+    "text": "saturating add"
+  },
+  {
+    "id": "u0178",
+    "kind": "prose",
+    "token": 982,
+    "text": "wrapping subtract"
+  },
+  {
+    "id": "u0179",
+    "kind": "prose",
+    "token": 993,
+    "text": "saturating subtract"
+  },
+  {
+    "id": "u0180",
+    "kind": "prose",
+    "token": 1004,
+    "text": "logical left shift"
+  },
+  {
+    "id": "u0181",
+    "kind": "prose",
+    "token": 1015,
+    "text": "saturating left shift"
+  },
+  {
+    "id": "u0182",
+    "kind": "prose",
+    "token": 1026,
+    "text": "fixed-point multiply"
+  },
+  {
+    "id": "u0183",
+    "kind": "prose",
+    "token": 1037,
+    "text": "integer multiply"
+  },
+  {
+    "id": "u0184",
+    "kind": "prose",
+    "token": 1048,
+    "text": "logical right shift"
+  },
+  {
+    "id": "u0185",
+    "kind": "prose",
+    "token": 1059,
+    "text": "arithmetic right shift"
+  },
+  {
+    "id": "u0186",
+    "kind": "prose",
+    "token": 1070,
+    "text": "arithmetic right shift with rounding"
+  },
+  {
+    "id": "u0187",
+    "kind": "prose",
+    "token": 1076,
+    "text": "The single-ALU rule rejects, for example, two ops that both target `FxpAdd`:"
+  },
+  {
+    "id": "u0188",
+    "kind": "comment",
+    "token": 1078,
+    "offset": 0,
+    "length": 38,
+    "text": "// PANICS: \"FxpAdd is already in use\"\n"
+  },
+  {
+    "id": "u0189",
+    "kind": "comment",
+    "token": 1078,
+    "offset": 150,
+    "length": 15,
+    "text": "// uses FxpAdd\n"
+  },
+  {
+    "id": "u0190",
+    "kind": "comment",
+    "token": 1078,
+    "offset": 209,
+    "length": 17,
+    "text": "// uses FxpMul ✓\n"
+  },
+  {
+    "id": "u0191",
+    "kind": "comment",
+    "token": 1078,
+    "offset": 270,
+    "length": 23,
+    "text": "// uses FxpAdd again ✗\n"
+  },
+  {
+    "id": "u0192",
+    "kind": "prose",
+    "token": 1080,
+    "text": "FxpToFp Conversion"
+  },
+  {
+    "id": "u0193",
+    "kind": "prose",
+    "token": 1083,
+    "text": "The FxpToFp Conversion stage converts `i32` to `f32`.\nThe `int_width` parameter specifies the integer bit width for the conversion; `int_width = 31` is the standard `i32` ↔ `f32` conversion."
+  },
+  {
+    "id": "u0194",
+    "kind": "prose",
+    "token": 1089,
+    "text": "Method"
+  },
+  {
+    "id": "u0195",
+    "kind": "prose",
+    "token": 1092,
+    "text": "Effect"
+  },
+  {
+    "id": "u0196",
+    "kind": "prose",
+    "token": 1102,
+    "text": "convert `i32` stream to `f32`"
+  },
+  {
+    "id": "u0197",
+    "kind": "prose",
+    "token": 1108,
+    "text": "Narrow"
+  },
+  {
+    "id": "u0198",
+    "kind": "prose",
+    "token": 1111,
+    "text": "The `Narrow` stage switches 8-way to 4-way.\nAn 8-way packet carries 8 active elements (`Packet = m![... # 8]`) and a 4-way packet carries 4 (`Packet = m![... # 4]`).\nNarrowing halves throughput on the float and reduce path, so the same logical tensor shape takes twice as many packets or Tensor Unit invocations."
+  },
+  {
+    "id": "u0199",
+    "kind": "prose",
+    "token": 1117,
+    "text": "Method"
+  },
+  {
+    "id": "u0200",
+    "kind": "prose",
+    "token": 1120,
+    "text": "Use When"
+  },
+  {
+    "id": "u0201",
+    "kind": "prose",
+    "token": 1123,
+    "text": "Effect"
+  },
+  {
+    "id": "u0202",
+    "kind": "prose",
+    "token": 1133,
+    "text": "both halves contain real data"
+  },
+  {
+    "id": "u0203",
+    "kind": "prose",
+    "token": 1136,
+    "text": "split one 8-way flit into a front-4 and back-4 packet, updating `Time` and `Packet`"
+  },
+  {
+    "id": "u0204",
+    "kind": "prose",
+    "token": 1144,
+    "text": "back 4 elements are already padding or irrelevant"
+  },
+  {
+    "id": "u0205",
+    "kind": "prose",
+    "token": 1147,
+    "text": "keep only the front 4 elements"
+  },
+  {
+    "id": "u0206",
+    "kind": "prose",
+    "token": 1153,
+    "text": "Shape semantics:"
+  },
+  {
+    "id": "u0207",
+    "kind": "comment",
+    "token": 1155,
+    "offset": 430,
+    "length": 52,
+    "text": "// shape semantics: [T], [P] -> [T, P / 2], [P % 4]\n"
+  },
+  {
+    "id": "u0208",
+    "kind": "comment",
+    "token": 1155,
+    "offset": 840,
+    "length": 45,
+    "text": "// shape semantics: [T], [P] -> [T], [P = 4]\n"
+  },
+  {
+    "id": "u0209",
+    "kind": "prose",
+    "token": 1157,
+    "text": "Float Cluster"
+  },
+  {
+    "id": "u0210",
+    "kind": "prose",
+    "token": 1160,
+    "text": "The Float Cluster provides unary, binary, and ternary floating-point operations on `f32`.\nIt runs 4-way, so the input must already have passed through `Narrow`."
+  },
+  {
+    "id": "u0211",
+    "kind": "prose",
+    "token": 1163,
+    "text": "It exposes five independent ALUs (`FpFma`, `FpFpu`, `FpExp`, `FpMul0`, `FpMul1`), each runnable once per Tensor Unit invocation.\nThis stage is where ALU planning matters most."
+  },
+  {
+    "id": "u0212",
+    "kind": "prose",
+    "token": 1166,
+    "text": "Unary ops:"
+  },
+  {
+    "id": "u0213",
+    "kind": "prose",
+    "token": 1172,
+    "text": "Op"
+  },
+  {
+    "id": "u0214",
+    "kind": "prose",
+    "token": 1175,
+    "text": "ALU"
+  },
+  {
+    "id": "u0215",
+    "kind": "prose",
+    "token": 1178,
+    "text": "Note"
+  },
+  {
+    "id": "u0216",
+    "kind": "prose",
+    "token": 1191,
+    "text": "exponential"
+  },
+  {
+    "id": "u0217",
+    "kind": "prose",
+    "token": 1202,
+    "text": "negative exponential"
+  },
+  {
+    "id": "u0218",
+    "kind": "prose",
+    "token": 1213,
+    "text": "square root"
+  },
+  {
+    "id": "u0219",
+    "kind": "prose",
+    "token": 1224,
+    "text": "hyperbolic tangent"
+  },
+  {
+    "id": "u0220",
+    "kind": "prose",
+    "token": 1235,
+    "text": "sigmoid"
+  },
+  {
+    "id": "u0221",
+    "kind": "prose",
+    "token": 1246,
+    "text": "error function"
+  },
+  {
+    "id": "u0222",
+    "kind": "prose",
+    "token": 1257,
+    "text": "natural logarithm"
+  },
+  {
+    "id": "u0223",
+    "kind": "prose",
+    "token": 1268,
+    "text": "sine"
+  },
+  {
+    "id": "u0224",
+    "kind": "prose",
+    "token": 1279,
+    "text": "cosine"
+  },
+  {
+    "id": "u0225",
+    "kind": "prose",
+    "token": 1285,
+    "text": "Binary ops:"
+  },
+  {
+    "id": "u0226",
+    "kind": "prose",
+    "token": 1291,
+    "text": "Op"
+  },
+  {
+    "id": "u0227",
+    "kind": "prose",
+    "token": 1294,
+    "text": "ALU"
+  },
+  {
+    "id": "u0228",
+    "kind": "prose",
+    "token": 1297,
+    "text": "Note"
+  },
+  {
+    "id": "u0229",
+    "kind": "prose",
+    "token": 1310,
+    "text": "floating-point add"
+  },
+  {
+    "id": "u0230",
+    "kind": "prose",
+    "token": 1321,
+    "text": "floating-point subtract"
+  },
+  {
+    "id": "u0231",
+    "kind": "prose",
+    "token": 1332,
+    "text": "multiply"
+  },
+  {
+    "id": "u0232",
+    "kind": "prose",
+    "token": 1343,
+    "text": "multiply"
+  },
+  {
+    "id": "u0233",
+    "kind": "prose",
+    "token": 1354,
+    "text": "multiply"
+  },
+  {
+    "id": "u0234",
+    "kind": "prose",
+    "token": 1365,
+    "text": "division inside `Fp` stage"
+  },
+  {
+    "id": "u0235",
+    "kind": "prose",
+    "token": 1371,
+    "text": "Ternary ops:"
+  },
+  {
+    "id": "u0236",
+    "kind": "prose",
+    "token": 1377,
+    "text": "Op"
+  },
+  {
+    "id": "u0237",
+    "kind": "prose",
+    "token": 1380,
+    "text": "ALU"
+  },
+  {
+    "id": "u0238",
+    "kind": "prose",
+    "token": 1383,
+    "text": "Note"
+  },
+  {
+    "id": "u0239",
+    "kind": "prose",
+    "token": 1396,
+    "text": "fused multiply-add"
+  },
+  {
+    "id": "u0240",
+    "kind": "prose",
+    "token": 1402,
+    "text": "For example, to compute `exp(sqrt(((x + 1) * 2) * 3))`:"
+  },
+  {
+    "id": "u0241",
+    "kind": "prose",
+    "token": 1407,
+    "text": "`x1 = x + 1` via FpFma (`FpBinaryOp::AddF`)"
+  },
+  {
+    "id": "u0242",
+    "kind": "prose",
+    "token": 1412,
+    "text": "`x2 = x1 * 2` via FpMul0 (`FpBinaryOp::MulF(FpMulAlu::Mul0)`)"
+  },
+  {
+    "id": "u0243",
+    "kind": "prose",
+    "token": 1417,
+    "text": "`x3 = x2 * 3` via FpMul1 (`FpBinaryOp::MulF(FpMulAlu::Mul1)`)"
+  },
+  {
+    "id": "u0244",
+    "kind": "prose",
+    "token": 1422,
+    "text": "`x4 = sqrt(x3)` via FpFpu (`FpUnaryOp::Sqrt`)"
+  },
+  {
+    "id": "u0245",
+    "kind": "prose",
+    "token": 1427,
+    "text": "`x5 = exp(x4)` via FpExp (`FpUnaryOp::Exp`)"
+  },
+  {
+    "id": "u0246",
+    "kind": "prose",
+    "token": 1432,
+    "text": "IntraSliceReduce"
+  },
+  {
+    "id": "u0247",
+    "kind": "prose",
+    "token": 1435,
+    "text": "The IntraSliceReduce stage reduces axes within a single slice.\nIt runs 4-way.\nThe stage uses a dedicated accumulator-tree ALU, so no user-selectable ALU is exposed."
+  },
+  {
+    "id": "u0248",
+    "kind": "prose",
+    "token": 1441,
+    "text": "Data Type"
+  },
+  {
+    "id": "u0249",
+    "kind": "prose",
+    "token": 1444,
+    "text": "Supported Ops"
+  },
+  {
+    "id": "u0250",
+    "kind": "prose",
+    "token": 1468,
+    "text": "See [Intra-Slice Reduce](./intra-slice-reduce.md) for details."
+  },
+  {
+    "id": "u0251",
+    "kind": "prose",
+    "token": 1471,
+    "text": "FpDiv"
+  },
+  {
+    "id": "u0252",
+    "kind": "prose",
+    "token": 1474,
+    "text": "The FpDiv stage performs floating-point division.\nIt runs 4-way.\nThe stage uses a dedicated floating-point divider, so no user-selectable ALU is exposed."
+  },
+  {
+    "id": "u0253",
+    "kind": "prose",
+    "token": 1480,
+    "text": "Op"
+  },
+  {
+    "id": "u0254",
+    "kind": "prose",
+    "token": 1483,
+    "text": "Note"
+  },
+  {
+    "id": "u0255",
+    "kind": "prose",
+    "token": 1493,
+    "text": "dedicated floating-point division"
+  },
+  {
+    "id": "u0256",
+    "kind": "prose",
+    "token": 1499,
+    "text": "Widen"
+  },
+  {
+    "id": "u0257",
+    "kind": "prose",
+    "token": 1502,
+    "text": "The `Widen` stage transitions from 4-way back to 8-way.\nLater stages (`FpToFxp`, `Clip`, `Filter`, `Output`) then see 8-element packets again."
+  },
+  {
+    "id": "u0258",
+    "kind": "prose",
+    "token": 1508,
+    "text": "Method"
+  },
+  {
+    "id": "u0259",
+    "kind": "prose",
+    "token": 1511,
+    "text": "Use When"
+  },
+  {
+    "id": "u0260",
+    "kind": "prose",
+    "token": 1514,
+    "text": "Effect"
+  },
+  {
+    "id": "u0261",
+    "kind": "prose",
+    "token": 1524,
+    "text": "reversing a prior `vector_narrow_split()`"
+  },
+  {
+    "id": "u0262",
+    "kind": "prose",
+    "token": 1527,
+    "text": "merge two 4-way packets back into one 8-way flit"
+  },
+  {
+    "id": "u0263",
+    "kind": "prose",
+    "token": 1535,
+    "text": "reversing a prior `vector_narrow_trim()`"
+  },
+  {
+    "id": "u0264",
+    "kind": "prose",
+    "token": 1538,
+    "text": "pad a 4-way packet back to 8 elements with invalid fillers"
+  },
+  {
+    "id": "u0265",
+    "kind": "prose",
+    "token": 1544,
+    "text": "Shape semantics:"
+  },
+  {
+    "id": "u0266",
+    "kind": "comment",
+    "token": 1546,
+    "offset": 420,
+    "length": 52,
+    "text": "// shape semantics: [T, P / 2], [P % 4] -> [T], [P]\n"
+  },
+  {
+    "id": "u0267",
+    "kind": "comment",
+    "token": 1546,
+    "offset": 821,
+    "length": 45,
+    "text": "// shape semantics: [T], [P] -> [T], [P # 8]\n"
+  },
+  {
+    "id": "u0268",
+    "kind": "prose",
+    "token": 1548,
+    "text": "FpToFxp Conversion"
+  },
+  {
+    "id": "u0269",
+    "kind": "prose",
+    "token": 1551,
+    "text": "The FpToFxp Conversion stage converts `f32` back to `i32`.\nThe `int_width` parameter specifies the integer bit width."
+  },
+  {
+    "id": "u0270",
+    "kind": "prose",
+    "token": 1557,
+    "text": "Method"
+  },
+  {
+    "id": "u0271",
+    "kind": "prose",
+    "token": 1560,
+    "text": "Effect"
+  },
+  {
+    "id": "u0272",
+    "kind": "prose",
+    "token": 1570,
+    "text": "convert `f32` stream back to `i32`"
+  },
+  {
+    "id": "u0273",
+    "kind": "prose",
+    "token": 1576,
+    "text": "Clip Cluster"
+  },
+  {
+    "id": "u0274",
+    "kind": "prose",
+    "token": 1579,
+    "text": "The Clip Cluster performs clamping and comparison operations.\nIt runs 8-way."
+  },
+  {
+    "id": "u0275",
+    "kind": "prose",
+    "token": 1582,
+    "text": "The stage exposes three ALU classes (`ClipAdd`, `ClipMax`, `ClipMin`), each runnable once per Tensor Unit invocation."
+  },
+  {
+    "id": "u0276",
+    "kind": "prose",
+    "token": 1585,
+    "text": "`i32` operations:"
+  },
+  {
+    "id": "u0277",
+    "kind": "prose",
+    "token": 1591,
+    "text": "Op"
+  },
+  {
+    "id": "u0278",
+    "kind": "prose",
+    "token": 1594,
+    "text": "ALU"
+  },
+  {
+    "id": "u0279",
+    "kind": "prose",
+    "token": 1597,
+    "text": "Note"
+  },
+  {
+    "id": "u0280",
+    "kind": "prose",
+    "token": 1610,
+    "text": "minimum"
+  },
+  {
+    "id": "u0281",
+    "kind": "prose",
+    "token": 1621,
+    "text": "maximum"
+  },
+  {
+    "id": "u0282",
+    "kind": "prose",
+    "token": 1632,
+    "text": "absolute minimum"
+  },
+  {
+    "id": "u0283",
+    "kind": "prose",
+    "token": 1643,
+    "text": "absolute maximum"
+  },
+  {
+    "id": "u0284",
+    "kind": "prose",
+    "token": 1654,
+    "text": "wrapping add"
+  },
+  {
+    "id": "u0285",
+    "kind": "prose",
+    "token": 1665,
+    "text": "saturating add"
+  },
+  {
+    "id": "u0286",
+    "kind": "prose",
+    "token": 1671,
+    "text": "`f32` operations:"
+  },
+  {
+    "id": "u0287",
+    "kind": "prose",
+    "token": 1677,
+    "text": "Op"
+  },
+  {
+    "id": "u0288",
+    "kind": "prose",
+    "token": 1680,
+    "text": "ALU"
+  },
+  {
+    "id": "u0289",
+    "kind": "prose",
+    "token": 1683,
+    "text": "Note"
+  },
+  {
+    "id": "u0290",
+    "kind": "prose",
+    "token": 1696,
+    "text": "minimum"
+  },
+  {
+    "id": "u0291",
+    "kind": "prose",
+    "token": 1707,
+    "text": "maximum"
+  },
+  {
+    "id": "u0292",
+    "kind": "prose",
+    "token": 1718,
+    "text": "absolute minimum"
+  },
+  {
+    "id": "u0293",
+    "kind": "prose",
+    "token": 1729,
+    "text": "absolute maximum"
+  },
+  {
+    "id": "u0294",
+    "kind": "prose",
+    "token": 1740,
+    "text": "floating-point add"
+  },
+  {
+    "id": "u0295",
+    "kind": "prose",
+    "token": 1746,
+    "text": "Filter"
+  },
+  {
+    "id": "u0296",
+    "kind": "prose",
+    "token": 1749,
+    "text": "The Filter stage applies an execution mask derived from a `TagGuard` (typically matching on the `GroupId` MSB of each element's `Tag`) to filter output flits.\nAvailable 8-way and `Standalone` context only.\nThe source `impl` lives on `VectorTensor` for any stage with `CanTransitionTo<Filter>`, which covers every intra-slice stage and `InterSliceReduce`."
+  },
+  {
+    "id": "u0297",
+    "kind": "prose",
+    "token": 1752,
+    "text": "Output"
+  },
+  {
+    "id": "u0298",
+    "kind": "prose",
+    "token": 1755,
+    "text": "The Output stage exits the Vector Engine pipeline.\nThe result can continue to the [Cast Engine](../cast-engine.md), [Transpose Engine](../transpose-engine.md), or [Commit Engine](../../moving-tensors/commit-engine.md)."
+  },
+  {
+    "id": "u0299",
+    "kind": "prose",
+    "token": 1758,
+    "text": "Reinterpret"
+  },
+  {
+    "id": "u0300",
+    "kind": "prose",
+    "token": 1761,
+    "text": "`vector_reinterpret::<D2>()` rereads the stream as the other 32-bit scalar with the bits untouched, so `1.0f32` becomes `0x3f80_0000` and not `1`.\nEvery element is 32 bits and every cluster takes its operand type from the op it runs, so a reinterpret emits no instruction, claims no ALU, and holds both the current stage and the way.\nIt can therefore appear anywhere in the chain, any number of times, including between two ops of the same cluster."
+  },
+  {
+    "id": "u0301",
+    "kind": "prose",
+    "token": 1764,
+    "text": "One possible use for a reinterpret is applying a bitwise operation to floating-point values, as in [Bitwise `abs` on `f32`](#bitwise-abs-on-f32).\nFor the value-preserving conversions use [FxpToFp](#fxptofp-conversion) / [FpToFxp](#fptofxp-conversion) instead."
+  },
+  {
+    "id": "u0302",
+    "kind": "prose",
+    "token": 1770,
+    "text": "Method"
+  },
+  {
+    "id": "u0303",
+    "kind": "prose",
+    "token": 1773,
+    "text": "Effect"
+  },
+  {
+    "id": "u0304",
+    "kind": "prose",
+    "token": 1783,
+    "text": "read the `f32` stream's bits as `i32`"
+  },
+  {
+    "id": "u0305",
+    "kind": "prose",
+    "token": 1791,
+    "text": "read the `i32` stream's bits as `f32`"
+  },
+  {
+    "id": "u0306",
+    "kind": "prose",
+    "token": 1797,
+    "text": "A reinterpret also decides what a following [`vector_stash()`](#operands) writes, since the stash takes the scalar the stream carries at the write.\nSo a value reaches a reader of the other scalar by reinterpreting first and stashing after; a read at the other scalar does not compile."
+  },
+  {
+    "id": "u0307",
+    "kind": "prose",
+    "token": 1800,
+    "text": "Examples"
+  },
+  {
+    "id": "u0308",
+    "kind": "prose",
+    "token": 1803,
+    "text": "`i32` Pipeline"
+  },
+  {
+    "id": "u0309",
+    "kind": "prose",
+    "token": 1806,
+    "text": "A minimal `i32` chain that adds a constant after branching.\nThe Fxp stage runs 8-way, so no narrow or widen is needed."
+  },
+  {
+    "id": "u0310",
+    "kind": "prose",
+    "token": 1810,
+    "text": "`f32` Pipeline"
+  },
+  {
+    "id": "u0311",
+    "kind": "prose",
+    "token": 1813,
+    "text": "`vector_narrow_trim()` is the `Narrow` step that converts the tensor from 8-way to 4-way before the float operation.\n`vector_widen_pad()` is the `Widen` step that converts back to 8-way afterward."
+  },
+  {
+    "id": "u0312",
+    "kind": "comment",
+    "token": 1815,
+    "offset": 349,
+    "length": 24,
+    "text": "// Narrow: Way8 -> Way4\n"
+  },
+  {
+    "id": "u0313",
+    "kind": "comment",
+    "token": 1815,
+    "offset": 463,
+    "length": 23,
+    "text": "// Widen: Way4 -> Way8\n"
+  },
+  {
+    "id": "u0314",
+    "kind": "prose",
+    "token": 1817,
+    "text": "Bitwise `Abs` on `f32`"
+  },
+  {
+    "id": "u0315",
+    "kind": "prose",
+    "token": 1820,
+    "text": "Clearing the sign bit is $|x|$, reached with no float ALU: the mask is an ordinary `i32` literal because the stream is read as `i32` for the one op that needs it.\nBoth reinterprets are free, so this costs exactly one `LogicAnd`."
+  },
+  {
+    "id": "u0316",
+    "kind": "comment",
+    "token": 1822,
+    "offset": 335,
+    "length": 24,
+    "text": "// read the bits as i32\n"
+  },
+  {
+    "id": "u0317",
+    "kind": "comment",
+    "token": 1822,
+    "offset": 420,
+    "length": 22,
+    "text": "// clear the sign bit\n"
+  },
+  {
+    "id": "u0318",
+    "kind": "comment",
+    "token": 1822,
+    "offset": 479,
+    "length": 12,
+    "text": "// and back\n"
+  },
+  {
+    "id": "u0319",
+    "kind": "prose",
+    "token": 1824,
+    "text": "Single-Stream Argument Mode"
+  },
+  {
+    "id": "u0320",
+    "kind": "prose",
+    "token": 1827,
+    "text": "`BinaryArgMode::Mode10` swaps the stream and operand positions, so `SubFxp` computes `operand - stream` (here, `7 - x`) rather than the default `stream - operand`."
+  },
+  {
+    "id": "u0321",
+    "kind": "comment",
+    "token": 1829,
+    "offset": 377,
+    "length": 17,
+    "text": "// compute 7 - x\n"
+  },
+  {
+    "id": "u0322",
+    "kind": "prose",
+    "token": 1831,
+    "text": "VRF Operand"
+  },
+  {
+    "id": "u0323",
+    "kind": "prose",
+    "token": 1834,
+    "text": "Pre-loaded VRF data as an operand:"
+  },
+  {
+    "id": "u0324",
+    "kind": "prose",
+    "token": 1838,
+    "text": "Stash on the Fp-Only Path"
+  },
+  {
+    "id": "u0325",
+    "kind": "prose",
+    "token": 1841,
+    "text": "Stash at an early stage, then use it later in a Clip operation.\nThis implements `max(2 * x, x)`:"
+  },
+  {
+    "id": "u0326",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 299,
+    "length": 12,
+    "text": "// enter VE\n"
+  },
+  {
+    "id": "u0327",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 358,
+    "length": 30,
+    "text": "// start the intra-slice path\n"
+  },
+  {
+    "id": "u0328",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 450,
+    "length": 19,
+    "text": "// save original x\n"
+  },
+  {
+    "id": "u0329",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 533,
+    "length": 18,
+    "text": "// narrow to Way4\n"
+  },
+  {
+    "id": "u0330",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 619,
+    "length": 17,
+    "text": "// compute 2 * x\n"
+  },
+  {
+    "id": "u0331",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 699,
+    "length": 22,
+    "text": "// widen back to Way8\n"
+  },
+  {
+    "id": "u0332",
+    "kind": "comment",
+    "token": 1843,
+    "offset": 783,
+    "length": 17,
+    "text": "// max(2 * x, x)\n"
+  },
+  {
+    "id": "u0333",
+    "kind": "prose",
+    "token": 1845,
+    "text": "Stash on the Fxp-Only Path"
+  },
+  {
+    "id": "u0334",
+    "kind": "prose",
+    "token": 1848,
+    "text": "Stash at an early stage, then use it later in a Clip operation.\nThis implements `max(x + bias, x)`:"
+  },
+  {
+    "id": "u0335",
+    "kind": "comment",
+    "token": 1850,
+    "offset": 290,
+    "length": 12,
+    "text": "// enter VE\n"
+  },
+  {
+    "id": "u0336",
+    "kind": "comment",
+    "token": 1850,
+    "offset": 349,
+    "length": 30,
+    "text": "// start the intra-slice path\n"
+  },
+  {
+    "id": "u0337",
+    "kind": "comment",
+    "token": 1850,
+    "offset": 439,
+    "length": 19,
+    "text": "// save original x\n"
+  },
+  {
+    "id": "u0338",
+    "kind": "comment",
+    "token": 1850,
+    "offset": 518,
+    "length": 20,
+    "text": "// compute x + bias\n"
+  },
+  {
+    "id": "u0339",
+    "kind": "comment",
+    "token": 1850,
+    "offset": 598,
+    "length": 28,
+    "text": "// compute max(x + bias, x)\n"
+  },
+  {
+    "id": "u0340",
+    "kind": "prose",
+    "token": 1852,
+    "text": "Stash Across Narrow and Widen"
+  },
+  {
+    "id": "u0341",
+    "kind": "prose",
+    "token": 1855,
+    "text": "Stash before narrowing, consume after widening.\nThis computes `max(sigmoid(x), x)`:"
+  },
+  {
+    "id": "u0342",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 309,
+    "length": 12,
+    "text": "// enter VE\n"
+  },
+  {
+    "id": "u0343",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 368,
+    "length": 30,
+    "text": "// start the intra-slice path\n"
+  },
+  {
+    "id": "u0344",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 457,
+    "length": 17,
+    "text": "// save x (Way8)\n"
+  },
+  {
+    "id": "u0345",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 535,
+    "length": 18,
+    "text": "// narrow to Way4\n"
+  },
+  {
+    "id": "u0346",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 612,
+    "length": 30,
+    "text": "// compute sigmoid(x) in Way4\n"
+  },
+  {
+    "id": "u0347",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 702,
+    "length": 22,
+    "text": "// widen back to Way8\n"
+  },
+  {
+    "id": "u0348",
+    "kind": "comment",
+    "token": 1857,
+    "offset": 783,
+    "length": 30,
+    "text": "// compute max(sigmoid(x), x)\n"
+  },
+  {
+    "id": "u0349",
+    "kind": "prose",
+    "token": 1859,
+    "text": "Pair Add"
+  },
+  {
+    "id": "u0350",
+    "kind": "prose",
+    "token": 1862,
+    "text": "Zip two interleaved groups with integer add:"
+  },
+  {
+    "id": "u0351",
+    "kind": "prose",
+    "token": 1866,
+    "text": "Pair Per-Side Preprocessing"
+  },
+  {
+    "id": "u0352",
+    "kind": "prose",
+    "token": 1869,
+    "text": "Asymmetric preprocessing scales only group 0 before zip:"
+  },
+  {
+    "id": "u0353",
+    "kind": "comment",
+    "token": 1871,
+    "offset": 371,
+    "length": 16,
+    "text": "// group 0 only\n"
+  },
+  {
+    "id": "u0354",
+    "kind": "prose",
+    "token": 1873,
+    "text": "Pair Float Pipeline with Zip"
+  },
+  {
+    "id": "u0355",
+    "kind": "prose",
+    "token": 1876,
+    "text": "Both groups traverse the float path (narrow -> fp -> zip -> widen):"
+  },
+  {
+    "id": "u0356",
+    "kind": "comment",
+    "token": 1878,
+    "offset": 384,
+    "length": 29,
+    "text": "// both groups: Way8 -> Way4\n"
+  },
+  {
+    "id": "u0357",
+    "kind": "comment",
+    "token": 1878,
+    "offset": 472,
+    "length": 26,
+    "text": "// group0 * group1 (Way4)\n"
+  },
+  {
+    "id": "u0358",
+    "kind": "comment",
+    "token": 1878,
+    "offset": 563,
+    "length": 16,
+    "text": "// Way4 -> Way8\n"
+  },
+  {
+    "id": "u0359",
+    "kind": "prose",
+    "token": 1880,
+    "text": "Pair Per-Group Preprocessing"
+  },
+  {
+    "id": "u0360",
+    "kind": "prose",
+    "token": 1883,
+    "text": "Apply a different operation to each group before zipping:"
+  },
+  {
+    "id": "u0361",
+    "kind": "comment",
+    "token": 1885,
+    "offset": 450,
+    "length": 34,
+    "text": "// group 0: exp(x), group 1: skip\n"
+  },
+  {
+    "id": "u0362",
+    "kind": "comment",
+    "token": 1885,
+    "offset": 543,
+    "length": 24,
+    "text": "// exp(group0) * group1\n"
+  },
+  {
+    "id": "u0363",
+    "kind": "prose",
+    "token": 1887,
+    "text": "Pair Zip Argument Mode"
+  },
+  {
+    "id": "u0364",
+    "kind": "prose",
+    "token": 1890,
+    "text": "`BinaryArgMode::Mode10` swaps the two grouped streams when zipping:"
+  },
+  {
+    "id": "u0365",
+    "kind": "comment",
+    "token": 1892,
+    "offset": 452,
+    "length": 27,
+    "text": "// compute group1 - group0\n"
+  },
+  {
+    "id": "u0366",
+    "kind": "prose",
+    "token": 1894,
+    "text": "Performance"
+  },
+  {
+    "id": "u0367",
+    "kind": "prose",
+    "token": 1897,
+    "text": "Throughput is full 8-way (8 elements per cycle) on the Logic, Fxp, and Clip clusters.\nThe Float cluster runs at 4-way, and the Narrow/Widen wrapping around the float path halves effective throughput in practice."
+  },
+  {
+    "id": "u0368",
+    "kind": "prose",
+    "token": 1900,
+    "text": "Latency adds one cycle per ALU used.\nOperations spanning multiple ALUs accumulate their latencies.\nFor example, `exp(sqrt(x))` adds 2 cycles (FpFpu for sqrt plus FpExp for exp)."
+  }
+]

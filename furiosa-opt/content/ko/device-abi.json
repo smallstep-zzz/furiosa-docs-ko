@@ -1,0 +1,13 @@
+{
+  "u0001": "furiosa-opt-abi",
+  "u0002": "RNGD 장치의 호스트 쪽(host side: 컴파일러와 `furiosa-opt-rt`)과 장치 쪽(device side: 펌웨어와 부트로더)이 공유하는 규약입니다. 장치 측에서도 이를 기반으로 빌드할 수 있도록 `no_std`를 사용합니다. 애플리케이션(application)은 대신 `furiosa-opt-std`를 사용합니다.",
+  "u0003": "모듈(module)",
+  "u0004": "규약(contract)",
+  "u0005": "펌웨어(firmware)가 적재하여 실행하는 컴파일된 장치 코드(compiled device code)",
+  "u0006": "실행되는 각 함수의 컴파일러 이미지(compiler image)와 실행 파일(binary)이 보유하는 이미지 테이블(table)",
+  "u0007": "펌웨어(firmware)를 부팅하는 요청(request)과 그 응답(answer)",
+  "u0008": "호스트(host)와 펌웨어(firmware) 사이에서 메시지(message)를 전달하는 큐(queue)",
+  "u0009": "장치 메모리 종류(device memory kinds)와 장치 형태(device shapes)",
+  "u0010": "레지스터 접근(register access), 그리고 레지스터·메모리 접근 사이의 배리어(barrier)",
+  "u0011": "RNGD 하드웨어(hardware)의 주소(address)와 한계값(limit)"
+}

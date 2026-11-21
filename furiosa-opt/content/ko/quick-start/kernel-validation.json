@@ -1,0 +1,9 @@
+{
+  "u0001": "커널 검증(Kernel Validation)",
+  "u0002": "검증(validation) 순서에서는 구조적 유효성(structural validity), 수치적 정확성(numerical correctness), 하드웨어 동작(hardware behavior), 정적 스케줄 데이터(static schedule data)를 구분합니다.",
+  "u0003": "**커널 컴파일(Kernel compilation)**(`cargo furiosa-opt compile`)은 모든 `#[device]` 본문을 변환하고 검증합니다. 실제로 실행하지 않고도 매핑(mapping)과 형상(shape) 오류를 찾아냅니다.",
+  "u0004": "**CPU 실행(CPU runs)**(일반 cargo)은 호스트(host)에서 구한 텐서 결과를 호스트 기준 계산(host oracle)과 비교합니다.",
+  "u0005": "**NPU 실행(NPU execution)**은 컴파일된 실행 가능 장치 형식(executable device format, EDF)을 Furiosa SDK와 실제 하드웨어를 통해 실행합니다.",
+  "u0006": "**스케줄 데이터(Schedule data)**에서는 출력된 스케줄 JSON을 살펴보고, 릴리스(release)·형상(shape)·타입(type)·매핑(mapping)을 고정한 상태에서 전체 완료 시간(makespan)을 비교합니다.",
+  "u0007": "커널 컴파일(kernel compilation)은 정적(static) 검증입니다. 선택한 모든 커널이 변환과 검증을 통과한다는 사실은 확인하지만, 수치적 정확성(numerical correctness)을 증명하지는 않습니다.\n스케줄(schedule)의 전체 완료 시간(makespan)은 릴리스(release), 형상(shape), 데이터 타입(data type), 매핑(mapping)이 동일할 때만 비교하세요.\n스케줄 자체는 처리량(throughput)을 측정한 결과가 아닙니다.\n조건을 고정한 스케줄 후보의 비교 방법은 [스케줄링과 튜닝(Scheduling and Tuning)](../scheduling/index.md)을 참고하세요.\n비교할 때마다 소스 리비전(source revision), 백엔드(backend), 형상, 매핑, 기준 계산 결과(oracle result), 스케줄 산출물(schedule artifact)을 기록하세요."
+}

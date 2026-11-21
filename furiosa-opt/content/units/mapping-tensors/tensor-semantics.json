@@ -1,0 +1,178 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Tensor Semantics"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Tensors reside in HBM, on-chip DM, or the pipeline stream, and operations transform them.\nThis chapter defines their mathematical meaning: what it means for a tensor variable to *hold* a mathematical tensor, and what it means for an operation to *specify* a mathematical function.\nThese definitions enable tensor-level reasoning about vISA programs: a function is correct when its output holds the right mathematical tensor, regardless of which mapping or memory tier is used."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Tensor Holding Semantics"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "A tensor variable *holds* mathematical tensor $T$ when each element stores the value of $T$ at the tensor index formed by summing the partial indices produced by each dimension's mapping."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "`HostTensor<D, E>` is the simplest case: a single mapping `E` fully determines the correspondence between buffer positions and tensor indices.\n`HostTensor<bf16, m![A, B]>` with `A = 8` and `B = 512`, for instance, stores 4,096 `bf16` elements in A-major, B-minor order.\nIt holds tensor $T$ when:"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 18,
+    "text": "for every buffer index `i` where `E::map(i) = Cell::Index(ti)`,"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 23,
+    "text": "the `i`-th element stores the value of $T$ at `ti`."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 28,
+    "text": "`HbmTensor<D, Chip, Element>` extends this by splitting the single mapping into two: `Chip` maps chip indices to partial tensor indices, and `Element` maps per-chip element indices to the remaining partial indices, with each covering a disjoint subset of axes so their sum recovers the full tensor index.\nIt holds $T$ when:"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 33,
+    "text": "for every chip index `i` and element index `j` where `Chip::map(i) = Cell::Index(ti)` and `Element::map(j) = Cell::Index(tj)`,"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 38,
+    "text": "the `i`-th chip's `j`-th element stores $T$ at the index `ti + tj`."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 43,
+    "text": "All other tensor types apply the same rule to more dimensions: each element stores $T$ at the sum of the partial indices returned by all its mapping parameters."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 46,
+    "text": "Linear Combination Semantics"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 49,
+    "text": "Linear combination expressions `$(e1:n1, ..., ed:nd)` combine multiple dimensions with specified strides.\nTheir size is `size_S($(e1:n1, ..., ed:nd)) = 1 + sum_k((size_S(ek) - 1) * nk)`.\nThe mapping `S, $(e1:n1, ..., ed:nd) |- si ~ ti` is valid if there exist `si1...sid, ti1...tid` such that for every `k`, `S, ek |- sik ~ tik`, `si = sum_k(sik * nk)`, and `ti = sum_k(tik * nk)`."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 52,
+    "text": "Linear combinations can encode outer sum: `e1 * e2` is equivalent to `$(e1 : size_S(e2), e2 : 1)`.\nOuter sum is preferred when axis reordering matters because changing `e1 * e2` to `e2 * e1` does not require manual stride updates."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 55,
+    "text": "Sliding operations access overlapping data blocks.\nConsider a buffer of 9 elements representing a tensor with shape $\\\\{N=5, F=3\\\\}$, where each row is a 3-element slice that slides one element at a time.\nThe tensor element at $N, F$ maps to buffer index $N + 2F$:"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 59,
+    "text": "In this sliding pattern, a single space index can map to multiple tensor indices.\nFor example, space index `4` maps to `{4_N}`, `{2_N, 1_F}`, and `{2_F}` simultaneously, illustrating the non-one-to-one nature of `(S, e).maps(si, ti)`.\nThe linear combination uses stride `1` for `N` and stride `2` for `F`, yielding `1 + (5-1)*1 + (3-1)*2 = 9`."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 62,
+    "text": "Function Specification"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 65,
+    "text": "Specifying a function means declaring what its output holds in terms of its inputs.\nFor example, the function `elementwise_add` specifies the mathematical operation $f(T_1, T_2) = T_1 + T_2$ in that:"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 70,
+    "text": "For every tensor $T_1$ and $T_2$,"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 75,
+    "text": "if `lhs` holds $T_1$ and `rhs` holds $T_2$,"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 80,
+    "text": "then the return value holds $T_1 + T_2$."
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 84,
+    "offset": 24,
+    "length": 75,
+    "text": "// This signature specifies the mathematical contract; the engine pipeline\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 84,
+    "offset": 99,
+    "length": 61,
+    "text": "// implementation is shown in the Computing Tensors chapter.\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 84,
+    "offset": 303,
+    "length": 73,
+    "text": "// The implementation is intentionally omitted; this example states only\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 84,
+    "offset": 380,
+    "length": 41,
+    "text": "// the function's tensor-level contract.\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 86,
+    "text": "<a id=\"mathematical-tensor-move\"></a>\nA *mathematical tensor move* specifies $f(T) = T$: the output holds the same mathematical tensor as the input, regardless of representation.\n`.to_dm()` is a mathematical tensor move.\nThe `.to_dm()` method, for instance, specifies $f(T) = T$ in that:"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 91,
+    "text": "if `hbm` holds $T$,"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 96,
+    "text": "the return value holds $T$."
+  }
+]

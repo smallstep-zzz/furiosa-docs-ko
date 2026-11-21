@@ -1,0 +1,348 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Vector Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Vector Engine performs elementwise computation and reduction.\nExamples include activations (GELU, SiLU), normalizations (softmax, layer norm), binary operations, and intra- and inter-slice reductions."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "The engine accepts only 32-bit types, `i32` and `f32`.\nAn upstream [Contraction Engine](../contraction-engine/index.md) widens types automatically (`bf16` products accumulate in `f32`, `i8` products in `i32`).\nWhen that engine is bypassed, the [Fetch Adapter](../fetch-adapter.md#type-casting) must widen the input via its type-cast adapter."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Interface"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "In a single Tensor Unit invocation, the Vector Engine portion is the method chain from `vector_init()` to `vector_final()`.\nThe engine has two sub-pieces: the [Intra-Slice Chain](./intra-slice-chain.md) (elementwise / binary / per-slice reduce stages) and the [Inter-Slice Reducer](./inter-slice-reducer.md) (reduces across the 256 slices in a cluster).\nBetween `vector_init()` and `vector_final()`, the chain alone, the reducer alone, or both can run.\nWhen both run, the order is `IntraFirst` (chain then reducer) or `InterFirst` (reducer then chain)."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "The intra-slice chain is entered via `vector_intra_slice_tag()`, or `vector_intra_slice_unzip()` when the input carries a 2-way grouping axis to split into two parallel streams (see [Pair Mode](./intra-slice-chain.md#pair-mode)).\nEither entry point fires right after `vector_init()` or on the inter-slice reducer's output.\nThe inter-slice reducer is entered via `vector_inter_slice_reduce()`, either right after `vector_init()` or from a [compatible intra-slice stage](./intra-slice-chain.md#transitioning-to-the-inter-slice-reducer).\nFor stage-by-stage API coverage, see [Intra-Slice Chain](./intra-slice-chain.md) and [Inter-Slice Reducer](./inter-slice-reducer.md)."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 19,
+    "text": "The signatures below cover the `vector_init()`-side entry methods only.\nThe same method names (`vector_intra_slice_tag`, `vector_inter_slice_reduce`) also exist on chain and reducer tensors for the chain↔reducer transitions; those are documented in the child pages."
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 21,
+    "offset": 241,
+    "length": 32,
+    "text": "primitive(TuTensor::vector_init)"
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 21,
+    "offset": 653,
+    "length": 51,
+    "text": "primitive(VectorInitTensor::vector_intra_slice_tag)"
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 21,
+    "offset": 1029,
+    "length": 53,
+    "text": "primitive(VectorInitTensor::vector_intra_slice_unzip)"
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 21,
+    "offset": 1622,
+    "length": 54,
+    "text": "primitive(VectorInitTensor::vector_inter_slice_reduce)"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 23,
+    "text": "Examples"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 26,
+    "text": "A few representative examples follow to give a feel for what a Vector Engine call looks like, with the full API tour deferred to the child pages [Intra-Slice Chain](./intra-slice-chain.md) and [Inter-Slice Reducer](./inter-slice-reducer.md)."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 29,
+    "text": "ReLU Activation"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 32,
+    "text": "This pass applies ReLU elementwise, computing $output[b, k, m, n] = \\max(input[b, k, m, n], 0)$."
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 34,
+    "offset": 40,
+    "length": 56,
+    "text": "// ReLU activation after batched matrix multiplication.\n"
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 34,
+    "offset": 96,
+    "length": 93,
+    "text": "// Chain-only pass, so the reducer is skipped and the path trivially resolves to IntraFirst.\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 34,
+    "offset": 189,
+    "length": 77,
+    "text": "// Both clusters (B = 2) and all 256 slices (K) carry real data, no padding.\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 34,
+    "offset": 548,
+    "length": 30,
+    "text": "// max(x, 0), the ReLU itself\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 36,
+    "text": "ReLU Then Reduce"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 39,
+    "text": "This pass applies ReLU per slice and then reduces across `R`, giving $output[a, b] = \\sum_{r \\in R} \\max(input[a, b, r], 0)$."
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 41,
+    "offset": 31,
+    "length": 56,
+    "text": "// Chain applies ReLU, then reducer sums across slices.\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 41,
+    "offset": 87,
+    "length": 54,
+    "text": "// IntraFirst shape (chain runs first, then reducer).\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 41,
+    "offset": 141,
+    "length": 100,
+    "text": "// Both clusters (B = 2), all 256 slices (A / 8 * R), and full Way8 packet (A % 8) carry real data.\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 41,
+    "offset": 538,
+    "length": 23,
+    "text": "// max(x, 0), the ReLU\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 41,
+    "offset": 615,
+    "length": 23,
+    "text": "// sum across R slices\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 43,
+    "text": "Reduce Then Bias"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 46,
+    "text": "This pass reduces across `R` and then adds a constant bias, giving $output[a, b] = \\left(\\sum_{r \\in R} input[a, b, r]\\right) + 100$."
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 48,
+    "offset": 31,
+    "length": 77,
+    "text": "// Reducer sums across slices, then chain adds a bias to the reduced result.\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 48,
+    "offset": 108,
+    "length": 54,
+    "text": "// InterFirst shape (reducer runs first, then chain).\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "comment",
+    "token": 48,
+    "offset": 162,
+    "length": 80,
+    "text": "// Both clusters (B = 2), all 256 slices, and full Way8 packet carry real data.\n"
+  },
+  {
+    "id": "u0032",
+    "kind": "comment",
+    "token": 48,
+    "offset": 491,
+    "length": 23,
+    "text": "// sum across R slices\n"
+  },
+  {
+    "id": "u0033",
+    "kind": "comment",
+    "token": 48,
+    "offset": 662,
+    "length": 16,
+    "text": "// add bias 100\n"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 50,
+    "text": "Intra- and Inter-Slice Reduction"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 53,
+    "text": "This pass reduces `R` entirely by combining the intra-slice reducer (over `R`'s Time and Packet portions) and the inter-slice reducer (over `R`'s Slice portion).\nThe einsum form is `BR -> B`, with saturating addition."
+  },
+  {
+    "id": "u0036",
+    "kind": "comment",
+    "token": 55,
+    "offset": 25,
+    "length": 105,
+    "text": "// R splits across Slice (R / 32 = 256), Time (R % 32 / 4 = 8), and Packet (R % 4, padded to 8 in Way8).\n"
+  },
+  {
+    "id": "u0037",
+    "kind": "comment",
+    "token": 55,
+    "offset": 130,
+    "length": 114,
+    "text": "// Chain runs intra-slice reduce over R's Time and Packet portions, then the reducer collapses the Slice portion.\n"
+  },
+  {
+    "id": "u0038",
+    "kind": "comment",
+    "token": 55,
+    "offset": 244,
+    "length": 54,
+    "text": "// IntraFirst shape (chain runs first, then reducer).\n"
+  },
+  {
+    "id": "u0039",
+    "kind": "comment",
+    "token": 55,
+    "offset": 593,
+    "length": 54,
+    "text": "// Way8 → Way4 (back 4 packet positions were padding)\n"
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 55,
+    "offset": 698,
+    "length": 41,
+    "text": "// sum over R's Time and Packet portions\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 55,
+    "offset": 836,
+    "length": 15,
+    "text": "// Way4 → Way8\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 55,
+    "offset": 900,
+    "length": 52,
+    "text": "// sum over R's Slice portion across all 256 slices\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 57,
+    "text": "Pair Add"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 60,
+    "text": "This pass unzips two interleaved groups along `I` and adds them pair-wise.\nThe einsum form is `ABI -> AB`."
+  },
+  {
+    "id": "u0045",
+    "kind": "comment",
+    "token": 62,
+    "offset": 32,
+    "length": 79,
+    "text": "// Pair-mode entry via unzip, then a zip op fuses the two streams with an add.\n"
+  },
+  {
+    "id": "u0046",
+    "kind": "comment",
+    "token": 62,
+    "offset": 111,
+    "length": 96,
+    "text": "// Both clusters (B = 2), all 256 slices (A / 8), and full Way8 packet (A % 8) carry real data.\n"
+  },
+  {
+    "id": "u0047",
+    "kind": "comment",
+    "token": 62,
+    "offset": 439,
+    "length": 42,
+    "text": "// split into group 0 and group 1 along I\n"
+  },
+  {
+    "id": "u0048",
+    "kind": "comment",
+    "token": 62,
+    "offset": 537,
+    "length": 19,
+    "text": "// group0 + group1\n"
+  }
+]

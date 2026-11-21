@@ -1,0 +1,418 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Spatial and Temporal Dimensions"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "`HostTensor<D, E>` uses a single mapping to fully capture its physical representation.\nDevice tensors split their mapping across multiple dedicated dimensions:"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 9,
+    "text": "**Spatial dimensions**: `Chip`, `Cluster`, and `Slice` distribute data across the hardware hierarchy.\n`SpmTensor` uses `Pe` instead of `Slice` for scratchpad placement.\nIn stream tensors, `Packet` additionally sizes parallel delivery within each temporal iteration."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 14,
+    "text": "**Temporal dimension**: `Time` sequences the delivery iterations in stream tensors."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 19,
+    "text": "Spatial Dimensions"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 22,
+    "text": "Each spatial level in the hardware hierarchy gets its own type parameter in the tensor type, enabling spatial parallelism.\nAll units at each level are assumed to share the same mapping."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 25,
+    "text": "The notation below names physical dimensions but is not a public type or constructor.\nThe storage modules document the public tensor APIs and views."
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 27,
+    "offset": 0,
+    "length": 33,
+    "text": "// Assumed throughout this page.\n"
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 27,
+    "offset": 57,
+    "length": 15,
+    "text": "// HBM tensors\n"
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 27,
+    "offset": 140,
+    "length": 16,
+    "text": "// SRAM tensors\n"
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 27,
+    "offset": 156,
+    "length": 80,
+    "text": "// DM (Data Memory), TRF (Tensor Register File), and VRF (Vector Register File)\n"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 29,
+    "text": "HBM tensors distribute data across chips for spatial parallelism: each chip processes its own portion of the data simultaneously.\nFor example, `HbmTensor<bf16, m![A], m![B]>` distributes `8 × 512 = 4096` elements across 8 chips with 512 elements per chip.\nThe `i`-th chip's `j`-th element stores tensor index `i![A: i, B: j]`."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 32,
+    "text": "SRAM tensor types add `Cluster` and `Slice` dimensions for finer-grained parallelism.\n`SpmTensor` uses `Pe` for fused-PE placement of scratchpad data: `m![4]` replicates the payload over every PE, `m![1 # 4]` keeps it in PE 0, and `m![X % 4]` partitions it over the four.\n`by_positions` requires an SPM index kept entirely on PE 0, spelled `Pe = m![1 # 4]` on a four-PE cluster; see [Gather and Scatter](../moving-tensors/dma-engine.md#gather-and-scatter).\n`TrfTensor` additionally has a `Lane` dimension that distributes TRF data across the 8 lanes per slice.\nSee [Contraction Engine](../computing-tensors/contraction-engine/index.md) for details."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 35,
+    "text": "HBM tensors carry concrete addresses.\nDM, SPM, TRF, and VRF tensors may receive addresses from the backend.\nHost tensors remain host-side values.\nMapping parameters determine physical representation; storage owns addresses separately."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 38,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 43,
+    "text": "**`Chip`, `Cluster`, `Slice`, and `Pe` size**: they must exactly match the hardware counts:"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 49,
+    "text": "Unit"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 52,
+    "text": "Count"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 55,
+    "text": "Constraint"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 58,
+    "text": "Padding Example"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 68,
+    "text": "System-dependent"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 82,
+    "text": "2 / Chip"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 96,
+    "text": "256 / Cluster"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 110,
+    "text": "4 / Cluster"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 122,
+    "text": "One PE owns 64 slices, so a DM ↔ SPM transfer additionally requires `Pe::SIZE == Slice::SIZE / 64`: both sides then name the same slices."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 125,
+    "text": "Any dimension can be padded with `#` when the kernel uses fewer units than the hardware provides.\nFor example, `type Cluster = m![1 # 2]` uses 1 active cluster and 1 padding-only cluster, satisfying the hardware's 2-cluster-per-chip requirement."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 129,
+    "text": "[!NOTE]\nThe runtime operates at chip granularity (`#[device(chip = N)]`), so partial chip or cluster usage is not yet supported.\nThis may be relaxed in future releases."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 135,
+    "text": "**`Element` size**: `Element::SIZE * size_of::<D>()` must not exceed the per-unit SRAM capacity, which varies by tensor type:"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 141,
+    "text": "Type"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 144,
+    "text": "Unit"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 147,
+    "text": "Constraint"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 157,
+    "text": "512KB / Slice"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 168,
+    "text": "4KB / PE"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 179,
+    "text": "8KB / Lane"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 190,
+    "text": "8KB / Slice"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 201,
+    "text": "**`Element` alignment**: Device storage APIs impose alignment constraints on addresses; consult the tier-specific constructor and backend checks rather than assuming one address rule for every tensor."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 206,
+    "text": "Temporal Dimension"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 209,
+    "text": "`TuTensor` represents tensor data flowing through the [Tensor Unit](../computing-tensors/index.md) as a stream.\nIt retains the same `Chip`, `Cluster`, and `Slice` dimensions as the SRAM types, and adds `Time` and `Packet` for streaming.\n`Time` is the temporal dimension: it sequences the delivery iterations.\nUnlike the spatial dimensions, `Time` has no hardware-imposed size limit and grows with the amount of data to process.\n`Packet` is an additional spatial dimension that determines how many elements each slice receives per temporal iteration."
+  },
+  {
+    "id": "u0039",
+    "kind": "comment",
+    "token": 211,
+    "offset": 432,
+    "length": 35,
+    "text": "// After the start of the pipeline\n"
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 211,
+    "offset": 484,
+    "length": 26,
+    "text": "// After the Fetch Engine\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 211,
+    "offset": 527,
+    "length": 27,
+    "text": "// After the Switch Engine\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 211,
+    "offset": 571,
+    "length": 28,
+    "text": "// After the Collect Engine\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "comment",
+    "token": 211,
+    "offset": 616,
+    "length": 32,
+    "text": "// After the Contraction Engine\n"
+  },
+  {
+    "id": "u0044",
+    "kind": "comment",
+    "token": 211,
+    "offset": 665,
+    "length": 27,
+    "text": "// After the Reduce Engine\n"
+  },
+  {
+    "id": "u0045",
+    "kind": "comment",
+    "token": 211,
+    "offset": 709,
+    "length": 25,
+    "text": "// After the Cast Engine\n"
+  },
+  {
+    "id": "u0046",
+    "kind": "comment",
+    "token": 211,
+    "offset": 751,
+    "length": 30,
+    "text": "// After the Transpose Engine\n"
+  },
+  {
+    "id": "u0047",
+    "kind": "comment",
+    "token": 211,
+    "offset": 824,
+    "length": 44,
+    "text": "// Lifetime tied to the Tensor Unit context\n"
+  },
+  {
+    "id": "u0048",
+    "kind": "comment",
+    "token": 211,
+    "offset": 1054,
+    "length": 25,
+    "text": "// Fetch Engine's output\n"
+  },
+  {
+    "id": "u0049",
+    "kind": "comment",
+    "token": 211,
+    "offset": 1110,
+    "length": 21,
+    "text": "// Chip: single chip\n"
+  },
+  {
+    "id": "u0050",
+    "kind": "comment",
+    "token": 211,
+    "offset": 1152,
+    "length": 27,
+    "text": "// Cluster: single cluster\n"
+  },
+  {
+    "id": "u0051",
+    "kind": "comment",
+    "token": 211,
+    "offset": 1200,
+    "length": 50,
+    "text": "// Slice: distribute 64 channels across 32 slices\n"
+  },
+  {
+    "id": "u0052",
+    "kind": "comment",
+    "token": 211,
+    "offset": 1271,
+    "length": 62,
+    "text": "// Time: iterate over batch (N) and spatial (H, W) dimensions\n"
+  },
+  {
+    "id": "u0053",
+    "kind": "comment",
+    "token": 211,
+    "offset": 1354,
+    "length": 32,
+    "text": "// Packet: 2 channels per cycle\n"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 213,
+    "text": "Type `T` streams a tensor with an aggregate shape of $\\\\{N=4, C=64, H=32, W=32\\\\}$ across 32 slices (`Slice::SIZE = m![C / 2]::SIZE = 32`).\nThe `Time` dimension (`m![N, H, W]`) has size `4 * 32 * 32 = 4096`, which means there are 4,096 temporal iterations.\nFor each temporal iteration, the `Packet` dimension `m![C % 2]` delivers 2 channels to each slice.\nSince 32 slices operate in parallel, each temporal iteration processes `32 * 2 = 64` channels total."
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 216,
+    "text": "NCHW Representation Trace"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 219,
+    "text": "The NCHW example makes the representation changes traceable from an HBM representation that distributes batches across four chips:"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 223,
+    "text": "Move it to DM with one active chip and one element slice per pair of channels:"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 227,
+    "text": "The stream type `T` above uses the same channel split, but places `N, H, W` in `Time` and the two channels of each slice in `Packet`."
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 230,
+    "text": "Trace `Index (N=1, C=17, H=3, W=5)`:"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 235,
+    "text": "HBM selects chip `1`; its element offset is `17 * 32 * 32 + 3 * 32 + 5 = 17,509`."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 240,
+    "text": "DM selects slice `17 / 2 = 8`; the element mapping selects `N=1, H=3, W=5` and packet position `17 % 2 = 1`."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 245,
+    "text": "The stream selects `Time = 1 * 32 * 32 + 3 * 32 + 5 = 1,125` and `Packet = 1` on slice `8`."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 250,
+    "text": "The value changes physical coordinates at each stage, but its `Index` remains `(1, 17, 3, 5)`.\nThis traces the mapping-to-representation path.\n[Tensor Semantics](./tensor-semantics.md) defines what it means for a tensor to hold values."
+  }
+]

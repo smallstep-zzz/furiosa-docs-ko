@@ -1,0 +1,768 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Transpose Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Transpose Engine swaps the `Time` and `Packet` dimensions, while leaving the `Chip`, `Cluster`, and `Slice` dimensions unchanged."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "`CollectTensor` and `VectorFinalTensor` both expose `.transpose()`.\nThe `VectorFinalTensor` entry point feeds the Transpose Engine directly from the Vector Engine output."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 0,
+    "length": 83,
+    "text": "// `D: MaterializableScalar` (see its doc) excludes i5/i9 stagings from transpose.\n"
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 12,
+    "offset": 369,
+    "length": 30,
+    "text": "primitive(TuTensor::transpose)"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 14,
+    "text": "The kernel writer chooses `OutTime` and `OutPacket` (the output dimension layouts), and the compiler verifies the result against the hardware constraints listed under [Parameters](#parameters)."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 17,
+    "text": "The example below transposes an 8×16 `i8` matrix whose 16-wide rows are each gathered from two input packets (`D = 2`).\nIt is reused as the running example throughout the rest of this page."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 21,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 24,
+    "text": "The five transpose stages below are illustrated using the running example from [Interface](#interface)."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 27,
+    "text": "Parameters"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 30,
+    "text": "`valid_size` is the number of valid elements the Transpose Engine reads per cycle from its 32-byte input bus, and every input flit arrives in `bit-width × valid_size` form, with any remaining bytes of the 32-byte flit treated as padding and discarded by the Unpack stage.\nFor 8-bit and 16-bit elements, the engine can select doubled input packing and read 16 valid elements from each flit instead of the base 8. Doubled packing is not supported for 4-bit or 32-bit elements.\nData reaches the Transpose Engine via `CollectTensor::transpose()` (after `Fetch → [Switch →] Collect → [Cast →] Transpose`) or `VectorFinalTensor::transpose()` (directly from the [Vector Engine](./vector-engine/index.md)).\nThe [Contraction Engine](./contraction-engine/index.md) emits `32b × 8` only, while the [Vector Engine](./vector-engine/index.md) and [Fetch Engine](../moving-tensors/fetch-engine.md) emit any combination from the table below."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 33,
+    "text": "`in_cols`, `in_rows`, and `out_rows` are fixed by the kernel writer's `OutTime` and `OutPacket` choices.\nAll four are constrained by the element size:"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 39,
+    "text": "Element size"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 42,
+    "text": "Single `valid_size`"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 45,
+    "text": "Doubled `valid_size`"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 48,
+    "text": "Max `in_rows`"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 51,
+    "text": "Valid `in_cols`"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 58,
+    "text": "4-bit"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 64,
+    "text": "unsupported"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 75,
+    "text": "8-bit"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 92,
+    "text": "16-bit"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 109,
+    "text": "32-bit"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 115,
+    "text": "unsupported"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 127,
+    "text": "For the running example (`i8`, so `valid_size = 8`), the compiler derives:"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 133,
+    "text": "Parameter"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 136,
+    "text": "Value"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 139,
+    "text": "Notes"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 152,
+    "text": "`D = 2` packets gathered × `valid_size = 8`"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 174,
+    "text": "`D·E` (= `in_cols`, fully utilized)"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 181,
+    "text": "Unpack"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 184,
+    "text": "Each 32-byte input packet carries `valid_size` valid elements; the Unpack stage discards the rest of the flit as padding.\nThe compiler selects doubled packing when an 8-bit or 16-bit packet has live elements beyond the base 8-element prefix. The selected `valid_size` must still cover the complete live prefix; any remaining lanes must be padding."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 187,
+    "text": "In the running example: `[C, D, E # 32]` → `[C, D, E]`."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 190,
+    "text": "For example, an `i8` packet `[B=16 # 32]` uses doubled packing and contributes all 16 live elements in one cycle. The equivalent single-packed layout would contribute 8 elements from each of two consecutive packets. An `i4` packet cannot request the doubled form: its only supported `valid_size` is 16."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 193,
+    "text": "Gather"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 196,
+    "text": "One row of the input matrix is `in_cols = packets_per_col × valid_size` elements wide, assembled from `packets_per_col` consecutive packets — the innermost time steps.\nThe Gather stage concatenates those packets into a single row, and `in_rows` further time steps stack into the `[in_rows × in_cols]` input matrix.\n(Unpack and Gather both happen as the engine reads its input — they are not separate buffered passes.)"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 199,
+    "text": "In the running example, the innermost `D = 2` packets each contribute `valid_size = 8`, forming `in_cols = 16`-wide rows, and the `C = 8` time steps above them stack into the `[8 × 16]` input matrix."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 202,
+    "text": "Transpose"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 205,
+    "text": "The matrix is transposed: `[in_rows × in_cols]` → `[in_cols × in_rows]`."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 208,
+    "text": "In the running example: `[C, D, E]` → `[D, E, C]`."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 211,
+    "text": "Trim"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 214,
+    "text": "When some input packets carry fewer valid elements than `valid_size`, the transposed matrix has padded rows.\nThe Trim stage drops those rows, producing `[out_rows × in_rows]` where `out_rows ≤ in_cols`."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 217,
+    "text": "In the running example: `[D, E, C]` → `[D, E, C]` (the input is fully utilized, so no rows are trimmed).\nSee the [Small Matrix](#small-matrix) example for a case where Trim actually discards rows."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 220,
+    "text": "Align"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 223,
+    "text": "The transposed rows are `in_rows` elements wide, but DM packets must be 32 bytes.\nThe Align stage pads each row to a 32-byte flit, producing shape `[out_rows × (in_rows # F)]` where `F` is chosen so that `D[F]` is 32 bytes."
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 226,
+    "text": "In the running example: `[D, E, C]` → `[D, E, C # 32]`."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 229,
+    "text": "Latency"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 233,
+    "text": "[!NOTE]\nRead [Performance](#performance) first for the formulas."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 237,
+    "text": "For the running example, `in_cols = 16 ≤ 16` selects double buffering.\nWith `in_flits = 16`, `out_rows = 16`, and `n = 2`, the total latency is `16 + 1 × max(16, 16) + 16 = 48` cycles."
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 240,
+    "text": "Examples"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 243,
+    "text": "Small Matrix"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 246,
+    "text": "This example demonstrates the Trim stage discarding padded rows when `out_rows < in_cols`:"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 250,
+    "text": "Parameters:"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 256,
+    "text": "Parameter"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 259,
+    "text": "Value"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 262,
+    "text": "Notes"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 275,
+    "text": "`B::SIZE = 2`, padded to 8"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 303,
+    "text": "Stages:"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 308,
+    "text": "**Unpack**: `[A, B # 32]` → `[A, B # 8]`."
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 313,
+    "text": "**Gather**: `[A, B # 8]` → `[A, B # 8]` (`packets_per_col = 1`, so each packet is already a full `in_cols = 8` row)."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 318,
+    "text": "**Transpose**: `[A, B # 8]` → `[B # 8, A]`."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 323,
+    "text": "**Trim**: `[B # 8, A]` → `[B, A]` (6 padded rows trimmed)."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 328,
+    "text": "**Align**: `[B, A]` → `[B, A # 32]`."
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 333,
+    "text": "Latency: `in_cols = 8 ≤ 16` selects double buffering.\nWith `in_flits = 4`, `out_rows = 2`, and `n = 1`, the total is `4 + 0 × max(4, 2) + 2 = 6` cycles."
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 336,
+    "text": "Large Column"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 339,
+    "text": "This example forces single buffering by making `in_cols > 16`, which prevents input and output from overlapping and so increases total cycles:"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 343,
+    "text": "Parameters:"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 349,
+    "text": "Parameter"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 352,
+    "text": "Value"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 355,
+    "text": "Notes"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 396,
+    "text": "Stages:"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 401,
+    "text": "**Unpack**: `[C, D, E # 32]` → `[C, D, E]`."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 406,
+    "text": "**Gather**: the innermost `D = 4` packets form each `in_cols = 32` row, and the `C = 8` time steps stack into the `[8 × 32]` input matrix."
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 411,
+    "text": "**Transpose**: `[C, D, E]` → `[D, E, C]`."
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 416,
+    "text": "**Trim**: `[D, E, C]` → `[D, E, C]` (no rows trimmed)."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 421,
+    "text": "**Align**: `[D, E, C]` → `[D, E, C # 32]`."
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 426,
+    "text": "Latency: `in_cols = 32 > 16` selects single buffering.\nWith `in_flits = 32`, `out_rows = 32`, and `n = 2` (B), the total is `2 × (32 + 32) = 128` cycles."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 429,
+    "text": "16-bit Data Type"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 432,
+    "text": "This example uses `bf16`, where the wider element halves max `in_rows` (4 instead of 8) and shrinks the 32-byte output flit to 16 elements (instead of 32 for `i8`):"
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 436,
+    "text": "Parameters:"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 442,
+    "text": "Parameter"
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 445,
+    "text": "Value"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 448,
+    "text": "Notes"
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 489,
+    "text": "Stages:"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 494,
+    "text": "**Unpack**: `[D, E # 16]` → `[D, E]`."
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 499,
+    "text": "**Gather**: `[D, E]` → `[D, E]` (`packets_per_col = 1`; each packet is already a full `in_cols = 8` row)."
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 504,
+    "text": "**Transpose**: `[D, E]` → `[E, D]`."
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 509,
+    "text": "**Trim**: `[E, D]` → `[E, D]` (no rows trimmed)."
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 514,
+    "text": "**Align**: `[E, D]` → `[E, D # 16]`."
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 519,
+    "text": "Latency: `in_cols = 8 ≤ 16` selects double buffering.\nWith `in_flits = 4`, `out_rows = 8`, and `n = 8` (C), the total is `4 + 7 × max(4, 8) + 8 = 68` cycles."
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 522,
+    "text": "4-bit Data Type"
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 525,
+    "text": "This example uses `i4`, where `valid_size = 16` doubles the per-cycle element count and max `in_rows` rises to 16 (16 × 4 bits = 8 bytes), while the 32-byte flit grows to 64 elements:"
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 529,
+    "text": "Parameters:"
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 535,
+    "text": "Parameter"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 538,
+    "text": "Value"
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 541,
+    "text": "Notes"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 582,
+    "text": "Stages:"
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 587,
+    "text": "**Unpack**: `[C, E # 64]` → `[C, E]`."
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 592,
+    "text": "**Gather**: `[C, E]` → `[C, E]` (`packets_per_col = 1`; each packet is already a full `in_cols = 16` row)."
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 597,
+    "text": "**Transpose**: `[C, E]` → `[E, C]`."
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 602,
+    "text": "**Trim**: `[E, C]` → `[E, C]` (no rows trimmed)."
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 607,
+    "text": "**Align**: `[E, C]` → `[E, C # 64]`."
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 612,
+    "text": "Latency: `in_cols = 16 ≤ 16` selects double buffering.\nWith `in_flits = 16`, `out_rows = 16`, and `n = 4` (B), the total is `16 + 3 × max(16, 16) + 16 = 80` cycles."
+  },
+  {
+    "id": "u0104",
+    "kind": "prose",
+    "token": 615,
+    "text": "32-bit Data Type"
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 618,
+    "text": "This example uses `f32`, one of the two 32-bit formats the [Contraction Engine](./contraction-engine/index.md) emits (`32b × 8`, either `f32` or `i32`).\nThe wider element drops max `in_rows` to 2 (2 × 4 bytes = 8 bytes) and shrinks the 32-byte flit to 8 elements:"
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 622,
+    "text": "Parameters:"
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 628,
+    "text": "Parameter"
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 631,
+    "text": "Value"
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 634,
+    "text": "Notes"
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 675,
+    "text": "Stages:"
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 680,
+    "text": "**Unpack**: `[D, E # 8]` → `[D, E]`."
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 685,
+    "text": "**Gather**: `[D, E]` → `[D, E]` (`packets_per_col = 1`; each packet is already a full `in_cols = 8` row)."
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 690,
+    "text": "**Transpose**: `[D, E]` → `[E, D]`."
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 695,
+    "text": "**Trim**: `[E, D]` → `[E, D]` (no rows trimmed)."
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 700,
+    "text": "**Align**: `[E, D]` → `[E, D # 8]`."
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 705,
+    "text": "Latency: `in_cols = 8 ≤ 16` selects double buffering.\nWith `in_flits = 2`, `out_rows = 8`, and `n = 4` (B), the total is `2 + 3 × max(2, 8) + 8 = 34` cycles."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 708,
+    "text": "Performance"
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 711,
+    "text": "A burst runs `n = OutTime::SIZE / out_rows` transpose iterations.\nEach iteration moves `in_flits = in_rows × (in_cols / valid_size)` input flits and `out_rows` output flits."
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 714,
+    "text": "Buffering Modes"
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 717,
+    "text": "The Transpose Engine has two internal buffers, each holding 16 columns.\nThe compiler picks double buffering when `in_cols ≤ 16` and single buffering otherwise: double buffering overlaps input and output to reduce total cycles, while single buffering serializes the two phases."
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 720,
+    "text": "Single Buffering Latency"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 723,
+    "text": "The total burst latency is `n × (in_flits + out_rows)`.\nBoth buffers are used together, so input and output add together each iteration."
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 726,
+    "text": "Double Buffering Latency"
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 729,
+    "text": "The total burst latency is `in_flits + (n - 1) × max(in_flits, out_rows) + out_rows`, which breaks into three phases:"
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 734,
+    "text": "**Input-only phase** (`in_flits` cycles): the first buffer fills."
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 739,
+    "text": "**Overlap phase** (`(n - 1) × max(in_flits, out_rows)` cycles): one buffer receives input while the other produces output simultaneously, so the slower side gates each iteration."
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 744,
+    "text": "**Output-only phase** (`out_rows` cycles): the last buffer drains."
+  }
+]

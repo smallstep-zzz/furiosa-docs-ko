@@ -1,0 +1,482 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Fetch Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Fetch Engine reads a DM tensor and produces a packet stream for the Tensor Unit, with `OutTime` and `OutPacket` choosing the stream consumed by later stages."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Choose Fetch when data in DM must enter the Tensor Unit stream with a specific temporal and packet order."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Interface"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "`BeginTensor` represents a tensor resident in DM, at the entry of the Tensor Unit pipeline.\nIts `Time` is `m![1]` (no temporal iteration before the pipeline starts) and `Packet` is the element layout in DM."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "`BeginTensor::fetch()` runs the sequencer and produces a `FetchTensor` packet stream.\nThe stream can feed the [Fetch Adapter](../computing-tensors/fetch-adapter.md), [Switch Engine](../computing-tensors/switch-engine.md), or [Collect Engine](../computing-tensors/collect-engine.md).\nThe `assert_eq!` calls enforce hardware constraints on `Cluster::SIZE`, `Slice::SIZE`, and packet alignment (see [Constraints](#constraints))."
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 18,
+    "offset": 221,
+    "length": 26,
+    "text": "primitive(TuTensor::fetch)"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 20,
+    "text": "As introduced in [Mapping Tensors](../mapping-tensors/index.md), the `Chip`, `Cluster`, `Slice`, `Time`, `Packet` mapping distributes data across space and time.\n`.fetch()` preserves the `Chip`, `Cluster`, and `Slice` dimensions unchanged from the input, because each slice independently reads its own DM partition.\nLater the [Switch Engine](../computing-tensors/switch-engine.md) changes the `Slice` mapping by moving data across slices.\n[Axis lifting](#axis-lifting) changes `Chip`, `Cluster`, or `Slice` without transferring data, using different DM read offsets across the selected dimension."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 23,
+    "text": "`fetch()` takes `OutTime` and `OutPacket` type parameters that configure the Fetch Sequencer.\n`OutTime` sets the number of time steps in the output stream, and `OutPacket` sets the element layout within each packet.\nFor performance implications of `OutPacket` choices, see [Optimizations](#optimizations)."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 26,
+    "text": "The following example fetches an `i8` matrix from DM as an `i8` packet stream.\nThe output `FetchTensor` streams 512 time steps, each a 32-element `i8` packet (32 bytes).\nHere `OutTime = m![A]` and `OutPacket = m![B]`."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 30,
+    "text": "`Chip`, `Cluster`, and `Slice` are the hardware spatial parallelism dimensions.\nA Fetch Sequencer runs independently in every slice, each operating on its own local DM partition.\nIn this example, `CH = 4`, `CL = 2`, and `S = 256` describe a 4-chip system with two clusters per chip and 256 slices per cluster.\nEach slice runs the same sequencer over its own `A×B` sub-tensor."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 33,
+    "text": "Axis Lifting"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 36,
+    "text": "`fetch_chip_lift`, `fetch_cluster_lift`, and `fetch_slice_lift` move axes from `Time` to `Chip`, `Cluster`, or `Slice`.\nA plain `fetch` starts every chip, cluster, and slice at the same DM offset and traverses the axes in `Time`.\nA lift gives each chip, cluster, or slice a different read *base*, so the lifted axes are read in parallel and removed from `Time`."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 39,
+    "text": "A lift requires the source region to be replicated across the selected dimension because a read base changes only the starting offset.\nThe DM placement represents this replication as a broadcast, which the lift replaces with the lifted axes."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 42,
+    "text": "For `Slice`, use [`InterTranspose`](../computing-tensors/switch-engine.md#intertranspose) when data must move between slices or from `Slice` to `Time`.\nFor `Chip` and `Cluster`, a [DMA](./dma-engine.md) is the alternative when the source region is not replicated."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 48,
+    "text": "Stage"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 51,
+    "text": "Dimension"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 54,
+    "text": "Where the base comes from"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 67,
+    "text": "the read command encodes a static base, so the lift adds no setup operation"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 78,
+    "text": "the read command encodes a static base, so the lift adds no setup operation"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 89,
+    "text": "the compiler materializes one runtime base per slice with a DMA, an add in the fetch's execution context, and an SFR store"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 95,
+    "text": "Slice bases depend on the source tensor's runtime address and therefore cannot be encoded as static command fields.\nThe compiler copies constant relative offsets from DRAM to SRAM, adds the source address in the fetch's execution context, and stores the results in the per-slice base SFRs.\nThe fetch waits for this setup, which uses the same SFR-store mechanism as the Switch Engine's [custom bitmap](../computing-tensors/switch-engine.md#configuration-overhead)."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 98,
+    "text": "For a sub-context fetch, the setup store overwrites SFRs that the fetch itself needs.\nThe compiler restores those parameters after writing the bases; both contexts support every lift variant."
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 100,
+    "offset": 309,
+    "length": 36,
+    "text": "primitive(TuTensor::fetch_chip_lift)"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 100,
+    "offset": 818,
+    "length": 39,
+    "text": "primitive(TuTensor::fetch_cluster_lift)"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 100,
+    "offset": 1333,
+    "length": 37,
+    "text": "primitive(TuTensor::fetch_slice_lift)"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 102,
+    "text": "Example: Lifting `Q` onto `Slice`"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 106,
+    "text": "With `A = 128`, the `Slice` placement `m![A, 2]` describes 128 pairs of slices; both slices in each pair hold the same `m![Q, V]` data.\nA plain `fetch` reads all four `Q` values on both slices.\nThe lift replaces the broadcast `2` with `Q / 2`, leaving `Q % 2` in `Time`: the first slice reads `Q = 0, 1` from base 0, and the second reads `Q = 2, 3` from base 32 elements (64 bytes of `bf16`)."
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 115,
+    "text": "placement"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 118,
+    "text": "base"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 121,
+    "text": "reads"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 124,
+    "text": "time steps"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 131,
+    "text": "`fetch`, either slice"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 148,
+    "text": "lift, first slice"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 165,
+    "text": "lift, second slice"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 171,
+    "text": "32 elements"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 183,
+    "text": "The base for any chip, cluster, or slice is the sum of each lifted-axis value multiplied by its original DM stride.\nHere the second slice has `Q / 2 = 1`, so its base is `1 × (Q % 2) × V = 32` elements."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 186,
+    "text": "Requirements"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 189,
+    "text": "A lift must satisfy all of the following:"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 194,
+    "text": "The input and output sizes of the selected dimension must match."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 199,
+    "text": "Only broadcasts may change.\nThe verifier compares the mappings in size-2 groups; a changed broadcast `2` must become an axis component of size 2.\nTo replace a broadcast with padding, reshape the DM placement and leave that padding unread.\nSeveral groups may change in one lift, but an existing axis or a broadcast of 3 may not."
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 204,
+    "text": "Lifted axes must be removed from `OutTime`. `OutPacket` remains unchanged."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 209,
+    "text": "Lift methods must be called in `Chip`, `Cluster`, `Slice` order, at most once per dimension."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 214,
+    "text": "Every calculated base must be a multiple of 8 bytes."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 219,
+    "text": "If an unsafe `reshape` introduces the broadcast, the data must already be replicated. `reshape` checks element order, not replication; violating this requirement can produce different hardware and CPU results."
+  },
+  {
+    "id": "u0046",
+    "kind": "comment",
+    "token": 223,
+    "offset": 48,
+    "length": 86,
+    "text": "// Valid: DMA replicates `[H, V]` across `Rep`; reshape exposes `Rep` as a broadcast.\n"
+  },
+  {
+    "id": "u0047",
+    "kind": "comment",
+    "token": 223,
+    "offset": 741,
+    "length": 90,
+    "text": "// Invalid for lifting: `G` stores different values, but reshape names it as a broadcast.\n"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 225,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 230,
+    "text": "**Hardware dimensions**: `Chip::SIZE`, `Cluster::SIZE`, and `Slice::SIZE` must match the hardware configuration (see [Spatial and Temporal Dimensions](../mapping-tensors/spatial-temporal-dimensions.md#constraints))."
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 235,
+    "text": "Multi-Read Packet"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 238,
+    "text": "Preparing a packet may require multiple hardware reads because packet axes may not be contiguous in DM, and the hardware reads at most 32 bytes at once.\nIn the [main-context](../computing-tensors/index.md#execution-context), `read_size` is the largest divisor of `max_access_size` for which `D[read_size]` is 1, 2, 4, 8, 16, or 32 bytes.\nSee [Sequencer Architecture](./sequencer.md#access-size) for `max_access_size`.\nIn the [sub-context](../computing-tensors/index.md#execution-context), `read_size` is fixed at 8 bytes.\nThe compiler derives `read_size` from the input element type and any [Fetch Adapter](../computing-tensors/fetch-adapter.md) cast.\nUsers do not set it directly.\nMulti-read occurs whenever `Packet::SIZE > read_size`.\nFor example, a 24-byte packet in the main-context forces `read_size = 8` and 3 reads per packet.\nThe total cycle count is `Time::SIZE * (Packet::SIZE / read_size)`."
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 241,
+    "text": "The following examples fetch the same `i4` tensor of shape `m![N, C, H, W]` (with `N=4, C=3, H=4, W=16`) using four different `OutPacket` choices."
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 245,
+    "text": "Interleaving"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 248,
+    "text": "Interleaving combines two tensors with identical mappings into a single sequencer operation, reducing overhead when both tensors are needed for the same computation.\nAn explicit `Time` axis encodes alternation between the two tensors."
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 251,
+    "text": "In the following example, the main-context creates an interleaved tensor using `begin_interleaved()`.\nThe first temporal iteration fetches from `lhs`, the second from `rhs`, the third from `lhs` again, and so on.\nAt most two tensors can be interleaved in a single fetch operation."
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 255,
+    "text": "Optimizations"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 258,
+    "text": "Three factors determine Fetch Sequencer throughput."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 263,
+    "text": "**Input bandwidth**: `read_size` is limited by axis contiguity in DM and packet size.\nNon-adjacent axes reduce `max_access_size` and therefore `read_size` (see [Non-Contiguous Packets](./sequencer.md#non-contiguous-packets)).\nA packet smaller than the contiguous run also limits `read_size`.\nPadding to a larger power-of-two raises it (see [Packet padding](#example-packet-padding))."
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 266,
+    "text": "Repeated access to the same bank can starve lower-priority [Commit Engine](./commit-engine.md) and [DMA Engine](./dma-engine.md) operations.\nThe limit is 64 consecutive accesses; exceeding it can cause a NoC timeout."
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 269,
+    "text": "See [Memory Performance](./memory-performance.md) for details."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 274,
+    "text": "**Output bandwidth**: the downstream [Collect Engine](../computing-tensors/collect-engine.md) converts Fetch's packets to 32-byte *flits*, so packet sizes that don't align to 32 bytes waste bandwidth.\nA 20-byte packet fills one flit with 12 bytes of zero-padding, wasting `12 / 32 = 37.5%`.\nA 40-byte packet spans two flits (64 bytes total) and zero-pads the final 24 bytes of the second flit, wasting `24 / 64 = 37.5%`."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 279,
+    "text": "**Spatial parallelism**: Distributing fetches across slices maximizes throughput."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 284,
+    "text": "Example: Packet padding"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 287,
+    "text": "Padding `OutPacket` to a larger power-of-two element count can increase `read_size`.\nThe three examples below fetch the same 30-byte tensor in 15, 3, and 1 cycles by growing the packet from 2 to 16 to 32 bytes:"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 291,
+    "text": "In these examples, padding reads beyond the actual data, but this is safe because padding values do not affect computation.\nDifferent padding strategies produce different `FetchTensor` mappings, which may affect downstream components."
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 294,
+    "text": "The same `A = 3`, `B = 5`, `C = 2` `f8e4m3` tensor can use these packet mappings:"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 300,
+    "text": "Function"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 303,
+    "text": "Fetch `Time`"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 306,
+    "text": "Fetch `Packet`"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 309,
+    "text": "Fetch work"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 312,
+    "text": "Collect padding"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 328,
+    "text": "15 packets of 8 bytes"
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 331,
+    "text": "24 bytes for each packet."
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 345,
+    "text": "3 packets of 16 bytes"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 348,
+    "text": "16 bytes for each packet."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 362,
+    "text": "1 packet of 32 bytes"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 365,
+    "text": "None."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 371,
+    "text": "The 8-byte and 16-byte candidates require Collect to pad each packet to a 32-byte flit.\nThe 32-byte candidate reaches Collect as one full flit, but its extra physical capacity can increase DM usage.\nThe schedule comparison decides whether fewer fetches outweigh the padding and downstream layout cost for the fixed workload."
+  }
+]

@@ -1,0 +1,218 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Language Server"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The language-server proxy provides IDE navigation, diagnostics, and readable mapping-expression types.\nEditor rendering does not change type checking."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "This tool reference details the installation and configuration of `furiosa-rust-analyzer-proxy`, a proxy for `rust-analyzer` that provides IDE support for mapping expressions.\nQuick Start introduces this tool alongside the other development tools; this section gives the installation and configuration steps.\nThe proxy runs `rust-analyzer` underneath, forwards normal Rust language-server traffic to it, and rewrites editor-facing results so mapping types are displayed in `m![...]` notation."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Installation"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 15,
+    "text": "Ensure [`rust-analyzer`](https://rust-analyzer.github.io/book/rust_analyzer_binary.html) is installed and available in your `PATH`.\nThe proxy launches this upstream `rust-analyzer` process to provide standard Rust IDE features."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 20,
+    "text": "Download the `furiosa-rust-analyzer-proxy` binary from the [GitHub releases](https://github.com/furiosa-ai/furiosa-opt/releases/latest) and make it executable:"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "Configure your IDE to use the downloaded binary instead of the default language server.\nFor example, in VSCode, update your `settings.json`:"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 32,
+    "text": "Environment variables"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 35,
+    "text": "You can configure the language server using environment variables.\nFor example, in VSCode, update your `settings.json`:"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 41,
+    "text": "`FURIOSA_RUST_ANALYZER_PROXY_UPSTREAM`: Custom path to the upstream `rust-analyzer` binary that the proxy launches.\nDefaults to `rust-analyzer` in `PATH`."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 46,
+    "text": "Features"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 49,
+    "text": "The proxy delegates standard Rust IDE features to `rust-analyzer` and rewrites mapping expressions in editor-facing results."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 52,
+    "text": "Call Hierarchy"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 55,
+    "text": "Provides incoming and outgoing call hierarchy views.\nFunction details shown in hierarchy entries are converted into mapping expressions."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 58,
+    "text": "![Call Hierarchy Demo](images/language-server-call-hierarchy.png)"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 61,
+    "text": "Code Actions"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 64,
+    "text": "Provides quick fixes, refactors, and other editor actions.\nAction title and text edits are converted into mapping expressions."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 67,
+    "text": "![Code Action Demo](images/language-server-code-action.webp)"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 70,
+    "text": "Code Completions"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 73,
+    "text": "Provides completion items for names, methods, functions, types, and snippets.\nCompletion labels, detail text, and text edits are converted into mapping expressions."
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 76,
+    "text": "![Code Completions Demo](images/language-server-code-completions.png)"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 79,
+    "text": "Diagnostics"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 82,
+    "text": "Provides diagnostics from `rust-analyzer` and `rustc`.\nDiagnostic messages and related information are converted into mapping expressions."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 85,
+    "text": "![Diagnostics Demo](images/language-server-diagnostics.png)"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 88,
+    "text": "Hover"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 91,
+    "text": "Shows additional information when hovering over a symbol.\nHover contents such as inferred types, function signatures, and documentation are converted into mapping expressions."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 94,
+    "text": "![Hover Demo](images/language-server-hover.png)"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 97,
+    "text": "Inlay Hints"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 100,
+    "text": "Shows additional information inline with the source code.\nInlay hints are converted into mapping expressions."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 104,
+    "text": "[!TIP]\nFor the most accurate conversion, set [`rust-analyzer.inlayHints.maxLength`](https://rust-analyzer.github.io/book/configuration.html#inlayHints.maxLength) to `null` (unlimited length).\nThis reduces how often long inlay hints are truncated into '_'."
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 108,
+    "text": "![Inlay Hints Demo](images/language-server-inlay-hints.png)"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 111,
+    "text": "Signature Help"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 114,
+    "text": "Shows function signatures and the active parameter while writing a call.\nSignature labels, parameter labels, and documentation are rewritten to use mapping notation, including offset-based parameter labels returned by LSP clients."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 117,
+    "text": "![Signature Help Demo](images/language-server-signature-help.webp)"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 120,
+    "text": "Caveats"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 123,
+    "text": "The language server may incorrectly interpret user-defined types as mapping expressions if they share names with internal mapping components.\nFor instance, if you define a custom `Symbol<T>` struct, the language server might mistakenly display it as `m![T]` in your IDE.\nThis is purely a UI display issue and does not affect the other LSP behaviors."
+  }
+]

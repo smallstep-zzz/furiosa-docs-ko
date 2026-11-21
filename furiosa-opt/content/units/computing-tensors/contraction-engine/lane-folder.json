@@ -1,0 +1,170 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Lane Folder"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Lane Folder is the Contraction Engine's final stage.\nIt eliminates the `Lane` dimension by relocating its 8 values into either `OutPacket` (Interleaved) or `OutTime` (Sequential).\nNo values are summed: the stage folds `Lane` into another axis rather than reducing it."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "`.contract_lane(mode)` invokes the Lane Folder.\nThe stage drains the upstream Time Reducer's buffer through an 8-element-wide output bus one cycle at a time, and `LaneMode` selects what each cycle's flit carries."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 447,
+    "length": 44,
+    "text": "primitive(ContractTimeTensor::contract_lane)"
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 12,
+    "offset": 1037,
+    "length": 91,
+    "text": "// Earlier stages only retype the deferred operands. Perform their fused contraction here,\n"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 12,
+    "offset": 1136,
+    "length": 38,
+    "text": "// then apply the lane-fold relayout.\n"
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 12,
+    "offset": 1182,
+    "length": 93,
+    "text": "// `contraction_prewidened` validates `out` through mapping carve. Symbol-wise comparison is\n"
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 12,
+    "offset": 1283,
+    "length": 77,
+    "text": "// invalid because one contracted symbol may span spatial and reduced slots.\n"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 14,
+    "text": "The minimal examples below take a `ContractTimeTensor` (the output of the upstream Time Reducer) and call only `.contract_lane(...)`, so each example shows the Lane Folder in isolation.\nThe input `Packet` carries the size that survived the [Packet Reducer](./packet-reducer.md), one of `{1, 2, 4, 8, 16, 32}` elements per lane."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 17,
+    "text": "Interleaved"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 20,
+    "text": "The `Lane` dimension folds into `OutPacket`: each cycle reads one column position across all 8 lanes (one value per lane, 8 values per flit), with `Lane` materialized as the innermost `OutPacket`."
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 23,
+    "offset": 90,
+    "length": 81,
+    "text": "// Input from upstream Time Reducer: Lane = m![N], Time = m![M], Packet = m![P].\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 23,
+    "offset": 281,
+    "length": 76,
+    "text": "// Output: OutTime = m![M, P] = [Time, Packet], OutPacket = m![N] = [Lane].\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 25,
+    "text": "Sequential"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 28,
+    "text": "The `Lane` dimension folds into `OutTime`: each cycle reads 8 column positions from one lane's `Packet` (8 values per flit), with `Lane` iterating across successive cycles.\nSince each cycle is 8 elements wide, `Packet` is first padded up to a multiple of 8 (the bus width), then split into `PadPacket / 8` cycles per lane and `PadPacket % 8` elements per cycle."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 32,
+    "text": "For `Packet::SIZE < 32`, `[PadPacket / 8]::SIZE = ceil(Packet::SIZE / 8)` is the number of cycles per packet (e.g., 1 cycle for `Packet::SIZE = 4`, 2 cycles for `Packet::SIZE = 16`)."
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 34,
+    "offset": 87,
+    "length": 81,
+    "text": "// Input from upstream Time Reducer: Lane = m![N], Time = m![M], Packet = m![P].\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 34,
+    "offset": 278,
+    "length": 103,
+    "text": "// Output: OutTime = m![M, N, P / 8] = [Time, Lane, Packet / 8], OutPacket = m![P % 8] = [Packet % 8].\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 36,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 39,
+    "text": "The Lane Folder has no constraints of its own.\nThe `LaneMode` selected here determines the slot capacity bound that the upstream Time Reducer enforces (see [Time Reducer Constraints](./time-reducer.md#constraints))."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 42,
+    "text": "Performance"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 45,
+    "text": "In Interleaved mode, throughput drops by `Lane::SIZE / 8` when `Lane < 8` (inactive lanes leave bus positions empty)."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 48,
+    "text": "In Sequential mode, when `Packet::SIZE < 8` (e.g., `Packet::SIZE = 4` after the Packet Reducer collapses half of an `bf16` packet), each cycle carries exactly `Packet::SIZE` elements rather than the full 8-element bus width: the output is narrower per cycle, but there is no padding and no wasted bus slots."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 51,
+    "text": "Latency is negligible: the Lane Folder reshapes per-lane outputs and does not add cycles beyond the buffer's drain time."
+  }
+]

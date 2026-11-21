@@ -1,0 +1,214 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Collect Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "All downstream engines ([Contraction Engine](./contraction-engine/index.md), [Vector Engine](./vector-engine/index.md), [Cast Engine](./cast-engine.md), [Transpose Engine](./transpose-engine.md), and [Commit Engine](../moving-tensors/commit-engine.md)) consume exactly 32-byte *flits*.\nThe Collect Engine normalizes arbitrary-sized packets to one flit in two steps:"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 9,
+    "text": "**Pad** the input packet up to the next 32-byte boundary.\nSkipped if the packet is already 32-byte aligned."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 14,
+    "text": "**Split** at the flit boundary: the inner 32 bytes become `Packet2`, and the outer flit count is absorbed into `Time2`.\nSkipped if the packet is already 32 bytes."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 19,
+    "text": "The resulting `CollectTensor` either flows down the pipeline to a downstream engine or is stored in the [Register Files](./register-files.md)."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 22,
+    "text": "Interface"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 25,
+    "text": "`SwitchTensor` and `FetchTensor` both expose `.collect()` with the same semantics.\nThe `FetchTensor` entry point bypasses the Switch Engine when no slice distribution is needed."
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 27,
+    "offset": 456,
+    "length": 28,
+    "text": "primitive(TuTensor::collect)"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 29,
+    "text": "Examples"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 32,
+    "text": "Single-Flit Packet"
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 34,
+    "offset": 228,
+    "length": 54,
+    "text": "// B=32 elements × 1 byte (i8) = 32 bytes = one flit.\n"
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 34,
+    "offset": 286,
+    "length": 43,
+    "text": "// Time and Packet pass through unchanged.\n"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 36,
+    "text": "When the input packet is already exactly 32 bytes, `collect` passes it through unchanged (`B = 32` elements × 1 byte for `i8` = 32 bytes)."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 40,
+    "text": "Sub-Flit Packet"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 42,
+    "offset": 227,
+    "length": 49,
+    "text": "// B=16 elements × 1 byte = 16 bytes < 32 bytes.\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 42,
+    "offset": 280,
+    "length": 45,
+    "text": "// Padded to 32 bytes: Packet2 = m![B # 32].\n"
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 42,
+    "offset": 329,
+    "length": 45,
+    "text": "// Time unchanged since it fits in one flit.\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 44,
+    "text": "When the input packet is smaller than 32 bytes, `collect` pads to 32 bytes (`B = 16` elements × 1 byte for `i8` = 16 bytes)."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 48,
+    "text": "Multi-Flit Packet"
+  },
+  {
+    "id": "u0020",
+    "kind": "comment",
+    "token": 50,
+    "offset": 242,
+    "length": 56,
+    "text": "// B=32 elements × 2 bytes (bf16) = 64 bytes = 2 flits.\n"
+  },
+  {
+    "id": "u0021",
+    "kind": "comment",
+    "token": 50,
+    "offset": 302,
+    "length": 56,
+    "text": "// Inner 16 elements = 32 bytes → Packet2 = m![B % 16].\n"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 50,
+    "offset": 362,
+    "length": 56,
+    "text": "// Outer 2 flits → absorbed into Time2 = m![A, B / 16].\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 52,
+    "text": "When the input packet exceeds 32 bytes, `collect` splits into flits and absorbs the outer flit count into Time (`B = 32` elements × 2 bytes for `bf16` = 64 bytes, so `B / 16 = 2` flits)."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 56,
+    "text": "Multi-Flit Packet With Padding"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 58,
+    "offset": 255,
+    "length": 68,
+    "text": "// B is not 32-byte aligned; first pad B to a multiple of 32 bytes.\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 58,
+    "offset": 327,
+    "length": 58,
+    "text": "// B # 64=64 elements × 1 byte (i8) = 64 bytes = 2 flits.\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "comment",
+    "token": 58,
+    "offset": 389,
+    "length": 61,
+    "text": "// Inner 32 elements = 32 bytes → Packet2 = m![B # 64 % 32].\n"
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 58,
+    "offset": 454,
+    "length": 61,
+    "text": "// Outer 2 flits → absorbed into Time2 = m![A, B # 64 / 32].\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 60,
+    "text": "When the input packet is not aligned to 32 bytes, it is first padded (`B = 51` elements × 1 byte for `i8` = 51 bytes, padded to 64).\nThen, `collect` splits into flits and absorbs the outer flit count (`B # 64 / 32 = 2`) into Time."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 64,
+    "text": "Register File Loading"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 67,
+    "text": "After normalization, store the `CollectTensor` into the Tensor Register File with [`.to_trf()`](./register-files.md#tensor-register-file) or the Vector Register File with [`.to_vrf()`](./register-files.md#vector-register-file).\nThe [Register Files](./register-files.md) chapter owns their APIs, regions, capacities, address modes, and examples."
+  }
+]

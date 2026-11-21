@@ -1,0 +1,86 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Furiosa Optimizer Kernel Authoring"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Follow `docs/src/quick-start.md` for the kernel quality model and verified patterns."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Agent Procedure"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 12,
+    "text": "Record the release tag and commit, or the checked-out contributor commit."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 17,
+    "text": "Implement the selected pattern, host oracle, and adversarial cases together."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 22,
+    "text": "Run the evidence sequence:"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "Run an NPU test when hardware is available."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 31,
+    "text": "Return the selected pattern, changed files, command results, schedule comparison, remaining hardware gap, and novel dataflow choices."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 36,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 41,
+    "text": "Treat a plain `cargo` invocation as the CPU build and `cargo furiosa-opt` as the NPU build."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 46,
+    "text": "Treat a passing kernel compile as mapping evidence, not value evidence."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 51,
+    "text": "Treat a passing CPU test as correctness evidence, not schedule evidence."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 56,
+    "text": "Do not claim a performance improvement without a lower makespan against the recorded baseline."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 61,
+    "text": "Do not update expected values, tests, or schedules merely to make a failure disappear. Diagnose the causal mapping, dataflow, or schedule decision."
+  }
+]

@@ -1,0 +1,15 @@
+This directory contains a Korean translation and a static HTML presentation
+of furiosa-ai/furiosa-opt documentation at commit
+3d43bc9d20f324af60e3006c3f1541938d7f5097 (2026-11-21).
+
+Original copyright: 2025-2026 FuriosaAI, Inc.
+The original LICENSE and NOTICE are preserved in this directory.
+
+Changes: Korean prose and code-comment translations, paragraph-aligned
+English-original popovers, navigation, search, responsive styles, and clearly
+marked reader notes. Executable code tokens are preserved. mdBook hidden
+setup lines are omitted from displayed examples, and three stale include
+references are resolved to their declarations in the same source revision.
+
+Korean translation and presentation: No5 community edition.
+This is not an official FuriosaAI translation.

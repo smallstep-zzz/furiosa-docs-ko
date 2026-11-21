@@ -1,0 +1,110 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Cast Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Cast Engine narrows `f32`/`i32` pipeline results to lower-precision types (e.g., `bf16`) before the [Commit Engine](../moving-tensors/commit-engine.md) writes them to DM, reducing storage cost."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "`CollectTensor`, `ContractTensor`, and `VectorFinalTensor` all expose `.cast()` with the same semantics."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 3,
+    "length": 80,
+    "text": "// The Cast Engine accepts only `VeScalar` inputs (hardware constraint), so the\n"
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 12,
+    "offset": 83,
+    "length": 57,
+    "text": "// bound lives on the impl rather than on a wider trait.\n"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 12,
+    "offset": 431,
+    "length": 25,
+    "text": "primitive(TuTensor::cast)"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 14,
+    "text": "`.cast::<OutD, OutPacket>()` converts each element to type `OutD` and pads the output back to one 32-byte flit.\nThe kernel writer chooses `OutD` (the target type) and `OutPacket` (the output element layout).\nThe compiler derives the rest."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 17,
+    "text": "Although the Cast Engine is not a [mathematical tensor move](../mapping-tensors/tensor-semantics.md#mathematical-tensor-move), it preserves the tensor's shape and only changes the element type.\nAll dimensions pass through unchanged, except for the `Packet` layout, which repads so the output still fits one 32-byte flit."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 20,
+    "text": "The example below casts an 8-element `i32` packet (8 × 4 = 32 bytes) to `i8`.\nAfter the cast, the 8 elements occupy 8 bytes, so `A # 32` pads the output back to 32 bytes:"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 24,
+    "text": "The input data may not fill 32 bytes.\nThe example below casts an `i32` input where 4 data elements are padded to 8 (`A # 8`, 32 bytes) into an `i8` output where the same 4 elements are padded to 32 (`A # 32`, also 32 bytes):"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 28,
+    "text": "Supported Casts"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 31,
+    "text": "Each input is a 32-byte flit.\nThe supported source types are `f32` and `i32`, each with specific target types:"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 37,
+    "text": "Input Type (`D`)"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 40,
+    "text": "Supported Output Types (`OutD`)"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 64,
+    "text": "Performance"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 67,
+    "text": "The Cast Engine is never the pipeline bottleneck: it processes one flit per cycle regardless of how much of the flit carries valid data.\nThe downstream [Commit Engine](../moving-tensors/commit-engine.md) aggregates under-utilized flits into dense DM writes, so no DM bandwidth is wasted."
+  }
+]

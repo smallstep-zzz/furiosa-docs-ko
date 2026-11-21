@@ -1,0 +1,32 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Tools"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "These tools support installation and the development process for kernel work."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 9,
+    "text": "[Kernel Optimizer](./kernel-optimizer.md): The cargo subcommand that drives the toolchain: backend selection, automatic kernel builds, and direct kernel compilation."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 14,
+    "text": "[Language Server](./language-server.md): Installation and configuration of `furiosa-rust-analyzer-proxy` for IDE integration."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 19,
+    "text": "[Schedule Viewer](./schedule-viewer.md): An interactive viewer for inspecting schedule JSON files."
+  }
+]

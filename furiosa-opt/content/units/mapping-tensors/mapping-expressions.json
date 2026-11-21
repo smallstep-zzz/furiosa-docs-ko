@@ -1,0 +1,536 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Mapping Expressions"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "A mapping expression is a Rust type that encodes a mapping.\nRead a position's `Cell` first; then use the `Index` terms, padding kind, or out-of-bounds result to debug the access.\nThis section defines the constructors and supported behavior that produce those results."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Axis Sizes"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "The `axes!` macro declares axis identifiers and their sizes.\nThe following declaration applies throughout this section:"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 14,
+    "text": "Position Results"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 17,
+    "text": "A mapping expression like `m![H, W]` maps each physical position to a `Cell`.\nSee the result before reading its terms:"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 21,
+    "text": "`Cell::Index` is a structural live result: it preserves the mapping terms, while `Index::finalize()` validates their scalar coordinates and can return an error for a modulo overshoot.\nPadding and out-of-bounds positions do not contain live terms.\n`Cell::Index(Index::new())` is a valid live result with no axis terms; it is distinct from `Cell::Padding` and `Cell::OutOfBounds`, so an empty `Index` never stands for a non-live position.\nThe `i!` macro combines assignments in the order written, which is the major-to-minor order for a composed mapping; because `Cell::combine` is non-commutative for padding, reorder assignments only when that order is intended."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 24,
+    "text": "`M` Constructor Rules"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 27,
+    "text": "Every mapping expression implements the `M` trait, which provides the buffer size and position mapping:"
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 29,
+    "offset": 0,
+    "length": 40,
+    "text": "// Inside `furiosa_opt_std::prelude`...\n"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 31,
+    "text": "Host Tensor Usage"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 34,
+    "text": "The simplest concrete type built on the `M` trait is `HostTensor<D, E>`: a host memory buffer of element type `D` whose representation is fully determined by mapping `E`.\n`E` determines both the buffer size (`E::SIZE`) and the correspondence from buffer positions to cells (`E::map`).\n`HostTensor<bf16, m![A, B]>` contains 4,096 elements of `bf16` data.\nFor a host tensor, each `Cell::Index(index)` returned by `E::map` identifies the structural `Index` stored at that physical position.\nCall `Index::finalize()` to validate its scalar coordinates before treating it as a tensor index; an overshoot can fail there.\nConvert `Cell::OutOfBounds` with `CellExt::finalize(PaddingKind::Top)` for reads or `CellExt::finalize(PaddingKind::Bottom)` for writes.\nThe formal definition of *holds* appears in [Tensor Semantics](./tensor-semantics.md)."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 37,
+    "text": "Device tensors such as `HbmTensor` and `DmTensor` have more complex representations spanning multiple mapping expressions; see [Spatial and Temporal Dimensions](./spatial-temporal-dimensions.md) for details."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 40,
+    "text": "Constructors"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 43,
+    "text": "Mapping expressions, including the mapping `E` in `HostTensor<D, E>`, are built by composing small constructors, each of which transforms or combines simpler mappings.\nThese expressions use arithmetic-like operators (`/`, `%`, and `#` for padding) to concisely define the mapping between tensor and linear buffer indices."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 46,
+    "text": "Symbol"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 49,
+    "text": "A symbol is a single uppercase letter whose size comes from the shape declaration.\nThe mapping `m![A]` maps 8 buffer indices linearly to tensor indices along the axis:"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 51,
+    "offset": 16,
+    "length": 23,
+    "text": "// Symbol<Ident::A, 8>\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 55,
+    "text": "[!NOTE]\nFor every symbol `A`, the zeroth index `i![A: 0]` is equivalent to the empty tensor index `i![]`."
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 59,
+    "text": "Pair"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 62,
+    "text": "The pair mapping `m![A, B]` stores a 2D tensor with shape $\\\\{A=8, B=512\\\\}$ as a buffer of 4,096 elements.\nThe mapping `Pair<L, R>` maps the Cartesian product of two spaces into a linear buffer where `L` is the major dimension and `R` is the minor dimension.\nThe size is `L::SIZE * R::SIZE`, and the mapping uses floor division and modulo to decompose indices.\nIf the major (`L`) result is padding, its kind wins before the minor (`R`) result is considered; an out-of-bounds result propagates when no live combination is possible.\n`m![A, B, C, D]` expands to `Pair<A, Pair<B, Pair<C, D>>>` and is right-associative."
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 64,
+    "offset": 19,
+    "length": 22,
+    "text": "// Pair<m![A], m![B]>\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 64,
+    "offset": 63,
+    "length": 50,
+    "text": "// First 512 elements hold A=0, next 512 hold A=1\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 67,
+    "text": "Identity"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 70,
+    "text": "The identity mapping `m![1]` creates a single-element buffer that maps buffer index `0` to the empty tensor index `i![]`.\nIt serves as the identity element for `Pair`: `m![1, A]` and `m![A, 1]` are both equivalent to `m![A]`.\nMore generally, a broadcast mapping returns the same live empty `Cell::Index(Index::new())` for every position below its size, and returns `Cell::OutOfBounds` beyond that size."
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 72,
+    "offset": 16,
+    "length": 12,
+    "text": "// Identity\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 75,
+    "text": "Padding"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 78,
+    "text": "Padding aligns data to hardware requirements by adding unused buffer space.\nFor example, the DMA engine requires rows to start on 64-byte boundaries.\nWith `axes![C = 13, D = 61]`, `m![C, D]` creates misaligned rows since `61` is not divisible by `64`.\n`m![C, D # 64]` fixes this by aligning each row to 64-byte boundaries, using 3 extra elements per row."
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 80,
+    "offset": 48,
+    "length": 35,
+    "text": "// Pair<m![C], Padding<m![D], 64>>\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 83,
+    "text": "The padded positions' content is part of the type, not just their count.\nThree kinds are tracked."
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 88,
+    "text": "`m![A # m]` (or `m![A #{*} m]`) is top padding to size `m`.\nThese positions are accessible but hold arbitrary values.\nRaw DM tensors carry this.\n`#` is the shorthand; `#{*}` spells the kind out explicitly."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 93,
+    "text": "`m![A #{0} m]` is zero-filled padding to size `m`.\nThese positions are accessible and known to hold zero.\nThe mapping records that value property; the expression itself does not perform the fill."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 98,
+    "text": "`m![A #{!} m]` is bottom padding to size `m`.\nReads are allowed and return arbitrary values; writes are forbidden.\nThis models positions the compiler must preserve when writing."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 103,
+    "text": "`#` defaults to top kind.\nThe Rust type level mirrors this via a const generic of `PaddingKind` on `Padding<L, SIZE, KIND>`.\n`Padding<L, N>` is `KIND = PaddingKind::Top`, `Padding<L, N, { PaddingKind::Zero }>` is the zero-filled variant, and `Padding<L, N, { PaddingKind::Bottom }>` is readable but non-writable."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 106,
+    "text": "`Cell::Padding(kind)` reports a position inside the padded extent but outside the inner mapping.\nThe `kind` is `Top`, `Zero`, or `Bottom`; positions beyond the padded extent remain `Cell::OutOfBounds`.\nThe complete `Cell` result definition appears in [Position Results](#position-results)."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 109,
+    "text": "Resize"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 112,
+    "text": "Resize constrains a mapping to a smaller logical size by truncating indices beyond the new size, discarding elements outside that range.\nUnlike padding, which expands the buffer, Resize shrinks the logical view.\nThe mapping `m![D = 2]` takes only the first 2 elements of axis `D`, producing indices `D = 0` and `D = 1`."
+  },
+  {
+    "id": "u0038",
+    "kind": "comment",
+    "token": 114,
+    "offset": 44,
+    "length": 33,
+    "text": "// Pair<m![C], Resize<m![D], 2>>\n"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 117,
+    "text": "Tiling"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 120,
+    "text": "Tiling is implemented through indexed views: `tile` validates a mapping split, then creates a metadata view without copying data.\nThe generic view API is `TensorView::tile<I, E2, LEN>(start)`.\n`I` is the mapping used to locate the tile, `E2` is the requested view mapping, `LEN` is the number of `I` cells in the tile, and `start` is the logical starting coordinate along `I`."
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 122,
+    "offset": 82,
+    "length": 46,
+    "text": "// HbmTensorView::<'_, bf16, m![1], m![A, B]>\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "comment",
+    "token": 122,
+    "offset": 187,
+    "length": 56,
+    "text": "// HbmTensorView::<'_, bf16, m![1], m![A, B = 2 # 512]>\n"
+  },
+  {
+    "id": "u0043",
+    "kind": "comment",
+    "token": 122,
+    "offset": 302,
+    "length": 56,
+    "text": "// HbmTensorView::<'_, bf16, m![1], m![A, B = 2 # 512]>\n"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 124,
+    "text": "The HBM example uses `I = m![B]`, `LEN = 2`, and `E2 = m![A, B = 2 # 512]`.\nThe `B = 2 # 512` mapping gives the view two live `B` positions inside a 512-cell physical extent; without that footprint, the split does not validate against the source mapping.\n`start = 0` and `start = 2` are logical `B` coordinates, so these views cover ranges `0..2` and `2..4`.\nThey are starts, not a separate tile-number API."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 127,
+    "text": "Read views fill cells outside the tile with `PaddingKind::Top`; mutable views require `PaddingKind::Bottom` there so writes cannot escape the tile.\nHBM and DM expose tier-specific tile wrappers, while TRF, VRF, and DPE use the generic view; `HostTensor` has no view/tile API."
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 130,
+    "text": "Stride and Modulo"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 133,
+    "text": "Stride (`/`) and modulo (`%`) decompose a single dimension into two: the outer (block index) and the inner (position within block).\nConsider the 512-element axis `B` divided into 8 blocks of 64 elements each.\nThe mapping `m![B / 64, B % 64]` creates an 8 × 64 grid where the first dimension selects which block and the second dimension selects the position within that block:"
+  },
+  {
+    "id": "u0048",
+    "kind": "comment",
+    "token": 135,
+    "offset": 22,
+    "length": 22,
+    "text": "// stride with size 8\n"
+  },
+  {
+    "id": "u0049",
+    "kind": "comment",
+    "token": 135,
+    "offset": 66,
+    "length": 23,
+    "text": "// modulo with size 64\n"
+  },
+  {
+    "id": "u0050",
+    "kind": "comment",
+    "token": 135,
+    "offset": 119,
+    "length": 25,
+    "text": "// equivalent to `m![B]`\n"
+  },
+  {
+    "id": "u0051",
+    "kind": "comment",
+    "token": 135,
+    "offset": 226,
+    "length": 43,
+    "text": "// block 2, position 2: B = 64*2 + 2 = 130\n"
+  },
+  {
+    "id": "u0052",
+    "kind": "comment",
+    "token": 135,
+    "offset": 331,
+    "length": 29,
+    "text": "// same result as flat m![B]\n"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 138,
+    "text": "Stride and modulo mappings can be visualized in tabular form.\nConsider the mapping `m![B / 4, B % 4]` with `B::SIZE = 16`.\nThe following table shows how buffer indices are arranged: each row corresponds to a specific index of `B / 4` (the stride axis), and each column corresponds to an index of `B % 4` (the modulo axis):"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 232,
+    "text": "Modulo differs from resize in how it handles buffer size:"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 237,
+    "text": "Resize shrinks the buffer by truncating indices beyond the new size."
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 242,
+    "text": "Modulo preserves the original buffer size while partitioning it into equal-sized blocks."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 247,
+    "text": "These operations can be nested for complex decompositions.\nThe following example splits `B` into three dimensions where the buffer's bit arrangement differs from that of the tensor index."
+  },
+  {
+    "id": "u0058",
+    "kind": "comment",
+    "token": 249,
+    "offset": 0,
+    "length": 39,
+    "text": "// B's bits: 6 - 8,  0 - 4,          5\n"
+  },
+  {
+    "id": "u0059",
+    "kind": "comment",
+    "token": 249,
+    "offset": 39,
+    "length": 39,
+    "text": "// Values:   0 - 7, 0 - 31,      0 - 1\n"
+  },
+  {
+    "id": "u0060",
+    "kind": "comment",
+    "token": 249,
+    "offset": 253,
+    "length": 58,
+    "text": "// Verify B=97 round-trips: 97/64=1, 97%32=1, (97/32)%2=1\n"
+  },
+  {
+    "id": "u0061",
+    "kind": "comment",
+    "token": 249,
+    "offset": 406,
+    "length": 90,
+    "text": "// buffer index: 64 * i + 2 * j + k (i = block, j = position within block, k = sub-block)\n"
+  },
+  {
+    "id": "u0062",
+    "kind": "comment",
+    "token": 249,
+    "offset": 500,
+    "length": 66,
+    "text": "// tensor index B: 64 * i + j + 32 * k (rearranges bit positions)\n"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 251,
+    "text": "This kind of bit rearrangement maps naturally to hardware representations where address bits are reordered for bank interleaving or cache efficiency.\nIn binary, this rearranges bit positions: buffer `001_00001_1` becomes `B = 001_1_00001`.\nThe buffer groups bits as `[8:6]_[5:1]_[0]` while `B` groups them as `[8:6]_[5]_[4:0]`."
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 254,
+    "text": "Tiling can operate on blocks rather than individual elements.\nThe following example tiles by block using `m![B / 32]` and creates overlapping tiles:"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 258,
+    "text": "With `B = 512`, the dimension `B / 32` has 16 blocks numbered 0-15.\nEach tile takes 2 consecutive blocks starting at index `i`.\nTile 0 covers blocks `{0, 1}`, tile 1 covers blocks `{1, 2}`, and so on through tile 14 covering blocks `{14, 15}`.\nThese tiles overlap because consecutive tiles share one block."
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 261,
+    "text": "The tile mapping `B / 32 = 2` resizes the block dimension to 2 since each tile contains exactly 2 blocks.\nWhen tiling with a single block, `B / 32 = 1` simplifies to the identity `m![1]` since the dimension has only one value."
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 264,
+    "text": "Escape"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 267,
+    "text": "For complex mappings, define type aliases and reference them using `{ ... }`.\nWith separate mappings `L = m![A]` and `R = m![B]`, combining them as `m![{ L }, { R }]` produces the same result as `m![A, B]`:"
+  },
+  {
+    "id": "u0069",
+    "kind": "comment",
+    "token": 269,
+    "offset": 59,
+    "length": 28,
+    "text": "// equivalent to `m![A, B]`\n"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 271,
+    "text": "This escape syntax breaks down complex mappings into named, reusable components."
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 274,
+    "text": "Equivalent Mappings"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 277,
+    "text": "Different constructor combinations can produce the same position behavior.\nThis behavioral relation is distinct from structural equality of Rust mapping values.\nMappings `E1` and `E2` are *equivalent* when:"
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 282,
+    "text": "`E1::SIZE == E2::SIZE`, and"
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 287,
+    "text": "For every `i`, `E1::map(i) == E2::map(i)`."
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 292,
+    "text": "The equivalence relation is reflexive, symmetric, and transitive.\nThe identities below describe useful behavior; they do not assert that normalization gives a unique structural representative for every equivalent input."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 295,
+    "text": "Normalization has a narrower tested behavior: applying it twice is idempotent; generated mapping corpora preserve their tested position and padding behavior; and normalized mappings round-trip through the mapping representation.\nThese tests do not prove equivalence, guarantee a unique representation, or establish universal semantic preservation.\nThe following identities capture common equivalences:"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 300,
+    "text": "**Identity of pairs**: for every `E`, `E` is equivalent both to `m![{ E }, 1]` and `m![1, { E }]`."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 305,
+    "text": "**Stride-modulo decomposition**: for every `E` whose size `E::SIZE` is divisible by `n`, `E` and `m![{ E } / n, { E } % n]` are equivalent."
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 310,
+    "text": "**Pair projection**: for every `A` and `B`, `m![[{ A }, { B }] / B::SIZE]` is equivalent to `m![A]` and `m![[{ A }, { B }] % B::SIZE]` is equivalent to `m![B]`."
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 315,
+    "text": "**Associativity of pairs**: for every `E1`, `E2`, `E3`, `m![{ E1 }, { E2 }, { E3 }]`, `m![[{ E1 }, { E2 }], { E3 }]`, and `m![{ E1 }, [{ E2 }, { E3 }]]` are equivalent."
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 320,
+    "text": "**Idempotent operations**: for every `E`, `E` is equivalent to `m![{ E } / 1]`, to `m![{ E } # E::SIZE]`, and to `m![{ E } = E::SIZE]`."
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 325,
+    "text": "**Modulo by 1**: for every `E`, `m![E % 1]` is equivalent to the identity mapping `m![1]`."
+  }
+]

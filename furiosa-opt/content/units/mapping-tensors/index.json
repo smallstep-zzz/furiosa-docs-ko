@@ -1,0 +1,434 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Mapping Tensors"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "A mapping is the source of truth for logical order and physical placement.\nValidate its cells and dimensions before selecting movement or compute operations.\nEvery mapping expression maps a logical index to a physical location.\nRead the result categories defined in [Position Cell Summary](#position-cell-summary) before selecting movement or compute operations."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Place and Reduce Dimensions"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "The table places axes before movement or compute operations are selected."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Dimension"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 19,
+    "text": "Type"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 22,
+    "text": "Defined in"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 25,
+    "text": "Reduced in"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 35,
+    "text": "Spatial"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 38,
+    "text": "[HBM, DM](./spatial-temporal-dimensions.md#spatial-dimensions), [Stream](./spatial-temporal-dimensions.md#temporal-dimension)"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 41,
+    "text": "[DMA](../moving-tensors/dma-engine.md) + [Vector](../computing-tensors/vector-engine/index.md)"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 49,
+    "text": "Spatial"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 52,
+    "text": "[DM](./spatial-temporal-dimensions.md#spatial-dimensions), [Stream](./spatial-temporal-dimensions.md#temporal-dimension)"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 55,
+    "text": "[DMA](../moving-tensors/dma-engine.md) + [Vector](../computing-tensors/vector-engine/index.md)"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 63,
+    "text": "Spatial"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 66,
+    "text": "[DM](./spatial-temporal-dimensions.md#spatial-dimensions), [Stream](./spatial-temporal-dimensions.md#temporal-dimension)"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 69,
+    "text": "[Vector](../computing-tensors/vector-engine/index.md)"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 77,
+    "text": "Spatial"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 80,
+    "text": "[TRF](./spatial-temporal-dimensions.md#spatial-dimensions)"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 83,
+    "text": "[Contraction](../computing-tensors/contraction-engine/index.md)"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 91,
+    "text": "Temporal"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 94,
+    "text": "[Stream](./spatial-temporal-dimensions.md#temporal-dimension)"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 97,
+    "text": "[Contraction](../computing-tensors/contraction-engine/index.md)"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 105,
+    "text": "Spatial"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 108,
+    "text": "[Stream](./spatial-temporal-dimensions.md#temporal-dimension)"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 111,
+    "text": "[Contraction](../computing-tensors/contraction-engine/index.md)"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 117,
+    "text": "Chip and Cluster reductions use DMA redistribution followed by Vector Engine reduction."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 120,
+    "text": "Mapping Order and Performance"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 123,
+    "text": "A tensor has values but no intrinsic storage order.\nA mapping chooses that order, and hardware accesses are most efficient when adjacent values occupy contiguous buffer positions.\nThe outermost mapping dimension is major and changes slowest.\nThe innermost is minor and changes fastest.\nFor a height-by-width tensor, `m![H, W]` makes rows contiguous, while `m![W, H]` makes columns contiguous.\nEach order favors locality along a different axis: an H-major mapping makes a scan along W contiguous, while a W-major mapping makes a scan along H contiguous.\nA tiled mapping such as `m![H / 2, W / 2, H % 2, W % 2]` places small two-dimensional neighborhoods contiguously, so neither H nor W is globally the sole contiguous direction.\nThis changes which access patterns map to nearby buffer positions, but does not inherently guarantee faster hardware access.\nThe additional mapping state needed to represent the split dimensions is its main extra cost."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 126,
+    "text": "For axes `H` (six rows) and `W` (eight columns), the same values can therefore have different physical access patterns:"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 340,
+    "text": "**H-major, W-minor: `m![H, W]`** — a scan along W is contiguous.\nA scan along H touches one value per cache line."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 346,
+    "text": "**W-major, H-minor: `m![W, H]`** — a scan along H is contiguous.\nA scan along W touches one value per cache line."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 352,
+    "text": "**2×2 tiles: `m![H / 2, W / 2, H % 2, W % 2]`** — H-major and W-major each sacrifice locality along one axis.\nTiling places small neighborhoods contiguously along both axes, changing the locality distribution without inherently guaranteeing faster hardware access.\nThe split dimensions require a non-trivial address formula and additional mapping state."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 358,
+    "text": "The selected mapping also constrains later execution.\nChanging a representation's order after allocation generally requires copying or transposing its data, so allocation-time choices affect subsequent operations.\nHardware geometry, alignment, and scheduling remain architectural constraints that compiler lowering must account for.\nThe mapping expresses the logical order rather than a raw address calculation.\nDevice-specific alignment checks apply, and misaligned accesses can require read-modify-write cycles with substantial performance cost (historically observed at roughly 50× for affected DM accesses)."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 361,
+    "text": "The mapping is the complete technical description of this choice.\nA physical representation is the concrete buffer, device placement, and stream decomposition produced from that mapping.\nThe same values can move between different physical representations without changing the logical tensor."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 364,
+    "text": "Position Cell Summary"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 367,
+    "text": "Every mapping expression maps a physical position to a `Cell`.\n  Identify the result category before interpreting any coordinates."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 371,
+    "text": "`Cell::Index` carries live `Index` terms.\n`Cell::OutOfBounds` identifies a position outside the mapping.\n`Cell::Padding` is introduced with padding in [Mapping Expressions](./mapping-expressions.md)."
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 374,
+    "text": "This section summarizes the result categories.\nAfter identifying the `Cell`, use [Mapping Expressions](./mapping-expressions.md) for constructors and API syntax."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 377,
+    "text": "Representation and Distribution"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 380,
+    "text": "Physical Representations"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 383,
+    "text": "Storage and stream tensors split one mapping across hardware dimensions.\nAn HBM representation may distribute channels across chips.\nA DM representation may repartition those channels across slices.\nA stream representation may put the remaining dimensions in `Time` and `Packet`.\n[Spatial and Temporal Dimensions](./spatial-temporal-dimensions.md) follows one NCHW tensor through those representations with a concrete coordinate trace."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 386,
+    "text": "This representation trace closes the chapter: choose a mapping, derive each physical representation, then verify that the value at a traced `Index` reaches the expected stream cell.\nThe formal tensor-value definition is in [Tensor Semantics](./tensor-semantics.md).\nThis chapter keeps the explanation operational."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 389,
+    "text": "For a minimal computation over a representation, see the [Vector Engine](../computing-tensors/vector-engine/index.md).\nElementwise operations belong with that execution API, while this chapter focuses on mapping and representation."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 392,
+    "text": "Distribution Across Space and Time"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 395,
+    "text": "Mapping dimensions are assigned explicitly to spatial hardware dimensions (`Chip`, `Cluster`, `Slice`, and `Packet`) or to the temporal `Time` loop.\nThese names describe where a mapping is consumed, not a second representation vocabulary.\nSee [Spatial and Temporal Dimensions](./spatial-temporal-dimensions.md) for the tensor declarations and constraints."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 398,
+    "text": "An assignment holds for one stage rather than for the whole pipeline, and four routes move an axis between `Time` and a spatial dimension."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 404,
+    "text": "Route"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 407,
+    "text": "Moves"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 410,
+    "text": "Available when"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 413,
+    "text": "Cost"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 420,
+    "text": "[Switch Engine](../computing-tensors/switch-engine.md)"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 423,
+    "text": "an axis either way between `Slice` and `Time`"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 426,
+    "text": "one of its configurations expresses the `Slice` placement"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 429,
+    "text": "`ring_size × Time::SIZE × flits_per_packet` cycles of ring traversal"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 434,
+    "text": "[DMA](../moving-tensors/dma-engine.md)"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 437,
+    "text": "an axis into `Chip`, `Cluster` or `Slice`, by writing the desired placement"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 440,
+    "text": "always"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 443,
+    "text": "a transfer of the whole tensor"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 448,
+    "text": "[Inter-slice reducer](../computing-tensors/vector-engine/inter-slice-reducer.md#promotion-from-time-into-outslice)"
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 451,
+    "text": "an axis out of `Time` into the `Slice` slot a reduced axis vacates"
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 454,
+    "text": "the stream is reduced over a `Slice` axis anyway"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 457,
+    "text": "none beyond that reduction"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 462,
+    "text": "[Axis lifting](../moving-tensors/fetch-engine.md#axis-lifting), at fetch"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 465,
+    "text": "an axis out of `Time` onto `Chip`, `Cluster` or `Slice`"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 468,
+    "text": "the selected dimension holds a broadcast"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 471,
+    "text": "the original read, plus a DMA, a context-local add, and an SFR store for `Slice`"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 477,
+    "text": "The Switch Engine is the general route across the `Slice` / `Time` boundary because it can deliver a value to a slice that does not already contain it.\nThe Switch Engine operates only across slices, so moving an axis onto `Chip` or `Cluster` requires a DMA that writes the desired placement."
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 480,
+    "text": "Axis lifting requires a broadcast on the selected dimension, meaning each chip, cluster, or slice already holds the source region.\nDifferent read offsets then move the axis out of `Time` without a data transfer."
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 483,
+    "text": "Declarative Mapping Context"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 486,
+    "text": "Declarative mappings state order in terms of logical axes instead of raw strides or offsets.\nThe H×W examples above use `m![H, W]` for H-major order, `m![W, H]` for W-major order, and `m![H / 2, W / 2, H % 2, W % 2]` for 2×2 tiles.\nThe first two tile dimensions identify a tile and the last two identify its position within that tile."
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 489,
+    "text": "Mapping expressions can be normalized to a standard representation, which makes equivalent constructor forms easier to inspect.\nThe tested normalization properties and their limits are documented with [Equivalent Mappings](./mapping-expressions.md#equivalent-mappings).\nThis chapter does not claim a universal proof or unique representation."
+  }
+]

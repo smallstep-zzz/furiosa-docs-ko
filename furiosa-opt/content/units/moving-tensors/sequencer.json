@@ -1,0 +1,900 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Sequencer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "A sequencer reads a memory buffer as a packet stream and writes a packet stream back to memory.\nMappings and packet sizes are the author-facing controls."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Sequencer mechanics explain the loops, strides, access sizes, and lifetimes shared by Fetch, Commit, and DMA.\nThe pseudo-type examples introduce the model; Access Size and Architecture explain the concrete engine behavior.\nThe Fetch and Commit Engines each use one sequencer to address DM.\nThe DMA Engine chains a read sequencer and a write sequencer to move data among DM and HBM without intermediate buffers."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Interface"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "`MemTensor` and `StreamTensor` are teaching-only pseudo types that isolate the buffer-to-stream pattern, so this section can explain sequencer mechanics without introducing every engine type.\nThe real engine APIs use different types (`DmTensor`, `HbmTensor`, `TuTensor`, …), but every concrete pair maps onto the same `MemTensor` → `StreamTensor` shape illustrated below."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "`MemTensor` holds data in some memory mapping `Buf`.\nDM, SPM, and HBM tensors play this role in the public API."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 19,
+    "text": "The DMA Engine chains a read sequencer and a write sequencer to move data among DM, SPM, and HBM without intermediate buffers."
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 21,
+    "offset": 116,
+    "length": 13,
+    "text": "derive(Debug)"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 23,
+    "text": "`StreamTensor` is a tensor in flight.\nThe lifetime `'l` ties the stream to its source buffer so a stream cannot outlive its data.\n`Time` is the temporal mapping (iteration over time) and `Packet` is the spatial mapping (contents of a single packet)."
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 25,
+    "offset": 119,
+    "length": 13,
+    "text": "derive(Debug)"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 27,
+    "text": "`read` converts a `MemTensor` into a `StreamTensor` and `write` reverses it, both preserving values.\nEach engine's full API adds spatial dimensions (`Chip`, `Cluster`, `Slice`) on top, covered in the engine-specific pages."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 31,
+    "text": "For any `MemTensor`, many valid `Time` and `Packet` combinations exist, each producing a different `StreamTensor`.\nAmong valid choices, larger `Packet` sizes improve bandwidth utilization, and [Memory Performance](./memory-performance.md) covers the trade-offs in detail."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 34,
+    "text": "Examples"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 37,
+    "text": "The following examples show common read and write patterns using the core API above.\n[Architecture](#architecture) below explains how the compiler derives each pattern's hardware configuration."
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 39,
+    "offset": 397,
+    "length": 28,
+    "text": "// Automatic type inference\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 41,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 44,
+    "text": "Each sequencer call is compiled from its input and output tensor mappings into a nested-loop configuration that the sequencer hardware executes.\nEach configuration takes the form `[size_0 : stride_0, size_1 : stride_1, ...] : packet_size`, where subscript 0 is the outermost loop:"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 48,
+    "text": "Each entry encodes one dimension of tensor traversal.\nThe `size` field determines how many times this loop iterates, while the `stride` field determines the memory offset between consecutive iterations."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 51,
+    "text": "Access Size"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 54,
+    "text": "`max_access_size = gcd(Packet::SIZE, contiguous_run)` is the number of elements per hardware access."
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 57,
+    "text": "Here, `contiguous_run` is the element count of the innermost physically contiguous run of `Config` entries.\nA larger `max_access_size` means fewer accesses per packet.\nThe following shows how `max_access_size` is computed from a `Config`:"
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 59,
+    "offset": 62,
+    "length": 77,
+    "text": "// Walk pairs from innermost outward; stop at the first non-contiguous pair.\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 59,
+    "offset": 147,
+    "length": 68,
+    "text": "// Two adjacent entries (n_outer : s_outer) and (n_inner : s_inner)\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 59,
+    "offset": 223,
+    "length": 53,
+    "text": "// are contiguous when s_outer == n_inner * s_inner.\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 61,
+    "text": "In most cases the packet layout is fully contiguous in DM and `max_access_size == Packet::SIZE`.\nSee [Non-Contiguous Packets](#non-contiguous-packets) for a case where `max_access_size < Packet::SIZE`."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 64,
+    "text": "How It Works"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 67,
+    "text": "The `Config` for `m![N, C, H, W]` → `m![W, H, C, N]` has one entry per axis in the stream, each with a stride equal to that axis's span in the source buffer.\nSince `Packet = m![1]`, `Packet::SIZE = max_access_size = 1` and the sequencer issues one DM access per loop iteration."
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 69,
+    "offset": 165,
+    "length": 73,
+    "text": "// Compiler-generated configuration: [8 : 1, 8 : 8, 3 : 64, 4 : 192] : 1\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 69,
+    "offset": 530,
+    "length": 60,
+    "text": "// The hardware executes the configuration as nested loops:\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 69,
+    "offset": 714,
+    "length": 21,
+    "text": "// Read each address\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "comment",
+    "token": 69,
+    "offset": 820,
+    "length": 20,
+    "text": "// yield buf[addr];\n"
+  },
+  {
+    "id": "u0032",
+    "kind": "comment",
+    "token": 69,
+    "offset": 1044,
+    "length": 58,
+    "text": "// The compiler generates an identical config for writing\n"
+  },
+  {
+    "id": "u0033",
+    "kind": "comment",
+    "token": 69,
+    "offset": 1106,
+    "length": 60,
+    "text": "// The hardware executes the configuration as nested loops:\n"
+  },
+  {
+    "id": "u0034",
+    "kind": "comment",
+    "token": 69,
+    "offset": 1290,
+    "length": 25,
+    "text": "// Write to each address\n"
+  },
+  {
+    "id": "u0035",
+    "kind": "comment",
+    "token": 69,
+    "offset": 1400,
+    "length": 30,
+    "text": "// buf[addr] = stream.next();\n"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 71,
+    "text": "Configurations"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 74,
+    "text": "The following patterns cover most configurations a kernel writer is likely to encounter."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 77,
+    "text": "Transposing Axes"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 80,
+    "text": "Axes may be transposed so that the stream visits them in a different order than the buffer, and the compiler computes the strides needed to traverse memory in that order."
+  },
+  {
+    "id": "u0040",
+    "kind": "comment",
+    "token": 82,
+    "offset": 101,
+    "length": 7,
+    "text": "// Buf\n"
+  },
+  {
+    "id": "u0041",
+    "kind": "comment",
+    "token": 82,
+    "offset": 159,
+    "length": 16,
+    "text": "// Time, Packet\n"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 84,
+    "text": "The compiler generates configuration entries by processing the combined mapping `m![B, A, C # 16]` term by term, transforming `Buf` along the way.\nFor each term, the entry size equals the term size, and the stride equals the volume that term occupies within the current `Buf`.\nAfter processing a term, `Buf` is updated to reflect that the axis has been consumed:"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 90,
+    "text": "Term"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 93,
+    "text": "Entry"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 96,
+    "text": "Stride Source"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 99,
+    "text": "`Buf` After"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 140,
+    "text": "contiguous (`Packet` dimension)"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 149,
+    "text": "`Packet::SIZE = max_access_size = 16`.\nThe innermost entry `16 : 1` is contiguous, so the hardware transfers the full packet in one access."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 152,
+    "text": "Splitting Axes"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 155,
+    "text": "Tiling breaks a logical axis into sub-blocks for cache efficiency or to match tensor unit buffer sizes, and the compiler achieves this by splitting the axis into multiple entries."
+  },
+  {
+    "id": "u0051",
+    "kind": "comment",
+    "token": 157,
+    "offset": 98,
+    "length": 7,
+    "text": "// Buf\n"
+  },
+  {
+    "id": "u0052",
+    "kind": "comment",
+    "token": 157,
+    "offset": 178,
+    "length": 16,
+    "text": "// Time, Packet\n"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 159,
+    "text": "Expressions like `A % 2` and `A / 2` split axis `A` into separate entries.\nThe compiler processes `m![A % 2, B % 4, A / 2, B / 4, C # 32]` term by term:"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 165,
+    "text": "Term"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 168,
+    "text": "Entry"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 171,
+    "text": "Stride Source"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 174,
+    "text": "`Buf` After"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 243,
+    "text": "contiguous (`Packet` dimension)"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 255,
+    "text": "Slicing Axes"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 258,
+    "text": "Slicing reads only a partial range of indices from the memory layout, a condition that arises when an indexed view selects a subset of the original tensor."
+  },
+  {
+    "id": "u0061",
+    "kind": "comment",
+    "token": 260,
+    "offset": 93,
+    "length": 7,
+    "text": "// Buf\n"
+  },
+  {
+    "id": "u0062",
+    "kind": "comment",
+    "token": 260,
+    "offset": 176,
+    "length": 16,
+    "text": "// Time, Packet\n"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 262,
+    "text": "The `= 3` notation limits `A % 4` to only 3 iterations instead of 4, restricting the hardware to a sub-region of the tensor.\nThe compiler processes `m![A / 4, A % 4 = 3, B / 4, B % 4 = 2, C]` term by term:"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 268,
+    "text": "Term"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 271,
+    "text": "Entry"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 274,
+    "text": "Stride Source"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 277,
+    "text": "`Buf` After"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 304,
+    "text": "`m![B, C]::SIZE` (sliced to 3)"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 332,
+    "text": "`m![C]::SIZE` (sliced to 2)"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 346,
+    "text": "contiguous (`Packet` dimension)"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 358,
+    "text": "Broadcasting Axes"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 361,
+    "text": "Broadcasting replicates an element across multiple packets or time steps when the stream visits axes that `Buf` does not carry.\nAn axis or partial-axis fragment such as `N / 512` can appear in `Time` or `Packet` but not `Buf`.\nThe sequencer then emits a broadcast entry `: 0` and revisits the same address."
+  },
+  {
+    "id": "u0073",
+    "kind": "comment",
+    "token": 363,
+    "offset": 92,
+    "length": 7,
+    "text": "// Buf\n"
+  },
+  {
+    "id": "u0074",
+    "kind": "comment",
+    "token": 363,
+    "offset": 145,
+    "length": 16,
+    "text": "// Time, Packet\n"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 365,
+    "text": "The compiler processes `m![T, A, P]` term by term:"
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 371,
+    "text": "Term"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 374,
+    "text": "Entry"
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 377,
+    "text": "Stride Source"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 380,
+    "text": "`Buf` After"
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 393,
+    "text": "not in `Buf` (broadcast)"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 407,
+    "text": "`A` in `m![A]`"
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 421,
+    "text": "not in `Buf` (broadcast)"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 430,
+    "text": "`Packet::SIZE = max_access_size = 4`.\n`P` is broadcast, so the same element is replicated across the packet (spatial broadcast).\n`T` is broadcast, so the same data is repeated across time steps (temporal broadcast)."
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 433,
+    "text": "The same rule applies when `Time` or `Packet` references a fragment of an axis that `Buf` does not carry.\nFor example, a buffer of `m![N % 512]` read as `StreamTensor<m![N / 512], m![N % 512]>` broadcasts on the `N / 512` time entry: the buffer's 512 elements are reused across each of the `N / 512` outer iterations."
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 436,
+    "text": "Merging Entries"
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 439,
+    "text": "The hardware supports at most 8 entries per configuration, so when a transformation produces more, the compiler merges adjacent entries to satisfy that limit.\nAdjacent entries `(n1 : s1)` and `(n2 : s2)` merge into `(n1 * n2 : s2)` when physically contiguous: `s1 == n2 * s2`."
+  },
+  {
+    "id": "u0087",
+    "kind": "comment",
+    "token": 441,
+    "offset": 103,
+    "length": 7,
+    "text": "// Buf\n"
+  },
+  {
+    "id": "u0088",
+    "kind": "comment",
+    "token": 441,
+    "offset": 215,
+    "length": 16,
+    "text": "// Time, Packet\n"
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 443,
+    "text": "The compiler processes `m![W / 16, H % 2, H / 2, C / 2, C % 2, N / 2, N % 2, W / 8 % 2, W % 8]` term by term, producing 9 initial entries:"
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 449,
+    "text": "Term"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 452,
+    "text": "Entry"
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 455,
+    "text": "Stride Source"
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 556,
+    "text": "contiguous (packet dimension)"
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 562,
+    "text": "Since 9 entries exceed the hardware limit of 8, the compiler merges contiguous pairs where `s1 == n2 * s2`.\nThe entries for `H % 2 -> (2 : 32)` and `H / 2 -> (4 : 64)` are not merged because they are not physically contiguous ($s_1 \\neq n_2 \\times s_2 \\iff 32 \\neq 4 \\times 64$).\nThe final configuration has 6 entries.\nThe last merge crosses the time/packet boundary: `W/8%2 (2:8)` and `W%8 (8:1)` merge into `W%16 (16:1)`."
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 568,
+    "text": "Term"
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 571,
+    "text": "Entry"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 574,
+    "text": "Merged Entries"
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 620,
+    "text": "`C / 2 (4 : 512)`,<br>`C % 2 (2 : 256)`"
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 631,
+    "text": "`N / 2 (4 : 4096)`,<br>`N % 2 (2 : 2048)`"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 642,
+    "text": "`W / 8 % 2 (2 : 8)`,<br>`W % 8 (8 : 1)`"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 651,
+    "text": "Non-Contiguous Packets"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 654,
+    "text": "When the DM layout has stride discontinuities within the packet span, `max_access_size < Packet::SIZE` and the hardware issues one access per contiguous sub-block rather than one per packet.\nThe example below writes a packet of 32 elements (`m![A, B]`) to a buffer where each B row is padded to 16 slots in DM.\nA's stride is 16 rather than 8, so the packet span is not contiguous and the hardware issues 4 accesses instead of 1:"
+  },
+  {
+    "id": "u0103",
+    "kind": "comment",
+    "token": 656,
+    "offset": 138,
+    "length": 39,
+    "text": "// Compiler-generated configuration: [\n"
+  },
+  {
+    "id": "u0104",
+    "kind": "comment",
+    "token": 656,
+    "offset": 181,
+    "length": 81,
+    "text": "//   A -> 4 : 16,   (16 != 8 * 1, NOT contiguous — padding gap after each B row)\n"
+  },
+  {
+    "id": "u0105",
+    "kind": "comment",
+    "token": 656,
+    "offset": 266,
+    "length": 51,
+    "text": "//   B -> 8 : 1,    (packet sub-block, contiguous)\n"
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 661,
+    "text": "Non-contiguous strides also arise when `Packet` contains non-adjacent axes from the source layout.\nThe example below reads the same `m![N, C, H, W]` buffer with two different `Packet` choices.\nPlacing only the innermost axis `W` in `Packet` gives `max_access_size = Packet::SIZE = 8`, one access per packet.\nPlacing `m![N, H, W]` in `Packet` skips `C`, so N's stride in source (96) does not equal H×W (32): `contiguous_run = 32`, `max_access_size = 32`, and the hardware issues 4 accesses per packet instead of 1."
+  },
+  {
+    "id": "u0107",
+    "kind": "comment",
+    "token": 663,
+    "offset": 36,
+    "length": 39,
+    "text": "// Compiler-generated configuration: [\n"
+  },
+  {
+    "id": "u0108",
+    "kind": "comment",
+    "token": 663,
+    "offset": 75,
+    "length": 47,
+    "text": "//   N -> 4 : 96,   (96 == 3 × 32, contiguous)\n"
+  },
+  {
+    "id": "u0109",
+    "kind": "comment",
+    "token": 663,
+    "offset": 122,
+    "length": 47,
+    "text": "//   C -> 3 : 32,   (32 == 4 × 8,  contiguous)\n"
+  },
+  {
+    "id": "u0110",
+    "kind": "comment",
+    "token": 663,
+    "offset": 169,
+    "length": 47,
+    "text": "//   H -> 4 : 8,    (8  == 8 × 1,  contiguous)\n"
+  },
+  {
+    "id": "u0111",
+    "kind": "comment",
+    "token": 663,
+    "offset": 216,
+    "length": 39,
+    "text": "//   W -> 8 : 1,    (packet dimension)\n"
+  },
+  {
+    "id": "u0112",
+    "kind": "comment",
+    "token": 663,
+    "offset": 264,
+    "length": 104,
+    "text": "// contiguous_run = 8 (W); ×4 (H): 8==8×1 ✓; ×3 (C): 32==4×8 ✓; ×4 (N): 96==3×32 ✓; all axes contiguous\n"
+  },
+  {
+    "id": "u0113",
+    "kind": "comment",
+    "token": 663,
+    "offset": 368,
+    "length": 72,
+    "text": "// max_access_size = gcd(packet_size, contiguous_run) = packet_size = 8\n"
+  },
+  {
+    "id": "u0114",
+    "kind": "comment",
+    "token": 663,
+    "offset": 574,
+    "length": 39,
+    "text": "// Compiler-generated configuration: [\n"
+  },
+  {
+    "id": "u0115",
+    "kind": "comment",
+    "token": 663,
+    "offset": 613,
+    "length": 37,
+    "text": "//   C -> 3 : 32,   (time dimension)\n"
+  },
+  {
+    "id": "u0116",
+    "kind": "comment",
+    "token": 663,
+    "offset": 650,
+    "length": 77,
+    "text": "//   N -> 4 : 96,   (96 != 4 × 8 = 32, NOT contiguous — C axis interspersed)\n"
+  },
+  {
+    "id": "u0117",
+    "kind": "comment",
+    "token": 663,
+    "offset": 727,
+    "length": 46,
+    "text": "//   H -> 4 : 8,    (8  == 8 × 1, contiguous)\n"
+  },
+  {
+    "id": "u0118",
+    "kind": "comment",
+    "token": 663,
+    "offset": 773,
+    "length": 39,
+    "text": "//   W -> 8 : 1,    (packet dimension)\n"
+  },
+  {
+    "id": "u0119",
+    "kind": "comment",
+    "token": 663,
+    "offset": 823,
+    "length": 78,
+    "text": "// contiguous_run = 8 (W); ×4 (H): 8==8×1 ✓ → 32; ×4 (N): 96!=4×8 ✗ stop → 32\n"
+  },
+  {
+    "id": "u0120",
+    "kind": "comment",
+    "token": 663,
+    "offset": 901,
+    "length": 87,
+    "text": "// max_access_size = gcd(128, 32) = 32; hardware issues 128/32 = 4 accesses per packet\n"
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 665,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 668,
+    "text": "In RNGD, exceeding any of the following hardware limits causes a compilation error:"
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 673,
+    "text": "**Entry limit**: Maximum 8 entries, so the compiler merges adjacent entries where possible (see [Merging Entries](#merging-entries) in Configurations)."
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 678,
+    "text": "**Iteration limit**: `size <= 65,536` per entry."
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 683,
+    "text": "**Packet size**: Must be 1, 2, 4, 8, 16, or 32 bytes."
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 688,
+    "text": "**Packet fetch**: The innermost entry `n : s` must satisfy one of:"
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 693,
+    "text": "Contiguous access (adjacent elements): `(s == 0 || s == 1) && n % packet_size == 0`"
+  },
+  {
+    "id": "u0128",
+    "kind": "prose",
+    "token": 698,
+    "text": "Discrete access (single-element packets): `packet_size == 1`"
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 705,
+    "text": "If merging fails or limits are exceeded, redesign the tensor mapping or split the operation across multiple sequencer calls."
+  },
+  {
+    "id": "u0130",
+    "kind": "prose",
+    "token": 708,
+    "text": "Compatible Axis Decompositions"
+  },
+  {
+    "id": "u0131",
+    "kind": "prose",
+    "token": 711,
+    "text": "Each axis named in both `Buf` and the stream must use the same decomposition.\nThe compiler walks the stream term by term and consumes axes from `Buf` (see [Architecture](#architecture)).\nWhen `Buf` splits an axis one way and the stream splits it another with no common refinement, no traversal order works and the configuration is rejected, even when both sides have the same total element count."
+  },
+  {
+    "id": "u0132",
+    "kind": "comment",
+    "token": 713,
+    "offset": 89,
+    "length": 7,
+    "text": "// Buf\n"
+  },
+  {
+    "id": "u0133",
+    "kind": "comment",
+    "token": 713,
+    "offset": 150,
+    "length": 16,
+    "text": "// Time, Packet\n"
+  },
+  {
+    "id": "u0134",
+    "kind": "comment",
+    "token": 713,
+    "offset": 181,
+    "length": 49,
+    "text": "// Compilation error: incompatible decomposition\n"
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 715,
+    "text": "`Buf` decomposes `A` as `5 × 3` while the stream decomposes it as `3 × 5`.\nSince `gcd(5, 3) = 1`, neither decomposition refines the other: the compiler cannot consume `A % 3` from a `Buf` that has already committed to a 5-block split."
+  }
+]

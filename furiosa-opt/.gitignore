@@ -1,0 +1,4 @@
+__pycache__/
+*.pyc
+content/assignment-*.json
+assets/upstream-images.json

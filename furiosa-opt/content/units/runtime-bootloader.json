@@ -1,0 +1,44 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "furiosa-opt-bootloader"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The signed code a PE runs from reset. The chip's secure boot runs only signed code, so the\nbootloader is the one signed part of the runtime: it authenticates the firmware image the host\nstaged in device memory, copies it into the scratchpad and enters it. Before that it serves\nnothing but the boot request; `furiosa_opt_abi::bootloader` holds the contract with the host."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "The bootloader authenticates exactly one firmware image, because its signed bytes carry that\nimage's SHA-256 digest. A firmware change therefore needs a rebuilt and re-signed bootloader, even\nthough the two images stay separate."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Build"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "`make furiosa-opt-vendor SIGN=dev` (or `SIGN=release`, with the release credentials) builds the\nfirmware, binds its digest into the bootloader through `FURIOSA_OPT_FIRMWARE`, then signs and\nvendors both images.\n`make furiosa-opt-bootloader-test` runs the host tests."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "Signing"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 19,
+    "text": "The device accepts a bootloader only with a signature from a key it trusts, so the runtime\nembeds `furiosa-opt-bootloader.signed`, never the bare `bootloader.bin`. The signer lives in\n`sign/`; the public distribution carries the signed image but not the signer, its certificates or\nthe release-key configuration."
+  }
+]

@@ -1,0 +1,509 @@
+{
+  "upstream": "furiosa-ai/furiosa-opt",
+  "commit": "3d43bc9d20f324af60e3006c3f1541938d7f5097",
+  "date": "2026-11-21",
+  "pages": [
+    {
+      "key": "introduction",
+      "title_en": "Introduction",
+      "depth": 0,
+      "source": "docs/src/introduction.md",
+      "unit_count": 11,
+      "source_chars": 1808
+    },
+    {
+      "key": "quick-start",
+      "title_en": "Quick Start",
+      "depth": 0,
+      "source": "docs/src/quick-start.md",
+      "unit_count": 15,
+      "source_chars": 2487
+    },
+    {
+      "key": "quick-start/setup-and-tooling",
+      "title_en": "Setup and Tooling",
+      "depth": 1,
+      "source": "docs/src/quick-start/setup-and-tooling.md",
+      "unit_count": 34,
+      "source_chars": 3844
+    },
+    {
+      "key": "quick-start/tensor-and-contraction",
+      "title_en": "Tensor and Contraction",
+      "depth": 1,
+      "source": "docs/src/quick-start/tensor-and-contraction.md",
+      "unit_count": 25,
+      "source_chars": 929
+    },
+    {
+      "key": "quick-start/kernel-design",
+      "title_en": "Kernel Design",
+      "depth": 1,
+      "source": "docs/src/quick-start/kernel-design.md",
+      "unit_count": 164,
+      "source_chars": 10249
+    },
+    {
+      "key": "quick-start/kernel-validation",
+      "title_en": "Kernel Validation",
+      "depth": 1,
+      "source": "docs/src/quick-start/kernel-validation.md",
+      "unit_count": 7,
+      "source_chars": 1103
+    },
+    {
+      "key": "mapping-tensors/index",
+      "title_en": "Mapping Tensors",
+      "depth": 0,
+      "source": "docs/src/mapping-tensors/index.md",
+      "unit_count": 72,
+      "source_chars": 8369
+    },
+    {
+      "key": "mapping-tensors/mapping-expressions",
+      "title_en": "Mapping Expressions",
+      "depth": 1,
+      "source": "docs/src/mapping-tensors/mapping-expressions.md",
+      "unit_count": 82,
+      "source_chars": 12015
+    },
+    {
+      "key": "mapping-tensors/spatial-temporal-dimensions",
+      "title_en": "Spatial and Temporal Dimensions",
+      "depth": 1,
+      "source": "docs/src/mapping-tensors/spatial-temporal-dimensions.md",
+      "unit_count": 63,
+      "source_chars": 5791
+    },
+    {
+      "key": "mapping-tensors/tensor-semantics",
+      "title_en": "Tensor Semantics",
+      "depth": 1,
+      "source": "docs/src/mapping-tensors/tensor-semantics.md",
+      "unit_count": 28,
+      "source_chars": 3954
+    },
+    {
+      "key": "moving-tensors/index",
+      "title_en": "Moving Tensors",
+      "depth": 0,
+      "source": "docs/src/moving-tensors/index.md",
+      "unit_count": 60,
+      "source_chars": 7880
+    },
+    {
+      "key": "moving-tensors/sequencer",
+      "title_en": "Sequencer",
+      "depth": 1,
+      "source": "docs/src/moving-tensors/sequencer.md",
+      "unit_count": 135,
+      "source_chars": 11322
+    },
+    {
+      "key": "moving-tensors/fetch-engine",
+      "title_en": "Fetch Engine",
+      "depth": 1,
+      "source": "docs/src/moving-tensors/fetch-engine.md",
+      "unit_count": 78,
+      "source_chars": 10250
+    },
+    {
+      "key": "moving-tensors/commit-engine",
+      "title_en": "Commit Engine",
+      "depth": 1,
+      "source": "docs/src/moving-tensors/commit-engine.md",
+      "unit_count": 41,
+      "source_chars": 4851
+    },
+    {
+      "key": "moving-tensors/tensor-unit-io",
+      "title_en": "Case Study: Tensor Unit I/O",
+      "depth": 1,
+      "source": "docs/src/moving-tensors/tensor-unit-io.md",
+      "unit_count": 12,
+      "source_chars": 1627
+    },
+    {
+      "key": "moving-tensors/dma-engine",
+      "title_en": "DMA Engine",
+      "depth": 1,
+      "source": "docs/src/moving-tensors/dma-engine.md",
+      "unit_count": 321,
+      "source_chars": 34364
+    },
+    {
+      "key": "moving-tensors/memory-performance",
+      "title_en": "Memory Performance",
+      "depth": 1,
+      "source": "docs/src/moving-tensors/memory-performance.md",
+      "unit_count": 171,
+      "source_chars": 12929
+    },
+    {
+      "key": "computing-tensors/index",
+      "title_en": "Computing Tensors",
+      "depth": 0,
+      "source": "docs/src/computing-tensors/index.md",
+      "unit_count": 71,
+      "source_chars": 5273
+    },
+    {
+      "key": "computing-tensors/fetch-adapter",
+      "title_en": "Fetch Adapter",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/fetch-adapter.md",
+      "unit_count": 49,
+      "source_chars": 7148
+    },
+    {
+      "key": "computing-tensors/switch-engine",
+      "title_en": "Switch Engine",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/switch-engine.md",
+      "unit_count": 135,
+      "source_chars": 19395
+    },
+    {
+      "key": "computing-tensors/collect-engine",
+      "title_en": "Collect Engine",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/collect-engine.md",
+      "unit_count": 31,
+      "source_chars": 2787
+    },
+    {
+      "key": "computing-tensors/register-files",
+      "title_en": "Register Files",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/register-files.md",
+      "unit_count": 69,
+      "source_chars": 9494
+    },
+    {
+      "key": "computing-tensors/contraction-engine/index",
+      "title_en": "Contraction Engine",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/contraction-engine/index.md",
+      "unit_count": 69,
+      "source_chars": 7223
+    },
+    {
+      "key": "computing-tensors/contraction-engine/outer",
+      "title_en": "Outer",
+      "depth": 2,
+      "source": "docs/src/computing-tensors/contraction-engine/outer.md",
+      "unit_count": 90,
+      "source_chars": 11768
+    },
+    {
+      "key": "computing-tensors/contraction-engine/packet-reducer",
+      "title_en": "Packet Reducer",
+      "depth": 2,
+      "source": "docs/src/computing-tensors/contraction-engine/packet-reducer.md",
+      "unit_count": 17,
+      "source_chars": 2871
+    },
+    {
+      "key": "computing-tensors/contraction-engine/time-reducer",
+      "title_en": "Time Reducer",
+      "depth": 2,
+      "source": "docs/src/computing-tensors/contraction-engine/time-reducer.md",
+      "unit_count": 34,
+      "source_chars": 3544
+    },
+    {
+      "key": "computing-tensors/contraction-engine/lane-folder",
+      "title_en": "Lane Folder",
+      "depth": 2,
+      "source": "docs/src/computing-tensors/contraction-engine/lane-folder.md",
+      "unit_count": 25,
+      "source_chars": 3055
+    },
+    {
+      "key": "computing-tensors/vector-engine/index",
+      "title_en": "Vector Engine",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/vector-engine/index.md",
+      "unit_count": 48,
+      "source_chars": 4688
+    },
+    {
+      "key": "computing-tensors/vector-engine/intra-slice-chain",
+      "title_en": "Intra-Slice Chain",
+      "depth": 2,
+      "source": "docs/src/computing-tensors/vector-engine/intra-slice-chain.md",
+      "unit_count": 368,
+      "source_chars": 24522
+    },
+    {
+      "key": "computing-tensors/vector-engine/intra-slice-reduce",
+      "title_en": "Intra-Slice Reduce",
+      "depth": 3,
+      "source": "docs/src/computing-tensors/vector-engine/intra-slice-reduce.md",
+      "unit_count": 54,
+      "source_chars": 5611
+    },
+    {
+      "key": "computing-tensors/vector-engine/vcg",
+      "title_en": "Valid Count Generator",
+      "depth": 3,
+      "source": "docs/src/computing-tensors/vector-engine/vcg.md",
+      "unit_count": 307,
+      "source_chars": 25492
+    },
+    {
+      "key": "computing-tensors/vector-engine/inter-slice-reducer",
+      "title_en": "Inter-Slice Reducer",
+      "depth": 2,
+      "source": "docs/src/computing-tensors/vector-engine/inter-slice-reducer.md",
+      "unit_count": 51,
+      "source_chars": 4213
+    },
+    {
+      "key": "computing-tensors/cast-engine",
+      "title_en": "Cast Engine",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/cast-engine.md",
+      "unit_count": 17,
+      "source_chars": 1905
+    },
+    {
+      "key": "computing-tensors/transpose-engine",
+      "title_en": "Transpose Engine",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/transpose-engine.md",
+      "unit_count": 127,
+      "source_chars": 9114
+    },
+    {
+      "key": "computing-tensors/commit-adapter",
+      "title_en": "Commit Adapter",
+      "depth": 1,
+      "source": "docs/src/computing-tensors/commit-adapter.md",
+      "unit_count": 37,
+      "source_chars": 5249
+    },
+    {
+      "key": "kernel-examples/chip-cluster-reduce",
+      "title_en": "Case Study: Chip/Cluster Reduction",
+      "depth": 1,
+      "source": "docs/src/kernel-examples/chip-cluster-reduce.md",
+      "unit_count": 119,
+      "source_chars": 7141
+    },
+    {
+      "key": "kernel-examples/index",
+      "title_en": "End-to-End Cases",
+      "depth": 0,
+      "source": "docs/src/kernel-examples/index.md",
+      "unit_count": 13,
+      "source_chars": 854
+    },
+    {
+      "key": "kernel-examples/transformer",
+      "title_en": "Case Study: Transformer",
+      "depth": 1,
+      "source": "docs/src/kernel-examples/transformer.md",
+      "unit_count": 51,
+      "source_chars": 6794
+    },
+    {
+      "key": "kernel-examples/skip-loop-bodies-at-runtime",
+      "title_en": "Case Study: Skip Loop Bodies at Runtime",
+      "depth": 1,
+      "source": "docs/src/kernel-examples/skip-loop-bodies-at-runtime.md",
+      "unit_count": 25,
+      "source_chars": 3413
+    },
+    {
+      "key": "scheduling/index",
+      "title_en": "Scheduling and Tuning",
+      "depth": 0,
+      "source": "docs/src/scheduling/index.md",
+      "unit_count": 8,
+      "source_chars": 1039
+    },
+    {
+      "key": "scheduling/schedule",
+      "title_en": "Schedule",
+      "depth": 1,
+      "source": "docs/src/scheduling/schedule.md",
+      "unit_count": 41,
+      "source_chars": 5630
+    },
+    {
+      "key": "scheduling/diagnosis",
+      "title_en": "Diagnosis",
+      "depth": 1,
+      "source": "docs/src/scheduling/diagnosis.md",
+      "unit_count": 13,
+      "source_chars": 1413
+    },
+    {
+      "key": "scheduling/tuning",
+      "title_en": "Tuning",
+      "depth": 1,
+      "source": "docs/src/scheduling/tuning.md",
+      "unit_count": 55,
+      "source_chars": 4953
+    },
+    {
+      "key": "tools/index",
+      "title_en": "Tools",
+      "depth": 0,
+      "source": "docs/src/tools/index.md",
+      "unit_count": 5,
+      "source_chars": 470
+    },
+    {
+      "key": "tools/kernel-optimizer",
+      "title_en": "Kernel Optimizer",
+      "depth": 1,
+      "source": "docs/src/tools/kernel-optimizer.md",
+      "unit_count": 40,
+      "source_chars": 4294
+    },
+    {
+      "key": "tools/language-server",
+      "title_en": "Language Server",
+      "depth": 1,
+      "source": "docs/src/tools/language-server.md",
+      "unit_count": 36,
+      "source_chars": 3818
+    },
+    {
+      "key": "tools/schedule-viewer",
+      "title_en": "Schedule Viewer",
+      "depth": 1,
+      "source": "docs/src/tools/schedule-viewer.md",
+      "unit_count": 23,
+      "source_chars": 2953
+    },
+    {
+      "key": "repository",
+      "title_en": "Repository Guide",
+      "depth": 0,
+      "appendix": true,
+      "source": "README.md",
+      "unit_count": 42,
+      "source_chars": 3440
+    },
+    {
+      "key": "runtime",
+      "title_en": "Runtime Guide",
+      "depth": 0,
+      "appendix": true,
+      "source": "furiosa-opt-rt/README.md",
+      "unit_count": 35,
+      "source_chars": 2151
+    },
+    {
+      "key": "runtime-bootloader",
+      "title_en": "Runtime Bootloader",
+      "depth": 0,
+      "appendix": true,
+      "source": "furiosa-opt-rt/bootloader/README.md",
+      "unit_count": 7,
+      "source_chars": 1211
+    },
+    {
+      "key": "device-abi",
+      "title_en": "Device Function ABI",
+      "depth": 0,
+      "appendix": true,
+      "source": "furiosa-opt-abi/README.md",
+      "unit_count": 11,
+      "source_chars": 626
+    },
+    {
+      "key": "example-mnist",
+      "title_en": "MNIST Example",
+      "depth": 0,
+      "appendix": true,
+      "source": "furiosa-opt-examples/src/mnist/README.md",
+      "unit_count": 7,
+      "source_chars": 521
+    },
+    {
+      "key": "example-transformer",
+      "title_en": "Transformer Example",
+      "depth": 0,
+      "appendix": true,
+      "source": "furiosa-opt-examples/src/transformer/README.md",
+      "unit_count": 7,
+      "source_chars": 854
+    },
+    {
+      "key": "kernel-authoring",
+      "title_en": "Kernel Authoring Skill",
+      "depth": 0,
+      "appendix": true,
+      "source": "skills/furiosa-opt-kernel-authoring/SKILL.md",
+      "unit_count": 14,
+      "source_chars": 970
+    },
+    {
+      "key": "changes",
+      "title_en": "Release Notes",
+      "depth": 0,
+      "appendix": true,
+      "source": "CHANGES.md",
+      "unit_count": 255,
+      "source_chars": 40089
+    },
+    {
+      "key": "computing-tensors/contraction-engine/2d-convolution",
+      "title_en": "2D Convolution",
+      "depth": 1,
+      "stub": true,
+      "source": "docs/src/computing-tensors/contraction-engine/2d-convolution.md",
+      "unit_count": 0,
+      "source_chars": 0
+    },
+    {
+      "key": "kernel-examples/mixture-of-experts",
+      "title_en": "Case Study: Mixture of Experts",
+      "depth": 1,
+      "stub": true,
+      "source": "docs/src/kernel-examples/mixture-of-experts.md",
+      "unit_count": 1,
+      "source_chars": 30
+    },
+    {
+      "key": "kernel-examples/split-reduce",
+      "title_en": "Case Study: Split Reduction",
+      "depth": 1,
+      "stub": true,
+      "source": "docs/src/kernel-examples/split-reduce.md",
+      "unit_count": 1,
+      "source_chars": 27
+    },
+    {
+      "key": "kernel-examples/tiling",
+      "title_en": "Case Study: Tiling",
+      "depth": 1,
+      "stub": true,
+      "source": "docs/src/kernel-examples/tiling.md",
+      "unit_count": 2,
+      "source_chars": 119
+    },
+    {
+      "key": "mapping-tensors/memory-stream",
+      "title_en": "Spatial and Temporal Dimensions",
+      "depth": 1,
+      "stub": true,
+      "source": "docs/src/mapping-tensors/memory-stream.md",
+      "unit_count": 1,
+      "source_chars": 31
+    },
+    {
+      "key": "mapping-tensors/tensor-functions",
+      "title_en": "Tensor Semantics",
+      "depth": 1,
+      "stub": true,
+      "source": "docs/src/mapping-tensors/tensor-functions.md",
+      "unit_count": 1,
+      "source_chars": 16
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "u0001": "빠른 시작(Quick Start)",
+  "u0002": "이 안내에서는 실행 가능한 기본 템플릿(base-template) 벡터 커널(vector kernel)로 출발합니다.\n[커널 설계(Kernel Design)](./quick-start/kernel-design.md)의 다섯 가지 실행 예제는 하드웨어 설계에서 고려할 사항을 하나씩 추가합니다.\n상수 덧셈(constant addition), 원소별 곱셈(elementwise multiplication), 내적(dot product), GEMV, GEMM의 장치 코드와 호스트 기준 계산(host oracle)을 소스에 근거해 설명하는 내용은 모두 해당 장에서 다룹니다.",
+  "u0003": "각 검증(validation)이 의미하는 바와 주의 사항은 [커널 검증(Kernel Validation)](./quick-start/kernel-validation.md)에서만 정의합니다.",
+  "u0004": "HBM은 호스트(host)와의 전송에 사용하는 고대역폭 메모리(high-bandwidth memory)이고, DM은 텐서 유닛(Tensor Unit)이 사용하는 칩 내부 데이터 메모리(on-chip data memory)입니다.",
+  "u0005": "기본 패턴을 익혔다면 매핑(Mapping), 이동(Moving), 계산(Computing), 전체 과정 사례(End-to-End Cases), 스케줄링(Scheduling), 도구(Tools) 순으로 학습을 이어 가세요.\n심화 예제는 해당 하위 시스템을 설명하는 장에서 다루고, 여러 요소를 조합한 모델 튜토리얼은 전체 과정 사례에 모아 두었습니다.",
+  "u0006": "하위 문서를 순서대로 읽기",
+  "u0007": "설치와 첫 프로젝트는 [설정과 도구(Setup and Tooling)](./quick-start/setup-and-tooling.md)를 읽으세요.\n텐서의 형상(shape)과 수축 연산(contraction)의 수학은 [텐서와 수축(Tensor and Contraction)](./quick-start/tensor-and-contraction.md)을 읽으세요.\n실행 가능한 다섯 가지 패턴은 [커널 설계(Kernel Design)](./quick-start/kernel-design.md)를 읽으세요.\n컴파일·CPU·NPU·스케줄(schedule)에서 얻는 검증 근거는 [커널 검증(Kernel Validation)](./quick-start/kernel-validation.md)을 읽으세요.",
+  "u0008": "참조 장(Reference Chapters)으로 이어 가기",
+  "u0009": "실행 예제들은 하드웨어에서 한 번의 처리(pass)로 계산할 수 있고 슬라이스(slice)당 DM 용량인 512 KB 안에 들어가는 텐서(tensor)를 다룹니다.\n타일(tile)을 시간에 따라 차례로 실행할 때는 시간 분할(temporal partitioning)을, 병렬 하드웨어 유닛에 나누어 배치할 때는 공간 분할(spatial partitioning)을 사용합니다.\n[텐서 매핑(Mapping Tensors)](./mapping-tensors/index.md), [텐서 이동(Moving Tensors)](./moving-tensors/index.md), [텐서 계산(Computing Tensors)](./computing-tensors/index.md) 순으로 읽으세요.\n참조 장을 읽은 뒤에는 매핑·이동·계산 중 해당하는 장에서 알맞은 심화 패턴을 고르세요.",
+  "u0010": "다음 패턴 고르기",
+  "u0011": "세 참조 장에서는 예제를 선택하기 전에 매핑(mapping), 데이터 이동(movement), 계산(compute)이 따라야 할 규칙(contract)을 설명합니다.\n커널(kernel)이 다음으로 해결해야 할 제약에 맞는 예제 중 가장 단순한 경로를 선택하세요.",
+  "u0012": "**한 번의 처리(pass)에 들어가는 경우:** 더 복잡한 패턴으로 넘어갈 필요 없이 앞의 기본 패턴을 적용하면 됩니다.",
+  "u0013": "**배치 순열(layout permutation)이나 패킷(packet) 처리가 필요한 경우:** 텐서 이동의 [사례 연구: 텐서 유닛 입출력(Tensor Unit I/O)](./moving-tensors/tensor-unit-io.md)을 읽으세요.",
+  "u0014": "**축약 축(reduction axis)이 칩(chip) 또는 클러스터(cluster)에 걸쳐 있는 경우:** 텐서 계산의 [사례 연구: 칩·클러스터 축약(Chip/Cluster Reduction)](./kernel-examples/chip-cluster-reduce.md)을 읽으세요.",
+  "u0015": "**여러 요소를 조합한 모델 패턴의 경우:** 전체 과정 사례의 [사례 연구: 트랜스포머(Transformer)](./kernel-examples/transformer.md)를 읽으세요."
+}

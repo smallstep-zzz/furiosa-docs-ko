@@ -1,0 +1,234 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Time Reducer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Time Reducer accumulates the [Packet Reducer](./packet-reducer.md)'s `[Lane, Packet]` output across `Time` into `OutTime`, with *temporal accumulators*."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "`.contract_time::<OutTime>()` invokes the Time Reducer.\n`OutTime` names the `Time` dimensions that survive (the rest are summed away)."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 471,
+    "length": 46,
+    "text": "primitive(ContractPacketTensor::contract_time)"
+  },
+  {
+    "id": "u0006",
+    "kind": "comment",
+    "token": 12,
+    "offset": 821,
+    "length": 91,
+    "text": "// Carry the deferred operands forward unreduced: the fused contraction at `contract_lane`\n"
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 12,
+    "offset": 920,
+    "length": 88,
+    "text": "// performs this Time reduction too. This stage only re-types the carrier to `OutTime`.\n"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 14,
+    "text": "For example, the kernel below reduces a 2D tensor along `B` (surviving only `A`)."
+  },
+  {
+    "id": "u0009",
+    "kind": "comment",
+    "token": 16,
+    "offset": 80,
+    "length": 76,
+    "text": "// Streaming operand: Slice = m![A / 8] (256 outer A chunks across slices).\n"
+  },
+  {
+    "id": "u0010",
+    "kind": "comment",
+    "token": 16,
+    "offset": 160,
+    "length": 50,
+    "text": "// Time = m![B / 16, A % 8]; Packet = m![B % 16].\n"
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 16,
+    "offset": 214,
+    "length": 89,
+    "text": "// B splits across Packet (B % 16) and Time (B / 16): each cycle produces a partial sum.\n"
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 16,
+    "offset": 417,
+    "length": 46,
+    "text": "// TRF operand: single-lane weight per slice.\n"
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 16,
+    "offset": 537,
+    "length": 44,
+    "text": "// Output: one f32 per (slice, A % 8) cell.\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 16,
+    "offset": 696,
+    "length": 77,
+    "text": "// Outer: Lane = m![1], OutTime = m![B / 16, A % 8], OutPacket = m![B % 16].\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 16,
+    "offset": 854,
+    "length": 66,
+    "text": "// Packet Reducer: OutPacket = m![1]. Collapses B % 16 spatially.\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 16,
+    "offset": 966,
+    "length": 59,
+    "text": "// Time Reducer: OutTime = m![A % 8]. Accumulator receives\n"
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 16,
+    "offset": 1034,
+    "length": 68,
+    "text": "// Time::SIZE = (B / 16) × (A % 8) = 2 × 8 = 16 flits; B / 16 outer\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 16,
+    "offset": 1111,
+    "length": 52,
+    "text": "// chunks accumulate into 8 slots indexed by A % 8.\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 16,
+    "offset": 1211,
+    "length": 75,
+    "text": "// Lane Folder: Lane folds into OutPacket. Sequential mode (Lane = m![1]).\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 18,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 21,
+    "text": "The Time Reducer receives the Packet Reducer's per-cycle `[Lane, Packet]` output.\nThe hardware caps `Lane::SIZE ≤ 8` (spatially parallel lanes) and `Packet::SIZE ≤ 32` upstream."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 24,
+    "text": "Each cycle the Time Reducer folds the `[Lane, Packet]` spatial grid across `Time` into `OutTime`.\n`OutTime` must be a subset of `Time` with the relative order of surviving dimensions preserved (enforced by `verify_contract_time`).\nDimensions in `Time` absent from `OutTime` are summed away, and the outermost such dimension iterates over flits."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 27,
+    "text": "Let `InnerTime` denote the inner non-reduce dimensions of `Time` (the dimensions inner to the outermost reduce dimension that survive in `OutTime`).\nIn `reduce_b` above, `Time = m![B / 4, A % 8]` and `OutTime = m![A % 8]`, so `B / 4` is the outermost reduce dimension (iterates over `Time::SIZE = 2 × 8 = 16` flits) and `InnerTime = m![A % 8]`."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 30,
+    "text": "Accumulation requires `InnerTime::SIZE` slots of `[Lane, Packet]`, one per `InnerTime` tuple value.\nFlits with the same tuple accumulate into the same slot.\nFor `reduce_b`, 8 slots accumulate across the `B / 4 = 2` iterations, and after flit 15 the buffer contains the final reduced results and hands them off to the [Lane Folder](./lane-folder.md):"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 34,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 37,
+    "text": "The mapping fits the buffer when `InnerTime::SIZE` does not exceed the slot capacity (the number of slots the buffer holds)."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 40,
+    "text": "The slot capacity follows from the buffer's 1,024 cells and the downstream [Lane Folder](./lane-folder.md)'s `LaneMode`.\nEach slot is a `[Lane, Packet]` chunk whose shape the `LaneMode` decides, so the number of slots is 1,024 divided by the cells per chunk:"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 49,
+    "text": "Chunk shape"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 52,
+    "text": "Cells per chunk"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 55,
+    "text": "Slot capacity"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 91,
+    "text": "For `reduce_b` under the downstream `.contract_lane(LaneMode::Sequential)` with `Lane::SIZE = 1`, the slot capacity is 32 and `InnerTime::SIZE = 8` fits comfortably.\nIf `InnerTime::SIZE` exceeded the slot capacity, you would restructure `Time` (e.g., split `B` further) or switch `LaneMode` to trade throughput for slot headroom."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 94,
+    "text": "Performance"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 97,
+    "text": "Throughput is one packet per cycle on the input side.\nThe effective output rate is `1 / N` of the input after reducing `N` inputs into one output."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 100,
+    "text": "Latency for a `Time`-dimension reduction of size `N` is approximately `N` cycles."
+  }
+]

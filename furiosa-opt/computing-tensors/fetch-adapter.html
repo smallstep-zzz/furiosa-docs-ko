@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="furiosa-opt의 한국어 문서. 텐서 매핑, 메모리, 연산 엔진, 커널 설계와 최적화를 문단별 영어 원문과 함께 읽습니다."><title>읽기 어댑터 · furiosa-opt 한국어</title><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../assets/style.css"><link rel="stylesheet" href="../assets/code.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><script>try{if(localStorage.getItem('opt-theme')==='dark')document.documentElement.dataset.theme='dark';}catch(e){}</script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script><script defer src="../assets/app.js"></script></head>
+<body data-root="../" data-page="computing-tensors/fetch-adapter"><a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<header class="topbar"><div class="topbar-start"><button class="icon-button menu-toggle" id="menu-toggle" aria-label="목차 열기" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="wordmark" href="../index.html">furiosa<span>-opt</span><span class="edition">한국어</span></a></div><div class="topbar-end"><span class="community-label">커뮤니티 번역</span><button class="icon-button" id="theme-toggle" aria-label="어두운 테마로 전환"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg></button><a class="github-link" href="https://github.com/smallstep-zzz/furiosa-docs-ko/tree/main/furiosa-opt" aria-label="한국어 문서 GitHub 저장소"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 .9-4-2-6-2m12 4v-3.4a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.2c.2-.9.1-2-.1-2.7 0 0-1-.3-3.3 1.2a11.4 11.4 0 0 0-6 0C6.7 3.1 5.7 3.4 5.7 3.4c-.3.7-.3 1.8-.1 2.7a4.7 4.7 0 0 0-1.3 3.2c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21"/></svg><span>GitHub</span></a></div></header>
+<div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div><div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div><aside class="sidebar" id="sidebar" aria-label="문서 탐색"><a class="sidebar-home" href="../index.html"><span class="mini-mark">F</span><span>furiosa-opt<span class="sidebar-subtitle">한국어 문서</span></span></a><div class="nav-search"><label class="sr-only" for="doc-search">문서 검색</label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.5"/><path d="m16 16 4 4"/></svg><input id="doc-search" type="search" placeholder="문서와 용어 검색" autocomplete="off"><kbd>/</kbd></div><div id="search-results" hidden aria-live="polite"></div><nav id="chapter-nav" aria-label="전체 문서 목차"><details class="nav-group" open><summary>시작하기<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../introduction.html" ><span>소개</span><small>Introduction</small></a></li><li class="nav-depth-0"><a href="../quick-start.html" ><span>빠른 시작</span><small>Quick Start</small></a></li><li class="nav-depth-1"><a href="../quick-start/setup-and-tooling.html" ><span>설치와 개발 도구</span><small>Setup and Tooling</small></a></li><li class="nav-depth-1"><a href="../quick-start/tensor-and-contraction.html" ><span>텐서와 수축 연산</span><small>Tensor and Contraction</small></a></li><li class="nav-depth-1"><a href="../quick-start/kernel-design.html" ><span>커널 설계</span><small>Kernel Design</small></a></li><li class="nav-depth-1"><a href="../quick-start/kernel-validation.html" ><span>커널 검증</span><small>Kernel Validation</small></a></li></ul></details><details class="nav-group" ><summary>텐서 매핑<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../mapping-tensors/index.html" ><span>텐서 매핑</span><small>Mapping Tensors</small></a></li><li class="nav-depth-1"><a href="../mapping-tensors/mapping-expressions.html" ><span>매핑 표현식</span><small>Mapping Expressions</small></a></li><li class="nav-depth-1"><a href="../mapping-tensors/spatial-temporal-dimensions.html" ><span>공간 차원과 시간 차원</span><small>Spatial and Temporal Dimensions</small></a></li><li class="nav-depth-1"><a href="../mapping-tensors/tensor-semantics.html" ><span>텐서의 의미</span><small>Tensor Semantics</small></a></li></ul></details><details class="nav-group" ><summary>텐서 이동과 메모리<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../moving-tensors/index.html" ><span>텐서 이동</span><small>Moving Tensors</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/sequencer.html" ><span>시퀀서</span><small>Sequencer</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/fetch-engine.html" ><span>읽기 엔진</span><small>Fetch Engine</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/commit-engine.html" ><span>쓰기 엔진</span><small>Commit Engine</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/tensor-unit-io.html" ><span>텐서 유닛 입출력</span><small>Tensor Unit I/O</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/dma-engine.html" ><span>DMA 엔진</span><small>DMA Engine</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/memory-performance.html" ><span>메모리 성능</span><small>Memory Performance</small></a></li></ul></details><details class="nav-group" open><summary>텐서 연산과 엔진<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="index.html" ><span>텐서 연산</span><small>Computing Tensors</small></a></li><li class="nav-depth-1"><a href="fetch-adapter.html" aria-current="page"><span>읽기 어댑터</span><small>Fetch Adapter</small></a></li><li class="nav-depth-1"><a href="switch-engine.html" ><span>교환 엔진</span><small>Switch Engine</small></a></li><li class="nav-depth-1"><a href="collect-engine.html" ><span>수집 엔진</span><small>Collect Engine</small></a></li><li class="nav-depth-1"><a href="register-files.html" ><span>레지스터 파일</span><small>Register Files</small></a></li><li class="nav-depth-1"><a href="contraction-engine/index.html" ><span>수축 연산기</span><small>Contraction Engine</small></a></li><li class="nav-depth-2"><a href="contraction-engine/outer.html" ><span>확장과 곱셈</span><small>Outer</small></a></li><li class="nav-depth-2"><a href="contraction-engine/packet-reducer.html" ><span>패킷 축약기</span><small>Packet Reducer</small></a></li><li class="nav-depth-2"><a href="contraction-engine/time-reducer.html" ><span>시간 축약기</span><small>Time Reducer</small></a></li><li class="nav-depth-2"><a href="contraction-engine/lane-folder.html" ><span>레인 폴더</span><small>Lane Folder</small></a></li><li class="nav-depth-1"><a href="vector-engine/index.html" ><span>벡터 엔진</span><small>Vector Engine</small></a></li><li class="nav-depth-2"><a href="vector-engine/intra-slice-chain.html" ><span>슬라이스 내부 연산 체인</span><small>Intra-Slice Chain</small></a></li><li class="nav-depth-2"><a href="vector-engine/intra-slice-reduce.html" ><span>슬라이스 내부 축약</span><small>Intra-Slice Reduce</small></a></li><li class="nav-depth-2"><a href="vector-engine/vcg.html" ><span>유효 개수 생성기</span><small>Valid Count Generator</small></a></li><li class="nav-depth-2"><a href="vector-engine/inter-slice-reducer.html" ><span>슬라이스 간 축약기</span><small>Inter-Slice Reducer</small></a></li><li class="nav-depth-1"><a href="cast-engine.html" ><span>자료형 변환 엔진</span><small>Cast Engine</small></a></li><li class="nav-depth-1"><a href="transpose-engine.html" ><span>전치 엔진</span><small>Transpose Engine</small></a></li><li class="nav-depth-1"><a href="commit-adapter.html" ><span>쓰기 어댑터</span><small>Commit Adapter</small></a></li></ul></details><details class="nav-group" ><summary>전체 실행 예제<span class="chevron"></span></summary><ul><li class="nav-depth-1"><a href="../kernel-examples/chip-cluster-reduce.html" ><span>칩·클러스터 간 축약</span><small>Chip/Cluster Reduction</small></a></li><li class="nav-depth-0"><a href="../kernel-examples/index.html" ><span>전체 실행 예제</span><small>End-to-End Cases</small></a></li><li class="nav-depth-1"><a href="../kernel-examples/transformer.html" ><span>트랜스포머 예제</span><small>Transformer</small></a></li><li class="nav-depth-1"><a href="../kernel-examples/skip-loop-bodies-at-runtime.html" ><span>실행 중 반복문 본문 건너뛰기</span><small>Skip Loop Bodies at Runtime</small></a></li></ul></details><details class="nav-group" ><summary>스케줄링과 도구<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../scheduling/index.html" ><span>스케줄링과 성능 조정</span><small>Scheduling and Tuning</small></a></li><li class="nav-depth-1"><a href="../scheduling/schedule.html" ><span>실행 스케줄</span><small>Schedule</small></a></li><li class="nav-depth-1"><a href="../scheduling/diagnosis.html" ><span>성능 진단</span><small>Diagnosis</small></a></li><li class="nav-depth-1"><a href="../scheduling/tuning.html" ><span>성능 조정</span><small>Tuning</small></a></li><li class="nav-depth-0"><a href="../tools/index.html" ><span>개발 도구</span><small>Tools</small></a></li><li class="nav-depth-1"><a href="../tools/kernel-optimizer.html" ><span>커널 최적화 도구</span><small>Kernel Optimizer</small></a></li><li class="nav-depth-1"><a href="../tools/language-server.html" ><span>언어 서버</span><small>Language Server</small></a></li><li class="nav-depth-1"><a href="../tools/schedule-viewer.html" ><span>스케줄 뷰어</span><small>Schedule Viewer</small></a></li></ul></details><details class="nav-group" ><summary>저장소와 런타임<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../repository.html" ><span>저장소 안내</span><small>Repository Guide</small></a></li><li class="nav-depth-0"><a href="../runtime.html" ><span>런타임 안내</span><small>Runtime Guide</small></a></li><li class="nav-depth-0"><a href="../runtime-bootloader.html" ><span>런타임 부트로더</span><small>Runtime Bootloader</small></a></li><li class="nav-depth-0"><a href="../device-abi.html" ><span>디바이스 함수 ABI</span><small>Device Function ABI</small></a></li><li class="nav-depth-0"><a href="../example-mnist.html" ><span>MNIST 예제 안내</span><small>MNIST Example</small></a></li><li class="nav-depth-0"><a href="../example-transformer.html" ><span>트랜스포머 예제 안내</span><small>Transformer Example</small></a></li><li class="nav-depth-0"><a href="../kernel-authoring.html" ><span>커널 작성 스킬</span><small>Kernel Authoring Skill</small></a></li><li class="nav-depth-0"><a href="../changes.html" ><span>변경 이력</span><small>Release Notes</small></a></li></ul></details></nav><div class="nav-footer"><a href="../about.html">번역 안내·용어집</a><a href="../../index.html">Furiosa 개발자 문서</a><span>한국어로 읽는 TCP · No5</span></div></aside>
+<div class="workspace"><main id="main" class="main-content " tabindex="-1"><div class="page-meta"><span>FURIOSA OPT / 한국어 문서</span><a href="https://github.com/furiosa-ai/furiosa-opt/blob/3d43bc9d20f324af60e3006c3f1541938d7f5097/docs/src/computing-tensors/fetch-adapter.md" target="_blank" rel="noopener noreferrer">원문링크 <span aria-hidden="true">↗</span></a></div><h1 id="fetch-adapter"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0001"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">읽기 어댑터(Fetch Adapter)</span></span></h1>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0002"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">읽기 어댑터(Fetch Adapter)는 <a href="../moving-tensors/fetch-engine.html">읽기 엔진(Fetch Engine)</a>이 내보낸 패킷 스트림(packet stream)에 형 변환(type casting), 마스킹(masking), 테이블 조회(table lookup), 영점 빼기(zero-point subtraction) 같은 원소별 변환을 적용합니다. 이 처리는 <a href="switch-engine.html">교환 엔진(Switch Engine)</a>이 슬라이스(slice) 사이로 데이터를 전달하기 전에 일어납니다. 읽기 엔진 자체는 이러한 변환을 수행하지 않습니다. 변환은 이 텐서 계산(Computing Tensors) 장에서 설명하는 별도의 단계로, 읽기 엔진과 교환 엔진 사이에 놓입니다. 커널 작성자는 <code>FetchTensor</code>에 단계별 메서드(method)를 직접 연결하며, 호출할 때마다 다음 단계로 진행합니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0003"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">어댑터(adapter)에는 사용할 수 있는 단계(stage)가 세 개 있습니다. 모두 선택 사항이며, 하드웨어 파이프라인(hardware pipeline) 순서대로 스트림(stream)의 해당 메서드를 호출합니다. 어댑터 메서드를 하나도 호출하지 않고 <code>FetchTensor</code>를 <a href="switch-engine.html">교환 엔진(Switch Engine)</a>이나 <a href="collect-engine.html">수집 엔진(Collect Engine)</a>에 바로 전달해도 됩니다.</span></span></p>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0004"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="#table-lookup">테이블 조회(Table Lookup)</a>는 하드웨어 조회 테이블(lookup table)로 값을 바꿉니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0005"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="#type-casting">형 변환(Type Casting)</a>은 원소 타입(element type)을 변환합니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0006"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="#zero-point-subtraction">영점 빼기(Zero-Point Subtraction)</a>는 양자화 영점(quantization zero point)을 빼고, 정수 스트림을 <a href="contraction-engine/index.html">수축 연산기(Contraction Engine)</a>의 준비용 타입(staging type)으로 확장합니다. <code>i4</code>는 <code>i5</code>로, <code>i8</code>은 <code>i9</code>로 바뀝니다.</span></span></li>
+</ul>
+<h2 id="table-lookup"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0007"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">테이블 조회(Table Lookup)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0008"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">테이블 조회(table lookup)는 읽기(fetch) 단계에서 하드웨어 가속 조회 테이블을 제공합니다. 각 입력값을 미리 설정한 테이블의 인덱스(index)로 해석하고, 입력값 대신 해당 테이블 항목(entry)을 출력합니다. Sigmoid와 GeLU 같은 비선형 활성화 함수(non-linear activation function), 또는 사용자 지정 인코딩 테이블(custom encoding table)을 쓰는 양자화(quantization) 방식처럼, 일반적인 산술 연산만으로 효율적으로 구현하기 어려운 연산에 유용합니다. 다음과 같은 용도로 사용할 수 있습니다.</span></span></p>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0009"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>비선형 활성화(non-linear activation)</strong>: 미리 계산한 조회 테이블(lookup table)로 Sigmoid, GeLU 등의 함수를 구현합니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0010"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>사용자 지정 형 변환(custom type casting)</strong>: 변환 테이블(conversion table)로 <code>MXFP4</code> / <code>NVFP4</code> 같은 특수 인코딩을 표준 형식으로 바꿉니다.</span></span></li>
+</ul>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0011"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">Sigmoid와 GeLU는 <a href="vector-engine/index.html">벡터 엔진(Vector Engine)</a>에서도 직접 표현할 수 있습니다. 따라서 테이블 조회(table lookup)는 이 활성화 함수들을 구현하는 여러 방법 중 하나입니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-47" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="c1">// 테이블 조회(table lookup)는 **main 문맥 전용(main-context-only)** 하드웨어 기능입니다. main Fetch Unit의</span>
+<span class="c1">// 조회 테이블 레지스터(lookup-table register)만 상주 테이블을 가리킬 수 있으므로, 이 구현은</span>
+<span class="c1">// `{ Tu::Main }`으로 고정됩니다. StoTrf 가중치 준비 경로가 사용하는 sub 문맥의 Fetch Unit에는</span>
+<span class="c1">// 테이블 조회 레지스터가 없습니다. 따라서 압축 가중치(packed weight)의 디코딩은 main 문맥에서 읽으며 수행하고,</span>
+<span class="c1">// 디코딩된 스트림을 DM에 기록해야 합니다. 그 뒤 변환만 수행하는 일반 StoTrf가 이를 TRF에 적재합니다.</span>
+<span class="k">impl</span><span class="o">&lt;</span>
+<span class="w">    </span><span class="o">'</span><span class="na">l</span><span class="p">,</span>
+<span class="w">    </span><span class="n">P</span><span class="p">:</span><span class="w"> </span><span class="nc">CanApplyFetchTableLookup</span><span class="p">,</span>
+<span class="w">    </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">MaterializableScalar</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Chip</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Cluster</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Slice</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Packet</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">B</span><span class="p">:</span><span class="w"> </span><span class="nc">Backend</span><span class="p">,</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">TuTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Tu</span><span class="p">::</span><span class="n">Main</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">P</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Chip</span><span class="p">,</span><span class="w"> </span><span class="n">Cluster</span><span class="p">,</span><span class="w"> </span><span class="n">Slice</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 읽기 어댑터(Fetch Adapter)의 테이블 조회(table-lookup) 단계를 실행합니다(main 문맥 전용).</span>
+<span class="w">    </span><span class="sd">///</span>
+<span class="w">    </span><span class="sd">/// 각 입력값은 `TableLookupCast` 구현(impl)이 선택한 디코딩 테이블(decode table)의 인덱스가 됩니다.</span>
+<span class="w">    </span><span class="sd">/// 런타임 인수(runtime argument)로 선택하지 않습니다. `f4e2m1`은 쌍 단위(paired) 4b-&gt;8b 테이블로</span>
+<span class="w">    </span><span class="sd">/// 두 8비트 부동소수점(float) 타입 중 하나로 디코딩합니다(NVFP4 / MXFP4 가중치 경로). 각 8비트 부동소수점은</span>
+<span class="w">    </span><span class="sd">/// 쌍 단위가 아닌(non-paired) 테이블로 `bf16`으로 디코딩합니다. 쌍 단위 디코딩 결과를 `f32`로 확장하려면</span>
+<span class="w">    </span><span class="sd">/// [`fetch_cast`](Self::fetch_cast)를 연결하세요. 블록별 스케일(per-block scale)은</span>
+<span class="w">    </span><span class="sd">/// 후단의 벡터 엔진(Vector Engine) 또는 수축 연산기(Contraction Engine)에서 적용합니다.</span>
+<span class="w">    </span><span class="sd">/// 문서의 `computing-tensors/fetch-adapter.md` 장에서 “테이블 조회(Table Lookup)”를 참고하세요.</span>
+<span class="w">    </span><span class="sd">///</span>
+<span class="w">    </span><span class="sd">/// main 문맥(context)에서만 사용할 수 있습니다. 조회 테이블(lookup table)은 main Fetch Unit의 레지스터에 있고</span>
+<span class="w">    </span><span class="sd">/// sub 문맥에는 해당 레지스터가 없습니다. 디코딩한 가중치를 수축(contraction)에 쓰려면 여기서 디코딩한</span>
+<span class="w">    </span><span class="sd">/// `f8e4m3` 스트림을 DM에 기록하고, 변환만 수행하는 일반 StoTrf로 그 DM 텐서를 TRF에 적재하세요.</span>
+<span class="w">    </span><span class="cp">#[primitive(TuTensor::fetch_table_lookup)]</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">fetch_table_lookup</span><span class="o">&lt;</span><span class="n">OutD</span><span class="p">:</span><span class="w"> </span><span class="nc">Scalar</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">FetchTableLookupTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Tu</span><span class="p">::</span><span class="n">Main</span><span class="w"> </span><span class="p">},</span><span class="w"> </span><span class="n">OutD</span><span class="p">,</span><span class="w"> </span><span class="n">Chip</span><span class="p">,</span><span class="w"> </span><span class="n">Cluster</span><span class="p">,</span><span class="w"> </span><span class="n">Slice</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="k">where</span>
+<span class="w">        </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">TableLookupCast</span><span class="o">&lt;</span><span class="n">OutD</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FetchTableLookupTensor</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">inner</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">lookup</span><span class="p">()))</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0018"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">디코딩 테이블(decode table)은 실행 시 인수(runtime argument)가 아니라 입력 스칼라 타입(input scalar type)의 <code>TableLookupCast</code> 트레이트(trait)로 선택합니다. <code>fetch_cast</code>가 입력 타입에 따라 변환을 선택하는 방식과 같습니다. 키 너비(key width)가 테이블을 결정하고, 요청한 출력 타입이 항목 인코딩(entry encoding)을 결정합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0019"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">입력(Input)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0020"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">출력(Output)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>f4e2m1</code></td>
+<td><code>f8e4m3</code>, <code>f8e5m2</code></td>
+</tr>
+<tr>
+<td><code>f8e4m3</code></td>
+<td><code>bf16</code></td>
+</tr>
+<tr>
+<td><code>f8e5m2</code></td>
+<td><code>bf16</code></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0021"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">디코딩된 8비트 부동소수점(float)은 뒤이어 <code>fetch_cast</code>를 호출하여 <code>f32</code>로 확장하세요. NVFP4 / MXFP4의 블록별 스케일(per-block scale)은 후단의 <a href="vector-engine/index.html">벡터 엔진(Vector Engine)</a>이나 <a href="contraction-engine/index.html">수축 연산기(Contraction Engine)</a>에서 적용합니다. 스케일은 의도적으로 테이블에 포함하지 않습니다. 테이블은 블록과 무관한 16개 항목의 정적 디코딩(static decode)으로 유지됩니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0022"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>f4e2m1</code> 디코딩(decode) 테이블은 컴파일 시 상수(compile-time constant)로 읽기 시퀀서(fetch sequencer) 설정에 포함됩니다. 따라서 이 단계의 데이터 입력은 <code>f4e2m1</code> 가중치 스트림(weight stream) 하나뿐이며, 호출할 때마다 테이블을 별도로 준비하지 않습니다. 16개 항목의 e2m1 디코딩은 블록과 무관하므로 블록별 스케일(per-block scale)을 포함하지 않습니다. 스케일까지 테이블에 넣으면 블록마다 다른 테이블이 필요해져 공통 정적 테이블을 공유할 수 없게 됩니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0023"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">하드웨어 시퀀서(sequencer)는 바이트 경계에 맞춘 1바이트 또는 2바이트 키(key)를 순회하며, 4비트 니블(nibble)을 직접 읽지 않습니다. 따라서 4비트 키에는 <em>쌍 단위(paired)</em> 테이블이 필요합니다. <code>f4e2m1</code> 디코딩은 바이트로 인덱싱하는 256개 항목의 테이블로 수행합니다. 각 바이트는 니블 두 개를 담고, 한 번 조회하면 디코딩된 <code>f8e4m3</code> 값 두 개가 나옵니다. 즉 키 하나당 원소 두 개를 디코딩합니다. 이에 맞춰 <code>f4e2m1</code> 스칼라(scalar)는 니블 두 개를 담는 바이트로 모델링합니다. 다만 <code>BITS = 4</code>로 두어 읽기 매핑(fetch mapping)이 바이트가 아니라 원소의 개수를 계산하도록 합니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-98" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="sd">/// 하드웨어 테이블(hardware table)로 e2m1(NVFP4 / MXFP4) 가중치 스트림(weight stream)을 f8e4m3로 디코딩하고,</span>
+<span class="sd">/// 이어지는 fetch_cast로 f32로 확장합니다.</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">fetch_decode_e2m1</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nc">Tu</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="nc">BeginTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">f4e2m1</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">FetchCastTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="kt">f32</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">input</span>
+<span class="w">        </span><span class="p">.</span><span class="n">fetch</span><span class="p">::</span><span class="o">&lt;</span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">fetch_table_lookup</span><span class="p">::</span><span class="o">&lt;</span><span class="n">f8e4m3</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="w">        </span><span class="p">.</span><span class="n">fetch_cast</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">f32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="type-casting"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0024"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">형 변환(Type Casting)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0025"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>fetch_cast::&lt;OutD&gt;()</code>는 <code>Time</code>과 <code>Packet</code> 매핑(mapping)을 유지하면서 원소 타입(element type)을 <code>D</code>에서 <code>OutD</code>로 변환합니다. 형 변환(type casting)은 1~2사이클(cycle)의 지연(latency)을 추가합니다. <code>fetch_cast</code>는 타입 변환만 수행합니다. 영점 오프셋(zero-point offset)을 담기 위한 정수 확장(<code>i4</code> → <code>i5</code>, <code>i8</code> → <code>i9</code>)은 별도의 <a href="#zero-point-subtraction">영점 빼기(Zero-Point Subtraction)</a> 단계이므로, <code>fetch_cast</code>는 <code>i5</code>/<code>i9</code>를 만들지 않습니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-105" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="k">impl</span><span class="o">&lt;</span>
+<span class="w">    </span><span class="o">'</span><span class="na">l</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nc">Tu</span><span class="p">,</span>
+<span class="w">    </span><span class="n">P</span><span class="p">:</span><span class="w"> </span><span class="nc">CanApplyFetchCast</span><span class="p">,</span>
+<span class="w">    </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">MaterializableScalar</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Chip</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Cluster</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Slice</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Packet</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">B</span><span class="p">:</span><span class="w"> </span><span class="nc">Backend</span><span class="p">,</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">TuTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Chip</span><span class="p">,</span><span class="w"> </span><span class="n">Cluster</span><span class="p">,</span><span class="w"> </span><span class="n">Slice</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 읽기 어댑터(Fetch Adapter)의 형 변환(type-casting) 단계를 실행합니다.</span>
+<span class="w">    </span><span class="sd">///</span>
+<span class="w">    </span><span class="sd">/// 스트림(stream)의 원소 타입(element type)을 `D`에서 `OutD`로 변환합니다. 매핑(mapping)의</span>
+<span class="w">    </span><span class="sd">/// 모양(shape)은 유지합니다.</span>
+<span class="w">    </span><span class="cp">#[primitive(TuTensor::fetch_cast)]</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">fetch_cast</span><span class="o">&lt;</span><span class="n">OutD</span><span class="p">:</span><span class="w"> </span><span class="nc">Scalar</span><span class="o">&gt;</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">FetchCastTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">OutD</span><span class="p">,</span><span class="w"> </span><span class="n">Chip</span><span class="p">,</span><span class="w"> </span><span class="n">Cluster</span><span class="p">,</span><span class="w"> </span><span class="n">Slice</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="k">where</span>
+<span class="w">        </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">FetchCast</span><span class="o">&lt;</span><span class="n">OutD</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">FetchCastTensor</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">inner</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">cast</span><span class="p">()))</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0027"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">RNGD는 아래의 변환만 지원합니다. 모든 확장(widening)은 계산 너비(compute width)인 <code>i32</code> / <code>f32</code>로 이어지며, 축소(narrowing)는 <code>f32</code> → <code>bf16</code>만 가능합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0028"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">입력(Input)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0029"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">출력(Output)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>i4</code></td>
+<td><code>i32</code></td>
+</tr>
+<tr>
+<td><code>i8</code></td>
+<td><code>i32</code></td>
+</tr>
+<tr>
+<td><code>i16</code></td>
+<td><code>i32</code></td>
+</tr>
+<tr>
+<td><code>f8e4m3</code></td>
+<td><code>f32</code></td>
+</tr>
+<tr>
+<td><code>f8e5m2</code></td>
+<td><code>f32</code></td>
+</tr>
+<tr>
+<td><code>bf16</code></td>
+<td><code>f32</code></td>
+</tr>
+<tr>
+<td><code>f32</code></td>
+<td><code>bf16</code></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0030"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">읽기 어댑터(Fetch Adapter)에는 8비트 부동소수점(float)을 <code>bf16</code>으로 바꾸는 형 변환도, <code>f32</code>를 8비트 부동소수점으로 바꾸는 형 변환도 없습니다. <code>f8e4m3</code> 스트림을 <code>bf16</code>으로 만들려면 쌍 단위가 아닌(non-paired) <a href="#table-lookup">테이블 조회(Table Lookup)</a> 테이블로 디코딩하세요. 8비트 부동소수점으로 만들려면 파이프라인 후단의 <a href="cast-engine.html">형 변환 엔진(Cast Engine)</a>에서 정밀도를 줄여야 합니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0031"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">아래 예제는 원소(element) 8개의 <code>i8</code> 스트림을 읽고 <code>i32</code>로 형 변환(cast)합니다. 호출 전후로 <code>Time</code>과 <code>Packet</code> 매핑(mapping)은 유지됩니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-185" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">];</span>
+
+<span class="sd">/// 형 변환(type casting)을 적용해 읽습니다. 계산을 위해 i8 저장값을 i32로 변환합니다.</span>
+<span class="sd">/// 입력(Input):   i8 [0, 1, 2, 3, 4, 5, 6, 7]</span>
+<span class="sd">/// 출력(Output): i32 [0, 1, 2, 3, 4, 5, 6, 7]</span>
+<span class="k">fn</span><span class="w"> </span><span class="nf">fetch_with_type_cast</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nc">Tu</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">    </span><span class="n">input</span><span class="p">:</span><span class="w"> </span><span class="nc">BeginTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="kt">i8</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">FetchCastTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">input</span><span class="p">.</span><span class="n">fetch</span><span class="p">::</span><span class="o">&lt;</span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">]</span><span class="o">&gt;</span><span class="p">().</span><span class="n">fetch_cast</span><span class="p">::</span><span class="o">&lt;</span><span class="kt">i32</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0032"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">형 변환(type casting)을 사용하면 <code>read_size</code>에 추가 제약이 생깁니다. 한 번 읽어서 변환한 출력은 32바이트 플릿(flit) 하나에 들어가야 합니다. <a href="collect-engine.html">수집 엔진(Collect Engine)</a>을 참고하세요.</span></span></p>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0033"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">유효한 경우(Valid):</span></span>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0034"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i4</code> -&gt; <code>i32</code>, <code>read_size = 8 (4 bytes)</code>: 8 × 4 = 32 B를 생성합니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0035"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i8</code> -&gt; <code>i32</code>, <code>read_size = 8 (8 bytes)</code>: 8 × 4 = 32 B를 생성합니다.</span></span></li>
+</ul>
+</li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0036"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">유효하지 않은 경우(Invalid):</span></span>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0037"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i4</code> -&gt; <code>i32</code>, <code>read_size = 16 (8 bytes)</code>: 16 × 4 = 64 B를 생성합니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0038"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i8</code> -&gt; <code>i32</code>, <code>read_size = 16 (16 bytes)</code>: 16 × 4 = 64 B를 생성합니다.</span></span></li>
+</ul>
+</li>
+</ul>
+<h2 id="zero-point-subtraction"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0039"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">영점 빼기(Zero-Point Subtraction)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0040"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>fetch_zero_point_sub::&lt;OutD&gt;(zero_point)</code>는 각 원소(element)에서 양자화(quantization)의 <code>zero_point</code>를 빼고, 스트림을 <a href="contraction-engine/index.html">수축 연산기(Contraction Engine)</a>의 준비용 타입(staging type)으로 확장합니다. <code>i4</code>는 <code>i5</code>로, <code>i8</code>은 <code>i9</code>로 바뀝니다. <code>i5</code>/<code>i9</code>를 생성하는 단계는 이것뿐입니다.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-231" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="k">impl</span><span class="o">&lt;</span>
+<span class="w">    </span><span class="o">'</span><span class="na">l</span><span class="p">,</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="n">T</span><span class="p">:</span><span class="w"> </span><span class="nc">Tu</span><span class="p">,</span>
+<span class="w">    </span><span class="n">P</span><span class="p">:</span><span class="w"> </span><span class="nc">CanApplyFetchZeroPointSub</span><span class="p">,</span>
+<span class="w">    </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">MaterializableScalar</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Chip</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Cluster</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Slice</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Time</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">Packet</span><span class="p">:</span><span class="w"> </span><span class="nc">M</span><span class="p">,</span>
+<span class="w">    </span><span class="n">B</span><span class="p">:</span><span class="w"> </span><span class="nc">Backend</span><span class="p">,</span>
+<span class="o">&gt;</span><span class="w"> </span><span class="n">TuTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">P</span><span class="p">,</span><span class="w"> </span><span class="n">D</span><span class="p">,</span><span class="w"> </span><span class="n">Chip</span><span class="p">,</span><span class="w"> </span><span class="n">Cluster</span><span class="p">,</span><span class="w"> </span><span class="n">Slice</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="sd">/// 읽기 어댑터(Fetch Adapter)의 영점 빼기(zero-point-subtraction) 단계를 실행합니다.</span>
+<span class="w">    </span><span class="sd">///</span>
+<span class="w">    </span><span class="sd">/// `zero_point`를 빼고 스트림(stream)을 `D`에서 수축 연산기(contraction engine)의 준비용</span>
+<span class="w">    </span><span class="sd">/// 타입(staging type) `OutD`(`i4 -&gt; i5`, `i8 -&gt; i9`)로 확장합니다. i5/i9 스트림을 만드는 유일한</span>
+<span class="w">    </span><span class="sd">/// 방법입니다. 결과는 `contract_outer`에만 전달할 수 있습니다. 이 타입은</span>
+<span class="w">    </span><span class="sd">/// [`MaterializableScalar`]가 아니므로 쓰기(commit)나 다른 경로로의 전달(re-routing)은 컴파일</span>
+<span class="w">    </span><span class="sd">/// 오류(error)가 됩니다. 매핑 모양(mapping shape)은 유지합니다.</span>
+<span class="w">    </span><span class="sd">///</span>
+<span class="w">    </span><span class="sd">/// `zero_point`가 원본 타입(source type)의 범위를 벗어나면 패닉(panic)을 일으킵니다.</span>
+<span class="w">    </span><span class="sd">/// 범위는 [`FetchZeroPointSub::ZERO_POINT_RANGE`]입니다. 범위 안의 영점(zero point)은</span>
+<span class="w">    </span><span class="sd">/// 확장된 모든 잔차(widened residual)를 `OutD` 안에 유지하므로, 스트림 데이터와 무관한</span>
+<span class="w">    </span><span class="sd">/// 이 검사 하나면 충분합니다.</span>
+<span class="w">    </span><span class="cp">#[primitive(TuTensor::fetch_zero_point_sub)]</span>
+<span class="w">    </span><span class="k">pub</span><span class="w"> </span><span class="k">fn</span><span class="w"> </span><span class="nf">fetch_zero_point_sub</span><span class="o">&lt;</span><span class="n">OutD</span><span class="p">:</span><span class="w"> </span><span class="nc">Scalar</span><span class="o">&gt;</span><span class="p">(</span>
+<span class="w">        </span><span class="bp">self</span><span class="p">,</span>
+<span class="w">        </span><span class="n">zero_point</span><span class="p">:</span><span class="w"> </span><span class="kt">i32</span><span class="p">,</span>
+<span class="w">    </span><span class="p">)</span><span class="w"> </span><span class="p">-&gt;</span><span class="w"> </span><span class="nc">FetchZeroPointSubTensor</span><span class="o">&lt;'</span><span class="na">l</span><span class="p">,</span><span class="w"> </span><span class="n">T</span><span class="p">,</span><span class="w"> </span><span class="n">OutD</span><span class="p">,</span><span class="w"> </span><span class="n">Chip</span><span class="p">,</span><span class="w"> </span><span class="n">Cluster</span><span class="p">,</span><span class="w"> </span><span class="n">Slice</span><span class="p">,</span><span class="w"> </span><span class="n">Time</span><span class="p">,</span><span class="w"> </span><span class="n">Packet</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="k">where</span>
+<span class="w">        </span><span class="n">D</span><span class="p">:</span><span class="w"> </span><span class="nc">FetchZeroPointSub</span><span class="o">&lt;</span><span class="n">OutD</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">let</span><span class="w"> </span><span class="n">zero_point_range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="n">D</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="n">FetchZeroPointSub</span><span class="o">&lt;</span><span class="n">OutD</span><span class="o">&gt;&gt;</span><span class="p">::</span><span class="n">ZERO_POINT_RANGE</span><span class="p">;</span>
+<span class="w">        </span><span class="fm">assert!</span><span class="p">(</span>
+<span class="w">            </span><span class="n">zero_point_range</span><span class="p">.</span><span class="n">contains</span><span class="p">(</span><span class="o">&amp;</span><span class="n">zero_point</span><span class="p">),</span>
+<span class="w">            </span><span class="s">"zero_point {zero_point} is outside the source type's quantized range {zero_point_range:?}"</span><span class="p">,</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">        </span><span class="n">FetchZeroPointSubTensor</span><span class="p">::</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">device</span><span class="p">,</span><span class="w"> </span><span class="bp">self</span><span class="p">.</span><span class="n">inner</span><span class="p">.</span><span class="n">map</span><span class="p">(</span><span class="o">|</span><span class="n">v</span><span class="o">|</span><span class="w"> </span><span class="n">v</span><span class="p">.</span><span class="n">zero_point_sub</span><span class="p">(</span><span class="n">zero_point</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="extra-bit-rationale"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0042"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">비트(bit)가 하나 더 필요한 이유</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0043"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">영점(zero point)을 빼면 <code>zero_point</code>를 중심으로 부호 없이 표현하던 양자화 값(quantized value)이 부호 있는 잔차(signed residual)로 바뀌며, 그 범위는 원래 입력 너비(width)에 들어가지 않을 수 있습니다. 대칭적인 부호 있는 입력(symmetric-signed input)에서 잔차는 같은 너비의 두 값의 차이입니다.</span></span></p>
+<ul>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0044"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i4</code> 잔차(residual): <code>[-8, 7] - [-8, 7] = [-15, 15]</code>이므로, <code>i5</code>의 범위 <code>[-16, 15]</code>가 필요합니다.</span></span></li>
+<li><span class="translation-unit" tabindex="0" data-original="original-u0045"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i8</code> 잔차(residual): <code>[-128, 127] - [-128, 127] = [-255, 255]</code>이므로, <code>i9</code>의 범위 <code>[-256, 255]</code>가 필요합니다.</span></span></li>
+</ul>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0046"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">따라서 이 뺄셈(subtraction)은 입력보다 한 비트(bit) 더 넓은 결과를 만듭니다. 변환 과정은 실행 시(runtime) 이 조건을 검사합니다. <code>zero_point</code>나 입력이 범위를 벗어나 잔차(residual)가 <code>i5</code>/<code>i9</code> 범위 밖으로 나가면, 조용히 순환(wrap)시키지 않고 거부합니다.</span></span></p>
+<h3 id="contraction-only-staging"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0047"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">수축 연산 전용 준비 타입(Contraction-Only Staging)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0048"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>i5</code>/<code>i9</code> 스트림은 <a href="switch-engine.html">교환 엔진(Switch Engine)</a>과 <a href="collect-engine.html">수집 엔진(Collect Engine)</a>을 통과할 수 있습니다. 그러나 그다음에 합법적으로 받을 수 있는 연산은 <strong><code>contract_outer</code>뿐</strong>입니다. 이 연산은 <a href="contraction-engine/outer.html#operand-types">피연산자 타입(Operand types)</a>에 설명한 방식으로 가중치(weight)와 짝을 이룹니다. 이 스트림을 메모리에 쓰거나, 레지스터 파일(register file)에 저장하거나(<code>to_trf</code>/<code>to_vrf</code>), 전치(transpose)하거나, 다른 엔진으로 전달할 수는 없습니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0049"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">이 제약은 실행 시 검사(runtime check)가 아니라 컴파일 시점(compile time)에 적용합니다. <code>i5</code>/<code>i9</code> 스트림을 <code>contract_outer</code>가 아닌 연산에 전달하면 컴파일 오류(compile error)가 발생합니다.</span></span></p>
+<template id="original-u0001">Fetch Adapter</template><template id="original-u0002">The Fetch Adapter applies element-wise transformations (type casting, masking, table lookup, zero-point subtraction) to the packet stream emitted by the <a href="../moving-tensors/fetch-engine.html">Fetch Engine</a>, before the <a href="switch-engine.html">Switch Engine</a> routes it across slices.
+The Fetch Engine itself does not run any of these transforms; they live here under Computing Tensors and are applied as separate stages between the Fetch Engine and the Switch Engine.
+The kernel writer composes the per-stage methods directly on a <code>FetchTensor</code>, and each call advances to the next stage.</template><template id="original-u0003">The adapter has three usable stages, each optional and invoked by calling its method on the stream in hardware pipeline order.
+A <code>FetchTensor</code> may flow directly into the <a href="switch-engine.html">Switch Engine</a> or the <a href="collect-engine.html">Collect Engine</a> with no adapter call at all.</template><template id="original-u0004"><a href="#table-lookup">Table Lookup</a> replaces values via a hardware lookup table.</template><template id="original-u0005"><a href="#type-casting">Type Casting</a> converts the element type.</template><template id="original-u0006"><a href="#zero-point-subtraction">Zero-Point Subtraction</a> subtracts a quantization zero point, widening an integer stream to the <a href="contraction-engine/index.html">Contraction Engine</a>'s staging type (<code>i4</code> to <code>i5</code>, <code>i8</code> to <code>i9</code>).</template><template id="original-u0007">Table Lookup</template><template id="original-u0008">Table lookup provides hardware-accelerated lookup tables during the fetch stage.
+Each value is treated as an index into a pre-configured table, and the corresponding table entry is output instead.
+This is useful for operations that cannot be efficiently implemented with standard arithmetic, such as non-linear activation functions like Sigmoid and GeLU, or quantization schemes that use custom encoding tables.
+This enables:</template><template id="original-u0009"><strong>Non-linear activations</strong>: Implements Sigmoid, GeLU, and other functions through pre-computed lookup tables.</template><template id="original-u0010"><strong>Custom type casting</strong>: Translates specialized encodings like <code>MXFP4</code> / <code>NVFP4</code> to standard formats using conversion tables.</template><template id="original-u0011">Sigmoid and GeLU can also be expressed directly in the <a href="vector-engine/index.html">Vector Engine</a>, so table lookup is one option among several for these activations rather than the only path.</template><template id="original-code-47"><pre><code>// Table lookup is a **main-context-only** hardware feature: only the main Fetch Unit&#x27;s
+// lookup-table register can point at a resident lookup table, so this impl is fixed to
+// `{ Tu::Main }`. The sub-context Fetch Unit (used by the StoTrf weight-staging path) has no
+// table-lookup register, so decoding a packed weight must happen in a main-context fetch that
+// commits the decoded stream to DM, after which a plain convert-only StoTrf stages it into the TRF.
+impl&lt;
+    &#x27;l,
+    P: CanApplyFetchTableLookup,
+    D: MaterializableScalar,
+    Chip: M,
+    Cluster: M,
+    Slice: M,
+    Time: M,
+    Packet: M,
+    B: Backend,
+&gt; TuTensor&lt;&#x27;l, { Tu::Main }, P, D, Chip, Cluster, Slice, Time, Packet, B&gt;
+{
+    /// Runs the Fetch Adapter&#x27;s table-lookup stage (main context only).
+    ///
+    /// Each input value indexes a decode table selected by the `TableLookupCast` impl,
+    /// not by a runtime argument: `f4e2m1` decodes to either 8-bit float through the
+    /// paired 4b-&gt;8b table (the NVFP4 / MXFP4 weight path), and either 8-bit float
+    /// decodes to `bf16` through the non-paired table. Chain a
+    /// [`fetch_cast`](Self::fetch_cast) to widen a paired decode to `f32`; the
+    /// per-block scale is applied downstream in the Vector or Contraction Engine.
+    /// See the book chapter `computing-tensors/fetch-adapter.md` (&quot;Table Lookup&quot;).
+    ///
+    /// Only available on the main context: the lookup table lives in a main Fetch Unit register the
+    /// sub context lacks. To feed a decoded weight into a contraction, decode here and commit the
+    /// `f8e4m3` stream to DM, then stage that DM tensor into the TRF with a plain convert-only StoTrf.
+    #[primitive(TuTensor::fetch_table_lookup)]
+    pub fn fetch_table_lookup&lt;OutD: Scalar&gt;(
+        self,
+    ) -&gt; FetchTableLookupTensor&lt;&#x27;l, { Tu::Main }, OutD, Chip, Cluster, Slice, Time, Packet, B&gt;
+    where
+        D: TableLookupCast&lt;OutD&gt;,
+    {
+        FetchTableLookupTensor::new(self.device, self.inner.map(|v| v.lookup()))
+    }
+}
+</code></pre></template><template id="original-u0018">The decode table is selected by the input scalar type (via the <code>TableLookupCast</code> trait), not by a runtime argument, exactly as <code>fetch_cast</code> selects its conversion by the input type.
+The key width picks the table and the requested output type picks the entry encoding:</template><template id="original-u0019">Input</template><template id="original-u0020">Output</template><template id="original-u0021">Widen a decoded 8-bit float to <code>f32</code> with a following <code>fetch_cast</code>, and apply any NVFP4 / MXFP4 per-block scale downstream in the <a href="vector-engine/index.html">Vector Engine</a> or the <a href="contraction-engine/index.html">Contraction Engine</a> (it is intentionally not folded into the table, which stays a static 16-entry, block-independent decode).</template><template id="original-u0022">The table for the <code>f4e2m1</code> decode is a compile-time constant baked into the fetch-sequencer configuration, so the <code>f4e2m1</code> weight stream is the only data input to the stage; there is no per-invocation table staging.
+The 16-entry e2m1 decode is block-independent, which is why the per-block scale stays out of it: folding the scale in would need a distinct table per block and defeat the shared static table.</template><template id="original-u0023">The hardware sequencer walks byte-aligned keys (1 or 2 bytes), never a raw 4-bit nibble, and a 4-bit key must use a <em>paired</em> table.
+The <code>f4e2m1</code> decode therefore runs as a 256-entry byte-indexed table: each byte carries two nibbles and one lookup yields the pair of decoded <code>f8e4m3</code> values, decoding at two elements per key.
+The <code>f4e2m1</code> scalar is modelled accordingly as a byte holding two nibbles, with <code>BITS = 4</code> so the fetch mapping accounts elements rather than bytes.</template><template id="original-code-98"><pre><code>axes![A = 8];
+
+/// Decodes an e2m1 (NVFP4 / MXFP4) weight stream to f8e4m3 via the hardware table,
+/// then widens to f32 with a following fetch_cast.
+fn fetch_decode_e2m1&lt;&#x27;l, const T: Tu&gt;(
+    input: BeginTensor&lt;&#x27;l, T, f4e2m1, m![1], m![1], m![1], m![1], m![A]&gt;,
+) -&gt; FetchCastTensor&lt;&#x27;l, T, f32, m![1], m![1], m![1], m![1], m![A]&gt; {
+    input
+        .fetch::&lt;m![1], m![A]&gt;()
+        .fetch_table_lookup::&lt;f8e4m3&gt;()
+        .fetch_cast::&lt;f32&gt;()
+}
+</code></pre></template><template id="original-u0024">Type Casting</template><template id="original-u0025"><code>fetch_cast::&lt;OutD&gt;()</code> converts the element type from <code>D</code> to <code>OutD</code>, preserving the <code>Time</code> and <code>Packet</code> mapping.
+Type casting adds 1 to 2 cycles of latency.
+<code>fetch_cast</code> performs only the type conversion; the integer widenings that hold a zero-point offset (<code>i4</code> to <code>i5</code>, <code>i8</code> to <code>i9</code>) are a separate stage, <a href="#zero-point-subtraction">Zero-Point Subtraction</a>, so <code>fetch_cast</code> never produces an <code>i5</code>/<code>i9</code>.</template><template id="original-code-105"><pre><code>impl&lt;
+    &#x27;l,
+    const T: Tu,
+    P: CanApplyFetchCast,
+    D: MaterializableScalar,
+    Chip: M,
+    Cluster: M,
+    Slice: M,
+    Time: M,
+    Packet: M,
+    B: Backend,
+&gt; TuTensor&lt;&#x27;l, T, P, D, Chip, Cluster, Slice, Time, Packet, B&gt;
+{
+    /// Runs the Fetch Adapter&#x27;s type-casting stage.
+    ///
+    /// Converts the stream&#x27;s element type from `D` to `OutD`. The mapping
+    /// shape is preserved.
+    #[primitive(TuTensor::fetch_cast)]
+    pub fn fetch_cast&lt;OutD: Scalar&gt;(self) -&gt; FetchCastTensor&lt;&#x27;l, T, OutD, Chip, Cluster, Slice, Time, Packet, B&gt;
+    where
+        D: FetchCast&lt;OutD&gt;,
+    {
+        FetchCastTensor::new(self.device, self.inner.map(|v| v.cast()))
+    }
+}
+</code></pre></template><template id="original-u0027">RNGD supports the conversions below and no others: every widening lands in the <code>i32</code> / <code>f32</code> compute width, and <code>f32</code> to <code>bf16</code> is the only narrowing.</template><template id="original-u0028">Input</template><template id="original-u0029">Output</template><template id="original-u0030">In particular the Fetch Adapter has no cast from an 8-bit float to <code>bf16</code>, and none from <code>f32</code> to an 8-bit float.
+To land an <code>f8e4m3</code> stream in <code>bf16</code>, decode it through the non-paired <a href="#table-lookup">Table Lookup</a> table instead; to reach an 8-bit float, narrow with the <a href="cast-engine.html">Cast Engine</a> later in the pipeline.</template><template id="original-u0031">The example below fetches an 8-element <code>i8</code> stream and casts it to <code>i32</code>.
+The <code>Time</code> and <code>Packet</code> mapping is unchanged across the call.</template><template id="original-code-185"><pre><code>axes![A = 8];
+
+/// Fetches with type casting: converts i8 storage to i32 for computation.
+/// Input:   i8 [0, 1, 2, 3, 4, 5, 6, 7]
+/// Output: i32 [0, 1, 2, 3, 4, 5, 6, 7]
+fn fetch_with_type_cast&lt;&#x27;l, const T: Tu&gt;(
+    input: BeginTensor&lt;&#x27;l, T, i8, m![1], m![1], m![1], m![1], m![A]&gt;,
+) -&gt; FetchCastTensor&lt;&#x27;l, T, i32, m![1], m![1], m![1], m![1], m![A]&gt; {
+    input.fetch::&lt;m![1], m![A]&gt;().fetch_cast::&lt;i32&gt;()
+}
+</code></pre></template><template id="original-u0032">Type casting adds an additional limit on <code>read_size</code>.
+The cast output per fetch must fit in a single 32-byte flit (see <a href="collect-engine.html">Collect Engine</a>).</template><template id="original-u0033">Valid:</template><template id="original-u0034"><code>i4</code> -&gt; <code>i32</code>, <code>read_size = 8 (4 bytes)</code>: produces 8 × 4 = 32 B</template><template id="original-u0035"><code>i8</code> -&gt; <code>i32</code>, <code>read_size = 8 (8 bytes)</code>: produces 8 × 4 = 32 B</template><template id="original-u0036">Invalid:</template><template id="original-u0037"><code>i4</code> -&gt; <code>i32</code>, <code>read_size = 16 (8 bytes)</code>: produces 16 × 4 = 64 B</template><template id="original-u0038"><code>i8</code> -&gt; <code>i32</code>, <code>read_size = 16 (16 bytes)</code>: produces 16 × 4 = 64 B</template><template id="original-u0039">Zero-Point Subtraction</template><template id="original-u0040"><code>fetch_zero_point_sub::&lt;OutD&gt;(zero_point)</code> subtracts the quantization <code>zero_point</code> from each element and widens the stream to the <a href="contraction-engine/index.html">Contraction Engine</a>'s staging type: <code>i4</code> to <code>i5</code>, <code>i8</code> to <code>i9</code>.
+It is the only stage that produces an <code>i5</code>/<code>i9</code>.</template><template id="original-code-231"><pre><code>impl&lt;
+    &#x27;l,
+    const T: Tu,
+    P: CanApplyFetchZeroPointSub,
+    D: MaterializableScalar,
+    Chip: M,
+    Cluster: M,
+    Slice: M,
+    Time: M,
+    Packet: M,
+    B: Backend,
+&gt; TuTensor&lt;&#x27;l, T, P, D, Chip, Cluster, Slice, Time, Packet, B&gt;
+{
+    /// Runs the Fetch Adapter&#x27;s zero-point-subtraction stage.
+    ///
+    /// Subtracts `zero_point` and widens the stream from `D` to its contraction-engine staging
+    /// type `OutD` (`i4 -&gt; i5`, `i8 -&gt; i9`), the only way to produce an i5/i9
+    /// stream. The result may only feed `contract_outer`; it is not
+    /// [`MaterializableScalar`], so committing or re-routing it is a compile
+    /// error. The mapping shape is preserved.
+    ///
+    /// Panics if `zero_point` is outside the source type&#x27;s range
+    /// ([`FetchZeroPointSub::ZERO_POINT_RANGE`]); a zero point in range keeps
+    /// every widened residual within `OutD`, so this one check (independent of
+    /// the stream data) is enough.
+    #[primitive(TuTensor::fetch_zero_point_sub)]
+    pub fn fetch_zero_point_sub&lt;OutD: Scalar&gt;(
+        self,
+        zero_point: i32,
+    ) -&gt; FetchZeroPointSubTensor&lt;&#x27;l, T, OutD, Chip, Cluster, Slice, Time, Packet, B&gt;
+    where
+        D: FetchZeroPointSub&lt;OutD&gt;,
+    {
+        let zero_point_range = &lt;D as FetchZeroPointSub&lt;OutD&gt;&gt;::ZERO_POINT_RANGE;
+        assert!(
+            zero_point_range.contains(&amp;zero_point),
+            &quot;zero_point {zero_point} is outside the source type&#x27;s quantized range {zero_point_range:?}&quot;,
+        );
+        FetchZeroPointSubTensor::new(self.device, self.inner.map(|v| v.zero_point_sub(zero_point)))
+    }
+}
+</code></pre></template><template id="original-u0042">Extra-Bit Rationale</template><template id="original-u0043">Subtracting the zero point turns an unsigned-around-<code>zero_point</code> quantized value into a signed residual whose range no longer fits the input width.
+For a symmetric-signed input the residual is a difference of two same-width values:</template><template id="original-u0044"><code>i4</code> residual: <code>[-8, 7] - [-8, 7] = [-15, 15]</code>, which needs <code>i5</code>'s <code>[-16, 15]</code>.</template><template id="original-u0045"><code>i8</code> residual: <code>[-128, 127] - [-128, 127] = [-255, 255]</code>, which needs <code>i9</code>'s <code>[-256, 255]</code>.</template><template id="original-u0046">The subtraction therefore produces one more bit than it consumes.
+The conversion checks this at runtime: a residual outside the <code>i5</code>/<code>i9</code> range (an out-of-range <code>zero_point</code> or input) is rejected rather than silently wrapped.</template><template id="original-u0047">Contraction-Only Staging</template><template id="original-u0048">An <code>i5</code>/<code>i9</code> stream may flow through the <a href="switch-engine.html">Switch Engine</a> and <a href="collect-engine.html">Collect Engine</a>, but from there its <strong>only</strong> legal consumer is <code>contract_outer</code>, which pairs it with a weight as <a href="contraction-engine/outer.html#operand-types">Operand types</a> lays out.
+It cannot be committed to memory, stored to a register file (<code>to_trf</code>/<code>to_vrf</code>), transposed, or fed to any other engine.</template><template id="original-u0049">This restriction is enforced at compile time, not by a runtime check: passing an <code>i5</code>/<code>i9</code> stream to any consumer other than <code>contract_outer</code> is a compile error.</template><nav class="page-nav" aria-label="이전과 다음 문서"><a href="index.html"><small>이전 문서</small><strong>텐서 연산</strong></a><a href="switch-engine.html"><small>다음 문서</small><strong>교환 엔진</strong></a></nav><footer class="page-footer"><div>FuriosaAI 원문 · Apache-2.0<span>한국어 번역·읽기 도움말 · No5</span></div><a href="../about.html">번역 기준 2026-11-21 · 3d43bc9</a></footer></main><aside class="page-toc" aria-label="이 문서의 목차"><div class="toc-sticky"><h2>이 문서에서</h2><nav><ul><li class="toc-level-2"><a href="#table-lookup">테이블 조회(Table Lookup)</a></li><li class="toc-level-2"><a href="#type-casting">형 변환(Type Casting)</a></li><li class="toc-level-2"><a href="#zero-point-subtraction">영점 빼기(Zero-Point Subtraction)</a></li><li class="toc-level-3"><a href="#extra-bit-rationale">비트(bit)가 하나 더 필요한 이유</a></li><li class="toc-level-3"><a href="#contraction-only-staging">수축 연산 전용 준비 타입(Contraction-Only Staging)</a></li></ul></nav><div class="toc-hint"><span class="hint-badge">EN</span><p>문단에 마우스를 올리면<br>영어 원문이 나타납니다.</p><small>키보드: Tab으로 이동 · Esc로 닫기</small></div></div></aside></div>
+<div class="original-popover" id="original-popover" role="dialog" aria-modal="false" aria-labelledby="original-title" hidden><div class="original-popover-head"><span id="original-title">영어 원문 <small>Original</small></span><button id="close-original" aria-label="원문 닫기">×</button></div><div id="original-content" lang="en"></div></div><div id="toast" role="status" aria-live="polite"></div></body></html>

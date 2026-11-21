@@ -1,0 +1,14 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Case Study: Tiling"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 5,
+    "text": "[!WARNING]\n**WIP**: This chapter is currently in progress.\nContent will be added in a future release."
+  }
+]

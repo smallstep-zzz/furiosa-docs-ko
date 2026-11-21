@@ -1,0 +1,308 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Case Study: Transformer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "This Transformer page uses Qwen3-0.6B as a concrete tutorial case, explaining its model mental model and following one decoder token from a host-prepared embedding to padded vocabulary logits.\nEach boundary is checked with a portable host oracle and a reproducible schedule artifact.\nPreserve those host-prepared boundaries when adapting it."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "The model is a decoder-only transformer with 28 layers.\nEach layer transforms one running hidden vector for one token at a time."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 11,
+    "text": "The model uses hidden size 1024, 16 query heads, 8 key/value heads, head dimension 128, and intermediate size 3072.\nGrouped-query attention shares each key/value head across two query heads.\nRoPE uses theta 1,000,000, and the embedding and output weights are tied by the model design."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 17,
+    "text": "Component"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 20,
+    "text": "Shape or count"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 27,
+    "text": "Decoder layers"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 35,
+    "text": "Vocabulary"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 38,
+    "text": "151,936 tokens"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 43,
+    "text": "Embedding and tied LM head"
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 51,
+    "text": "Attention projections per layer"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 54,
+    "text": "`6,291,456` parameters"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 59,
+    "text": "SwiGLU MLP per layer"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 62,
+    "text": "`9,437,184` parameters"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 67,
+    "text": "Total model"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 70,
+    "text": "approximately 596 million parameters"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 76,
+    "text": "The RMSNorm, RoPE, attention, KV-cache, SwiGLU, residual, and output-projection decisions are summarized in this case study and implemented in the local transformer example."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 79,
+    "text": "The example is **decode-only and single-token**.\nIt does not implement prefill, sampling, or device-side token lookup.\nThe executable source is the [transformer example](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/src/transformer/mod.rs).\nThis case study explains its decisions and points to the source and tests instead of copying the implementation."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 82,
+    "text": "Runnable decoder flow"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 85,
+    "text": "The local `furiosa-opt-examples/src/transformer/mod.rs` exposes these device launches:"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 120,
+    "text": "This local launch map is the canonical execution surface for this case study.\nThe vISA and API contracts remain in the reference chapters."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 123,
+    "text": "Workload semantics"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 126,
+    "text": "The workload is one decoder step:"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 130,
+    "text": "The current example describes Qwen3-0.6B with 28 layers and hidden size 1024.\nEach decoder layer has these boundaries:"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 135,
+    "text": "`projection`: input RMSNorm, Q/K/V projections, Q/K RMSNorm, RoPE, and KV-cache writes."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 140,
+    "text": "`attention_forward_first` or `attention_forward`: one online-softmax attention chunk."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 145,
+    "text": "`decoder`: output projection, residual, post-attention RMSNorm, MLP, and residual."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 150,
+    "text": "`final_layer` applies the final RMSNorm and computes logits into the padded vocabulary shape.\nThe exact axis sizes and tensor types are defined in [`axes.rs`](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/src/transformer/axes.rs)."
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 153,
+    "text": "Decision trace"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 156,
+    "text": "The case study follows the same order as the rest of the book:"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 161,
+    "text": "**Workload semantics**: one token and a growing KV cache define the data movement."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 166,
+    "text": "**Hard constraints**: every kernel has a typed public boundary.\nThe vocabulary output uses `Wp`, while the model vocabulary is `W`."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 171,
+    "text": "**Kernel boundaries**: the Rust module exposes `embedding`, `projection`, `attention_forward_first`, `attention_forward`, `decoder`, and `final_layer` as separate device entry points."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 176,
+    "text": "**Mapping and movement**: the source moves host-prepared tensors through HBM and DM and uses the representations required by each engine.\nSee [Mapping Tensors](../mapping-tensors/index.md) and [Moving Tensors](../moving-tensors/index.md) for those contracts."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 181,
+    "text": "**Engine choices**: projection and LM-head contractions use the Contraction Engine.\nRMSNorm and elementwise stages use the Vector Engine.\nTransfers use the DMA and Fetch/Commit paths.\nSee [Computing Tensors](../computing-tensors/index.md) for the contracts."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 186,
+    "text": "**Checks**: host-oracle tests establish values, and a dumped schedule records the static execution plan.\nSee [Scheduling and Tuning](../scheduling/index.md)."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 191,
+    "text": "The case study therefore demonstrates how choices compose.\nIt does not redefine any individual engine API."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 194,
+    "text": "Host-prepared embedding"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 197,
+    "text": "The `embedding` entry point is a host-prepared HBM copy.\nIt accepts an `HbmTensor<bf16, ..., m![H]>` and copies its view into the output HBM tensor with `to_hbm_view`.\nIt is not a device lookup from token IDs and must not be described as one."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 200,
+    "text": "The current source implements this step as [`ops::embedding`](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/src/transformer/mod.rs).\nThe smoke test is [`test_embedding`](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/tests/transformer_tests.rs)."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 203,
+    "text": "Decoder step"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 206,
+    "text": "`projection` receives one hidden vector, the projection and RMSNorm weights, the position-dependent `cos` and `sin` vectors, and mutable K/V caches.\nIt writes Q to HBM and updates the cache.\nThe first attention chunk uses `attention_forward_first`.\nLater chunks use `attention_forward` to continue the online reduction state."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 209,
+    "text": "`decoder` consumes the attention output and its reduction state, writes the residual stream back to HBM, and applies the output projection, residual path, RMSNorm, MLP, and final residual path.\nThe function signatures define the required inputs and outputs.\nThe implementation details are in [`furiosa-opt-examples/src/transformer/mod.rs`](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/src/transformer/mod.rs)."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 212,
+    "text": "The boundary test [`test_decoder_step_wires_kernel_boundaries`](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/tests/transformer_tests.rs) passes host-prepared input through projection, one attention chunk, and decoder with zero weights.\nIts scalar-oracle tests separately cover projection, chunked attention, and decoder arithmetic."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 215,
+    "text": "Final layer and padded logits"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 218,
+    "text": "`final_layer` takes the residual stream, applies RMSNorm, reshapes the model vocabulary weight view to the padded output representation, and writes logits to `m![Wp]`.\nThe source accepts a separate `lm_head_weight`.\nThis example makes no tied-embedding claim."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 221,
+    "text": "The deterministic test [`test_final_layer_matches_scalar_reference`](https://github.com/furiosa-ai/furiosa-opt/blob/main/furiosa-opt-examples/tests/transformer_tests.rs) compares the valid `W` logits with a host RMSNorm-and-dot-product oracle.\nPadding is part of the tensor's required shape and storage behavior.\nInterpretation of padded entries belongs to the caller."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 224,
+    "text": "Verify and inspect"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 227,
+    "text": "Run the transformer test target with the repository's normal command:"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 231,
+    "text": "The tests use seeded small fixtures and compare each supported boundary against host equations.\nThey do not require model files or a sampling loop.\nCompile a selected device entry point with `--dump-schedule` to produce schedule data.\nInspect the result with the [Schedule Viewer](../tools/schedule-viewer.md) and follow the [Scheduling and Tuning](../scheduling/index.md) comparison protocol."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 234,
+    "text": "Keep changes disciplined: establish the oracle first, record a baseline schedule, change one mapping, movement, engine, or shape choice, and compare the same artifact.\nDo not infer throughput from the oracle or from source order."
+  }
+]

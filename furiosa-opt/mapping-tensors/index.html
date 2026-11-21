@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="furiosa-opt의 한국어 문서. 텐서 매핑, 메모리, 연산 엔진, 커널 설계와 최적화를 문단별 영어 원문과 함께 읽습니다."><title>텐서 매핑 · furiosa-opt 한국어</title><link rel="icon" href="../assets/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="../assets/style.css"><link rel="stylesheet" href="../assets/code.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"><script>try{if(localStorage.getItem('opt-theme')==='dark')document.documentElement.dataset.theme='dark';}catch(e){}</script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script><script defer src="../assets/app.js"></script></head>
+<body data-root="../" data-page="mapping-tensors/index"><a class="skip-link" href="#main">본문으로 건너뛰기</a>
+<header class="topbar"><div class="topbar-start"><button class="icon-button menu-toggle" id="menu-toggle" aria-label="목차 열기" aria-expanded="false" aria-controls="sidebar"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button><a class="wordmark" href="../index.html">furiosa<span>-opt</span><span class="edition">한국어</span></a></div><div class="topbar-end"><span class="community-label">커뮤니티 번역</span><button class="icon-button" id="theme-toggle" aria-label="어두운 테마로 전환"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 15.5A8.5 8.5 0 0 1 8.5 4a8.5 8.5 0 1 0 11.5 11.5Z"/></svg></button><a class="github-link" href="https://github.com/smallstep-zzz/furiosa-docs-ko/tree/main/furiosa-opt" aria-label="한국어 문서 GitHub 저장소"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 19c-4 .9-4-2-6-2m12 4v-3.4a3 3 0 0 0-.8-2.3c2.7-.3 5.5-1.3 5.5-6a4.7 4.7 0 0 0-1.3-3.2c.2-.9.1-2-.1-2.7 0 0-1-.3-3.3 1.2a11.4 11.4 0 0 0-6 0C6.7 3.1 5.7 3.4 5.7 3.4c-.3.7-.3 1.8-.1 2.7a4.7 4.7 0 0 0-1.3 3.2c0 4.7 2.8 5.7 5.5 6a3 3 0 0 0-.8 2.3V21"/></svg><span>GitHub</span></a></div></header>
+<div class="reading-progress" aria-hidden="true"><span id="reading-progress-bar"></span></div><div class="sidebar-backdrop" id="sidebar-backdrop" hidden></div><aside class="sidebar" id="sidebar" aria-label="문서 탐색"><a class="sidebar-home" href="../index.html"><span class="mini-mark">F</span><span>furiosa-opt<span class="sidebar-subtitle">한국어 문서</span></span></a><div class="nav-search"><label class="sr-only" for="doc-search">문서 검색</label><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.5"/><path d="m16 16 4 4"/></svg><input id="doc-search" type="search" placeholder="문서와 용어 검색" autocomplete="off"><kbd>/</kbd></div><div id="search-results" hidden aria-live="polite"></div><nav id="chapter-nav" aria-label="전체 문서 목차"><details class="nav-group" open><summary>시작하기<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../introduction.html" ><span>소개</span><small>Introduction</small></a></li><li class="nav-depth-0"><a href="../quick-start.html" ><span>빠른 시작</span><small>Quick Start</small></a></li><li class="nav-depth-1"><a href="../quick-start/setup-and-tooling.html" ><span>설치와 개발 도구</span><small>Setup and Tooling</small></a></li><li class="nav-depth-1"><a href="../quick-start/tensor-and-contraction.html" ><span>텐서와 수축 연산</span><small>Tensor and Contraction</small></a></li><li class="nav-depth-1"><a href="../quick-start/kernel-design.html" ><span>커널 설계</span><small>Kernel Design</small></a></li><li class="nav-depth-1"><a href="../quick-start/kernel-validation.html" ><span>커널 검증</span><small>Kernel Validation</small></a></li></ul></details><details class="nav-group" open><summary>텐서 매핑<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="index.html" aria-current="page"><span>텐서 매핑</span><small>Mapping Tensors</small></a></li><li class="nav-depth-1"><a href="mapping-expressions.html" ><span>매핑 표현식</span><small>Mapping Expressions</small></a></li><li class="nav-depth-1"><a href="spatial-temporal-dimensions.html" ><span>공간 차원과 시간 차원</span><small>Spatial and Temporal Dimensions</small></a></li><li class="nav-depth-1"><a href="tensor-semantics.html" ><span>텐서의 의미</span><small>Tensor Semantics</small></a></li></ul></details><details class="nav-group" ><summary>텐서 이동과 메모리<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../moving-tensors/index.html" ><span>텐서 이동</span><small>Moving Tensors</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/sequencer.html" ><span>시퀀서</span><small>Sequencer</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/fetch-engine.html" ><span>읽기 엔진</span><small>Fetch Engine</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/commit-engine.html" ><span>쓰기 엔진</span><small>Commit Engine</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/tensor-unit-io.html" ><span>텐서 유닛 입출력</span><small>Tensor Unit I/O</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/dma-engine.html" ><span>DMA 엔진</span><small>DMA Engine</small></a></li><li class="nav-depth-1"><a href="../moving-tensors/memory-performance.html" ><span>메모리 성능</span><small>Memory Performance</small></a></li></ul></details><details class="nav-group" ><summary>텐서 연산과 엔진<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../computing-tensors/index.html" ><span>텐서 연산</span><small>Computing Tensors</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/fetch-adapter.html" ><span>읽기 어댑터</span><small>Fetch Adapter</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/switch-engine.html" ><span>교환 엔진</span><small>Switch Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/collect-engine.html" ><span>수집 엔진</span><small>Collect Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/register-files.html" ><span>레지스터 파일</span><small>Register Files</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/contraction-engine/index.html" ><span>수축 연산기</span><small>Contraction Engine</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/outer.html" ><span>확장과 곱셈</span><small>Outer</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/packet-reducer.html" ><span>패킷 축약기</span><small>Packet Reducer</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/time-reducer.html" ><span>시간 축약기</span><small>Time Reducer</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/contraction-engine/lane-folder.html" ><span>레인 폴더</span><small>Lane Folder</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/vector-engine/index.html" ><span>벡터 엔진</span><small>Vector Engine</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/intra-slice-chain.html" ><span>슬라이스 내부 연산 체인</span><small>Intra-Slice Chain</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/intra-slice-reduce.html" ><span>슬라이스 내부 축약</span><small>Intra-Slice Reduce</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/vcg.html" ><span>유효 개수 생성기</span><small>Valid Count Generator</small></a></li><li class="nav-depth-2"><a href="../computing-tensors/vector-engine/inter-slice-reducer.html" ><span>슬라이스 간 축약기</span><small>Inter-Slice Reducer</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/cast-engine.html" ><span>자료형 변환 엔진</span><small>Cast Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/transpose-engine.html" ><span>전치 엔진</span><small>Transpose Engine</small></a></li><li class="nav-depth-1"><a href="../computing-tensors/commit-adapter.html" ><span>쓰기 어댑터</span><small>Commit Adapter</small></a></li></ul></details><details class="nav-group" ><summary>전체 실행 예제<span class="chevron"></span></summary><ul><li class="nav-depth-1"><a href="../kernel-examples/chip-cluster-reduce.html" ><span>칩·클러스터 간 축약</span><small>Chip/Cluster Reduction</small></a></li><li class="nav-depth-0"><a href="../kernel-examples/index.html" ><span>전체 실행 예제</span><small>End-to-End Cases</small></a></li><li class="nav-depth-1"><a href="../kernel-examples/transformer.html" ><span>트랜스포머 예제</span><small>Transformer</small></a></li><li class="nav-depth-1"><a href="../kernel-examples/skip-loop-bodies-at-runtime.html" ><span>실행 중 반복문 본문 건너뛰기</span><small>Skip Loop Bodies at Runtime</small></a></li></ul></details><details class="nav-group" ><summary>스케줄링과 도구<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../scheduling/index.html" ><span>스케줄링과 성능 조정</span><small>Scheduling and Tuning</small></a></li><li class="nav-depth-1"><a href="../scheduling/schedule.html" ><span>실행 스케줄</span><small>Schedule</small></a></li><li class="nav-depth-1"><a href="../scheduling/diagnosis.html" ><span>성능 진단</span><small>Diagnosis</small></a></li><li class="nav-depth-1"><a href="../scheduling/tuning.html" ><span>성능 조정</span><small>Tuning</small></a></li><li class="nav-depth-0"><a href="../tools/index.html" ><span>개발 도구</span><small>Tools</small></a></li><li class="nav-depth-1"><a href="../tools/kernel-optimizer.html" ><span>커널 최적화 도구</span><small>Kernel Optimizer</small></a></li><li class="nav-depth-1"><a href="../tools/language-server.html" ><span>언어 서버</span><small>Language Server</small></a></li><li class="nav-depth-1"><a href="../tools/schedule-viewer.html" ><span>스케줄 뷰어</span><small>Schedule Viewer</small></a></li></ul></details><details class="nav-group" ><summary>저장소와 런타임<span class="chevron"></span></summary><ul><li class="nav-depth-0"><a href="../repository.html" ><span>저장소 안내</span><small>Repository Guide</small></a></li><li class="nav-depth-0"><a href="../runtime.html" ><span>런타임 안내</span><small>Runtime Guide</small></a></li><li class="nav-depth-0"><a href="../runtime-bootloader.html" ><span>런타임 부트로더</span><small>Runtime Bootloader</small></a></li><li class="nav-depth-0"><a href="../device-abi.html" ><span>디바이스 함수 ABI</span><small>Device Function ABI</small></a></li><li class="nav-depth-0"><a href="../example-mnist.html" ><span>MNIST 예제 안내</span><small>MNIST Example</small></a></li><li class="nav-depth-0"><a href="../example-transformer.html" ><span>트랜스포머 예제 안내</span><small>Transformer Example</small></a></li><li class="nav-depth-0"><a href="../kernel-authoring.html" ><span>커널 작성 스킬</span><small>Kernel Authoring Skill</small></a></li><li class="nav-depth-0"><a href="../changes.html" ><span>변경 이력</span><small>Release Notes</small></a></li></ul></details></nav><div class="nav-footer"><a href="../about.html">번역 안내·용어집</a><a href="../../index.html">Furiosa 개발자 문서</a><span>한국어로 읽는 TCP · No5</span></div></aside>
+<div class="workspace"><main id="main" class="main-content " tabindex="-1"><div class="page-meta"><span>FURIOSA OPT / 한국어 문서</span><a href="https://github.com/furiosa-ai/furiosa-opt/blob/3d43bc9d20f324af60e3006c3f1541938d7f5097/docs/src/mapping-tensors/index.md" target="_blank" rel="noopener noreferrer">원문링크 <span aria-hidden="true">↗</span></a></div><h1 id="mapping-tensors"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0001"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">텐서 매핑(Mapping Tensors)</span></span></h1><details class="source-note"><summary>원문 대조 메모 · 번역자 설명</summary><p>매핑(mapping)은 논리적 데이터와 물리적 저장 위치의 대응 관계입니다. 도입부의 개념 설명과 달리, 아래 <code>E::map(position)</code> 예제에서 함수가 평가하는 방향은 <strong>물리적 위치 → 해당 위치의 셀(Cell)</strong>입니다. 두 표현을 같은 방향의 함수라고 생각하지 않도록 구분해 읽으세요.</p></details><aside class="reader-note"><div class="note-label">읽기 도움말 · 번역자 설명</div><p>같은 행렬도 메모리에 한 행씩 놓을 수 있고, 여러 슬라이스(slice)에 나누어 놓을 수도 있습니다. <strong>논리 축(logical axis)</strong>은 행·열처럼 데이터의 의미를 나타내고, <strong>물리 차원(physical dimension)</strong>은 칩·슬라이스·레인처럼 실행 위치를 나타냅니다. 매핑(mapping)은 이 둘의 관계를 정합니다.</p></aside>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0002"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">매핑(mapping)은 논리적 순서(logical order)와 물리적 배치(physical placement)를 결정하는 기준입니다. 데이터 이동이나 계산 연산을 선택하기 전에 매핑의 셀(cell)과 차원(dimension)을 검증하세요. 모든 매핑 표현식(mapping expression)은 논리 인덱스(logical index)를 물리적 위치(physical location)에 대응시킵니다. 데이터 이동이나 계산 연산을 선택하기 전에 <a href="#position-cell-summary">위치 셀 요약(Position Cell Summary)</a>에 정의된 결과 종류를 읽으세요.</span></span></p>
+<h2 id="place-and-reduce-dimensions"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0003"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">차원의 배치와 축약(Place and Reduce Dimensions)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0004"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">아래 표는 데이터 이동이나 계산 연산을 선택하기 전에 축(axis)을 어느 차원에 배치할지 정리합니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0005"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">차원(Dimension)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0006"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">종류(Type)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0007"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">정의되는 위치(Defined in)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0008"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축약되는 위치(Reduced in)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Chip</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0009"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">공간(Spatial)</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0010"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="spatial-temporal-dimensions.html#spatial-dimensions">HBM, DM</a>, <a href="spatial-temporal-dimensions.html#temporal-dimension">스트림(Stream)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0011"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../moving-tensors/dma-engine.html">DMA</a> + <a href="../computing-tensors/vector-engine/index.html">벡터(Vector)</a></span></span></td>
+</tr>
+<tr>
+<td><code>Cluster</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0012"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">공간(Spatial)</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0013"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="spatial-temporal-dimensions.html#spatial-dimensions">DM</a>, <a href="spatial-temporal-dimensions.html#temporal-dimension">스트림(Stream)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0014"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../moving-tensors/dma-engine.html">DMA</a> + <a href="../computing-tensors/vector-engine/index.html">벡터(Vector)</a></span></span></td>
+</tr>
+<tr>
+<td><code>Slice</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0015"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">공간(Spatial)</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0016"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="spatial-temporal-dimensions.html#spatial-dimensions">DM</a>, <a href="spatial-temporal-dimensions.html#temporal-dimension">스트림(Stream)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0017"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../computing-tensors/vector-engine/index.html">벡터(Vector)</a></span></span></td>
+</tr>
+<tr>
+<td><code>Lane</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0018"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">공간(Spatial)</span></span></td>
+<td><a href="spatial-temporal-dimensions.html#spatial-dimensions">TRF</a></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0020"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../computing-tensors/contraction-engine/index.html">수축(Contraction)</a></span></span></td>
+</tr>
+<tr>
+<td><code>Time</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0021"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">시간(Temporal)</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0022"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="spatial-temporal-dimensions.html#temporal-dimension">스트림(Stream)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0023"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../computing-tensors/contraction-engine/index.html">수축(Contraction)</a></span></span></td>
+</tr>
+<tr>
+<td><code>Packet</code></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0024"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">공간(Spatial)</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0025"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="spatial-temporal-dimensions.html#temporal-dimension">스트림(Stream)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0026"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../computing-tensors/contraction-engine/index.html">수축(Contraction)</a></span></span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0027"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">칩(Chip)과 클러스터(Cluster)의 축약(reduction)은 DMA로 데이터를 재분배한 뒤 벡터 엔진(Vector Engine)에서 축약하는 방식으로 수행합니다.</span></span></p>
+<h2 id="mapping-order-and-performance"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0028"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">매핑 순서와 성능(Mapping Order and Performance)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0029"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">텐서(tensor)는 값을 가지지만, 저장 순서(storage order)가 본래부터 정해져 있지는 않습니다. 이 순서는 매핑(mapping)이 선택하며, 이웃한 값들이 버퍼(buffer)의 연속된 위치를 차지할 때 하드웨어 접근이 가장 효율적입니다. 매핑의 가장 바깥 차원은 주 차원(major)이며 가장 느리게 변합니다. 가장 안쪽 차원은 부 차원(minor)이며 가장 빠르게 변합니다. 높이×너비 텐서에서 <code>m![H, W]</code>는 각 행(row)을 연속되게 배치하고, <code>m![W, H]</code>는 각 열(column)을 연속되게 배치합니다. 따라서 각 순서는 서로 다른 축(axis)에서 지역성(locality)에 유리합니다. H-major 매핑에서는 W 방향 순회가, W-major 매핑에서는 H 방향 순회가 연속 접근이 됩니다. <code>m![H / 2, W / 2, H % 2, W % 2]</code> 같은 타일 매핑(tiled mapping)은 작은 2차원 이웃 영역을 연속되게 배치하므로, 전체에서 H나 W 중 어느 한쪽만이 유일한 연속 방향이 되지는 않습니다. 이 방식은 어떤 접근 패턴(access pattern)이 버퍼의 가까운 위치로 대응되는지를 바꾸지만, 그 자체로 더 빠른 하드웨어 접근을 보장하지는 않습니다. 분할된 차원들을 표현하기 위한 추가 매핑 상태(mapping state)가 주된 추가 비용입니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0030"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">따라서 <code>H</code>축(axis)이 여섯 행(row), <code>W</code>축이 여덟 열(column)일 때 같은 값도 서로 다른 물리적 접근 패턴(physical access pattern)을 가질 수 있습니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">H\W</th>
+<th style="text-align:center">0</th>
+<th style="text-align:center">1</th>
+<th style="text-align:center">2</th>
+<th style="text-align:center">3</th>
+<th style="text-align:center">4</th>
+<th style="text-align:center">5</th>
+<th style="text-align:center">6</th>
+<th style="text-align:center">7</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">a</td>
+<td style="text-align:center">b</td>
+<td style="text-align:center">c</td>
+<td style="text-align:center">d</td>
+<td style="text-align:center">e</td>
+<td style="text-align:center">f</td>
+<td style="text-align:center">g</td>
+<td style="text-align:center">h</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">i</td>
+<td style="text-align:center">j</td>
+<td style="text-align:center">k</td>
+<td style="text-align:center">l</td>
+<td style="text-align:center">m</td>
+<td style="text-align:center">n</td>
+<td style="text-align:center">o</td>
+<td style="text-align:center">p</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+</tr>
+<tr>
+<td style="text-align:center">3</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+</tr>
+<tr>
+<td style="text-align:center">4</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+</tr>
+<tr>
+<td style="text-align:center">5</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+<td style="text-align:center">·</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0031"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>H-major, W-minor: <code>m![H, W]</code></strong> — W 방향으로 순회하면 연속 접근이 됩니다. H 방향으로 순회하면 캐시 라인(cache line)마다 값 하나씩을 접근합니다.</span></span></p>
+<table>
+  <tr>
+    <th colspan="8" align="center">H=0</th>
+    <th colspan="8" align="center">H=1</th>
+    <th align="center">...</th>
+  </tr>
+  <tr>
+    <td>a</td><td>b</td><td>c</td><td>d</td><td>e</td><td>f</td><td>g</td><td>h</td>
+    <td>i</td><td>j</td><td>k</td><td>l</td><td>m</td><td>n</td><td>o</td><td>p</td>
+    <td>...</td>
+  </tr>
+</table>
+</li>
+<li>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0032"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>W-major, H-minor: <code>m![W, H]</code></strong> — H 방향으로 순회하면 연속 접근이 됩니다. W 방향으로 순회하면 캐시 라인(cache line)마다 값 하나씩을 접근합니다.</span></span></p>
+<table>
+  <tr>
+    <th colspan="6" align="center">W=0</th>
+    <th colspan="6" align="center">W=1</th>
+    <th colspan="6" align="center">W=2</th>
+    <th align="center">...</th>
+  </tr>
+  <tr>
+    <td>a</td><td>i</td><td>·</td><td>·</td><td>·</td><td>·</td>
+    <td>b</td><td>j</td><td>·</td><td>·</td><td>·</td><td>·</td>
+    <td>c</td><td>k</td><td>·</td><td>·</td><td>·</td><td>·</td>
+    <td>...</td>
+  </tr>
+</table>
+</li>
+<li>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0033"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><strong>2×2 타일(tile): <code>m![H / 2, W / 2, H % 2, W % 2]</code></strong> — H-major와 W-major는 각각 어느 한 축(axis)의 지역성(locality)을 희생합니다. 타일링(tiling)은 두 축에서 작은 이웃 영역을 연속되게 배치하여 지역성의 분포를 바꿉니다. 다만 이 자체가 더 빠른 하드웨어 접근을 보장하지는 않습니다. 분할된 차원을 다루려면 단순하지 않은 주소 계산식(address formula)과 추가 매핑 상태(mapping state)가 필요합니다.</span></span></p>
+<table>
+  <tr>
+    <th colspan="4" align="center">t(0,0)</th>
+    <th colspan="4" align="center">t(0,1)</th>
+    <th colspan="4" align="center">t(0,2)</th>
+    <th align="center">...</th>
+  </tr>
+  <tr>
+    <td>a</td><td>b</td><td>i</td><td>j</td>
+    <td>c</td><td>d</td><td>k</td><td>l</td>
+    <td>e</td><td>f</td><td>m</td><td>n</td>
+    <td>...</td>
+  </tr>
+</table>
+</li>
+</ul>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0034"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">선택한 매핑(mapping)은 이후 실행에도 제약을 줍니다. 할당(allocation) 후 표현(representation)의 순서를 바꾸려면 대개 데이터를 복사(copy)하거나 전치(transpose)해야 하므로, 할당 시점의 선택이 후속 연산에 영향을 줍니다. 하드웨어 구조(geometry), 정렬(alignment), 스케줄링(scheduling)은 컴파일러의 하위 표현 변환(lowering)이 고려해야 할 아키텍처(architecture) 제약입니다. 매핑은 원시 주소 계산(raw address calculation) 대신 논리적 순서(logical order)를 표현합니다. 장치별 정렬 검사가 적용되며, 정렬되지 않은 접근(misaligned access)은 읽기·수정·쓰기(read-modify-write) 사이클이 필요해 성능 비용이 매우 커질 수 있습니다. 과거 해당 DM 접근에서 약 50×의 비용이 관찰된 바 있습니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0035"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">매핑(mapping)은 이러한 선택을 기술적으로 완전히 설명합니다. 물리적 표현(physical representation)은 그 매핑으로부터 얻어지는 구체적인 버퍼(buffer), 장치 배치(device placement), 스트림 분해(stream decomposition)입니다. 같은 값들이 서로 다른 물리적 표현 사이를 이동해도 논리적 텐서(logical tensor)는 바뀌지 않을 수 있습니다.</span></span></p>
+<h2 id="position-cell-summary"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0036"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">위치 셀 요약(Position Cell Summary)</span></span></h2>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0037"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">모든 매핑 표현식(mapping expression)은 물리적 위치(physical position)를 <code>Cell</code>에 대응시킵니다. 좌표(coordinate)를 해석하기 전에 먼저 결과 종류를 확인하세요.</span></span></p>
+<div class="code-block"><div class="code-toolbar"><span>rust</span><div><button class="code-original" data-original="original-code-369" aria-controls="original-popover" aria-expanded="false">원문</button><button class="copy-code" type="button">복사</button></div></div><pre tabindex="0"><code class="language-rust"><span class="n">axes</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="k">type</span><span class="w"> </span><span class="nc">E</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">];</span>
+
+<span class="fm">assert_eq!</span><span class="p">(</span><span class="n">E</span><span class="p">::</span><span class="n">map</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span><span class="w"> </span><span class="n">i</span><span class="o">!</span><span class="p">[</span><span class="n">A</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">]);</span>
+<span class="fm">assert_eq!</span><span class="p">(</span><span class="n">E</span><span class="p">::</span><span class="n">map</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span><span class="w"> </span><span class="n">Cell</span><span class="p">::</span><span class="n">OutOfBounds</span><span class="p">);</span>
+</code></pre></div>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0038"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><code>Cell::Index</code>에는 유효한 값 위치(live)를 나타내는 <code>Index</code> 항(term)이 들어 있습니다. <code>Cell::OutOfBounds</code>는 매핑(mapping) 바깥의 위치를 나타냅니다. <code>Cell::Padding</code>은 <a href="mapping-expressions.html">매핑 표현식(Mapping Expressions)</a>에서 설명하는 패딩(padding)으로 생깁니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0039"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">이 절은 결과의 종류를 요약합니다. <code>Cell</code>을 확인한 뒤 생성자(constructor)와 API 문법은 <a href="mapping-expressions.html">매핑 표현식(Mapping Expressions)</a>을 참고하세요.</span></span></p>
+<h2 id="representation-and-distribution"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0040"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">표현과 분산(Representation and Distribution)</span></span></h2>
+<h3 id="physical-representations"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0041"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">물리적 표현(Physical Representations)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0042"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">저장 텐서(storage tensor)와 스트림 텐서(stream tensor)는 하나의 매핑(mapping)을 여러 하드웨어 차원(dimension)에 나누어 배치합니다. HBM 표현(representation)은 채널(channel)을 여러 칩(chip)에 분산할 수 있습니다. DM 표현은 그 채널들을 여러 슬라이스(slice)에 다시 분할할 수 있습니다. 스트림 표현은 남은 차원들을 <code>Time</code>과 <code>Packet</code>에 배치할 수 있습니다. <a href="spatial-temporal-dimensions.html">공간 차원과 시간 차원(Spatial and Temporal Dimensions)</a>에서는 구체적인 좌표(coordinate)를 추적하면서 NCHW 텐서 하나가 이 표현들을 거치는 과정을 살펴봅니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0043"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">이 장은 표현(representation)을 추적하는 과정으로 마무리됩니다. 매핑(mapping)을 선택하고, 각 물리적 표현(physical representation)을 도출한 다음, 추적한 <code>Index</code>의 값이 예상한 스트림 셀(stream cell)에 도달하는지 확인합니다. 텐서 값(tensor value)의 형식적 정의(formal definition)는 <a href="tensor-semantics.html">텐서 의미론(Tensor Semantics)</a>에 있습니다. 이 장에서는 실제 동작 중심으로 설명합니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0044"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">표현(representation)에 대해 수행하는 가장 간단한 계산은 <a href="../computing-tensors/vector-engine/index.html">벡터 엔진(Vector Engine)</a>을 참고하세요. 원소별 연산(elementwise operation)은 그 실행 API에서 설명하며, 이 장은 매핑(mapping)과 표현에 집중합니다.</span></span></p>
+<h3 id="distribution-across-space-and-time"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0045"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">공간과 시간에 걸친 분산(Distribution Across Space and Time)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0046"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">매핑 차원(mapping dimension)은 공간 하드웨어 차원(spatial hardware dimension)인 <code>Chip</code>, <code>Cluster</code>, <code>Slice</code>, <code>Packet</code> 또는 시간 방향의 <code>Time</code> 루프(loop)에 명시적으로 배정됩니다. 이 이름들은 매핑을 어디에서 사용하는지 나타내며, 표현(representation)에 관한 별개의 용어 체계를 뜻하지는 않습니다. 텐서(tensor) 선언과 제약은 <a href="spatial-temporal-dimensions.html">공간 차원과 시간 차원(Spatial and Temporal Dimensions)</a>을 참고하세요.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0047"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">이 배정은 파이프라인(pipeline) 전체가 아닌 특정 단계(stage)에 적용됩니다. 축(axis)을 <code>Time</code>과 공간 차원(spatial dimension) 사이에서 옮기는 경로는 네 가지입니다.</span></span></p>
+<table>
+<thead>
+<tr>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0048"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">경로(Route)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0049"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">이동 내용(Moves)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0050"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">사용 조건(Available when)</span></span></th>
+<th><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0051"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">비용(Cost)</span></span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0052"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../computing-tensors/switch-engine.html">교환 엔진(Switch Engine)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0053"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축(axis)을 <code>Slice</code>와 <code>Time</code> 사이에서 어느 방향으로든 이동</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0054"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">스위치 엔진의 구성(configuration) 중 하나로 <code>Slice</code> 배치를 표현할 수 있을 때</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0055"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">링 순회(ring traversal)에 <code>ring_size × Time::SIZE × flits_per_packet</code> 사이클(cycle)</span></span></td>
+</tr>
+<tr>
+<td><a href="../moving-tensors/dma-engine.html">DMA</a></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0057"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">원하는 배치로 기록하여 축(axis)을 <code>Chip</code>, <code>Cluster</code> 또는 <code>Slice</code>에 이동</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0058"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">항상</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0059"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">텐서(tensor) 전체 전송</span></span></td>
+</tr>
+<tr>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0060"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content"><a href="../computing-tensors/vector-engine/inter-slice-reducer.html#promotion-from-time-into-outslice">슬라이스 간 축약기(Inter-slice reducer)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0061"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축약된 축(axis)이 비운 <code>Slice</code> 자리에 <code>Time</code>의 축을 이동</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0062"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">원래부터 스트림(stream)을 <code>Slice</code>의 축(axis)에 대해 축약(reduce)해야 할 때</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0063"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">해당 축약(reduction) 외의 추가 비용 없음</span></span></td>
+</tr>
+<tr>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0064"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">fetch 시 <a href="../moving-tensors/fetch-engine.html#axis-lifting">축 끌어올리기(Axis lifting)</a></span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0065"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축(axis)을 <code>Time</code>에서 <code>Chip</code>, <code>Cluster</code> 또는 <code>Slice</code>로 이동</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0066"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">선택한 차원(dimension)이 브로드캐스트(broadcast)를 담고 있을 때</span></span></td>
+<td><span class="translation-unit cell-unit" tabindex="0" data-original="original-u0067"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">기존 읽기 비용에 더해, <code>Slice</code>의 경우 DMA, 컨텍스트 내부 덧셈(context-local add), SFR 저장(store)이 추가됨</span></span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0068"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">교환 엔진(Switch Engine)은 어떤 값을 아직 그 값이 없는 슬라이스(slice)로 전달할 수 있으므로, <code>Slice</code>와 <code>Time</code> 사이에서 축을 이동하는 일반적인 경로입니다. 스위치 엔진은 슬라이스 사이에서만 동작하므로, 축(axis)을 <code>Chip</code>이나 <code>Cluster</code>로 옮기려면 원하는 배치로 기록하는 DMA가 필요합니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0069"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">축 끌어올리기(axis lifting)는 선택한 차원(dimension)에 브로드캐스트(broadcast)가 있어야 가능합니다. 즉 각 칩(chip), 클러스터(cluster), 슬라이스(slice)가 이미 원본 영역(source region)을 보유해야 합니다. 그러면 읽기 오프셋(read offset)을 다르게 주는 것만으로 데이터 전송 없이 축(axis)을 <code>Time</code>에서 옮길 수 있습니다.</span></span></p>
+<h3 id="declarative-mapping-context"><span class="translation-unit heading-unit" tabindex="0" data-original="original-u0070"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">선언적 매핑의 맥락(Declarative Mapping Context)</span></span></h3>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0071"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">선언적 매핑(declarative mapping)은 원시 스트라이드(raw stride)나 오프셋(offset) 대신 논리 축(logical axis)으로 순서를 표현합니다. 위의 H×W 예제는 H-major 순서에 <code>m![H, W]</code>, W-major 순서에 <code>m![W, H]</code>, 2×2 타일(tile)에 <code>m![H / 2, W / 2, H % 2, W % 2]</code>를 사용합니다. 타일 매핑의 앞 두 차원(dimension)은 어느 타일인지를, 뒤 두 차원은 그 타일 안의 위치를 나타냅니다.</span></span></p>
+<p><span class="translation-unit" tabindex="0" data-original="original-u0072"><button class="original-trigger" type="button" aria-label="이 문단의 영어 원문 보기" aria-expanded="false" aria-controls="original-popover">원문</button><span class="translation-content">매핑 표현식(mapping expression)은 표준 표현(standard representation)으로 정규화(normalization)할 수 있어, 서로 동등한 생성자(constructor) 형태를 더 쉽게 비교할 수 있습니다. 테스트로 확인된 정규화 특성과 한계는 <a href="mapping-expressions.html#equivalent-mappings">동등한 매핑(Equivalent Mappings)</a>에 설명되어 있습니다. 이 장은 보편적인 증명이나 유일한 표현을 주장하지 않습니다.</span></span></p>
+<template id="original-u0001">Mapping Tensors</template><template id="original-u0002">A mapping is the source of truth for logical order and physical placement.
+Validate its cells and dimensions before selecting movement or compute operations.
+Every mapping expression maps a logical index to a physical location.
+Read the result categories defined in <a href="#position-cell-summary">Position Cell Summary</a> before selecting movement or compute operations.</template><template id="original-u0003">Place and Reduce Dimensions</template><template id="original-u0004">The table places axes before movement or compute operations are selected.</template><template id="original-u0005">Dimension</template><template id="original-u0006">Type</template><template id="original-u0007">Defined in</template><template id="original-u0008">Reduced in</template><template id="original-u0009">Spatial</template><template id="original-u0010"><a href="spatial-temporal-dimensions.html#spatial-dimensions">HBM, DM</a>, <a href="spatial-temporal-dimensions.html#temporal-dimension">Stream</a></template><template id="original-u0011"><a href="../moving-tensors/dma-engine.html">DMA</a> + <a href="../computing-tensors/vector-engine/index.html">Vector</a></template><template id="original-u0012">Spatial</template><template id="original-u0013"><a href="spatial-temporal-dimensions.html#spatial-dimensions">DM</a>, <a href="spatial-temporal-dimensions.html#temporal-dimension">Stream</a></template><template id="original-u0014"><a href="../moving-tensors/dma-engine.html">DMA</a> + <a href="../computing-tensors/vector-engine/index.html">Vector</a></template><template id="original-u0015">Spatial</template><template id="original-u0016"><a href="spatial-temporal-dimensions.html#spatial-dimensions">DM</a>, <a href="spatial-temporal-dimensions.html#temporal-dimension">Stream</a></template><template id="original-u0017"><a href="../computing-tensors/vector-engine/index.html">Vector</a></template><template id="original-u0018">Spatial</template><template id="original-u0020"><a href="../computing-tensors/contraction-engine/index.html">Contraction</a></template><template id="original-u0021">Temporal</template><template id="original-u0022"><a href="spatial-temporal-dimensions.html#temporal-dimension">Stream</a></template><template id="original-u0023"><a href="../computing-tensors/contraction-engine/index.html">Contraction</a></template><template id="original-u0024">Spatial</template><template id="original-u0025"><a href="spatial-temporal-dimensions.html#temporal-dimension">Stream</a></template><template id="original-u0026"><a href="../computing-tensors/contraction-engine/index.html">Contraction</a></template><template id="original-u0027">Chip and Cluster reductions use DMA redistribution followed by Vector Engine reduction.</template><template id="original-u0028">Mapping Order and Performance</template><template id="original-u0029">A tensor has values but no intrinsic storage order.
+A mapping chooses that order, and hardware accesses are most efficient when adjacent values occupy contiguous buffer positions.
+The outermost mapping dimension is major and changes slowest.
+The innermost is minor and changes fastest.
+For a height-by-width tensor, <code>m![H, W]</code> makes rows contiguous, while <code>m![W, H]</code> makes columns contiguous.
+Each order favors locality along a different axis: an H-major mapping makes a scan along W contiguous, while a W-major mapping makes a scan along H contiguous.
+A tiled mapping such as <code>m![H / 2, W / 2, H % 2, W % 2]</code> places small two-dimensional neighborhoods contiguously, so neither H nor W is globally the sole contiguous direction.
+This changes which access patterns map to nearby buffer positions, but does not inherently guarantee faster hardware access.
+The additional mapping state needed to represent the split dimensions is its main extra cost.</template><template id="original-u0030">For axes <code>H</code> (six rows) and <code>W</code> (eight columns), the same values can therefore have different physical access patterns:</template><template id="original-u0031"><strong>H-major, W-minor: <code>m![H, W]</code></strong> — a scan along W is contiguous.
+A scan along H touches one value per cache line.</template><template id="original-u0032"><strong>W-major, H-minor: <code>m![W, H]</code></strong> — a scan along H is contiguous.
+A scan along W touches one value per cache line.</template><template id="original-u0033"><strong>2×2 tiles: <code>m![H / 2, W / 2, H % 2, W % 2]</code></strong> — H-major and W-major each sacrifice locality along one axis.
+Tiling places small neighborhoods contiguously along both axes, changing the locality distribution without inherently guaranteeing faster hardware access.
+The split dimensions require a non-trivial address formula and additional mapping state.</template><template id="original-u0034">The selected mapping also constrains later execution.
+Changing a representation's order after allocation generally requires copying or transposing its data, so allocation-time choices affect subsequent operations.
+Hardware geometry, alignment, and scheduling remain architectural constraints that compiler lowering must account for.
+The mapping expresses the logical order rather than a raw address calculation.
+Device-specific alignment checks apply, and misaligned accesses can require read-modify-write cycles with substantial performance cost (historically observed at roughly 50× for affected DM accesses).</template><template id="original-u0035">The mapping is the complete technical description of this choice.
+A physical representation is the concrete buffer, device placement, and stream decomposition produced from that mapping.
+The same values can move between different physical representations without changing the logical tensor.</template><template id="original-u0036">Position Cell Summary</template><template id="original-u0037">Every mapping expression maps a physical position to a <code>Cell</code>.
+Identify the result category before interpreting any coordinates.</template><template id="original-code-369"><pre><code>axes![A = 4];
+type E = m![A];
+
+assert_eq!(E::map(0), i![A: 0]);
+assert_eq!(E::map(4), Cell::OutOfBounds);
+</code></pre></template><template id="original-u0038"><code>Cell::Index</code> carries live <code>Index</code> terms.
+<code>Cell::OutOfBounds</code> identifies a position outside the mapping.
+<code>Cell::Padding</code> is introduced with padding in <a href="mapping-expressions.html">Mapping Expressions</a>.</template><template id="original-u0039">This section summarizes the result categories.
+After identifying the <code>Cell</code>, use <a href="mapping-expressions.html">Mapping Expressions</a> for constructors and API syntax.</template><template id="original-u0040">Representation and Distribution</template><template id="original-u0041">Physical Representations</template><template id="original-u0042">Storage and stream tensors split one mapping across hardware dimensions.
+An HBM representation may distribute channels across chips.
+A DM representation may repartition those channels across slices.
+A stream representation may put the remaining dimensions in <code>Time</code> and <code>Packet</code>.
+<a href="spatial-temporal-dimensions.html">Spatial and Temporal Dimensions</a> follows one NCHW tensor through those representations with a concrete coordinate trace.</template><template id="original-u0043">This representation trace closes the chapter: choose a mapping, derive each physical representation, then verify that the value at a traced <code>Index</code> reaches the expected stream cell.
+The formal tensor-value definition is in <a href="tensor-semantics.html">Tensor Semantics</a>.
+This chapter keeps the explanation operational.</template><template id="original-u0044">For a minimal computation over a representation, see the <a href="../computing-tensors/vector-engine/index.html">Vector Engine</a>.
+Elementwise operations belong with that execution API, while this chapter focuses on mapping and representation.</template><template id="original-u0045">Distribution Across Space and Time</template><template id="original-u0046">Mapping dimensions are assigned explicitly to spatial hardware dimensions (<code>Chip</code>, <code>Cluster</code>, <code>Slice</code>, and <code>Packet</code>) or to the temporal <code>Time</code> loop.
+These names describe where a mapping is consumed, not a second representation vocabulary.
+See <a href="spatial-temporal-dimensions.html">Spatial and Temporal Dimensions</a> for the tensor declarations and constraints.</template><template id="original-u0047">An assignment holds for one stage rather than for the whole pipeline, and four routes move an axis between <code>Time</code> and a spatial dimension.</template><template id="original-u0048">Route</template><template id="original-u0049">Moves</template><template id="original-u0050">Available when</template><template id="original-u0051">Cost</template><template id="original-u0052"><a href="../computing-tensors/switch-engine.html">Switch Engine</a></template><template id="original-u0053">an axis either way between <code>Slice</code> and <code>Time</code></template><template id="original-u0054">one of its configurations expresses the <code>Slice</code> placement</template><template id="original-u0055"><code>ring_size × Time::SIZE × flits_per_packet</code> cycles of ring traversal</template><template id="original-u0057">an axis into <code>Chip</code>, <code>Cluster</code> or <code>Slice</code>, by writing the desired placement</template><template id="original-u0058">always</template><template id="original-u0059">a transfer of the whole tensor</template><template id="original-u0060"><a href="../computing-tensors/vector-engine/inter-slice-reducer.html#promotion-from-time-into-outslice">Inter-slice reducer</a></template><template id="original-u0061">an axis out of <code>Time</code> into the <code>Slice</code> slot a reduced axis vacates</template><template id="original-u0062">the stream is reduced over a <code>Slice</code> axis anyway</template><template id="original-u0063">none beyond that reduction</template><template id="original-u0064"><a href="../moving-tensors/fetch-engine.html#axis-lifting">Axis lifting</a>, at fetch</template><template id="original-u0065">an axis out of <code>Time</code> onto <code>Chip</code>, <code>Cluster</code> or <code>Slice</code></template><template id="original-u0066">the selected dimension holds a broadcast</template><template id="original-u0067">the original read, plus a DMA, a context-local add, and an SFR store for <code>Slice</code></template><template id="original-u0068">The Switch Engine is the general route across the <code>Slice</code> / <code>Time</code> boundary because it can deliver a value to a slice that does not already contain it.
+The Switch Engine operates only across slices, so moving an axis onto <code>Chip</code> or <code>Cluster</code> requires a DMA that writes the desired placement.</template><template id="original-u0069">Axis lifting requires a broadcast on the selected dimension, meaning each chip, cluster, or slice already holds the source region.
+Different read offsets then move the axis out of <code>Time</code> without a data transfer.</template><template id="original-u0070">Declarative Mapping Context</template><template id="original-u0071">Declarative mappings state order in terms of logical axes instead of raw strides or offsets.
+The H×W examples above use <code>m![H, W]</code> for H-major order, <code>m![W, H]</code> for W-major order, and <code>m![H / 2, W / 2, H % 2, W % 2]</code> for 2×2 tiles.
+The first two tile dimensions identify a tile and the last two identify its position within that tile.</template><template id="original-u0072">Mapping expressions can be normalized to a standard representation, which makes equivalent constructor forms easier to inspect.
+The tested normalization properties and their limits are documented with <a href="mapping-expressions.html#equivalent-mappings">Equivalent Mappings</a>.
+This chapter does not claim a universal proof or unique representation.</template><nav class="page-nav" aria-label="이전과 다음 문서"><a href="../quick-start/kernel-validation.html"><small>이전 문서</small><strong>커널 검증</strong></a><a href="mapping-expressions.html"><small>다음 문서</small><strong>매핑 표현식</strong></a></nav><footer class="page-footer"><div>FuriosaAI 원문 · Apache-2.0<span>한국어 번역·읽기 도움말 · No5</span></div><a href="../about.html">번역 기준 2026-11-21 · 3d43bc9</a></footer></main><aside class="page-toc" aria-label="이 문서의 목차"><div class="toc-sticky"><h2>이 문서에서</h2><nav><ul><li class="toc-level-2"><a href="#place-and-reduce-dimensions">차원의 배치와 축약(Place and Reduce Dimensions)</a></li><li class="toc-level-2"><a href="#mapping-order-and-performance">매핑 순서와 성능(Mapping Order and Performance)</a></li><li class="toc-level-2"><a href="#position-cell-summary">위치 셀 요약(Position Cell Summary)</a></li><li class="toc-level-2"><a href="#representation-and-distribution">표현과 분산(Representation and Distribution)</a></li><li class="toc-level-3"><a href="#physical-representations">물리적 표현(Physical Representations)</a></li><li class="toc-level-3"><a href="#distribution-across-space-and-time">공간과 시간에 걸친 분산(Distribution Across Space and Time)</a></li><li class="toc-level-3"><a href="#declarative-mapping-context">선언적 매핑의 맥락(Declarative Mapping Context)</a></li></ul></nav><div class="toc-hint"><span class="hint-badge">EN</span><p>문단에 마우스를 올리면<br>영어 원문이 나타납니다.</p><small>키보드: Tab으로 이동 · Esc로 닫기</small></div></div></aside></div>
+<div class="original-popover" id="original-popover" role="dialog" aria-modal="false" aria-labelledby="original-title" hidden><div class="original-popover-head"><span id="original-title">영어 원문 <small>Original</small></span><button id="close-original" aria-label="원문 닫기">×</button></div><div id="original-content" lang="en"></div></div><div id="toast" role="status" aria-live="polite"></div></body></html>

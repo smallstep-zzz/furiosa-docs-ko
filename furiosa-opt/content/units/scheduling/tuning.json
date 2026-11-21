@@ -1,0 +1,342 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Tuning"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Tuning is a controlled experiment: preserve correctness, record a baseline, change one supported lever, and compare the same schedule metric before deciding whether to keep the change."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Control the experiment"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Follow this order for every candidate:"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 15,
+    "text": "Run the type-checking path to validate mapping and shape constraints."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 20,
+    "text": "Run a CPU test with a host oracle, including the relevant boundary cases."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 25,
+    "text": "Compile the baseline and record its schedule makespan."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 30,
+    "text": "Change one lever while keeping release, shapes, data types, and mappings fixed."
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 35,
+    "text": "Run the same checks and dump the candidate schedule."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 40,
+    "text": "Keep the change only if correctness still passes and the measured metric improves; otherwise restore the baseline."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 45,
+    "text": "Schedule makespan is the primary static metric in this chapter.\nDo not report a throughput or cycle improvement without a reproducible schedule comparison or separately documented device evidence."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 48,
+    "text": "Choose one lever"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 51,
+    "text": "Choose a lever only after diagnosis names the dependency or resource it targets:"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 56,
+    "text": "change the execution-engine path when the current resource is the bottleneck;"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 61,
+    "text": "change a tile or split shape when the schedule exposes avoidable serial work or an ill-fitting reduction;"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 66,
+    "text": "change a mapping, padding, or transfer boundary when the limiting interval is movement or an address dependency."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 71,
+    "text": "The [Moving Tensors](../moving-tensors/index.md), [Computing Tensors](../computing-tensors/index.md), and [Mapping Tensors](../mapping-tensors/index.md) chapters define these choices."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 74,
+    "text": "Unroll a loop"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 77,
+    "text": "Use `#[unroll]` to expose every iteration of a small static loop to the scheduler."
+  },
+  {
+    "id": "u0020",
+    "kind": "comment",
+    "token": 79,
+    "offset": 2,
+    "length": 6,
+    "text": "unroll"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 81,
+    "text": "The kernel crate requires `#![feature(proc_macro_hygiene, stmt_expr_attributes)]`.\nThe loop must start at zero, run at least once, and have a compile-time constant end. `#[unroll]`\nfully expands that trip count; there is no source-level partial-unroll factor or hard maximum trip\ncount. In practice, generated IR and code grow with the trip count, so reserve it for small loops."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 84,
+    "text": "A runtime `if` inside the body is supported and is copied into every expanded iteration. A runtime\nloop end such as `0..valid_len` is rejected before unrolling because the compiler has no fixed\nnumber of body copies to create.\nThe loop may be in a device entry point or a helper called by one.\nNested loops are not unrolled automatically.\nTo unroll every level, add `#[unroll]` to each loop.\nA nested loop with its own constant end is supported. An end that depends on an outer loop counter,\nsuch as `for j in 0..i`, is a runtime loop end and is rejected even when the outer loop has\n`#[unroll]`; loop construction currently happens before unrolling."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 87,
+    "text": "The compiler checks for remaining loops after applying `#[unroll]`.\nRegister-file reuse is enabled only when no loop remains anywhere in the kernel.\nUnrolling only some loops can still expose those iterations to scheduling, but a remaining outer or nested loop does not unlock loop-free optimizations."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 90,
+    "text": "Double buffering"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 93,
+    "text": "Double buffering can overlap staging the next weight group on `SubContext` with contracting the current group on `MainContext`.\nThe scheduler can consider this overlap only when both operations are visible in the same scheduling unit.\nUse a manual two-stage loop or `#[unroll]` to create that opportunity."
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 96,
+    "text": "The comparison uses 20 weight groups and the same schedule window for every case."
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 102,
+    "text": "Loop form"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 105,
+    "text": "Groups visible per scheduling unit"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 108,
+    "text": "Cross-iteration overlap"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 111,
+    "text": "Makespan"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 118,
+    "text": "Ordinary rolled loop"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 124,
+    "text": "No"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 127,
+    "text": "19,106 cycles"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 132,
+    "text": "Manual two-stage software pipeline"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 138,
+    "text": "Yes"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 141,
+    "text": "15,477 cycles"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 146,
+    "text": "Full unrolling"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 152,
+    "text": "Yes"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 155,
+    "text": "15,086 cycles"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 161,
+    "text": "`StoTrf` stages a weight group in the tensor register file (TRF).\nThe TRF can place one group in each half, but both halves share banks.\nSee [Register Files: Double Buffering](../computing-tensors/register-files.md#double-buffering) for capacity and address-mode details.\nUse the [Schedule Viewer](../tools/schedule-viewer.md) to verify the resulting overlap."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 164,
+    "text": "Blue boxes mark `StoTrf`, orange boxes mark contraction, and green bands mark measured overlap."
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 167,
+    "text": "Ordinary rolled loop: 19,106 cycles"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 170,
+    "text": "The scheduler builds one schedule for the rolled loop body and repeats that schedule for every iteration.\nTherefore, `Contraction(i)` and `StoTrf(i + 1)` cannot overlap."
+  },
+  {
+    "id": "u0044",
+    "kind": "comment",
+    "token": 172,
+    "offset": 184,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 174,
+    "text": "![The rolled loop schedules each StoTrf before its matching contraction without cross-iteration overlap.](../images/loop-unrolling-rolled-schedule.png)"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 177,
+    "text": "Manual two-stage software pipeline: 15,477 cycles"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 180,
+    "text": "The manual pipeline places two groups in one loop body.\nThis makes `Contraction(first)` and `StoTrf(second)` available to the scheduler together."
+  },
+  {
+    "id": "u0048",
+    "kind": "comment",
+    "token": 182,
+    "offset": 189,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 184,
+    "text": "![The software-pipelined loop overlaps each current contraction with the next StoTrf.](../images/loop-unrolling-software-pipelined-schedule.png)"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 187,
+    "text": "Full unrolling: 15,086 cycles"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 190,
+    "text": "`#[unroll]` exposes all 20 groups without manually pairing them."
+  },
+  {
+    "id": "u0052",
+    "kind": "comment",
+    "token": 192,
+    "offset": 186,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0053",
+    "kind": "comment",
+    "token": 192,
+    "offset": 718,
+    "length": 6,
+    "text": "unroll"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 194,
+    "text": "![The unrolled loop overlaps the first contraction with the next iteration's StoTrf.](../images/loop-unrolling-unrolled-schedule.png)"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 197,
+    "text": "All captures show cycles 4,000 through 8,000."
+  }
+]

@@ -1,0 +1,292 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Commit Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Commit Engine writes a Tensor Unit stream packet to DM, the inverse of the [Fetch Engine](./fetch-engine.md), after adapters have selected the final element type and layout.\nIt is the Commit Sequencer: a [mathematical tensor move](../mapping-tensors/tensor-semantics.md#mathematical-tensor-move) that runs independently in every slice, each writing to its own local DM partition."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Choose Commit when a computed Tensor Unit stream must become a DM tensor with a deliberate `Element` layout."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Interface"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "A `TuTensor` carries `Chip`, `Cluster`, `Slice`, `Time`, and `Packet` dimensions at the end of the Tensor Unit pipeline.\nIts `Time` reflects the temporal unrolling of the computation, and `Packet` is the element layout in the output stream."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "`.commit()` writes the stream to a `DmTensor` in DM."
+  },
+  {
+    "id": "u0007",
+    "kind": "comment",
+    "token": 18,
+    "offset": 220,
+    "length": 27,
+    "text": "primitive(TuTensor::commit)"
+  },
+  {
+    "id": "u0008",
+    "kind": "comment",
+    "token": 18,
+    "offset": 517,
+    "length": 32,
+    "text": "primitive(TuTensor::commit_view)"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 20,
+    "text": "`.commit()` preserves the `Chip`, `Cluster`, and `Slice` dimensions unchanged, because each slice independently writes to its own DM partition.\nThe output `Element` mapping replaces `Time` and `Packet`, defining how the stream is laid out in DM.\n`Element` configures both the Commit Sequencer and the [Commit Adapter](../computing-tensors/commit-adapter.md), and can reorder `Time` axes relative to the input stream, performing a transpose during the commit.\nFor performance implications of the `Element` mapping, see [Optimizations](#optimizations)."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 23,
+    "text": "The following example commits a cast accumulation result to DM as `bf16`.\nThe output `DmTensor` stores 16 time steps × 8 `bf16` elements across 256 slices.\nHere `D = bf16` and `Element = m![M, N # 16]`."
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 25,
+    "offset": 209,
+    "length": 70,
+    "text": "// Cast f32 to bf16 (Cast Engine), then commit to DM (Commit Engine).\n"
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 25,
+    "offset": 283,
+    "length": 71,
+    "text": "// Input: M = 16 time steps, N = 8 f32 elements per packet (32 bytes).\n"
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 25,
+    "offset": 358,
+    "length": 60,
+    "text": "// After cast: N = 8 bf16 elements padded to 16 (32 bytes).\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 25,
+    "offset": 422,
+    "length": 42,
+    "text": "// After trim: N # 16 trimmed into N = 8.\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 25,
+    "offset": 468,
+    "length": 47,
+    "text": "// The sequencer writes across P = 256 slices.\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 27,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 32,
+    "text": "**Hardware dimensions**: `Chip::SIZE`, `Cluster::SIZE`, and `Slice::SIZE` must match the hardware configuration (see [Spatial and Temporal Dimensions](../mapping-tensors/spatial-temporal-dimensions.md#constraints))."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 37,
+    "text": "**Address alignment**: All sequencer strides must be multiples of 8 bytes."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 42,
+    "text": "**Write unit alignment**: `D[valid_size]` must be 8, 16, 24, or 32 bytes (see the [Commit Adapter's Trimming](../computing-tensors/commit-adapter.md#trimming) stage)."
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 47,
+    "text": "Multi-Write Packet"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 50,
+    "text": "Writing a packet may require multiple hardware writes because packet axes may not be contiguous in DM.\nThe compiler derives `write_size = gcd(valid_size, access_size)`.\nThe [Commit Adapter](../computing-tensors/commit-adapter.md) supplies `valid_size`; the [Sequencer](./sequencer.md#access-size) supplies `access_size`.\nIn the [sub-context](../computing-tensors/index.md#execution-context), `D[write_size]` is fixed at 8 bytes.\nThe total cycle count is `Time::SIZE * (valid_size / write_size)`.\nThe division is always exact: in the main-context, `valid_size == write_size`, so each packet commits in a single cycle.\nIn the sub-context, `write_size` is fixed at 8 bytes and `valid_size` is one of 8, 16, 24, or 32 bytes (from the trimming constraint), so `valid_size / write_size` is always 1, 2, 3, or 4."
+  },
+  {
+    "id": "u0022",
+    "kind": "comment",
+    "token": 52,
+    "offset": 45,
+    "length": 39,
+    "text": "// Compiler-generated configuration: [\n"
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 52,
+    "offset": 84,
+    "length": 47,
+    "text": "//   M -> 4 : 64,  (64 == 2 * 32,  contiguous)\n"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 52,
+    "offset": 131,
+    "length": 49,
+    "text": "//   K -> 2 : 32,   (32  == 32 * 1,  contiguous)\n"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 52,
+    "offset": 180,
+    "length": 51,
+    "text": "//   M -> 32 : 1    (packet dimension, contiguous)\n"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 52,
+    "offset": 240,
+    "length": 88,
+    "text": "// access_size = 64; valid_size = 8; write_size = gcd(64, 8) = 8; writes per packet = 1\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "comment",
+    "token": 52,
+    "offset": 553,
+    "length": 39,
+    "text": "// Compiler-generated configuration: [\n"
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 52,
+    "offset": 592,
+    "length": 50,
+    "text": "//   M -> 4 : 8,   (8  != 2 * 32, NOT contiguous)\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 52,
+    "offset": 642,
+    "length": 50,
+    "text": "//   K -> 2 : 32,  (32 != 8 * 1,  NOT contiguous)\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "comment",
+    "token": 52,
+    "offset": 692,
+    "length": 50,
+    "text": "//   W -> 8 : 1    (packet dimension, contiguous)\n"
+  },
+  {
+    "id": "u0031",
+    "kind": "comment",
+    "token": 52,
+    "offset": 752,
+    "length": 86,
+    "text": "// access_size = 8; valid_size = 8; write_size = gcd(8, 8) = 8; writes per packet = 1\n"
+  },
+  {
+    "id": "u0032",
+    "kind": "comment",
+    "token": 52,
+    "offset": 1066,
+    "length": 39,
+    "text": "// Compiler-generated configuration: [\n"
+  },
+  {
+    "id": "u0033",
+    "kind": "comment",
+    "token": 52,
+    "offset": 1105,
+    "length": 50,
+    "text": "//   M -> 4 : 8,   (8  != 2 * 32, NOT contiguous)\n"
+  },
+  {
+    "id": "u0034",
+    "kind": "comment",
+    "token": 52,
+    "offset": 1155,
+    "length": 50,
+    "text": "//   K -> 2 : 32,  (32 != 8 * 1,  NOT contiguous)\n"
+  },
+  {
+    "id": "u0035",
+    "kind": "comment",
+    "token": 52,
+    "offset": 1205,
+    "length": 58,
+    "text": "//   N -> 8 : 1    (trimmed packet dimension, contiguous)\n"
+  },
+  {
+    "id": "u0036",
+    "kind": "comment",
+    "token": 52,
+    "offset": 1273,
+    "length": 104,
+    "text": "// access_size = 8; valid_size = 8 (trimmed from 16); write_size = gcd(8, 8) = 8; writes per packet = 1\n"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 54,
+    "text": "Optimizations"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 57,
+    "text": "Three factors determine Commit Sequencer throughput."
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 62,
+    "text": "**Sequential Addresses**: Writing to sequential DM addresses within each slice enables parallel bank access (128 B/cycle per DMN, 256 B/cycle with DMN interleaving).\nPatterns that hit the same bank 64+ times consecutively trigger [DM Bank Starvation](./memory-performance.md#bank-starvation)."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 67,
+    "text": "**Spatial parallelism**: Distributing writes across all active slices maximizes throughput."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 72,
+    "text": "**Aligned writes** (invariant): Partial bank writes never occur, because both the write address and the write unit are always 8-byte aligned.\nSequencer strides are multiples of 8 bytes (see [Constraints](#constraints)), and the [Commit Adapter's Trimming](../computing-tensors/commit-adapter.md#trimming) stage holds `D[valid_size]` to a multiple of 8 bytes."
+  }
+]

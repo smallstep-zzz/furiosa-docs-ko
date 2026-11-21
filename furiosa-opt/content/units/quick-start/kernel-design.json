@@ -1,0 +1,1120 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Kernel Design"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "First Vector Kernel"
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Constant Addition"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "Goal"
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "Compute $\\text{out}[i] = \\text{in}[i] + 1$ for every element of a vector.\nThis pattern covers residual and bias addition."
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "Data Movement"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 19,
+    "text": "Move the vector from HBM to DM, stream each DM slice through Fetch, Collect, the Vector Engine, and Commit, and move the result from DM back to HBM."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 23,
+    "text": "Device Source"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 26,
+    "text": "The kernel uses one chip, one of two clusters, and all 256 slices in that cluster.\nEach slice receives eight `i32` values.\n`TagMode::Zero` executes the Vector Engine on every cycle.\n`to_dm` distributes the vector across slices, and the `begin → fetch → collect → vector_init → vector_intra_slice_tag → vector_fxp → vector_final → commit` chain processes each slice in one pass."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 29,
+    "text": "Device source: `src/kernel/constant_add_kernel.rs`."
+  },
+  {
+    "id": "u0011",
+    "kind": "comment",
+    "token": 31,
+    "offset": 142,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0012",
+    "kind": "comment",
+    "token": 31,
+    "offset": 282,
+    "length": 74,
+    "text": "// HBM → DM: split 2048 elements across 256 slices (8 elements per slice)\n"
+  },
+  {
+    "id": "u0013",
+    "kind": "comment",
+    "token": 31,
+    "offset": 502,
+    "length": 61,
+    "text": "// Fetch: stream 8-element packets from DM into the pipeline\n"
+  },
+  {
+    "id": "u0014",
+    "kind": "comment",
+    "token": 31,
+    "offset": 608,
+    "length": 62,
+    "text": "// Collect: normalize the stream into 32-byte flits (8 × i32)\n"
+  },
+  {
+    "id": "u0015",
+    "kind": "comment",
+    "token": 31,
+    "offset": 717,
+    "length": 57,
+    "text": "// Vector Engine: enter pipeline and arm unconditionally\n"
+  },
+  {
+    "id": "u0016",
+    "kind": "comment",
+    "token": 31,
+    "offset": 852,
+    "length": 46,
+    "text": "// Add the scalar constant 1 to every element\n"
+  },
+  {
+    "id": "u0017",
+    "kind": "comment",
+    "token": 31,
+    "offset": 950,
+    "length": 71,
+    "text": "// Exit VE and commit: trim the packet to the commit width, then write\n"
+  },
+  {
+    "id": "u0018",
+    "kind": "comment",
+    "token": 31,
+    "offset": 1029,
+    "length": 22,
+    "text": "// results back to DM\n"
+  },
+  {
+    "id": "u0019",
+    "kind": "comment",
+    "token": 31,
+    "offset": 1148,
+    "length": 12,
+    "text": "// DM → HBM\n"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 33,
+    "text": "Host Program and Oracle"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 36,
+    "text": "The host program creates input, uploads it to HBM, launches the device function, and compares the result with the host equation in its test."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 39,
+    "text": "Base-template host program and oracle: `src/constant_add.rs`."
+  },
+  {
+    "id": "u0023",
+    "kind": "comment",
+    "token": 41,
+    "offset": 162,
+    "length": 11,
+    "text": "tokio::main"
+  },
+  {
+    "id": "u0024",
+    "kind": "comment",
+    "token": 41,
+    "offset": 579,
+    "length": 9,
+    "text": "cfg(test)"
+  },
+  {
+    "id": "u0025",
+    "kind": "comment",
+    "token": 41,
+    "offset": 627,
+    "length": 11,
+    "text": "tokio::test"
+  },
+  {
+    "id": "u0026",
+    "kind": "comment",
+    "token": 41,
+    "offset": 949,
+    "length": 34,
+    "text": "// Reference: out[i] = in[i] + 1.\n"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 43,
+    "text": "Pattern-Specific Mapping and Memory"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 46,
+    "text": "TCP has four nested hardware levels."
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 52,
+    "text": "Level"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 55,
+    "text": "Count (RNGD)"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 58,
+    "text": "Role"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 68,
+    "text": "System-dependent"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 71,
+    "text": "Top-level unit that holds HBM."
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 79,
+    "text": "Two per chip"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 82,
+    "text": "Group of 256 slices."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 90,
+    "text": "256 per cluster"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 93,
+    "text": "One Tensor Unit."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 101,
+    "text": "Eight per slice"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 104,
+    "text": "One row of the Contraction Engine MAC array."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 110,
+    "text": "A tensor type encodes its element type and the distribution of each logical axis across this hierarchy.\nFor example, `DmTensor<bf16, m![1], m![1 # 2], m![A / 8 # 256], m![A % 8]>` represents a `bf16` vector with axis `A` split across 256 slices with eight elements per slice.\nEach element of `A` has one well-defined position in one slice."
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 113,
+    "text": "Mapping operators describe where an axis goes."
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 118,
+    "text": "`/` splits an axis by stride."
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 123,
+    "text": "`%` gives the in-unit count."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 128,
+    "text": "`#` pads a mapping to the hardware unit count."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 133,
+    "text": "`=` reduces how much of an existing term a view covers, which is how a tile selects one piece of a tensor."
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 138,
+    "text": "`%` and `=` both narrow an axis, so it is worth stating what separates them.\n`%` introduces a new inner term: in `m![B / 2048, B % 2048]` the first term counts the 2048-element blocks of `B` and the second counts the positions inside one block.\n`=` leaves the terms alone and shrinks the extent the view reads, so `m![B / 2048 = 1 # 2]` selects one of the two blocks, where `# 2` keeps the stride of the full axis rather than of the selection.\nA tiled kernel uses them together, as in `m![B / 2048 = 1 # 2, B % 2048]`, which picks one block and covers every position within it.\nSee [Tiling](../mapping-tensors/mapping-expressions.md#tiling) for the general rule."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 141,
+    "text": "Tensor Unit tensors also use `Time` for pipeline iterations and `Packet` for elements within an iteration.\nThe Tensor Unit pipeline is Fetch → Switch → Collect → Contraction → Vector → Cast → Transpose → Commit.\nThe Switch Engine connects slices while most stages operate independently within a slice."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 147,
+    "text": "Type"
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 150,
+    "text": "Location"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 153,
+    "text": "Capacity (RNGD)"
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 156,
+    "text": "Role"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 166,
+    "text": "On-package"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 169,
+    "text": "48 GB and 1.5 TB/s"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 172,
+    "text": "Long-term weight and activation storage."
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 180,
+    "text": "On-chip SRAM"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 183,
+    "text": "256 MB total and 512 KB per slice"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 186,
+    "text": "Primary working memory."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 194,
+    "text": "On-chip scratchpad"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 197,
+    "text": "4 KB per PE and four PEs per cluster"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 200,
+    "text": "Staging for small, reread values such as gather indices."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 208,
+    "text": "On-chip SRAM"
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 211,
+    "text": "8 KB per lane and eight lanes per slice"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 214,
+    "text": "Contraction Engine register file."
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 222,
+    "text": "On-chip SRAM"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 225,
+    "text": "8 KB per slice"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 228,
+    "text": "Vector Engine operand register file."
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 234,
+    "text": "Convert a `DmTensor` to scratchpad with `to_spm` and back with `to_dm`; an SPM gather takes its index directly from an `SpmTensor`.\nThese choices specialize the constant-add pattern.\nSee [Mapping Tensors](../mapping-tensors/index.md) for the complete mapping model, [Moving Tensors](../moving-tensors/index.md) for memory movement, and [Computing Tensors](../computing-tensors/index.md) for the pipeline APIs."
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 237,
+    "text": "Stationary Vector Operand"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 240,
+    "text": "Elementwise Multiplication"
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 243,
+    "text": "Goal"
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 246,
+    "text": "Compute $\\text{out}[i] = \\text{lhs}[i] \\times \\text{rhs}[i]$.\nThis pattern covers gate scaling, GLU, and attention scaling."
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 249,
+    "text": "Mapping and Data Movement"
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 252,
+    "text": "The `sub` context preloads `rhs` into the VRF while the `main` context streams `lhs` and reads the VRF on every Vector Engine cycle.\nThe two DM regions must not overlap."
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 256,
+    "text": "Every device kernel has `device.main` and `device.sub` execution contexts on separate hardware resources.\n`main` runs the primary computation while `sub` commonly prefetches operands.\n`main` waits when it needs data that `sub` has not produced, and both contexts share the flat on-chip SRAM."
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 259,
+    "text": "Omit DM addresses for automatic placement.\nUse `_at` APIs only when an algorithm needs explicit non-overlapping addresses.\nThe `Tu` const generic identifies whether a tensor flows through `{ Tu::Main }` or `{ Tu::Sub }`.\nThe `sub` context loads `rhs_dm` through Fetch, Collect, and `.to_vrf()`, while `main` streams `lhs_dm` through `MulInt` with that stationary VRF operand.\nThe two contexts run concurrently when their resource dependencies allow it."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 262,
+    "text": "Device Source"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 265,
+    "text": "Device source: `src/kernel/elementwise_mul_kernel.rs`."
+  },
+  {
+    "id": "u0078",
+    "kind": "comment",
+    "token": 267,
+    "offset": 142,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0079",
+    "kind": "comment",
+    "token": 267,
+    "offset": 333,
+    "length": 79,
+    "text": "// Move both operands from HBM to DM (DM placement is assigned automatically).\n"
+  },
+  {
+    "id": "u0080",
+    "kind": "comment",
+    "token": 267,
+    "offset": 567,
+    "length": 83,
+    "text": "// Sub context: load rhs into VRF (runs concurrently with the main context below).\n"
+  },
+  {
+    "id": "u0081",
+    "kind": "comment",
+    "token": 267,
+    "offset": 654,
+    "length": 75,
+    "text": "// VRF holds a per-slice operand that the Vector Engine reads every cycle.\n"
+  },
+  {
+    "id": "u0082",
+    "kind": "comment",
+    "token": 267,
+    "offset": 958,
+    "length": 76,
+    "text": "// Main context: multiply every lhs element by its rhs counterpart from VRF\n"
+  },
+  {
+    "id": "u0083",
+    "kind": "comment",
+    "token": 267,
+    "offset": 1256,
+    "length": 82,
+    "text": "// Each slice multiplies its 8 lhs elements by the matching 8 rhs elements in VRF\n"
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 269,
+    "text": "Host Program and Oracle"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 272,
+    "text": "Base-template host program and oracle: `src/elementwise_mul.rs`."
+  },
+  {
+    "id": "u0086",
+    "kind": "comment",
+    "token": 274,
+    "offset": 168,
+    "length": 11,
+    "text": "tokio::main"
+  },
+  {
+    "id": "u0087",
+    "kind": "comment",
+    "token": 274,
+    "offset": 713,
+    "length": 9,
+    "text": "cfg(test)"
+  },
+  {
+    "id": "u0088",
+    "kind": "comment",
+    "token": 274,
+    "offset": 761,
+    "length": 11,
+    "text": "tokio::test"
+  },
+  {
+    "id": "u0089",
+    "kind": "comment",
+    "token": 274,
+    "offset": 1203,
+    "length": 40,
+    "text": "// Reference: out[i] = lhs[i] * rhs[i].\n"
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 276,
+    "text": "Contraction Patterns"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 279,
+    "text": "Dot Product"
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 282,
+    "text": "Goal"
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 285,
+    "text": "Compute $\\sum_i x_i y_i$.\nThis pattern covers attention scores and similarity."
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 288,
+    "text": "Mapping and Data Movement"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 291,
+    "text": "One operand flows through the pipeline while the `sub` context stores the other operand in the TRF.\nThe `sub` context loads that operand through Fetch, Collect, and `.to_trf()`."
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 294,
+    "text": "`.contract_outer()` pairs 32-byte flits into 64-byte packets and reads the stationary TRF operand.\nThe Stream Adapter performs the pairing and the TRF Sequencer reads the stationary operand.\nBoth operands feed the per-lane multiplier.\n`.contract_packet()` reduces products spatially through the hardware reduction tree.\n`.contract_time::<m![1]>()` accumulates across time and produces one scalar per slice.\n`.contract_lane()` folds the lanes, which is trivial when `Lane = m![1]`.\n`.cast()` converts the `f32` accumulator to `bf16`."
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 297,
+    "text": "Contraction performs multiply-and-accumulate over many terms and needs a widened type.\nContraction widens `i4` and `i8` to `i32`, and it widens `fp8` and `bf16` to `f32`.\nThe annotations on `.align()` and `.contract()` select that widened type."
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 300,
+    "text": "Device Source"
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 303,
+    "text": "Device source: `src/kernel/dot_product_kernel.rs`."
+  },
+  {
+    "id": "u0100",
+    "kind": "comment",
+    "token": 305,
+    "offset": 135,
+    "length": 67,
+    "text": "// 1 active slice; m![A / 8 # 256] would distribute across all 256\n"
+  },
+  {
+    "id": "u0101",
+    "kind": "comment",
+    "token": 305,
+    "offset": 225,
+    "length": 25,
+    "text": "// No temporal iteration\n"
+  },
+  {
+    "id": "u0102",
+    "kind": "comment",
+    "token": 305,
+    "offset": 273,
+    "length": 23,
+    "text": "// No lane parallelism\n"
+  },
+  {
+    "id": "u0103",
+    "kind": "comment",
+    "token": 305,
+    "offset": 299,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0104",
+    "kind": "comment",
+    "token": 305,
+    "offset": 489,
+    "length": 12,
+    "text": "// HBM → DM\n"
+  },
+  {
+    "id": "u0105",
+    "kind": "comment",
+    "token": 305,
+    "offset": 682,
+    "length": 34,
+    "text": "// Sub context: load rhs into TRF\n"
+  },
+  {
+    "id": "u0106",
+    "kind": "comment",
+    "token": 305,
+    "offset": 940,
+    "length": 75,
+    "text": "// Main context: stream lhs through the Contraction Engine, reduce along A\n"
+  },
+  {
+    "id": "u0107",
+    "kind": "comment",
+    "token": 305,
+    "offset": 1214,
+    "length": 89,
+    "text": "// Pair consecutive 32-byte flits into 64-byte packets, halving time steps (A/16 → A/32)\n"
+  },
+  {
+    "id": "u0108",
+    "kind": "comment",
+    "token": 305,
+    "offset": 1540,
+    "length": 44,
+    "text": "// cast f32 accumulator output back to bf16\n"
+  },
+  {
+    "id": "u0109",
+    "kind": "comment",
+    "token": 305,
+    "offset": 1644,
+    "length": 12,
+    "text": "// DM → HBM\n"
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 307,
+    "text": "Host Program and Oracle"
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 310,
+    "text": "Base-template host program and oracle: `src/dot_product.rs`."
+  },
+  {
+    "id": "u0112",
+    "kind": "comment",
+    "token": 312,
+    "offset": 160,
+    "length": 11,
+    "text": "tokio::main"
+  },
+  {
+    "id": "u0113",
+    "kind": "comment",
+    "token": 312,
+    "offset": 689,
+    "length": 9,
+    "text": "cfg(test)"
+  },
+  {
+    "id": "u0114",
+    "kind": "comment",
+    "token": 312,
+    "offset": 737,
+    "length": 11,
+    "text": "tokio::test"
+  },
+  {
+    "id": "u0115",
+    "kind": "comment",
+    "token": 312,
+    "offset": 1177,
+    "length": 64,
+    "text": "// Reference: sum_i lhs[i] * rhs[i] in f32, then round to bf16.\n"
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 314,
+    "text": "GEMV"
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 317,
+    "text": "Goal"
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 320,
+    "text": "Compute $y_i = \\sum_j A_{ij} x_j$.\nThis pattern covers LLM decode."
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 323,
+    "text": "Mapping and Data Movement"
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 326,
+    "text": "Map output dimension `I` across slices so each slice computes one row.\nBroadcast the full vector `x` so every slice can contract it with its row.\nUnlike dot product, the rows are independent but every row needs the same complete vector operand."
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 329,
+    "text": "Device Source"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 332,
+    "text": "Device source: `src/kernel/gemv_kernel.rs`."
+  },
+  {
+    "id": "u0123",
+    "kind": "comment",
+    "token": 334,
+    "offset": 138,
+    "length": 45,
+    "text": "// Distribute output dimension across slices\n"
+  },
+  {
+    "id": "u0124",
+    "kind": "comment",
+    "token": 334,
+    "offset": 211,
+    "length": 47,
+    "text": "// Temporal iterations for reduction dimension\n"
+  },
+  {
+    "id": "u0125",
+    "kind": "comment",
+    "token": 334,
+    "offset": 288,
+    "length": 39,
+    "text": "// Packet size for reduction dimension\n"
+  },
+  {
+    "id": "u0126",
+    "kind": "comment",
+    "token": 334,
+    "offset": 353,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0127",
+    "kind": "comment",
+    "token": 334,
+    "offset": 545,
+    "length": 28,
+    "text": "// Move data from HBM to DM\n"
+  },
+  {
+    "id": "u0128",
+    "kind": "comment",
+    "token": 334,
+    "offset": 766,
+    "length": 24,
+    "text": "// Load vector into TRF\n"
+  },
+  {
+    "id": "u0129",
+    "kind": "comment",
+    "token": 334,
+    "offset": 954,
+    "length": 45,
+    "text": "// Collect Engine: split into 32-byte flits.\n"
+  },
+  {
+    "id": "u0130",
+    "kind": "comment",
+    "token": 334,
+    "offset": 1068,
+    "length": 33,
+    "text": "// Compute GEMV: matrix × vector\n"
+  },
+  {
+    "id": "u0131",
+    "kind": "comment",
+    "token": 334,
+    "offset": 1105,
+    "length": 67,
+    "text": "// Key difference: `I` maps to slice (preserved), `J` gets reduced\n"
+  },
+  {
+    "id": "u0132",
+    "kind": "comment",
+    "token": 334,
+    "offset": 1671,
+    "length": 26,
+    "text": "// Transfer result to HBM\n"
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 336,
+    "text": "Host Program and Oracle"
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 339,
+    "text": "Base-template host program and oracle: `src/gemv.rs`."
+  },
+  {
+    "id": "u0135",
+    "kind": "comment",
+    "token": 341,
+    "offset": 149,
+    "length": 11,
+    "text": "tokio::main"
+  },
+  {
+    "id": "u0136",
+    "kind": "comment",
+    "token": 341,
+    "offset": 690,
+    "length": 9,
+    "text": "cfg(test)"
+  },
+  {
+    "id": "u0137",
+    "kind": "comment",
+    "token": 341,
+    "offset": 738,
+    "length": 11,
+    "text": "tokio::test"
+  },
+  {
+    "id": "u0138",
+    "kind": "comment",
+    "token": 341,
+    "offset": 1192,
+    "length": 77,
+    "text": "// Reference: y[i] = sum_j matrix[i, j] * vector[j] in f32, rounded to bf16.\n"
+  },
+  {
+    "id": "u0139",
+    "kind": "prose",
+    "token": 343,
+    "text": "GEMM"
+  },
+  {
+    "id": "u0140",
+    "kind": "prose",
+    "token": 346,
+    "text": "Goal"
+  },
+  {
+    "id": "u0141",
+    "kind": "prose",
+    "token": 349,
+    "text": "Compute $C_{ij} = \\sum_k A_{ik} B_{kj}$.\n`A` broadcasts across `J`, and `B` broadcasts across `I`."
+  },
+  {
+    "id": "u0142",
+    "kind": "prose",
+    "token": 352,
+    "text": "Mapping and Data Movement"
+  },
+  {
+    "id": "u0143",
+    "kind": "prose",
+    "token": 355,
+    "text": "Map both output dimensions with `type Slice = m![I / 32, J / 32]` so each slice computes a 16 × 16 output tile.\nThe Switch Engine routes each `B` tile to its matching slice, so each slice receives only the `J` portion that belongs to its output tile.\n`.contract_packet::<m![1]>()` reduces along `K` spatially.\n`.contract_time::<m![I]>()` accumulates over time while preserving `I`.\n`.contract_lane::<m![I], m![J # 8]>(LaneMode::Interleaved)` preserves `I` and `J` in the output packet."
+  },
+  {
+    "id": "u0144",
+    "kind": "prose",
+    "token": 358,
+    "text": "Device Source"
+  },
+  {
+    "id": "u0145",
+    "kind": "prose",
+    "token": 361,
+    "text": "Device source: `src/kernel/gemm_kernel.rs`."
+  },
+  {
+    "id": "u0146",
+    "kind": "comment",
+    "token": 363,
+    "offset": 121,
+    "length": 58,
+    "text": "// Distribute output dimensions `I` and `J` across slices\n"
+  },
+  {
+    "id": "u0147",
+    "kind": "comment",
+    "token": 363,
+    "offset": 216,
+    "length": 44,
+    "text": "// Each slice handles a 16 × 16 output tile\n"
+  },
+  {
+    "id": "u0148",
+    "kind": "comment",
+    "token": 363,
+    "offset": 290,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0149",
+    "kind": "comment",
+    "token": 363,
+    "offset": 478,
+    "length": 28,
+    "text": "// Move data from HBM to DM\n"
+  },
+  {
+    "id": "u0150",
+    "kind": "comment",
+    "token": 363,
+    "offset": 695,
+    "length": 26,
+    "text": "// Load matrix B into TRF\n"
+  },
+  {
+    "id": "u0151",
+    "kind": "comment",
+    "token": 363,
+    "offset": 725,
+    "length": 49,
+    "text": "// Switch Engine distributes B across 256 slices\n"
+  },
+  {
+    "id": "u0152",
+    "kind": "comment",
+    "token": 363,
+    "offset": 778,
+    "length": 77,
+    "text": "// Each slice gets the full `K` dimension but only its (16 × 16) output tile\n"
+  },
+  {
+    "id": "u0153",
+    "kind": "comment",
+    "token": 363,
+    "offset": 859,
+    "length": 61,
+    "text": "// See: Switch Engine topologies for details on distribution\n"
+  },
+  {
+    "id": "u0154",
+    "kind": "comment",
+    "token": 363,
+    "offset": 1179,
+    "length": 23,
+    "text": "// Compute GEMM: A × B\n"
+  },
+  {
+    "id": "u0155",
+    "kind": "comment",
+    "token": 363,
+    "offset": 1206,
+    "length": 74,
+    "text": "// Switch Engine ensures matching (`I / 32`, `J / 32`) slice distribution\n"
+  },
+  {
+    "id": "u0156",
+    "kind": "comment",
+    "token": 363,
+    "offset": 1284,
+    "length": 56,
+    "text": "// Contraction reduces along `K`, preserves `I` and `J`\n"
+  },
+  {
+    "id": "u0157",
+    "kind": "comment",
+    "token": 363,
+    "offset": 1928,
+    "length": 26,
+    "text": "// Transfer result to HBM\n"
+  },
+  {
+    "id": "u0158",
+    "kind": "prose",
+    "token": 365,
+    "text": "Host Program and Oracle"
+  },
+  {
+    "id": "u0159",
+    "kind": "prose",
+    "token": 368,
+    "text": "Base-template host program and oracle: `src/gemm.rs`."
+  },
+  {
+    "id": "u0160",
+    "kind": "comment",
+    "token": 370,
+    "offset": 152,
+    "length": 11,
+    "text": "tokio::main"
+  },
+  {
+    "id": "u0161",
+    "kind": "comment",
+    "token": 370,
+    "offset": 656,
+    "length": 9,
+    "text": "cfg(test)"
+  },
+  {
+    "id": "u0162",
+    "kind": "comment",
+    "token": 370,
+    "offset": 704,
+    "length": 11,
+    "text": "tokio::test"
+  },
+  {
+    "id": "u0163",
+    "kind": "comment",
+    "token": 370,
+    "offset": 1131,
+    "length": 73,
+    "text": "// Reference: C[i, j] = sum_k A[i, k] * B[j, k] in f32, rounded to bf16.\n"
+  },
+  {
+    "id": "u0164",
+    "kind": "prose",
+    "token": 372,
+    "text": "Blocked GEMM extends GEMM with tiling for matrices that exceed on-chip DM capacity.\nIt covers temporal partitioning over `K` and spatial partitioning of `I` and `J` across chips.\nFlash Attention combines GEMM, Vector Engine softmax, and main/sub prefetch across a transformer attention head."
+  }
+]

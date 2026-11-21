@@ -1,0 +1,248 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Kernel Optimizer"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "The Kernel Optimizer provides build, test, run, and direct-compile workflows for Furiosa Optimizer kernels.\nThe `cargo-furiosa-opt` command is the entry point for these workflows."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "`cargo-furiosa-opt` is a thin wrapper around cargo for the Furiosa NPU compiler toolchain.\n`cargo furiosa-opt` is the NPU build; a plain `cargo` invocation builds and runs on the CPU.\nEvery cargo argument passes through verbatim, and the wrapper compiles the kernels your build needs."
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "For installation, see [Installation and First Program](../quick-start/setup-and-tooling.md#installation-and-first-program)."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 13,
+    "text": "First Commands"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 16,
+    "text": "Run a binary on the CPU, then check mappings, compare values with an oracle, and export schedule data."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 20,
+    "text": "Quick Start introduces these commands in context.\nThis section gives the complete `cargo-furiosa-opt` command reference.\nUse [Kernel Validation](../quick-start/kernel-validation.md) to interpret compile, CPU, NPU, and schedule results."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 23,
+    "text": "Usage"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 27,
+    "text": "The first form is the cargo passthrough: `<command>` is any cargo subcommand (`build`, `test`, `run`, …) and `[args]` are forwarded to cargo unchanged, compiled for the NPU.\nThe second form compiles kernels directly.\nSee [Direct compilation](#direct-compilation-cargo-furiosa-opt-compile)."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 30,
+    "text": "A plain `cargo build`/`cargo test`/`cargo run` is the CPU build: kernels run on the host, and no NPU hardware or SDK is required."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 33,
+    "text": "What the wrapper adds"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 36,
+    "text": "Compared to plain cargo, `cargo furiosa-opt` does two things around the cargo invocation:"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 41,
+    "text": "**Targets the NPU.**\nKernels dispatch to real hardware.\nIt requires a physical NPU and the Furiosa SDK."
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 46,
+    "text": "**Builds the kernels you need automatically.**\nIt compiles necessary `#[device]` functions before the cargo build so the resulting binary can load them at runtime.\nSee [Automatic kernel builds](#automatic-kernel-builds)."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 51,
+    "text": "See [Quick Start: Kernel Optimizer](../quick-start/setup-and-tooling.md#kernel-optimizer) for a task-oriented overview."
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 54,
+    "text": "Automatic kernel builds"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 57,
+    "text": "`cargo furiosa-opt` runs a kernel pre-compilation step before handing off to cargo.\nThe pre-step runs only when it matters.\nIt is skipped unless **both** of the following hold:"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 62,
+    "text": "The cargo subcommand builds or executes code: `build`, `check`, `test`, `run`, `bench`, or `doc`."
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 67,
+    "text": "The invocation is not a `-h` / `--help` query."
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 72,
+    "text": "When it runs, the pre-step compiles only the kernels the build actually needs:"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 77,
+    "text": "It reads cargo's unit graph, honoring your `-p` / `--package` and workspace selection, to find kernel packages.\nA crate is a kernel package if its `Cargo.toml` declares `[package.metadata.furiosa-opt]`."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 82,
+    "text": "When the command resolves to specific runnable targets, such as a test, example, or binary, the compiler scans each target and compiles only the `#[device]` functions reachable from it."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 87,
+    "text": "Otherwise, it falls back to compiling every kernel in the selected packages."
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 92,
+    "text": "Compilation is cached per kernel so unchanged kernels are not recompiled on the next run.\nArtifacts are written under the output directory (see [`FURIOSA_OPT_OUT_DIR`](#environment-variables))."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 95,
+    "text": "Direct compilation: `cargo furiosa-opt compile`"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 98,
+    "text": "`cargo furiosa-opt compile` compiles `#[device]` functions directly, without the cargo passthrough."
+  },
+  {
+    "id": "u0027",
+    "kind": "comment",
+    "token": 100,
+    "offset": 0,
+    "length": 60,
+    "text": "# Compile every #[device] function in every kernel package.\n"
+  },
+  {
+    "id": "u0028",
+    "kind": "comment",
+    "token": 100,
+    "offset": 87,
+    "length": 64,
+    "text": "# Compile only the functions matching a filter, in one package.\n"
+  },
+  {
+    "id": "u0029",
+    "kind": "comment",
+    "token": 100,
+    "offset": 209,
+    "length": 75,
+    "text": "# Compile a single function and dump its schedule for the Schedule Viewer.\n"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 105,
+    "text": "Specifies the set of `#[device]` functions to compile.\nFilters are matched as a substring against `#[device]` function names as a full path (`abc::def::foo`).\nA function is compiled if it matches any filter.\nWhen omitted, all device functions are compiled."
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 108,
+    "text": "`-p`, `--package` _name_"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 111,
+    "text": "Restrict compilation to the named kernel package.\nThe option may be repeated to select multiple kernel packages.\nWhen omitted, all kernel packages are compiled."
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 114,
+    "text": "`--message-format` _format_"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 117,
+    "text": "Diagnostic format forwarded to the compiler (e.g.\n`json`), so tools can machine-parse kernel-compile failure diagnostics."
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 120,
+    "text": "`--dump-visa` _file_"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 123,
+    "text": "Dump the intermediate vISA to a file.\nShould only be used when compiling a single kernel."
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 126,
+    "text": "`--dump-schedule` _file_"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 129,
+    "text": "Dump the schedule as JSON for the [Schedule Viewer](./schedule-viewer.md).\nShould only be used when compiling a single kernel."
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 132,
+    "text": "Environment variables"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 138,
+    "text": "Kernel output directory.\nDefaults to `<workspace target>/furiosa-opt/kernel`."
+  }
+]

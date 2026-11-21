@@ -1,0 +1,738 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Case Study: Chip and Cluster Reduction"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "Chip and cluster reduction combines partial values stored along different `Chip` or `Cluster` dimensions.\nThe examples implement ReduceScatter, AllGather, their composition, and direct AllReduce for both dimensions.\nA separate chip example implements Butterfly AllReduce."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Shape Transformations"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "The notation `[dimension], [local]` separates the dimension shape from the shape stored locally at each dimension index.\nLet `R` be a dimension to reduce, `S` a local axis to distribute or gather, and `P...` and `Q...` the local shapes before and after `S`.\nFor ReduceScatter and AllGather, `R` and `S` must have the same size `N`.\n`Broadcast(N)` means that all `N` indices along the dimension hold the same value.\nThe table describes the logical result and preserves the order of local axes that are not removed."
+  },
+  {
+    "id": "u0005",
+    "kind": "prose",
+    "token": 16,
+    "text": "Operation"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 19,
+    "text": "Shape transformation"
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 26,
+    "text": "ReduceScatter"
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 34,
+    "text": "AllGather"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 42,
+    "text": "AllReduce"
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 51,
+    "text": "ReduceScatter reduces `R` and distributes the resulting `S` axis: dimension index `s` retains coordinate `s` of `S`.\nAllGather reverses that distribution by collecting every `S` coordinate at every dimension index.\nAllReduce preserves the local shape while reducing `R` and replicating the result.\nDirect cyclic reduction, ReduceScatter followed by AllGather, and butterfly exchanges have the same AllReduce shape transformation.\nThese transformations apply to both chip and cluster dimensions."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 54,
+    "text": "Floating-Point Reduction Order"
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 57,
+    "text": "`Broadcast(N)` is a logical placement guarantee.\nIndependently computed floating-point replicas may differ because cyclic reductions use orders such as `0 + 1 + 2 + 3` and `1 + 2 + 3 + 0`.\nAllGather after ReduceScatter computes each shard once and gathers it, so those replicas are identical.\nThe examples use `i32`, where rounding order does not apply."
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 60,
+    "text": "Redistribution Primitives"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 63,
+    "text": "The examples use the deferred SRAM [redistribution plan](../moving-tensors/dma-engine.md#redistribution-operations).\nShuffle and slice stages before `to_dm` fuse into one DMA.\nDirect `asymmetric_chip_slice` and `asymmetric_cluster_slice` calls instead use the sub-context without moving data along either dimension."
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 66,
+    "text": "Synchronization"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 69,
+    "text": "The compiler derives synchronization from the final redistribution plan when `to_dm` materializes it.\nA source chip change inserts `ChipSync`, and a source cluster change inserts `ClusterSync`.\nA fused plan that changes both dimensions gets both synchronization protocols.\nLocal `DmTensor` slicing adds neither."
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 72,
+    "text": "The compiler emits a destination-readiness sync before remote DMA access and a completion sync afterward.\nA self-to-self chip route emits no inter-chip send or receive."
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 78,
+    "text": "Example"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 81,
+    "text": "Redistribution calls"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 84,
+    "text": "Automatically inserted synchronization"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 91,
+    "text": "Chip ReduceScatter"
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 94,
+    "text": "4 `chip_shuffle().chip_slice().to_dm()` chains"
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 97,
+    "text": "3 `ChipSync` protocols; round 0 is self-to-self, while rounds 1-3 communicate between chips"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 102,
+    "text": "Chip AllGather"
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 105,
+    "text": "1 dimension-to-element `to_dm()`"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 108,
+    "text": "1 `ChipSync` protocol"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 113,
+    "text": "Chip AllGather after ReduceScatter"
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 116,
+    "text": "ReduceScatter plus AllGather"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 119,
+    "text": "4 `ChipSync` protocols"
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 124,
+    "text": "Chip AllReduce"
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 127,
+    "text": "3 `chip_shuffle().to_dm()` chains; the local value is already present"
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 130,
+    "text": "3 `ChipSync` protocols"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 135,
+    "text": "Chip Butterfly AllReduce"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 138,
+    "text": "2 `chip_shuffle().to_dm()` chains"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 141,
+    "text": "2 `ChipSync` protocols"
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 146,
+    "text": "Cluster ReduceScatter"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 149,
+    "text": "2 local slices and 1 `cluster_swap().to_dm()` chain"
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 152,
+    "text": "1 `ClusterSync` protocol"
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 157,
+    "text": "Cluster AllGather"
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 160,
+    "text": "1 dimension-to-element `to_dm()`"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 163,
+    "text": "1 `ClusterSync` protocol"
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 168,
+    "text": "Cluster AllGather after ReduceScatter"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 171,
+    "text": "ReduceScatter plus AllGather"
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 174,
+    "text": "2 `ClusterSync` protocols"
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 179,
+    "text": "Cluster AllReduce"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 182,
+    "text": "1 `cluster_swap().to_dm()` chain"
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 185,
+    "text": "1 `ClusterSync` protocol"
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 191,
+    "text": "These counts describe the explicit redistribution calls in the examples.\nHBM transfers and local Vector Engine work have their own dependencies but do not add chip or cluster redistribution syncs."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 194,
+    "text": "Chip Examples"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 197,
+    "text": "The examples use four-chip `A` and `B` axes and a 256-byte `[C, D]` payload.\nChip and shard indices range from 0 through 3."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 201,
+    "text": "The reduction examples share this Vector Engine addition:"
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 205,
+    "text": "ReduceScatter"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 208,
+    "text": "The input places `A` across chips and keeps `[B, C, D]` local.\nEach `chip_shuffle().chip_slice().to_dm()` chain selects one `B` coordinate and routes it to a target chip.\nThe three Vector Engine chains then sum the four routed `[C, D]` values.\nHere, `in[p, s]` is source chip `p`'s value for shard `s`, and `out[s] = sum_p in[p, s]`."
+  },
+  {
+    "id": "u0054",
+    "kind": "comment",
+    "token": 210,
+    "offset": 58,
+    "length": 16,
+    "text": "device(chip = 4)"
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 215,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 218,
+    "text": "Round 0"
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 221,
+    "text": "Round 1"
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 224,
+    "text": "Round 2"
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 227,
+    "text": "Round 3"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 230,
+    "text": "Result"
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 318,
+    "text": "The result remains sharded: target chip `s` owns `out[s]`."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 321,
+    "text": "AllGather"
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 324,
+    "text": "The input gives source chip `s` one `[C, D]` shard, denoted by `in[s]`.\nOne `to_dm()` moves the chip dimension into the local element shape and broadcasts that shape to every chip."
+  },
+  {
+    "id": "u0064",
+    "kind": "comment",
+    "token": 326,
+    "offset": 49,
+    "length": 16,
+    "text": "device(chip = 4)"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 331,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 334,
+    "text": "Local element after `to_dm()`"
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 374,
+    "text": "Every target receives every shard."
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 377,
+    "text": "AllGather after ReduceScatter"
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 380,
+    "text": "This example feeds the ReduceScatter result directly into AllGather."
+  },
+  {
+    "id": "u0070",
+    "kind": "comment",
+    "token": 382,
+    "offset": 86,
+    "length": 16,
+    "text": "device(chip = 4)"
+  },
+  {
+    "id": "u0071",
+    "kind": "comment",
+    "token": 382,
+    "offset": 414,
+    "length": 84,
+    "text": "// Target chip b owns coordinate b, so changing the axis name preserves wire order.\n"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 384,
+    "text": "Its final placement is the AllGather state shown above."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 387,
+    "text": "AllReduce"
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 390,
+    "text": "The input gives chip `p` one partial `in[p]` with shape `[C, D]`.\nThe original tensor supplies the identity rotation, and three chip shuffles supply the remaining cyclic rotations.\nAdding all four rotations leaves `out[target] = sum_i in[i]` on every target chip."
+  },
+  {
+    "id": "u0075",
+    "kind": "comment",
+    "token": 392,
+    "offset": 81,
+    "length": 16,
+    "text": "device(chip = 4)"
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 397,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 400,
+    "text": "Local"
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 403,
+    "text": "Rotation 1"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 406,
+    "text": "Rotation 2"
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 409,
+    "text": "Rotation 3"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 412,
+    "text": "Result"
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 500,
+    "text": "Butterfly AllReduce"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 503,
+    "text": "The input gives chip `p` one partial `in[p]` with shape `[C, D]`.\nTwo shuffle-and-add rounds leave `sum_i in[i]` on every chip.\nHere, `i` ranges over all source chips."
+  },
+  {
+    "id": "u0084",
+    "kind": "comment",
+    "token": 505,
+    "offset": 61,
+    "length": 16,
+    "text": "device(chip = 4)"
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 510,
+    "text": "Target chip"
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 513,
+    "text": "Initial"
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 516,
+    "text": "First peer"
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 519,
+    "text": "First sum"
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 522,
+    "text": "Second peer sum"
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 525,
+    "text": "Final"
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 613,
+    "text": "Cluster Examples"
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 616,
+    "text": "The cluster examples use two-element `A` and `B` axes with the same 256-byte `[C, D]` payload.\nCluster and shard indices range from 0 through 1."
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 620,
+    "text": "The cluster examples use the corresponding two-cluster addition:"
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 624,
+    "text": "ReduceScatter"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 627,
+    "text": "The first local `cluster_slice` selects `B` coordinates `[0, 1]`, one value per cluster.\nThe second selects `[1, 0]`, and `cluster_swap().to_dm()` moves those values to the opposite clusters.\nThe Vector Engine chain then adds the local and moved `[C, D]` values.\nHere, `in[c, s]` is source cluster `c`'s value for shard `s`, and `out[s] = sum_c in[c, s]`."
+  },
+  {
+    "id": "u0096",
+    "kind": "comment",
+    "token": 629,
+    "offset": 65,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 634,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 637,
+    "text": "Local"
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 640,
+    "text": "Remote before swap"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 643,
+    "text": "Remote after swap"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 646,
+    "text": "Result"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 688,
+    "text": "AllGather"
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 691,
+    "text": "The input gives source cluster `s` one `[C, D]` shard, denoted by `in[s]`.\nOne `to_dm()` moves the cluster dimension into the local element shape and broadcasts that shape to both clusters."
+  },
+  {
+    "id": "u0104",
+    "kind": "comment",
+    "token": 693,
+    "offset": 51,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 698,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 701,
+    "text": "Local element after `to_dm()`"
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 725,
+    "text": "AllGather after ReduceScatter"
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 728,
+    "text": "This example feeds the cluster ReduceScatter result directly into AllGather."
+  },
+  {
+    "id": "u0109",
+    "kind": "comment",
+    "token": 730,
+    "offset": 88,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0110",
+    "kind": "comment",
+    "token": 730,
+    "offset": 415,
+    "length": 87,
+    "text": "// Target cluster b owns coordinate b, so changing the axis name preserves wire order.\n"
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 732,
+    "text": "AllReduce"
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 735,
+    "text": "The input gives cluster `c` one partial `in[c]` with shape `[C, D]`.\nOne cluster swap exchanges the two partials, and one addition leaves the complete reduction on both clusters."
+  },
+  {
+    "id": "u0113",
+    "kind": "comment",
+    "token": 737,
+    "offset": 95,
+    "length": 16,
+    "text": "device(chip = 1)"
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 742,
+    "text": "Target cluster"
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 745,
+    "text": "Local"
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 748,
+    "text": "Swapped peer"
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 751,
+    "text": "Result"
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 787,
+    "text": "DMA Layout Requirements"
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 790,
+    "text": "See [Redistribution Operations](../moving-tensors/dma-engine.md#redistribution-operations) for the alignment, live-index, and 256-byte contiguous-run requirements.\nThese examples use `m![B, C, D]`, whose inner `m![C, D]` run is exactly 256 bytes of `i32` data."
+  }
+]

@@ -1,0 +1,814 @@
+[
+  {
+    "id": "u0001",
+    "kind": "prose",
+    "token": 1,
+    "text": "Switch Engine"
+  },
+  {
+    "id": "u0002",
+    "kind": "prose",
+    "token": 4,
+    "text": "While every other Tensor Unit engine runs per-slice on its own DM partition, the Switch Engine moves data across slices through a 256-slice ring network: broadcasting one slice's value to a group, swapping values between slices, or permuting which slice holds which value."
+  },
+  {
+    "id": "u0003",
+    "kind": "prose",
+    "token": 7,
+    "text": "Interface"
+  },
+  {
+    "id": "u0004",
+    "kind": "prose",
+    "token": 10,
+    "text": "`FetchTensor::switch()` produces a `SwitchTensor`, preserving `Chip`, `Cluster`, `Packet`, and the underlying data values.\nOnly the `Slice` and `Time` mappings change to reflect the selected configuration."
+  },
+  {
+    "id": "u0005",
+    "kind": "comment",
+    "token": 12,
+    "offset": 386,
+    "length": 27,
+    "text": "primitive(TuTensor::switch)"
+  },
+  {
+    "id": "u0006",
+    "kind": "prose",
+    "token": 14,
+    "text": "The kernel writer picks `OutSlice`, `OutTime`, and a `SwitchConfig` argument that selects the configuration and its parameters.\n`SwitchConfig` is one of the predefined variants ([`Broadcast01`](#broadcast01), [`Broadcast1`](#broadcast1), [`Transpose`](#transpose), [`InterTranspose`](#intertranspose), [`TransposedBroadcast1`](#transposedbroadcast1)) for common patterns, or a [`CustomBroadcast`](#custom-configurations) for more general patterns.\nThe numeric suffix in each variant name lists the slice sub-dimensions that move out of `Slice`.\nFor example, `Broadcast01` broadcasts both `slice0` and `slice1`, while `Broadcast1` broadcasts only `slice1`."
+  },
+  {
+    "id": "u0007",
+    "kind": "prose",
+    "token": 17,
+    "text": "The compiler verifies that `OutSlice` and `OutTime` match the configuration's required dimension structure (each per-config section below shows the required structure with input/output diagrams), and compilation fails when they do not.\nEvery configuration also requires `InSlice::SIZE == OutSlice::SIZE`: the switch preserves the total slice count."
+  },
+  {
+    "id": "u0008",
+    "kind": "prose",
+    "token": 20,
+    "text": "Regular Configurations"
+  },
+  {
+    "id": "u0009",
+    "kind": "prose",
+    "token": 23,
+    "text": "Each regular configuration partitions the 256 slices on a chip into parallel **sub-rings** of `ring_size` slices each.\n`ring_size` is derived from the configuration's parameters (typically `slice1 × slice0`) and determines both the partitioning granularity and the cycle cost.\nSee [Architecture](#architecture) below for the ring topology and per-router decision logic, and [Performance](#performance) for the cycle-factor breakdown."
+  },
+  {
+    "id": "u0010",
+    "kind": "prose",
+    "token": 26,
+    "text": "Regular configurations cover six common patterns.\nArbitrary `Slice` sub-dimension permutations not expressible by one of these patterns require [`CustomBroadcast`](#custom-configurations) instead."
+  },
+  {
+    "id": "u0011",
+    "kind": "prose",
+    "token": 29,
+    "text": "Configurations that introduce broadcast axes (`X` or `Y` in `Broadcast01`, `Broadcast1`, `TransposedBroadcast1`) require those axes to be new: they must not already appear in input `Slice` or input `Time`."
+  },
+  {
+    "id": "u0012",
+    "kind": "prose",
+    "token": 35,
+    "text": "Configuration"
+  },
+  {
+    "id": "u0013",
+    "kind": "prose",
+    "token": 38,
+    "text": "Use case"
+  },
+  {
+    "id": "u0014",
+    "kind": "prose",
+    "token": 51,
+    "text": "pass each slice's data through unchanged (no inter-slice exchange)"
+  },
+  {
+    "id": "u0015",
+    "kind": "prose",
+    "token": 62,
+    "text": "broadcast both inner `Slice` sub-dimensions (`slice1` and `slice0`) to every slice in a sub-ring"
+  },
+  {
+    "id": "u0016",
+    "kind": "prose",
+    "token": 73,
+    "text": "broadcast `slice1` while keeping `slice0` in `Slice`"
+  },
+  {
+    "id": "u0017",
+    "kind": "prose",
+    "token": 84,
+    "text": "swap `slice1` and `slice0` within `Slice`"
+  },
+  {
+    "id": "u0018",
+    "kind": "prose",
+    "token": 95,
+    "text": "swap a `Slice` sub-dimension (`slice1`) with a `Time` sub-dimension (`time1`)"
+  },
+  {
+    "id": "u0019",
+    "kind": "prose",
+    "token": 106,
+    "text": "broadcast `slice0` to `Time` while shifting `slice1` to innermost `Slice` (equivalent to `Transpose` then `Broadcast1`)"
+  },
+  {
+    "id": "u0020",
+    "kind": "prose",
+    "token": 115,
+    "text": "Forwarding"
+  },
+  {
+    "id": "u0021",
+    "kind": "prose",
+    "token": 118,
+    "text": "`Forwarding` leaves the `Slice` and `Time` mappings unchanged: every router outputs its own slice's input directly, with no cross-slice movement."
+  },
+  {
+    "id": "u0022",
+    "kind": "prose",
+    "token": 121,
+    "text": "`SwitchConfig` has no `Forwarding` variant.\nWhen no inter-slice exchange is needed, skip `.switch()` and call [`.collect()`](./collect-engine.md) directly on the `FetchTensor`."
+  },
+  {
+    "id": "u0023",
+    "kind": "prose",
+    "token": 125,
+    "text": "Broadcast01"
+  },
+  {
+    "id": "u0024",
+    "kind": "prose",
+    "token": 128,
+    "text": "`Broadcast01` broadcasts each slice's data to every slice in a sub-ring, moving both inner `Slice` sub-dimensions (`slice0` and `slice1`) into `Time`."
+  },
+  {
+    "id": "u0025",
+    "kind": "prose",
+    "token": 131,
+    "text": "The input dimension structure (outermost to innermost, left to right):"
+  },
+  {
+    "id": "u0026",
+    "kind": "prose",
+    "token": 135,
+    "text": "After switching, `slice1` and `slice0` move from `Slice` into `Time` to broadcast across the sub-ring.\nTwo new broadcast dimensions, labeled `X` and `Y`, fill their vacated `Slice` positions:"
+  },
+  {
+    "id": "u0027",
+    "kind": "prose",
+    "token": 139,
+    "text": "The sub-ring spans `ring_size = slice1 × slice0` slices, one for each `(slice1, slice0)` combination at fixed `slice2`.\nEvery slice sends its packet around the sub-ring, and every slice receives all `ring_size` packets, so each output slice ends up holding the full broadcast group's data, indexed along the new `X` and `Y` axes in the output `Slice`."
+  },
+  {
+    "id": "u0028",
+    "kind": "prose",
+    "token": 142,
+    "text": "Example"
+  },
+  {
+    "id": "u0029",
+    "kind": "prose",
+    "token": 146,
+    "text": "With `slice1 = 2` (size of broadcast `X`), `slice0 = 2` (size of broadcast `Y`), and `time0 = 4`, the compiler derives `slice2 = 64`, `time1 = 16`, and `ring_size = 4` (64 sub-rings span 256 slices)."
+  },
+  {
+    "id": "u0030",
+    "kind": "prose",
+    "token": 149,
+    "text": "Sub-dimensions resolve to `slice2 = A / 4`, `slice1 = A / 2 % 2`, `slice0 = A % 2`, `time1 = B / 4`, `time0 = B % 4`, giving `OutSlice = m![A / 4, X, Y]` and `OutTime = m![B / 4, A / 2 % 2, B % 4, A % 2]`."
+  },
+  {
+    "id": "u0031",
+    "kind": "prose",
+    "token": 152,
+    "text": "[Cycle estimate](#performance): `ring_size × Time::SIZE × flits_per_packet = 4 × 64 × 8 = 2048`, where `Time::SIZE = 64` and `flits_per_packet = sizeof(f32) × Packet::SIZE / 32 = 4 × 64 / 32 = 8`."
+  },
+  {
+    "id": "u0032",
+    "kind": "prose",
+    "token": 155,
+    "text": "Broadcast1"
+  },
+  {
+    "id": "u0033",
+    "kind": "prose",
+    "token": 158,
+    "text": "The input dimension structure (outermost to innermost, left to right):"
+  },
+  {
+    "id": "u0034",
+    "kind": "prose",
+    "token": 162,
+    "text": "After switching, `slice1` moves from `Slice` into `Time` to broadcast across the sub-ring while `slice0` stays in `Slice`.\nA new broadcast dimension labeled `X` fills `slice1`'s vacated `Slice` position:"
+  },
+  {
+    "id": "u0035",
+    "kind": "prose",
+    "token": 166,
+    "text": "The sub-ring spans `ring_size = slice1 × slice0` slices, the same physical extent as `Broadcast01`'s.\nBut broadcasting happens only along `slice1`: each output slice receives the `slice1` packets from sources at the same `slice0` position, sequenced along the innermost `Time`.\nThe new `X` axis in the output `Slice` (sized `slice1`) replicates this collected data, while `slice0` itself is preserved at its original position."
+  },
+  {
+    "id": "u0036",
+    "kind": "prose",
+    "token": 169,
+    "text": "Example"
+  },
+  {
+    "id": "u0037",
+    "kind": "prose",
+    "token": 173,
+    "text": "With `slice1 = 4` (size of broadcast `X`) and `slice0 = 8`, the compiler derives `slice2 = 8` and `ring_size = 32` (8 sub-rings span 256 slices)."
+  },
+  {
+    "id": "u0038",
+    "kind": "prose",
+    "token": 176,
+    "text": "Sub-dimensions resolve to `slice2 = A / 32`, `slice1 = A / 8 % 4`, `slice0 = A % 8`, `time0 = B`, giving `OutSlice = m![A / 32, X, A % 8]` and `OutTime = m![B, A / 8 % 4]`."
+  },
+  {
+    "id": "u0039",
+    "kind": "prose",
+    "token": 179,
+    "text": "[Cycle estimate](#performance): `ring_size × Time::SIZE × flits_per_packet = 32 × 64 × 2 = 4096`, where `Time::SIZE = 64` and `flits_per_packet = sizeof(i8) × Packet::SIZE / 32 = 1 × 64 / 32 = 2`."
+  },
+  {
+    "id": "u0040",
+    "kind": "prose",
+    "token": 182,
+    "text": "Transpose"
+  },
+  {
+    "id": "u0041",
+    "kind": "prose",
+    "token": 185,
+    "text": "`Transpose` swaps `slice1` and `slice0` within the innermost part of `Slice`."
+  },
+  {
+    "id": "u0042",
+    "kind": "prose",
+    "token": 188,
+    "text": "The input and output `Slice` orderings:"
+  },
+  {
+    "id": "u0043",
+    "kind": "prose",
+    "token": 192,
+    "text": "Each sub-ring spans `slice0 × slice1` slices and circulates data so every slice in the sub-ring ends up holding the value previously held by its swap partner."
+  },
+  {
+    "id": "u0044",
+    "kind": "prose",
+    "token": 195,
+    "text": "`Transpose` requires input `Time` and output `Time` to match (after normalization)."
+  },
+  {
+    "id": "u0045",
+    "kind": "prose",
+    "token": 198,
+    "text": "Example"
+  },
+  {
+    "id": "u0046",
+    "kind": "prose",
+    "token": 202,
+    "text": "With `slice1 = 32` and `slice0 = 2`, the compiler derives `slice2 = 4` and `ring_size = 64` (4 sub-rings span 256 slices)."
+  },
+  {
+    "id": "u0047",
+    "kind": "prose",
+    "token": 205,
+    "text": "Sub-dimensions resolve to `slice2 = A / 64`, `slice1 = A / 2 % 32`, `slice0 = A % 2`, `time0 = B`, giving `OutSlice = m![A / 64, A % 2, A / 2 % 32]` and `OutTime = m![B]` (slice0 and slice1 swap; `Time` is unchanged)."
+  },
+  {
+    "id": "u0048",
+    "kind": "prose",
+    "token": 208,
+    "text": "[Cycle estimate](#performance): `ring_size × Time::SIZE × flits_per_packet = 64 × 64 × 2 = 8192`, where `Time::SIZE = 64` and `flits_per_packet = sizeof(i8) × Packet::SIZE / 32 = 1 × 64 / 32 = 2`."
+  },
+  {
+    "id": "u0049",
+    "kind": "prose",
+    "token": 211,
+    "text": "InterTranspose"
+  },
+  {
+    "id": "u0050",
+    "kind": "prose",
+    "token": 214,
+    "text": "`InterTranspose` swaps a dimension between `Slice` and `Time`: `slice1` moves into `Time` and `time1` moves into `Slice` (regular `Transpose` stays within `Slice`)."
+  },
+  {
+    "id": "u0051",
+    "kind": "prose",
+    "token": 218,
+    "text": "[!NOTE]\n[Axis lifting](../moving-tensors/fetch-engine.md#axis-lifting) can replace `InterTranspose` when every destination slice already holds a copy of the source region.\nIt assigns a different read offset to each slice and performs no sub-ring traversal.\nUse `InterTranspose` when data must move between slices or from `Slice` to `Time`."
+  },
+  {
+    "id": "u0052",
+    "kind": "prose",
+    "token": 222,
+    "text": "The input dimension structure (outermost to innermost, left to right):"
+  },
+  {
+    "id": "u0053",
+    "kind": "prose",
+    "token": 226,
+    "text": "After switching, `slice1` and `time1` swap positions across the `Slice`/`Time` boundary:"
+  },
+  {
+    "id": "u0054",
+    "kind": "prose",
+    "token": 230,
+    "text": "Each sub-ring spans `slice1 × slice0` slices and circulates data over `time1` time steps so each slice's value previously indexed by `slice1` ends up indexed by `time1`, and vice versa."
+  },
+  {
+    "id": "u0055",
+    "kind": "prose",
+    "token": 233,
+    "text": "`InterTranspose` enforces three sizing constraints:"
+  },
+  {
+    "id": "u0056",
+    "kind": "prose",
+    "token": 238,
+    "text": "`InSlice` spans all 256 slices: `slice2 × slice1 × slice0 == 256`."
+  },
+  {
+    "id": "u0057",
+    "kind": "prose",
+    "token": 243,
+    "text": "The swapped dimensions match in size: `time1.SIZE == slice1`."
+  },
+  {
+    "id": "u0058",
+    "kind": "prose",
+    "token": 248,
+    "text": "`InTime::SIZE` is divisible by `slice1 × time0` so the `time2` decomposition is integral."
+  },
+  {
+    "id": "u0059",
+    "kind": "prose",
+    "token": 253,
+    "text": "Example"
+  },
+  {
+    "id": "u0060",
+    "kind": "prose",
+    "token": 257,
+    "text": "With `slice1 = 2`, `slice0 = 16`, and `time0 = 2`, the compiler derives `slice2 = 8`, `time2 = 2`, and `ring_size = 32` (8 sub-rings span 256 slices)."
+  },
+  {
+    "id": "u0061",
+    "kind": "prose",
+    "token": 260,
+    "text": "Sub-dimensions resolve to `slice2 = A / 32`, `slice1 = A / 16 % 2`, `slice0 = A % 16`, `time2 = B / 4`, `time1 = B / 2 % 2`, `time0 = B % 2`, giving `OutSlice = m![A / 32, B / 2 % 2, A % 16]` and `OutTime = m![B / 4, B % 2, A / 16 % 2]` (slice1 and time1 swap between `Slice` and `Time`)."
+  },
+  {
+    "id": "u0062",
+    "kind": "prose",
+    "token": 263,
+    "text": "[Cycle estimate](#performance): `ring_size × Time::SIZE × flits_per_packet = 32 × 8 × 1 = 256`, where `Time::SIZE = 8` and `flits_per_packet = sizeof(i8) × Packet::SIZE / 32 = 1 × 32 / 32 = 1`."
+  },
+  {
+    "id": "u0063",
+    "kind": "prose",
+    "token": 266,
+    "text": "TransposedBroadcast1"
+  },
+  {
+    "id": "u0064",
+    "kind": "prose",
+    "token": 269,
+    "text": "`TransposedBroadcast1` broadcasts `slice0` to the innermost `Time` position and shifts `slice1` to the innermost `Slice` position, equivalent to applying `Transpose` followed by `Broadcast1`.\nAn input tensor structured as:"
+  },
+  {
+    "id": "u0065",
+    "kind": "prose",
+    "token": 273,
+    "text": "becomes the output below, where `slice0` moves to the innermost `Time` position to broadcast across the sub-ring, `slice1` shifts to the innermost `Slice` position, and a broadcast dimension fills `slice1`'s vacated middle slot:"
+  },
+  {
+    "id": "u0066",
+    "kind": "prose",
+    "token": 277,
+    "text": "Each sub-ring spans `slice0 × slice1` slices and circulates data so every slice ends up with its swap partner's value, broadcast across the `slice0` positions at the innermost `Time` sub-dimension."
+  },
+  {
+    "id": "u0067",
+    "kind": "prose",
+    "token": 280,
+    "text": "Example"
+  },
+  {
+    "id": "u0068",
+    "kind": "prose",
+    "token": 284,
+    "text": "With `slice1 = 8` and `slice0 = 8` (size of broadcast `Y`), the compiler derives `slice2 = 4` and `ring_size = 64` (4 sub-rings span 256 slices)."
+  },
+  {
+    "id": "u0069",
+    "kind": "prose",
+    "token": 287,
+    "text": "Sub-dimensions resolve to `slice2 = A / 64`, `slice1 = A / 8 % 8`, `slice0 = A % 8`, `time0 = B`, giving `OutSlice = m![A / 64, Y, A / 8 % 8]` and `OutTime = m![B, A % 8]`."
+  },
+  {
+    "id": "u0070",
+    "kind": "prose",
+    "token": 290,
+    "text": "[Cycle estimate](#performance): `ring_size × Time::SIZE × flits_per_packet = 64 × 16 × 1 = 1024`, where `Time::SIZE = 16` and `flits_per_packet = sizeof(i8) × Packet::SIZE / 32 = 1 × 32 / 32 = 1`."
+  },
+  {
+    "id": "u0071",
+    "kind": "prose",
+    "token": 293,
+    "text": "Architecture"
+  },
+  {
+    "id": "u0072",
+    "kind": "prose",
+    "token": 296,
+    "text": "To execute the configurations introduced above, the Switch Engine arranges all 256 slices on a chip into a single physical ring (one router per slice), partitioned into `256 / ring_size` parallel sub-rings of `ring_size` slices each (one such sub-ring is shown below).\nFor regular configurations the compiler derives `ring_size` from the configuration's parameters (`slice1`, `slice0`, `time0`); for `CustomBroadcast` the kernel writer sets `ring_size` directly."
+  },
+  {
+    "id": "u0073",
+    "kind": "prose",
+    "token": 300,
+    "text": "Performance"
+  },
+  {
+    "id": "u0074",
+    "kind": "prose",
+    "token": 303,
+    "text": "A switch operation takes roughly `ring_size × Time::SIZE × flits_per_packet` cycles.\nAll sub-rings advance in parallel, so this per-ring cycle count is also the chip-wide latency.\nThe three factors are:"
+  },
+  {
+    "id": "u0075",
+    "kind": "prose",
+    "token": 308,
+    "text": "`ring_size`: cycles for one flit to traverse one sub-ring.\nA larger `ring_size` reaches more slices per ring at a higher per-ring cost, while a smaller `ring_size` partitions the cluster into more parallel rings at a lower per-ring cost."
+  },
+  {
+    "id": "u0076",
+    "kind": "prose",
+    "token": 313,
+    "text": "`Time::SIZE`: number of time steps in the input tensor.\nThe sub-ring traversal repeats once per time step."
+  },
+  {
+    "id": "u0077",
+    "kind": "prose",
+    "token": 318,
+    "text": "`flits_per_packet`: flits per packet, equal to size of `D[Packet::SIZE]` divided by 32 bytes.\nThe traversal also repeats once per flit of the packet."
+  },
+  {
+    "id": "u0078",
+    "kind": "prose",
+    "token": 323,
+    "text": "Custom Configurations"
+  },
+  {
+    "id": "u0079",
+    "kind": "prose",
+    "token": 326,
+    "text": "Custom configurations handle movement patterns no regular configuration expresses, such as arbitrary dimension permutations or partial dimension extractions.\nThis flexibility comes with [configuration overhead](#configuration-overhead) and the [constraints](#constraints) listed at the end of the section."
+  },
+  {
+    "id": "u0080",
+    "kind": "prose",
+    "token": 329,
+    "text": "The `SwitchConfig::CustomBroadcast` variant carries a single field:"
+  },
+  {
+    "id": "u0081",
+    "kind": "prose",
+    "token": 333,
+    "text": "Where regular configurations supply built-in generators for the snoop bitmap, `CustomBroadcast` lets the compiler synthesize the bitmap directly from the kernel writer's input/output mappings together with `ring_size`."
+  },
+  {
+    "id": "u0082",
+    "kind": "prose",
+    "token": 336,
+    "text": "Supported Transformation Patterns"
+  },
+  {
+    "id": "u0083",
+    "kind": "prose",
+    "token": 339,
+    "text": "Custom bitmaps cover two patterns regular configurations cannot:"
+  },
+  {
+    "id": "u0084",
+    "kind": "prose",
+    "token": 344,
+    "text": "**Free transpose with broadcast**: arbitrary permutation and broadcast of partitioning dimensions, beyond the fixed forms in `Transpose` or `TransposedBroadcast1`."
+  },
+  {
+    "id": "u0085",
+    "kind": "prose",
+    "token": 349,
+    "text": "**Partial dimension extraction**: only a subset of a dimension's values moves to `Time` during broadcasting, whereas regular configurations like `Broadcast01` always move the whole dimension."
+  },
+  {
+    "id": "u0086",
+    "kind": "prose",
+    "token": 354,
+    "text": "The examples below illustrate these patterns."
+  },
+  {
+    "id": "u0087",
+    "kind": "prose",
+    "token": 357,
+    "text": "Configuration Overhead"
+  },
+  {
+    "id": "u0088",
+    "kind": "prose",
+    "token": 360,
+    "text": "Writing a custom snoop bitmap streams configuration data into the Switch Engine's Special Function Registers (SFRs), and this SFR write occupies both the DMA Engine and the sub-context for the duration.\nWhile the bitmap is loading, the DMA and sub contexts cannot run any other operation, so the cost manifests as reduced scheduling parallelism rather than a fixed-cycle stall."
+  },
+  {
+    "id": "u0089",
+    "kind": "prose",
+    "token": 363,
+    "text": "Example 1: Arbitrary Permutation"
+  },
+  {
+    "id": "u0090",
+    "kind": "prose",
+    "token": 366,
+    "text": "This example reverses the four innermost slice sub-dimensions (`A / 4, A % 4, B / 4, B % 4`) into `[3, 2, 1, 0]`, a pattern no regular configuration expresses."
+  },
+  {
+    "id": "u0091",
+    "kind": "prose",
+    "token": 370,
+    "text": "The output `Slice = m![B % 4, B / 4, A % 4, A / 4]` permutes the input slice shape `[0, 1, 2, 3]` into `[3, 2, 1, 0]`, which no regular configuration covers but a custom bitmap does."
+  },
+  {
+    "id": "u0092",
+    "kind": "prose",
+    "token": 376,
+    "text": "Bitmap Index"
+  },
+  {
+    "id": "u0093",
+    "kind": "prose",
+    "token": 385,
+    "text": "Ring Group"
+  },
+  {
+    "id": "u0094",
+    "kind": "prose",
+    "token": 505,
+    "text": "Plugging into the [cycle formula](#performance), `cycles ≈ ring_size × Time::SIZE × flits_per_packet = 256 × 8 × 8 = 16384`:"
+  },
+  {
+    "id": "u0095",
+    "kind": "prose",
+    "token": 525,
+    "text": "The maximum `ring_size = 256` is necessary because the permutation creates dependencies across all slices with no repeating structure, so input and output slices can be arbitrarily far apart in the ring index, and any smaller sub-ring would fail to cover at least one such pair."
+  },
+  {
+    "id": "u0096",
+    "kind": "prose",
+    "token": 528,
+    "text": "Example 2: Multi-dimension Broadcast"
+  },
+  {
+    "id": "u0097",
+    "kind": "prose",
+    "token": 531,
+    "text": "Unlike Example 1's pure permutation, this example moves two non-contiguous dimensions (`A % 2` and `B % 2`) from `Slice` to `Time`, broadcasting at their original positions."
+  },
+  {
+    "id": "u0098",
+    "kind": "prose",
+    "token": 535,
+    "text": "The output moves `A % 2` and `B % 2` from `Slice` to `Time`, broadcasting at their original positions via the broadcast dimensions `X` and `Y`.\n`Broadcast01` supports a similar form but requires the broadcast dimensions (`slice0`, `slice1`) to be contiguous in the input slice, so it cannot express non-contiguous dimensions moving from `Slice` to `Time`.\nA custom bitmap expresses it instead."
+  },
+  {
+    "id": "u0099",
+    "kind": "prose",
+    "token": 541,
+    "text": "Bitmap Index"
+  },
+  {
+    "id": "u0100",
+    "kind": "prose",
+    "token": 550,
+    "text": "Ring Group"
+  },
+  {
+    "id": "u0101",
+    "kind": "prose",
+    "token": 642,
+    "text": "Plugging into the [cycle formula](#performance), `cycles ≈ ring_size × Time::SIZE × flits_per_packet = 32 × 8 × 8 = 2048`:"
+  },
+  {
+    "id": "u0102",
+    "kind": "prose",
+    "token": 647,
+    "text": "`ring_size = 32` (the outermost `A / 2` partition needs no inter-sub-ring exchange, so only the innermost 32 slices within each sub-ring communicate)"
+  },
+  {
+    "id": "u0103",
+    "kind": "prose",
+    "token": 662,
+    "text": "Example 3: Partial Axis Extraction (Slicing)"
+  },
+  {
+    "id": "u0104",
+    "kind": "prose",
+    "token": 665,
+    "text": "Unlike Examples 1 and 2, which include every value of the moved dimensions, here only the 3 valid values of `C # 4` move from `Slice` to `Time`; its padding cell stays behind."
+  },
+  {
+    "id": "u0105",
+    "kind": "prose",
+    "token": 669,
+    "text": "The output moves `C # 4` from `Slice` to `Time`, placing a broadcast axis `X` at its vacated `Slice` position, and the fourth value (`C # 4 = 3`), a pure padding cell, is dropped, so only the three valid values `C` are extracted.\n`Broadcast1` supports a similar form but always moves the entire dimension, so it cannot express a subset."
+  },
+  {
+    "id": "u0106",
+    "kind": "prose",
+    "token": 672,
+    "text": "This partial extraction is allowed only because the discarded value is padding: `C # 4` holds `C = 3` valid elements in a slot padded to 4, so slicing it down to `C` (`C # 4 → C`) throws away nothing real.\nSlicing a valid range would instead discard live input, which the [Dropped values must be padding](#dropped-values-must-be-padding) constraint forbids.\nA custom bitmap expresses this padding-only extraction instead."
+  },
+  {
+    "id": "u0107",
+    "kind": "prose",
+    "token": 678,
+    "text": "Bitmap Index"
+  },
+  {
+    "id": "u0108",
+    "kind": "prose",
+    "token": 681,
+    "text": "`(A, B, C # 4)` sources"
+  },
+  {
+    "id": "u0109",
+    "kind": "prose",
+    "token": 684,
+    "text": "Ring Group"
+  },
+  {
+    "id": "u0110",
+    "kind": "prose",
+    "token": 769,
+    "text": "Plugging into the [cycle formula](#performance), `cycles ≈ ring_size × Time::SIZE × flits_per_packet = 4 × 24 × 1 = 96`:"
+  },
+  {
+    "id": "u0111",
+    "kind": "prose",
+    "token": 774,
+    "text": "`ring_size = 4` (the outer `A, B` partition needs no inter-sub-ring exchange, so only the innermost 4 slices (one `C # 4` group) within each sub-ring communicate)"
+  },
+  {
+    "id": "u0112",
+    "kind": "prose",
+    "token": 789,
+    "text": "The bitmap shows padding-only extraction directly: `bitmap[0] = {0, 1, 2}` means output slice 0 receives from the 3 valid input slices in its `C # 4` group while skipping index 3, the padding cell.\nReading `{0, 1, 2, 3}` would pull that padding in as if it were real data."
+  },
+  {
+    "id": "u0113",
+    "kind": "prose",
+    "token": 792,
+    "text": "Constraints"
+  },
+  {
+    "id": "u0114",
+    "kind": "prose",
+    "token": 795,
+    "text": "Custom configurations come with seven constraints that bound this flexibility."
+  },
+  {
+    "id": "u0115",
+    "kind": "prose",
+    "token": 798,
+    "text": "Broadcast axes must be new"
+  },
+  {
+    "id": "u0116",
+    "kind": "prose",
+    "token": 801,
+    "text": "Same rule as the [Regular Configurations](#regular-configurations) intro: each broadcast axis introduced in the output `Slice` must not appear in the input `Slice` or input `Time`."
+  },
+  {
+    "id": "u0117",
+    "kind": "prose",
+    "token": 804,
+    "text": "For instance, with `axes![A = 256, B = 64, C = 32]` and input `Slice = m![A], Time = m![B], Packet = m![C # 32]`, an output `Slice = m![A / 4, B / 32, A % 4]` violates this constraint because `B` already appears in the input `Time`."
+  },
+  {
+    "id": "u0118",
+    "kind": "prose",
+    "token": 807,
+    "text": "Each broadcast axis used exactly once"
+  },
+  {
+    "id": "u0119",
+    "kind": "prose",
+    "token": 810,
+    "text": "Each broadcast axis must appear exactly once in the output `Slice`.\nRepeating the same axis at two output positions has no defined meaning for the routing bitmap."
+  },
+  {
+    "id": "u0120",
+    "kind": "prose",
+    "token": 813,
+    "text": "For instance, output `Slice = m![A / 4, X, X]` (where `X` is a new axis used twice) violates this constraint."
+  },
+  {
+    "id": "u0121",
+    "kind": "prose",
+    "token": 816,
+    "text": "Broadcast axes must not be padded"
+  },
+  {
+    "id": "u0122",
+    "kind": "prose",
+    "token": 819,
+    "text": "Broadcast axes in the output `Slice` must not carry padding (no `Axis # N` form).\nPadding on a broadcast axis would leave routing destinations undefined for the padded positions."
+  },
+  {
+    "id": "u0123",
+    "kind": "prose",
+    "token": 822,
+    "text": "For instance, output `Slice = m![A / 4, X # 4, Y]` violates this constraint because `X` is a broadcast axis with padding."
+  },
+  {
+    "id": "u0124",
+    "kind": "prose",
+    "token": 825,
+    "text": "Order preservation"
+  },
+  {
+    "id": "u0125",
+    "kind": "prose",
+    "token": 828,
+    "text": "Axes moving from `Slice` to `Time` must preserve their relative order from the input slice dimension, and the verifier in `SwitchConfig::CustomBroadcast` panics at kernel compile time when they do not.\nEach router has minimal buffering (one packet) and must immediately decide to output locally or forward, with no opportunity to buffer multiple packets and reorder them."
+  },
+  {
+    "id": "u0126",
+    "kind": "prose",
+    "token": 831,
+    "text": "For instance, with `axes![A = 16, B = 16, C = 8, D = 8, E = 8]` and `dtype = i8`, mapping input `Slice = m![A, B], Time = m![C], Packet = m![D, E]` to output `Slice = m![A, B / 4, 4], Time = m![C, B % 2, B / 2], Packet = m![D, E]` violates this constraint.\nHere `B % 2` and `B / 2` appear in reversed order relative to their input slice arrangement.\nOutput `Time = m![C, B / 2, B % 2]` would be valid, since `B / 2, B % 2` match the input order."
+  },
+  {
+    "id": "u0127",
+    "kind": "prose",
+    "token": 834,
+    "text": "Innermost time position"
+  },
+  {
+    "id": "u0128",
+    "kind": "prose",
+    "token": 837,
+    "text": "Axes moving from `Slice` to `Time` must occupy the innermost positions of the output `Time`.\nData from other slices arrives last within each packet in the pipeline, so `Slice`-to-`Time` sub-dimensions naturally land at the innermost time dimensions.\nPlacing them elsewhere would demand buffering and reordering full time sequences, which the hardware cannot do."
+  },
+  {
+    "id": "u0129",
+    "kind": "prose",
+    "token": 840,
+    "text": "For instance, with the same `axes!` and `dtype` as above, mapping input `Slice = m![A, B], Time = m![C], Packet = m![D, E]` to output `Slice = m![A / 2, 2, B / 2, 2], Time = m![A % 2, C, B % 2], Packet = m![D, E]` violates this constraint.\nHere `A % 2` and `B % 2` preserve their relative order correctly, but `C` sits between them."
+  },
+  {
+    "id": "u0130",
+    "kind": "prose",
+    "token": 844,
+    "text": "[!NOTE]\n`Broadcast01` works around this constraint via the `time0` parameter, but custom configurations lack that mechanism and must follow the constraint strictly."
+  },
+  {
+    "id": "u0131",
+    "kind": "prose",
+    "token": 848,
+    "text": "Dropped values must be padding"
+  },
+  {
+    "id": "u0132",
+    "kind": "prose",
+    "token": 851,
+    "text": "When fewer values of a dimension move from `Slice` to `Time` than the dimension spans (partial extraction, as in [Example 3](#example-3-partial-axis-extraction-slicing)), every value left behind must be padding.\nDropping a valid value would silently discard live input, so the verifier rejects it at kernel compile time."
+  },
+  {
+    "id": "u0133",
+    "kind": "prose",
+    "token": 854,
+    "text": "For instance, with `axes![A = 16, B = 4, C = 3, D = 8, E = 8, X = 4]` and input `Slice = m![A, B, C # 4]`, extracting `C # 4 → C` is allowed because the dropped fourth value is a padding cell.\nSlicing a fully valid axis, for instance `B = 4 → B = 3`, violates this constraint, since the dropped value carries real data."
+  },
+  {
+    "id": "u0134",
+    "kind": "prose",
+    "token": 857,
+    "text": "Ring size"
+  },
+  {
+    "id": "u0135",
+    "kind": "prose",
+    "token": 860,
+    "text": "The `ring_size` parameter must be a power of 2.\nThe compiler also derives the expected `ring_size` from the input/output mappings (the outermost non-direct-cast boundary) and rejects any user-supplied value that does not match."
+  }
+]

@@ -1,0 +1,7 @@
+{
+  "u0001": "도구(Tools)",
+  "u0002": "이 도구들은 커널(kernel) 작업을 위한 설치(installation)와 개발 과정(development process)을 지원합니다.",
+  "u0003": "[커널 최적화 도구(Kernel Optimizer)](./kernel-optimizer.md): 백엔드 선택(backend selection), 자동 커널 빌드(automatic kernel builds), 직접 커널 컴파일(direct kernel compilation)을 수행하는 cargo 하위 명령(subcommand)입니다.",
+  "u0004": "[언어 서버(Language Server)](./language-server.md): IDE 연동(integration)을 위한 `furiosa-rust-analyzer-proxy`의 설치와 설정을 설명합니다.",
+  "u0005": "[스케줄 뷰어(Schedule Viewer)](./schedule-viewer.md): 스케줄 JSON 파일을 살펴보는 대화형 뷰어(interactive viewer)입니다."
+}

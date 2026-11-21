@@ -1,0 +1,15 @@
+{
+  "u0001": "진단(Diagnosis)",
+  "u0002": "진단(diagnosis)은 스케줄(schedule) 화면에서 검증 가능한 병목 가설(bottleneck hypothesis) 하나를 도출하는 과정입니다. 데이터 의존성(data dependency)과 공유 자원 대기(shared-resource wait)를 구분하세요. 스케줄 화면을 눈으로 살펴보는 것만으로 속도 향상(speedup)이 입증되지는 않습니다.",
+  "u0003": "덤프한 스케줄 살펴보기(Inspect a dumped schedule)",
+  "u0004": "[스케줄 뷰어 도구 문서(Schedule Viewer)](../tools/schedule-viewer.md)에 따라 JSON을 생성하고 여세요. 뷰어(viewer)는 예정된 타임라인(timeline), 연산 컨텍스트(operation context), 수명(lifetime), 연결된 텐서(tensor), 연산자 설명(operator description)을 보여 줍니다. 노드(node)를 선택하여 입력과 출력을 추적하고, 사이클 범위(cycle range)를 확대하여 의심되는 구간을 따로 살펴보세요.",
+  "u0005": "타임라인 읽기(Read the timeline)",
+  "u0006": "스케줄(schedule)의 마지막 사이클(cycle)이 전체 완료 시간(makespan)을 정합니다. 그 시점에 영향을 주는 구간(interval)들을 바탕으로 진단합니다.",
+  "u0007": "마지막 사이클(cycle)에 도달하는 구간(interval)을 찾습니다.",
+  "u0008": "그 앞에서 기다리게 하는 원인이 메모리 의존성(memory dependency), 공유 자원(shared resource), 또는 스케줄이 배정되지 않은 공백(unscheduled gap)인지 확인합니다.",
+  "u0009": "관련 컨텍스트 레인(context lane)을 비교하여 다른 연산이 겹쳐 실행될 수 있는지 봅니다.",
+  "u0010": "변경 후보(candidate) 하나와 그 변경이 해당 구간(interval)에 영향을 줄 것으로 보는 이유를 명시합니다.",
+  "u0011": "스케줄(schedule)은 컴파일러(compiler)의 정적 동작(static behavior)을 보여 줍니다. 값의 정답 기준(value oracle)을 대신하지 않으며, 실제 장치 처리량(device throughput)을 증명하지도 않습니다.",
+  "u0012": "유효한 비교 조건 유지하기(Keep the comparison valid)",
+  "u0013": "후보(candidate)마다 소스 리비전(source revision), 릴리스 프로필(release profile), 장치 함수 필터(device-function filter), 형태(shape), 원소 자료형(element type), 매핑(mapping), 스케줄 파일(schedule file)을 기록하세요. 후보 간에는 선택한 커널 설계 사항 하나만 바꿉니다. 이들 입력 중 다른 조건이 바뀌면 튜닝 비교(tuning comparison)가 아니라 새로운 기준선(baseline)으로 취급하세요."
+}

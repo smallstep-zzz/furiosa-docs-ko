@@ -1,0 +1,14 @@
+{
+  "u0001": "사례 연구: 텐서 유닛 입출력(Case Study: Tensor Unit I/O)",
+  "u0002": "이 전체 과정 텐서 유닛 입출력(end-to-end Tensor Unit I/O) 패턴은 Fetch와 Commit을 사용해 텐서(tensor)를 DM을 거쳐 이동시키며 모든 논리 인덱스(logical index)를 보존합니다. 여러 이동 단계를 결합한 패턴(composed movement pattern)이므로, Fetch Engine·Commit Engine 각각의 참조 페이지와 구분됩니다.",
+  "u0003": "대표적인 공개 예제(canonical public case)는 `fetch_commit_simple`입니다. 매핑(mapping)이 `[A, B]`인 `i8` HBM 텐서(tensor)를 입력받고, 텐서 유닛(Tensor Unit)에서 값의 타입 폭을 `i32`로 넓힌 뒤 매핑이 `[B, A]`인 HBM 텐서를 반환합니다. 마지막 `to_hbm` DMA 호출이 출력 HBM 매핑을 선택하므로, 이 테스트는 HBM→DM, Fetch, Collect, Commit, DM→HBM으로 이어지는 파이프라인(pipeline) 전체를 검증합니다. 이 예제는 스트리밍 중의 순열 변환(streaming permutation)을 주장하지 않습니다. 공개 예제의 `[A, B]`→`[B, A]` 재배치(relayout)는 마지막 DMA 경계에서 일어납니다. 장치 소스(device source)는 아래에 포함되어 있습니다.",
+  "u0006": "// Element의 가장 안쪽 축(axis)은 원본의 가장 안쪽 축(B, 스트라이드(stride) 1)과 같아야 함. 그래야\n",
+  "u0007": "// DMA 꼬리(tail)가 B축 전체(8 × i8 = 8바이트)를 포함하여 min_align = 8을 만족함.\n",
+  "u0008": "호스트 기준 계산(host oracle)과 테스트는 examples의 테스트 타깃(test target)에 포함되어 있습니다.",
+  "u0010": "// 형상(shape)이 (A=4096)(B=8)인 입력 텐서(tensor)를 생성.\n",
+  "u0011": "// 장치 함수(device function)를 호출.\n",
+  "u0012": "`cargo furiosa-opt test --test fetch_commit_tests`를 실행하면 대표 예제(canonical case)를 실행할 수 있습니다. 호스트 기준 계산(host oracle)은 모든 `output[b, a]` 값을 타입 폭을 넓힌 `input[a, b]` 값과 비교합니다. 스트리밍 경로(streaming path)는 입력 DM, Fetch, Cast, Collect, Commit, 출력 DM 순서이며, DM 배치(layout)는 원래의 `[A, B]`를 유지합니다. 여기서 사용하는 API는 [읽기 엔진(Fetch Engine)](./fetch-engine.md), [수집 엔진(Collect Engine)](../computing-tensors/collect-engine.md), [쓰기 엔진(Commit Engine)](./commit-engine.md)에서 설명합니다.",
+  "u0004": "expect(clippy::type_complexity)",
+  "u0005": "device(chip = 1)",
+  "u0009": "tokio::test"
+}

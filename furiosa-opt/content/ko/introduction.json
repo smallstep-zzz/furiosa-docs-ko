@@ -1,0 +1,13 @@
+{
+  "u0001": "소개(Introduction)",
+  "u0002": "FuriosaAI의 텐서 수축 프로세서(Tensor Contraction Processor, TCP)는 추론 작업(inference workload)을 위한 대규모 병렬 AI 가속기(accelerator)입니다.\n메모리 배치(memory layout)와 하드웨어 스케줄링(hardware scheduling)을 추상화하는 PyTorch·XLA 같은 고수준 프레임워크와 달리, TCP는 프로그래머가 이를 직접 제어할 수 있게 합니다. 그러면서도 저수준 커널 API처럼 바이트 단위까지 따져 가며 프로그래밍할 필요는 없습니다.",
+  "u0003": "TCP의 가상 명령어 집합 구조(Virtual Instruction Set Architecture, Virtual ISA 또는 vISA)는 이러한 제어 기능을 제공하는 프로그래밍 인터페이스입니다.\n프로그래머는 텐서(tensor)를 기준으로 생각하면서도 메모리 할당(memory allocation)과 텐서 유닛(Tensor Unit)의 스케줄링을 직접 관리할 수 있습니다.\n이 설명서는 주로 작성자가 AI 에이전트(agent)에게 vISA 커널(kernel)의 작성·검증·최적화를 지시하는 데 도움을 줍니다.\nvISA를 생성하는 컴파일러 개발자에게 필요한 기술 자료도 제공합니다.\n공개 릴리스(release)의 API에 관한 기준 자료는 [`furiosa-opt-std` rustdoc](https://docs.rs/crate/furiosa-opt-std)입니다.\n이 책은 커널의 설계 결정을 어떻게 내리고 검토하는지 설명합니다.\n두 독자층 모두 Rust의 기본 문법을 알고 있다고 가정합니다.\n필요하다면 [Rust 언어 설명서](https://doc.rust-lang.org/book/)를 참고하세요.",
+  "u0004": "하려는 작업에 맞춰 읽기(Read This Book by Task)",
+  "u0005": "[빠른 시작(Quick Start)](./quick-start.md)에서는 기본 템플릿(base-template) 커널 패턴을 소개하고, 매핑(Mapping), 이동(Moving), 계산(Computing), 전체 과정 사례(End-to-End Cases), 스케줄링(Scheduling), 도구(Tools)로 이어지는 학습 경로를 안내합니다.",
+  "u0006": "[!WARNING]\n**알파 테스트 빌드(Alpha Test Build): 실험 단계의 소프트웨어**",
+  "u0007": "이 소프트웨어는 초기 실험 단계의 미완성 빌드(build)이며, 기술 평가와 내부 테스트만을 목적으로 제공합니다.",
+  "u0008": "이 소프트웨어를 운영 환경(production)의 작업, 중대한 작업 또는 중요한 데이터에 사용하기 전에는 반드시 Furiosa 엔지니어와 상의해야 합니다.",
+  "u0009": "여러분의 피드백(feedback)은 개발에 매우 중요합니다.\n의견을 보내 주세요.",
+  "u0010": "라이선스(License)",
+  "u0011": "이 문서와 `furiosa-opt` 저장소 전체에는 [Apache License Version 2.0](https://www.apache.org/licenses/LICENSE-2.0)이 적용됩니다."
+}

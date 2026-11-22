@@ -2,7 +2,7 @@
 
 **웹사이트:** https://smallstep-zzz.github.io/furiosa-docs-ko/furiosa-opt/
 
-FuriosaAI의 `furiosa-opt` 문서를 소프트웨어 공학과 3학년 독자에게 맞춰 번역한 정적 HTML 사이트입니다. 영어 원문을 문단별로 확인하며 읽을 수 있습니다.
+FuriosaAI의 공식 `furiosa-opt` 설명서 **Programming Tensor Contraction Processors**를 소프트웨어 공학과 3학년 독자에게 맞춰 번역한 정적 HTML 사이트입니다. 영어 원문을 문단별로 확인하며 읽을 수 있습니다. 공식 웹 문서와 GitHub 원본을 모두 연결합니다.
 
 ## 수록 내용
 
@@ -20,11 +20,14 @@ Rust 전체 구현과 자동 생성 `rustdoc` API 참조는 원본 링크로 연
 - 문단에 마우스를 올리거나 원문 버튼을 눌러 영어 원문 확인
 - 긴 원문은 팝업 내부 스크롤, 화면 위·아래 공간에 맞춰 팝업 배치
 - 한국어·영어 본문 검색, 코드 복사, 밝은·어두운 테마
+- 코드 배경·문법 강조·복사 버튼·원문 코드 팝업까지 함께 바뀌는 다크모드
 - 키보드 탐색, Escape로 닫기, 가로로 스크롤하는 코드와 표
 - 주요 용어의 한국어·영어 병기, 별도로 표시한 번역자 읽기 도움말
 
 ## 원본 기준
 
+- 공식 설명서: https://developer.furiosa.ai/furiosa-opt/book/
+- 공식 웹 문서 대조일: 2026-11-22
 - 원본 저장소: https://github.com/furiosa-ai/furiosa-opt
 - 고정 커밋: `3d43bc9d20f324af60e3006c3f1541938d7f5097`
 - 번역 기준일: 2026-11-21
@@ -32,6 +35,12 @@ Rust 전체 구현과 자동 생성 `rustdoc` API 참조는 원본 링크로 연
 - 원문과 파생 번역: Apache-2.0. `LICENSE`와 원문의 `NOTICE`를 보존했습니다.
 
 공식 FuriosaAI 번역이 아닌 커뮤니티 한국어판입니다. 원문 변경은 자동 반영하지 않습니다. 원문 자체의 수치·설명 불일치는 임의로 고치지 않고 해당 문서의 ‘원문 대조 메모’에서 구분해 설명합니다.
+
+## 공식 웹 문서와의 관계
+
+공식 개발자 사이트의 목차 47개 문서를 고정 커밋의 영어 원문과 대조했습니다. 공식 웹 설명서와 GitHub 문서가 같은 본문을 제공하므로 하나의 한국어판에서 읽을 수 있도록 통합했습니다. 각 문서의 **원문링크**는 공식 웹 문서를, **GitHub**는 번역 기준 커밋의 원본 파일을 엽니다. 부록은 해당 GitHub 원본으로 연결합니다.
+
+공식 배포본의 경고문·수식·각주·스마트 따옴표 등 렌더링 차이는 명시적으로 정규화해 비교합니다. 공식 배포본에서 비어 있는 코드 영역 3곳은 기존에 복원한 동일 커밋의 선언을 유지하며, 이 예외를 별도로 기록합니다. `tools/verify-official.py`가 재현 가능한 대조를 수행하고 `content/official-site.json`에 페이지별 결과와 공식 원문 파일의 SHA-256을 저장합니다.
 
 ## 번역과 코드 보존
 
@@ -43,12 +52,18 @@ Rust 전체 구현과 자동 생성 `rustdoc` API 참조는 원본 링크로 연
 
 ## 다시 빌드하기
 
-Python 3.10 이상에서:
+Python 3.12 이상에서:
 
 ```bash
 python -m pip install -r furiosa-opt/requirements.txt
 python furiosa-opt/tools/build.py
 python furiosa-opt/tools/validate.py
+```
+
+공식 웹 문서와 다시 대조하려면 다음을 실행합니다. 공식 사이트에서 내용이 바뀌었으면 검사가 실패하고 기존 대조 보고서는 유지됩니다.
+
+```bash
+python furiosa-opt/tools/verify-official.py
 ```
 
 원본 버전을 갱신하려면 별도로 원본 저장소를 체크아웃한 뒤 `prepare.py <원본 체크아웃 경로>`를 실행합니다. 새로 생성되거나 바뀐 번역 단위를 모두 검토하고 번역한 다음 빌드해야 합니다. 단순히 원문만 갱신해서 게시하지 마세요.

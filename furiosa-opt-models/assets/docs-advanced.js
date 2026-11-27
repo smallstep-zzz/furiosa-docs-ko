@@ -817,3 +817,644 @@ window.OPT_DOCS_ADVANCED={
     ]
   }
 };
+
+Object.assign(window.OPT_DOCS_ADVANCED,{
+  "design/testing": {
+    "title": "검증 원칙 · Testing principles",
+    "blocks": [
+      [
+        "p",
+        "각 불변조건은 **보장할 수 있는 가장 높은 계층에서** 보장하고, 더 높은 계층에서 보장할 수 없을 때만 테스트를 추가합니다.",
+        "Guarantee each invariant at the highest level that can hold it, and write a test only when no higher level can."
+      ],
+      [
+        "table",
+        [
+          "단계",
+          "보장 내용",
+          "실패 시점"
+        ],
+        [
+          [
+            "1. 타입 시스템",
+            "불법 상태는 컴파일 자체가 불가능",
+            "빌드 시"
+          ],
+          [
+            "2. 검증된 생성자",
+            "외부 입력을 한 번 검증해 정제된 타입으로 구성",
+            "경계에서"
+          ],
+          [
+            "3. 런타임 검사",
+            "외부 응답·데이터 진입 시 검사",
+            "경계에서"
+          ],
+          [
+            "4. 테스트",
+            "타입/경계 검사로 보장할 수 없는 계약",
+            "CI에서"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "보다 높은 단계는 더 일찍 실패하며 모든 호출자를 포괄한다는 의미입니다.",
+        "A level is higher when it fails earlier and covers every caller."
+      ],
+      [
+        "h2",
+        "1단계: 타입 시스템",
+        "Level 1: type system"
+      ],
+      [
+        "table",
+        [
+          "도구",
+          "원문 예시"
+        ],
+        [
+          [
+            "축별 Shape 타입",
+            "`geometry::Hidden<const N: usize>`"
+          ],
+          [
+            "Const Assertion",
+            "`Live::groups`"
+          ],
+          [
+            "Phantom Type",
+            "`Rows<D, Row>`"
+          ],
+          [
+            "Newtype / Enum",
+            "`Keep`"
+          ],
+          [
+            "검증된 생성자",
+            "`qwen3::Size<N>`"
+          ],
+          [
+            "Typestate",
+            "호출 순서마다 서로 다른 타입을 사용"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "새 Variant를 추가하면 Exhaustive `match`가 각 사용처에서 컴파일 오류를 만들어야 합니다. 런타임 값은 검증된 생성자, 컴파일 상수는 Const Assertion으로 처리합니다.",
+        "Exhaustive match makes a new variant a compile error at every use. Runtime values need a checked constructor; constants need a const assert."
+      ],
+      [
+        "h2",
+        "2단계: 검증된 생성",
+        "Level 2: checked construction"
+      ],
+      [
+        "p",
+        "바이트, 설정 파일, 프레임워크 인자, 드라이버 응답, 요청 필드는 신뢰할 수 없는 입력입니다. `TryFrom` 또는 검증을 수행하는 `new`로 **한 번만** 정제하고, 무엇을 왜 거부했는지 명시합니다.",
+        "Bytes, configs, framework arguments, driver answers and request fields are untrusted. Parse each once into a refined type with TryFrom or a validating new."
+      ],
+      [
+        "p",
+        "경계를 통과한 뒤에는 정제된 타입을 받아 같은 검사를 반복하지 않습니다. 그 뒤 불변조건이 깨지면 외부 입력 오류가 아니라 내부 버그이므로 `assert!`로 확인합니다.",
+        "Past the boundary, take the refined type and do not check again. Inside it, a violated invariant is a bug: assert! it."
+      ],
+      [
+        "h2",
+        "3단계: 런타임 검사",
+        "Level 3: runtime check"
+      ],
+      [
+        "p",
+        "타입으로 표현할 수 없는 조건은 외부 경계에서 검사합니다. 예를 들어 `LoadOptions::parse`는 레지스트리에서 지원하지 않는 칩 수를 `LoadError::Unsupported`로 거부합니다. 테스트에서는 이 검사가 일어나는지만 고정합니다.",
+        "When no type can hold a value, check it where it enters: LoadOptions::parse rejects a chip count ... a level 4 test only pins that the check fires."
+      ],
+      [
+        "h2",
+        "4단계: 테스트",
+        "Level 4: tests"
+      ],
+      [
+        "list",
+        [
+          [
+            "파서가 허용하거나 거부하는 입력.",
+            "A parser's accepted and refused inputs."
+          ],
+          [
+            "하드웨어·컴파일러·프레임워크·체크포인트 파일 형식 등 외부와의 계약.",
+            "A contract with an outside party: hardware, compiler, framework, checkpoint format."
+          ],
+          [
+            "기준 구현과의 수치적 일치.",
+            "Numerical agreement with a reference."
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "계약 하나당 테스트 하나",
+        "One contract per test"
+      ],
+      [
+        "table",
+        [
+          "계약",
+          "테스트 접점"
+        ],
+        [
+          [
+            "NPU 커널",
+            "실제 장치에서 `launch`"
+          ],
+          [
+            "vLLM 동작",
+            "`LLM.generate`"
+          ],
+          [
+            "SGLang 동작",
+            "HTTP 엔드포인트"
+          ],
+          [
+            "병렬화 한도",
+            "서버 시작 단계"
+          ],
+          [
+            "캐시 전송",
+            "Copy Hook"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "가짜 객체(Mock)는 잘못된 가정을 공유할 수 있으므로, 실제 하드웨어와 고정된 프레임워크 버전으로 검증해야 합니다.",
+        "Use real hardware and the pinned framework version, because a mock shares the code's wrong assumptions."
+      ],
+      [
+        "h2",
+        "테스트 파일의 위치",
+        "Where a test lives"
+      ],
+      [
+        "p",
+        "Rust 단위 테스트는 구현을 소유한 파일 내부의 `#[cfg(test)] mod tests`에 둡니다. 별도의 `tests.rs`나 `#[path]` 모듈을 만들지 않습니다. 모듈·크레이트의 공개 경계를 검증할 때만 별도의 통합 테스트 파일을 사용합니다.",
+        "A Rust unit test sits inline, in a #[cfg(test)] mod tests of the file that owns the behavior."
+      ],
+      [
+        "h2",
+        "독립된 기준값(Oracle)과 비교",
+        "Assert against an oracle"
+      ],
+      [
+        "p",
+        "자체 출력의 녹화본이나 테스트 대상 코드를 다시 구현한 결과로 비교하지 않습니다. `adds_elementwise`는 호스트의 `f32` 계산을 기준으로 사용합니다.",
+        "Never compare with a recording of our own output, or re-implement the code under test. adds_elementwise computes the expected sum on the host in f32."
+      ],
+      [
+        "p",
+        "기준은 동일 체크포인트의 Transformers, 같은 요청의 다른 경로(배치/단독, 캐시 적중/실패), 프레임워크 명세, 별도로 저장한 원본 프레임워크 출력 등이 될 수 있습니다.",
+        "Oracles are Transformers on the same checkpoint, the same request through another path, framework semantics, and the upstream framework's reference outputs."
+      ],
+      [
+        "list",
+        [
+          [
+            "Log Probability 비교에서는 Cosine Similarity 계산 전에 중심화합니다.",
+            "Log-probabilities are centered before cosine similarity."
+          ],
+          [
+            "Greedy Token 검증은 BF16 반올림에 따른 상위 두 토큰의 순위 변경을 감안해 최상위 확률의 5% 이내를 허용합니다.",
+            "A greedy token passes within 5% of the top probability, which allows for BF16 rounding tying the top two."
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "각 거부 사유를 고정",
+        "Pin each rejection"
+      ],
+      [
+        "p",
+        "거부되는 각 경로에 대해 오류 종류와 사유를 확인하는 독립 사례를 작성합니다. 알 수 없는 아키텍처는 `InvalidData`, 지원하지 않는 아키텍처나 구현 조건은 `Unsupported`로 구분합니다.",
+        "Each way to be refused gets its own case asserting the kind and the reason."
+      ],
+      [
+        "h2",
+        "점검 순서",
+        "Checklist"
+      ],
+      [
+        "list",
+        [
+          [
+            "타입으로 불가능하게 만들 수 있는가? 가능하면 타입으로 보장하고 테스트하지 않습니다.",
+            "A type can make it unrepresentable: do that, no test."
+          ],
+          [
+            "입력이 신뢰할 수 없는가? 한 번만 검증하고 허용·거부를 테스트합니다.",
+            "The input is untrusted: parse once, test accepted and refused inputs."
+          ],
+          [
+            "타입으로 보장할 수 없다면 경계에서 검사하고 각 거부를 검증합니다.",
+            "No type can hold it: check at the boundary, test each refusal."
+          ],
+          [
+            "상위 수준의 테스트가 이미 보장한다면 중복 테스트를 작성하지 않습니다.",
+            "A higher test already covers it: write nothing, delete duplicates."
+          ],
+          [
+            "그 외에는 관찰 가능한 가장 높은 경계에서 실장비·독립 Oracle을 이용해 계약 테스트 하나를 작성합니다.",
+            "Otherwise write one test, named for its contract, at the highest boundary, on hardware, against an oracle."
+          ]
+        ]
+      ]
+    ]
+  },
+  "develop/kernel": {
+    "title": "vISA 커널 작성",
+    "partial": true,
+    "blocks": [
+      [
+        "note",
+        "원문은 `Add` 실제 구현과 테스트의 Rust 코드를 `--8<--` 매크로로 가져옵니다. 이 발췌 번역에서는 **설명·검증 규칙을 번역**하고, 코드 본문은 원문 GitHub에서 확인하도록 남깁니다. 따라서 완역으로 표시하지 않습니다.",
+        "The example is Add, with code snippets from the model crate."
+      ],
+      [
+        "p",
+        "기존 모델 크레이트가 지원하지 않는 **Leaf Operation**을 새로 구현할 때 사용하는 가이드입니다. 이미 구현된 연산을 조립하는 방법은 Model Composition / Adding a model을 참고합니다.",
+        "Write the device kernel of a leaf operation that a model needs and the models crate does not implement yet."
+      ],
+      [
+        "p",
+        "여기서 커널은 `furiosa-opt` SDK의 **vISA**로 작성합니다. 텐서·매핑·엔진 개념은 furiosa-opt 설명서를 따릅니다.",
+        "Kernels are written in the Virtual ISA (VISA) of the furiosa-opt SDK."
+      ],
+      [
+        "h2",
+        "연산 정의",
+        "Define the operation"
+      ],
+      [
+        "p",
+        "Leaf Operation은 `crates/furiosa-opt-models/src/ops/`에 있고 하드웨어를 직접 다루는 계층입니다. `ops/mod.rs`에 하위 모듈을 `pub mod <name>;`로 등록합니다.",
+        "Leaf operations live in crates/furiosa-opt-models/src/ops/. They are the only modules that touch hardware."
+      ],
+      [
+        "list",
+        [
+          [
+            "연산 구조체는 RMSNorm 가중치 같은 파라미터를 갖고, `DeviceSend`를 구현해 `#[device]`로 전달될 수 있어야 합니다.",
+            "The struct holds the operation's parameters ... derives DeviceSend."
+          ],
+          [
+            "허용된 피연산자 타입마다 `Op` 구현을 제공하며, 입력 레이아웃/자료형/메모리는 타입에서 결정합니다.",
+            "Each impl takes the device and operands; operand types fix each tensor's memory, element type and mapping."
+          ],
+          [
+            "크기는 `Rows`, `Hidden`과 같은 축 타입으로 전달합니다. 구현은 모델 이름이나 레이어 수에 따른 분기를 피합니다.",
+            "Axis sizes are type parameters, such as Add's Hidden and Rows, and the model definition fixes them."
+          ],
+          [
+            "문서 주석은 수학과 정밀도 계약을 명시하고, 테스트가 그 계약을 독립적으로 확인해야 합니다.",
+            "The doc comment states the mathematics and its precision, and the test checks the kernel against it."
+          ],
+          [
+            "가중치가 있는 경우뿐 아니라 없는 경우에도 체크포인트 로딩 계약을 위해 `Load`를 선언합니다.",
+            "To load as part of a model, the struct derives Load ... an operation without weights derives it too and reads nothing."
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "Add 연산 예제의 데이터 흐름",
+        "Example: Add"
+      ],
+      [
+        "p",
+        "HBM 텐서는 공용 원소별 연산을 재사용하며, DM의 `Spread` Row는 Leaf 커널이 직접 처리합니다. **Sub Context는 rhs를 VRF로 적재하고, Main Context는 lhs를 Vector Engine으로 스트리밍**합니다. 더한 결과를 BF16으로 Cast하고 DM에 Commit합니다.",
+        "The sub context loads rhs into the vector register file, and the main context streams lhs through the vector engine, adds rhs, casts the sum to bf16 and commits it to DM."
+      ],
+      [
+        "p",
+        "Vector Engine은 32비트 값으로 연산하므로, 두 입력은 Fetch 시 f32로 변환됩니다. 계산의 통과 경로는 `Fetch → Collect → Vector → Cast → Commit`입니다.",
+        "The vector engine computes on 32-bit lanes, so both terms are cast to f32 as they are fetched. The DM chain passes through fetch, collect, vector, cast and commit."
+      ],
+      [
+        "h2",
+        "커널이 없는 연산",
+        "Operations without a kernel"
+      ],
+      [
+        "p",
+        "커널이 없는 `forward`는 필요한 연산을 설명하는 `todo!()`일 수 있습니다. `todo!()`도 출력 타입 검사를 통과하기 때문에 모델이 컴파일·적재되어도 첫 NPU Launch에서 Panic이 발생할 수 있습니다.",
+        "An operation without a kernel is a typed contract whose forward is todo!(). A family that uses the operation still compiles and loads, and its first launch panics."
+      ],
+      [
+        "code",
+        "bash",
+        "grep -rn 'todo!(' crates/furiosa-opt-models/src"
+      ],
+      [
+        "p",
+        "이 경우 기존 `Op` 구현 시그니처를 유지하며 `todo!()` 자리에 실제 커널을 작성합니다.",
+        "Write the kernel in place of the todo!(). Keep the impl's signature."
+      ],
+      [
+        "h2",
+        "실제 칩에서 커널 검증",
+        "Test the kernel on the chip"
+      ],
+      [
+        "list",
+        [
+          [
+            "`axes!`로 축 크기를 확정합니다(원문 예제 `Pinned=1024`).",
+            "Fix the axis sizes with axes!, here Pinned = 1024."
+          ],
+          [
+            "업로드·Launch가 비동기이므로 `#[tokio::test(flavor=\"current_thread\")]`를 사용합니다.",
+            "Make the test a tokio test because uploads and launches are awaited."
+          ],
+          [
+            "`Device::new(...)`로 장치를 열고 피연산자를 HBM에 올린 뒤 결과를 호스트로 되돌립니다.",
+            "Open the device, upload operands with to_hbm, launch and read back with to_host."
+          ],
+          [
+            "호스트의 독립 계산값과 비교하고 정밀도가 고정된 경우 비트 단위로 검증합니다.",
+            "Compute expected values on host; compare within tolerance, or bits when contract fixes rounding."
+          ],
+          [
+            "동시에 동일 칩을 사용하는 테스트는 공유 Device Lock으로 직렬화합니다.",
+            "Hold crate::tests::DEVICE while a test uses the chip."
+          ]
+        ]
+      ],
+      [
+        "code",
+        "bash",
+        "cargo furiosa-opt test -p furiosa-opt-models --release --lib \\\n  ops::pointwise::add::tests::adds_elementwise -- --test-threads 1"
+      ],
+      [
+        "h2",
+        "Lowering 단계의 함정",
+        "Lowering traps"
+      ],
+      [
+        "list",
+        [
+          [
+            "HBM→DM Source Stride는 **8바이트 정렬**이 필요합니다. CPU 백엔드는 일부 잘못된 소스 정렬을 통과시키므로 NPU 빌드에서 확인해야 합니다.",
+            "HBM-to-DM source strides must be 8-byte aligned."
+          ],
+          [
+            "Collect의 패킷은 **32바이트 Flit 하나**입니다. 더 큰 패킷은 Lowering에 실패합니다.",
+            "A collect packet is one 32-byte flit."
+          ],
+          [
+            "`vector_widen_pad`로 추가된 Lane은 NPU에서 이전 값이 남아 있을 수 있습니다. CPU 백엔드에서는 0으로 보여 테스트를 속일 수 있으므로 실제 칩에서 확인해야 합니다.",
+            "After vector_widen_pad, the new lanes hold stale values on the chip and zero on the CPU backend."
+          ]
+        ]
+      ],
+      [
+        "p",
+        "최종적으로 Leaf 테스트와 모델 전체 테스트를 모두 실행해야 합니다.",
+        "Run the operation's test, then the model's tests."
+      ]
+    ]
+  },
+  "develop/compose": {
+    "title": "모델 조립과 스트리밍",
+    "partial": true,
+    "blocks": [
+      [
+        "note",
+        "원문에는 Mistral NeMo 실제 Rust 조합 코드, Streaming 루프 등 하위 절이 더 있습니다. 이 문서는 **주요 인터페이스·가중치 로딩·스트리밍 설계를 우선 번역한 발췌판**입니다.",
+        "The worked example is Mistral NeMo; the source has full code snippets and additional sections."
+      ],
+      [
+        "p",
+        "모델은 하나의 `Module` 트레이트를 구현한 모듈 트리입니다. 트리에는 체크포인트에서 필드명으로 로드하는 가중치도 포함되며, 전체를 실행하거나 Row 타일 단위로 처리할 수 있습니다.",
+        "A model is a tree of modules that all implement one trait, Module. The tree also holds the model's weights, which load from a checkpoint by its field names. It runs on the device whole, or a tile of rows at a time."
+      ],
+      [
+        "h2",
+        "Module의 네 인자",
+        "The Module contract"
+      ],
+      [
+        "table",
+        [
+          "인자",
+          "역할",
+          "결정 시점"
+        ],
+        [
+          [
+            "`self`",
+            "가중치와 Checkpoint Config에서 읽은 상수",
+            "모델 적재 시"
+          ],
+          [
+            "`env`",
+            "Position, Block Table, 현재 처리할 Row 등 호출 전역 정보",
+            "호출마다"
+          ],
+          [
+            "`state`",
+            "KV Cache 블록 또는 Recurrent State 같은 쓰기 가능한 상태",
+            "호출마다 빌림"
+          ],
+          [
+            "`input`",
+            "계산 중 흐르는 입력 데이터와 호출자가 소유한 출력 버퍼",
+            "호출마다"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "모듈이 **가중치는 소유하지만 요청별 State는 소유하지 않습니다.** 따라서 하나의 적재된 모델이 여러 요청을 처리할 수 있습니다.",
+        "A module owns its weights, never its state, so one loaded tree serves any number of requests."
+      ],
+      [
+        "p",
+        "부모 모듈의 State는 하위 모듈 State의 조합이며, Stateless Module은 `&mut ()`을 사용합니다. 일반적인 `env`는 복합 모듈을 거쳐 전달됩니다.",
+        "A composite's state is its children's states; a stateless module takes &mut (). A composite passes env on as a generic E."
+      ],
+      [
+        "h2",
+        "네 종류의 모듈",
+        "Four kinds of module"
+      ],
+      [
+        "table",
+        [
+          "종류",
+          "소스 위치",
+          "예시"
+        ],
+        [
+          [
+            "Leaf Operation",
+            "`ops/`",
+            "`Add`, `RmsNorm`, `Linear`"
+          ],
+          [
+            "범용 Combinator",
+            "`modules/generic/`",
+            "`Sequential`, `Then`, `Layers`"
+          ],
+          [
+            "관계 모듈(Relation)",
+            "`modules/`",
+            "`Attention`, `Residual`"
+          ],
+          [
+            "모델 정의",
+            "`models/`",
+            "`mistral::Model`, `qwen3::ForCausalLM`"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "하드웨어를 직접 사용하는 것은 Leaf이며, 범용 Combinator는 계산 구조만 조합합니다. `Sequential`은 첫 모듈의 결과를 두 번째에 전달하고 두 모듈 사이 타입이 다르면 컴파일이 실패합니다.",
+        "Only leaves touch hardware. Sequential passes its first child's output to the second by value; a mismatch fails to compile."
+      ],
+      [
+        "h2",
+        "컴파일 시 Variant 선택",
+        "Variant selection"
+      ],
+      [
+        "p",
+        "모듈과 연산은 피연산자의 타입별로 구현을 갖고, 컴파일러가 입력 타입과 자식 타입에 따라 구현을 고릅니다. **실행 중 Variant 디스패치는 없습니다.**",
+        "A module or an op has one impl for each operand type it takes, and the compiler picks the impl from the operand and child types. Nothing dispatches at run time."
+      ],
+      [
+        "list",
+        [
+          [
+            "가중치 표현: `tensor/form` 타입으로 FP8·NVFP4 같은 저장/복구 방식을 표현.",
+            "Weight form: a type in tensor/form that says how a weight is stored and restored."
+          ],
+          [
+            "전략: `specialize/` 값으로 타일링과 Attention Strategy를 선택.",
+            "Strategy: a value in specialize/, such as contraction tiling or attention strategy."
+          ],
+          [
+            "캐시: `Scatter` 등의 연산은 KV Cache 레이아웃 타입별 구현을 가집니다.",
+            "Cache: Scatter has an impl for each cache it writes into."
+          ],
+          [
+            "배치: `Parallel<N>`이 N개 칩에 대한 Tensor Parallelism을 타입으로 지정합니다.",
+            "Placement: a model alias takes Parallel<N>, tensor parallelism over N chips, as a type."
+          ],
+          [
+            "Row: `Live<X,R>`는 한 호출이 실제 사용하는 Row 수를 나타냅니다.",
+            "Rows: Live<X, R> carries the rows a call fills."
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "가중치와 적재",
+        "Weights and loading"
+      ],
+      [
+        "p",
+        "`#[derive(Load)]`는 체크포인트 필드명에 따라 가중치를 HBM으로 한 텐서씩 적재합니다. `T<Hbm>`이 가중치를 소유하고 호출은 `T<&Hbm>`로 빌려 사용합니다.",
+        "A tree is generic over its memory: T<Hbm> owns its leaves in HBM, and a call borrows it as T<&Hbm>. Nothing stays on host."
+      ],
+      [
+        "p",
+        "원문은 `Update`를 이용해 **이미 적재한 모델 트리의 가중치를 원위치에 갱신**하는 경로도 설명합니다. 이는 재컴파일 없이 일부 가중치를 바꾸려는 응용에 중요한 단서입니다. 도중 실패하면 모델 값은 다시 적재할 때까지 불확정입니다.",
+        "An Update writes new weights into a loaded tree as their chunks arrive, keeping its structure and ties. If a write fails after the device took it, the tree's values are unknown until it loads again."
+      ],
+      [
+        "h2",
+        "타일 단위 스트리밍 실행",
+        "Streaming execution"
+      ],
+      [
+        "p",
+        "일반 `forward`는 한 모듈의 출력을 모두 계산한 뒤 다음 모듈을 시작합니다. 스트리밍은 Row 그룹 하나가 완성되면 다음 모듈로 전달합니다. 입력을 기다리는 모듈도 다음 가중치를 DM으로 미리 이동시키는 독립 작업을 할 수 있습니다.",
+        "forward computes a module's whole output before the next module starts. The streaming form runs the same tree a tile at a time. A module that waits for input can do work such as moving its next weights to DM."
+      ],
+      [
+        "table",
+        [
+          "모듈",
+          "스트리밍 방식"
+        ],
+        [
+          [
+            "`RowWise` Leaf",
+            "입력 Row 타일마다 `forward`"
+          ],
+          [
+            "`CrossRow` Leaf (Attention 등)",
+            "모든 입력 타일을 보관한 뒤 계산하고 결과를 타일별 출력"
+          ],
+          [
+            "`Sequential`, `Then`",
+            "첫 모듈의 스트림을 두 번째 모듈이 소비"
+          ],
+          [
+            "`Residual`",
+            "정규화된 타일을 Branch로 전달한 후 원본과 더함"
+          ],
+          [
+            "반복 `Layers`",
+            "활성 상태의 두 레이어를 순환 재사용하여 Layer 수 증가에도 코드 복사 최소화"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "각 모듈은 필요한 시점에 입력 타일을 Pull하는 스트림 노드처럼 동작하며, `Scheduled<M>`이 루트를 반복 Poll합니다. 동작 보장은 원문 `schedule.rs`에 정의되어 있습니다.",
+        "Each module streams as a node that the next module polls, like a futures::Stream. Scheduled<M> polls a model's root this way until it is done."
+      ],
+      [
+        "h2",
+        "전체 예제와 추가 세부 구현",
+        "Further source"
+      ],
+      [
+        "p",
+        "원문에는 모델 레지스트리, 호스트 실행 구성, Device Entry, 수학적 Trait, NeMo 40 Layer 조립 등 코드 예시가 더 있습니다. 이 발췌 번역에서 생략된 부분은 상단 원문 링크에서 확인하세요.",
+        "The original page has more sections including the model registry and the host."
+      ]
+    ]
+  },
+  "reference/rust": {
+    "title": "Rust API 참조",
+    "blocks": [
+      [
+        "p",
+        "Rust API 문서는 `main` 브랜치를 기준으로 생성됩니다. 코드·트레이트의 최신 정확한 시그니처는 아래 공식 API에서 확인하세요.",
+        "The reference is built from main."
+      ],
+      [
+        "list",
+        [
+          [
+            "**`furiosa_opt_models`**: 수치 연산, 모듈, 모델 정의, 모델 Registry, 가중치 적재 방식. 공식 API: https://developer.furiosa.ai/furiosa-opt-models/api/rust/furiosa_opt_models/",
+            "furiosa_opt_models: numerical operations, modules, model definitions, the model registry and how weights load."
+          ],
+          [
+            "**`furiosa_opt_engine`**: 로드 옵션, 실행 호출, Decoder API. 공식 API: https://developer.furiosa.ai/furiosa-opt-models/api/rust/furiosa_opt_engine/",
+            "furiosa_opt_engine: load options, launches and decoder calls."
+          ]
+        ]
+      ],
+      [
+        "p",
+        "프레임워크는 Python 모듈을 통해 엔진을 호출하지만, 이 Rust API에는 새 모델을 추가할 개발자를 위한 내부 구조도 포함됩니다.",
+        "Frameworks call the engine through its Python module, so this reference also documents its internal items, for developers adding a model."
+      ]
+    ]
+  }
+});

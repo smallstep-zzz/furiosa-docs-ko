@@ -1458,3 +1458,578 @@ Object.assign(window.OPT_DOCS_ADVANCED,{
     ]
   }
 });
+
+Object.assign(window.OPT_DOCS_ADVANCED,{
+  "develop/add-model": {
+    "title": "기존 연산으로 모델 추가하기",
+    "partial": true,
+    "blocks": [
+      [
+        "note",
+        "원문에는 Mistral NeMo·Qwen3의 Rust 코드 포함(`--8<--`)과 레지스트리 연결 예제가 있습니다. 이 페이지는 **작업 절차와 파일 관계를 번역**하고 코드 본문은 영문 GitHub에서 보도록 남깁니다.",
+        "The composition example is Mistral NeMo, and the later steps follow the Qwen3 files."
+      ],
+      [
+        "p",
+        "이미 구현된 연산 블록을 조합해 새 모델을 추가할 때의 안내입니다. 커널이 새로 필요하지 않은 경우를 전제로 합니다. 수학적 연산을 추가해야 한다면 [[vISA 커널 작성|develop/kernel]]을 먼저 참고하세요.",
+        "Add a model whose building blocks already exist in the models crate, so no new kernel is written."
+      ],
+      [
+        "table",
+        [
+          "단계",
+          "코드 위치"
+        ],
+        [
+          [
+            "모델 모듈 조립",
+            "`crates/furiosa-opt-models/src/models/<family>/<model type>.rs`"
+          ],
+          [
+            "가중치 로더",
+            "같은 모델 파일"
+          ],
+          [
+            "서빙 Decoder와 Python 바인딩",
+            "`crates/furiosa-opt-engine/src/decoder/`, `crates/furiosa-opt-python/src/model/`"
+          ],
+          [
+            "Registry 등록",
+            "`crates/furiosa-opt-engine/src/registry.rs`"
+          ],
+          [
+            "체크포인트 벤치마크 등록",
+            "`.github/benchmarks.json`"
+          ],
+          [
+            "문서 등록",
+            "`docs/models/<name>.md`, `mkdocs.yml`"
+          ],
+          [
+            "테스트 추가",
+            "`crates/furiosa-opt-engine/tests/`"
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "모듈 구조 정의",
+        "Define the composition"
+      ],
+      [
+        "p",
+        "모델 계열의 `models/` 경로에 새 타입을 만들고 `mod.rs`에 `pub mod <model type>;`을 등록합니다. 체크포인트의 아키텍처와 Shape에 맞는 기존 모듈을 조립합니다.",
+        "Create the model type's file in its family's directory and bind the checkpoint's architecture to existing modules at its dimensions."
+      ],
+      [
+        "p",
+        "각 크기별 `Geometry`와 `Decode` 조건을 타입으로 정의합니다. 체크포인트 설정이 타입으로 고정한 크기나 연산 형식과 다르면 명시적으로 거부해야 합니다.",
+        "Each size implements Geometry and Decode. Converting the parsed Config to a size checks every value the size fixes."
+      ],
+      [
+        "list",
+        [
+          [
+            "모델 파일은 위에서 아래로 **모델 타입 → 구성 요소(Embedding/Layer/Norm/Head) → 입출력 타입 → 축/상수 → Config 파싱 → 테스트** 순서로 작성합니다.",
+            "Declare items top-down: model type, parts, input/output/context types, axes/constants, Config and parsing, tests."
+          ],
+          [
+            "카탈로그 템플릿에는 따라 만든 Transformers/vLLM 소스의 정확한 커밋 URL을 `/// Source: <URL>`로 기록합니다.",
+            "Give every catalog template a /// Source: <URL> line at a pinned commit."
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "체크포인트 가중치 적재",
+        "Load its weights"
+      ],
+      [
+        "p",
+        "새 구조체에는 `Load`를 파생(`derive`)하고 실제 체크포인트 텐서 이름과 각 필드가 일치하게 작성합니다. 이름이나 Shape가 다르면 매핑 속성으로 처리합니다. 사용하지 않는 체크포인트 텐서는 명시적으로 무시할 접두사를 선언해야 합니다.",
+        "Derive Load on each struct ... name each field as the checkpoint names it. A checkpoint tensor that no field reads fails the load unless an ignore prefix covers it."
+      ],
+      [
+        "h2",
+        "엔진 서빙 연결",
+        "Serve it from the engine"
+      ],
+      [
+        "p",
+        "엔진 Decoder는 호출의 행과 결과, Cache Layer View를 구성합니다. Python 쪽 타입은 공통 `Decoder`를 상속하며, 바인딩 등록과 `LoadOptions.load`에 새 모델 타입을 연결합니다.",
+        "The decoder states what one call holds and returns, views each layer of the cache, and launches the call. The Python class derives from Decoder."
+      ],
+      [
+        "p",
+        "Python 타입 Stub이 바뀌면 다음 명령으로 재생성합니다. 설치된 Python의 `LIBDIR` 경로를 `LD_LIBRARY_PATH`에 포함해야 할 수 있으며, Stub이 소스와 다르면 CI가 실패합니다.",
+        "Regenerate the Python type stubs with cargo furiosa-opt run ...; CI fails when the stubs differ from the code."
+      ],
+      [
+        "code",
+        "bash",
+        "cargo furiosa-opt run -p furiosa-opt-python --release --bin stub"
+      ],
+      [
+        "h2",
+        "레지스트리 등록",
+        "Add it to the registry"
+      ],
+      [
+        "p",
+        "지원할 크기마다 `Implementation::of::<T>()`를 등록합니다. 모델 아키텍처 이름은 레지스트리에 한 번만 나타나며, 제공할 구체 타입이 없으면 거부 상태로 남습니다.",
+        "Add Implementation::of::<T>() for each concrete type, one per size, to the row of each upstream architecture."
+      ],
+      [
+        "h2",
+        "벤치마크 목록 등록",
+        "List the checkpoint"
+      ],
+      [
+        "p",
+        "`.github/benchmarks.json`의 `models` 배열에 새 행을 추가합니다.",
+        "Add a row to models in .github/benchmarks.json, copying a similar model's row."
+      ],
+      [
+        "code",
+        "json",
+        "{\n  \"id\": \"org/Model-Name\",\n  \"tier\": \"nightly\",\n  \"task\": \"text\",\n  \"doc\": \"model-name\",\n  \"serve\": [\"--max-model-len\", \"40960\"],\n  \"download\": [\"*.json\", \"*.safetensors\"]\n}"
+      ],
+      [
+        "list",
+        [
+          [
+            "`tier`: Gate 또는 Nightly 측정 주기.",
+            "tier sets how often CI runs the row."
+          ],
+          [
+            "`revision`: 다운로드할 Checkpoint 커밋 고정.",
+            "revision pins the checkpoint commit that CI downloads."
+          ],
+          [
+            "`reference`: 비교할 참조 출력 태그.",
+            "reference names the reference outputs that the tests compare with."
+          ],
+          [
+            "`download`: Hugging Face에서 받을 파일 패턴.",
+            "download lists the files CI downloads as hf download --include patterns."
+          ],
+          [
+            "`quantization`: 양자화 가중치/활성화 정밀도와 해당 레이어.",
+            "quantization lists the precision of a quantized checkpoint."
+          ],
+          [
+            "`forward`: 독립적으로 측정할 NPU Forward 테스트.",
+            "forward names the row's device test."
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "문서와 테스트",
+        "Document and test"
+      ],
+      [
+        "p",
+        "`docs/models/<name>.md`를 추가하고 `mkdocs.yml` 탐색 메뉴에 등록합니다. `mkdocs build --strict`는 목차 밖의 문서를 오류로 처리합니다. 테스트는 Transformers의 동일 체크포인트 Greedy 출력과 비교하고, 지원하지 않는 요청이 거부되는지도 고정합니다.",
+        "Create docs/models/<name>.md and add it to nav. Test the model type ... compare a greedy continuation with Transformers and pin each refusal."
+      ]
+    ]
+  },
+  "develop/testing": {
+    "title": "모델 테스트와 벤치마크",
+    "partial": true,
+    "blocks": [
+      [
+        "note",
+        "원문에서 일부 벤치마크 명령은 MkDocs 템플릿(`{{ ... }}`)으로 최신 모델을 선택해 생성합니다. 여기서는 재현 가능한 고정 명령과 측정 원칙을 번역했습니다. 전체 템플릿이 렌더링된 명령은 공식 웹 문서를 보세요.",
+        "Testing commands use macros to select the served checkpoint at build time."
+      ],
+      [
+        "p",
+        "모델 및 프레임워크 테스트를 수행하려면 RNGD 장치, `uv`, `cargo-furiosa-opt`가 필요합니다. 체크포인트 Fixture는 `uv`로 다운로드됩니다.",
+        "You need an RNGD device, uv and cargo-furiosa-opt on your PATH."
+      ],
+      [
+        "h2",
+        "모델 단위 테스트",
+        "Test a model"
+      ],
+      [
+        "p",
+        "장치에서 Checkpoint를 적재하고 디코딩한 결과를 Transformers와 비교합니다.",
+        "They load the checkpoint, decode on the device and check the output against Transformers."
+      ],
+      [
+        "code",
+        "bash",
+        "cargo furiosa-opt test -p furiosa-opt-engine --release --test qwen3_bf16 \\\n  -- --include-ignored --test-threads 1"
+      ],
+      [
+        "p",
+        "장치를 여는 테스트는 기본적으로 Ignored이므로 `--include-ignored`로 실행합니다. 새 컴파일러 리비전에서 첫 빌드가 오래 걸릴 수 있습니다.",
+        "A test that opens a device is ignored by default ... the first build on a new compiler revision is slow."
+      ],
+      [
+        "p",
+        "개별 연산은 `-p furiosa-opt-models`와 `adds_elementwise` 같은 테스트로 검사합니다. Checkpoint 설정만 검증하는 테스트는 `config.json` 및 Safetensors 헤더만 읽어 처음 실행 시 Hugging Face 캐시에 저장하고 다음부터 재사용합니다.",
+        "To test one numerical operation, run a models test. The engine's tests of a checkpoint's config and strict load fetch no weights."
+      ],
+      [
+        "h2",
+        "프레임워크 테스트",
+        "Run the framework tests"
+      ],
+      [
+        "p",
+        "플러그인을 설치한 뒤 RNGD에서 vLLM과 SGLang 테스트를 각각 실행합니다. 일부 테스트는 `FURIOSA_OPT_REFERENCES`의 독립 기준값을 읽습니다.",
+        "Install a plugin ... then run its tests on RNGD. A test that compares with reference outputs reads them from FURIOSA_OPT_REFERENCES."
+      ],
+      [
+        "code",
+        "bash",
+        "python -m pytest integrations/furiosa-opt-vllm/tests\npython -m pytest integrations/furiosa-opt-sglang/tests"
+      ],
+      [
+        "h2",
+        "기준 출력(Reference Output)",
+        "Reference outputs"
+      ],
+      [
+        "p",
+        "기준 출력은 원본 프레임워크가 자신에게 맞는 장치에서 **같은 고정 요청**을 실행한 결과입니다. 자체 구현의 출력을 저장하면 현재 버그까지 고정할 수 있으므로 기준값으로 사용하지 않습니다.",
+        "A reference output is what the upstream framework returns for one fixed request ... It is never our own output."
+      ],
+      [
+        "p",
+        "참조 결과는 체크포인트의 리비전에 묶인 `references/<org>--<name>@<revision>` 태그로 저장합니다. `manifest.json`에 버전, 요청, Hash 등을 기록하며, CI는 Tag 단위로 캐시하므로 기존 Tag를 덮어쓰면 안 됩니다.",
+        "Each reference is a release of this repository, tagged references/<org>--<name>@<revision>. A tag is never changed."
+      ],
+      [
+        "code",
+        "bash",
+        "export FURIOSA_OPT_REFERENCES=~/.cache/furiosa-opt-models/references\ntag=references/<org>--<checkpoint>@<revision>\ngh release download \"$tag\" --repo furiosa-ai/furiosa-opt-models --dir \"$FURIOSA_OPT_REFERENCES/$tag\""
+      ],
+      [
+        "h2",
+        "벤치마크 재현",
+        "Reproduce a benchmark"
+      ],
+      [
+        "p",
+        "커널 실행 시간과 Forward 시간은 `FURIOSA_OPT_PROFILE=info`로 장치 Span을 기록한 뒤 확인합니다. Chrome Trace는 `trace/<org>--<checkpoint>/forward.json`에 생성되며 Perfetto로 열 수 있습니다.",
+        "To reproduce kernel and forward figures, run a checkpoint's forward test with FURIOSA_OPT_PROFILE=info. The trace lands in trace/<org>--<checkpoint>/forward.json."
+      ],
+      [
+        "h2",
+        "측정 구현",
+        "Measurement implementation"
+      ],
+      [
+        "table",
+        [
+          "측정 단계",
+          "기준 Span",
+          "기록 방식"
+        ],
+        [
+          [
+            "Kernel",
+            "Forward 내부의 `NPU` Span",
+            "Chrome Trace·장치 Cycle"
+          ],
+          [
+            "Forward",
+            "`forward` Span",
+            "Host 시간, ms로 게시"
+          ],
+          [
+            "Serving",
+            "클라이언트가 관측한 전체 요청",
+            "vLLM Bench 또는 Contract Test의 Trace"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "커널 시간은 `begin_cycle`부터 `end_cycle`까지 집계하고, Forward의 호스트 시간과 구분합니다. CI는 같은 단계의 중앙값을 기록하며 PR에서는 기준 커밋 대비 예산 초과 여부를 검사합니다.",
+        "Kernel time is begin_cycle to end_cycle. Forward time is recorded in microseconds and published in milliseconds. The metrics action takes the median."
+      ],
+      [
+        "p",
+        "서빙 결과는 동시성·워크로드별 TTFT(Time To First Token), TPOT(Time Per Output Token), 전체 요청 지연으로 기록합니다.",
+        "Serving records median time to first token, time per output token and whole-request latency per concurrency width and workload."
+      ]
+    ]
+  },
+  "reference/python": {
+    "title": "Python API 참조 안내",
+    "partial": true,
+    "blocks": [
+      [
+        "note",
+        "공식 Python Reference는 Python 타입 Stub에서 자동 생성되는 API 시그니처 페이지입니다. 이 한국어판은 **API 계층과 주요 타입의 역할**을 설명하고, 실제 함수 매개변수·반환값의 최신 표는 상단 원문을 보도록 연결합니다.",
+        "This page is generated from its type stubs and grouped by task."
+      ],
+      [
+        "p",
+        "엔진은 양쪽 플러그인의 의존성으로 설치되는 `furiosa_opt_engine` 패키지입니다. 실제 사용 순서는 [[Python 엔진 사용|engine/python]]을 참고하세요.",
+        "The engine is the furiosa_opt_engine package, which both plugins install as a dependency."
+      ],
+      [
+        "h2",
+        "체크포인트 적재",
+        "Load a checkpoint"
+      ],
+      [
+        "p",
+        "`Checkpoint`는 모델 파일과 설정을 표현합니다. `LoadOptions`는 가중치를 읽기 전에 선택한 구성이 체크포인트에 적합한지 검사하고, Registry가 선택한 모델을 `Device`에 적재합니다.",
+        "LoadOptions checks its choices against a Checkpoint before any weight is read, then loads the model the registry selects onto a Device."
+      ],
+      [
+        "table",
+        [
+          "타입",
+          "역할"
+        ],
+        [
+          [
+            "`Checkpoint`",
+            "체크포인트와 텐서/설정 확인"
+          ],
+          [
+            "`LoadOptions`",
+            "아키텍처·KV 타입·배치 등의 로딩 계약"
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "디바이스 메모리",
+        "Device memory"
+      ],
+      [
+        "table",
+        [
+          "타입",
+          "역할"
+        ],
+        [
+          [
+            "`Placement`",
+            "칩·PE 위치 지정"
+          ],
+          [
+            "`Device`",
+            "RNGD 장치 핸들"
+          ],
+          [
+            "`HbmBuffer`",
+            "HBM의 바이트 버퍼"
+          ],
+          [
+            "`HostBuffer`",
+            "호스트 메모리 버퍼"
+          ],
+          [
+            "`Transfer`",
+            "비동기 데이터 이동 완료 객체"
+          ],
+          [
+            "`HostTensor`",
+            "호스트 텐서"
+          ],
+          [
+            "`HbmTensor`",
+            "NPU 상주 텐서"
+          ]
+        ]
+      ],
+      [
+        "h2",
+        "적재된 모델",
+        "Loaded models"
+      ],
+      [
+        "p",
+        "모델 적재는 모델 타입별 Python 클래스(예: `qwen3.ForCausalLM`, `llama.ForCausalLM`)를 반환하지만, 공통 `Decoder` 인터페이스를 사용합니다. `forward()`는 장치가 작업을 수락한 직후 반환할 수 있으므로 완료를 기다리는 함수와 구분해야 합니다.",
+        "A load returns a Decoder as an object of the model type's class. Every forward returns once the device accepted the call."
+      ],
+      [
+        "p",
+        "비전 언어 모델의 미디어 Encoder를 단독으로 로드하면 `Encoder`를 반환하며 `vision_language.Image`, `vision_language.Audio` 같은 입력 타입을 지원하는 구성이 따로 있습니다.",
+        "A load of a vision-language model's media encoder alone returns an Encoder."
+      ],
+      [
+        "h2",
+        "요청과 KV 캐시",
+        "Requests and cache"
+      ],
+      [
+        "p",
+        "`decoder.Request`는 한 시퀀스의 토큰·캐시 블록 ID·기존 위치 등을 담습니다. `decoder.Cache(spec, blocks)`는 적재된 모델의 `CacheSpec`을 기준으로 실제 메모리를 할당합니다. `Pool`, `Group`, `Kind`는 캐시 구조를 나타냅니다.",
+        "A call takes one Request per sequence and the Cache they append to; Cache(spec, blocks) allocates the CacheSpec that a loaded model describes."
+      ],
+      [
+        "note",
+        "**KV 풀 크기를 직접 제어하려는 경우:** 프레임워크 없이 엔진을 직접 사용하면 `Cache(spec, blocks)`의 블록 수가 **메모리 할당의 명시적 입력**입니다. 이 기능이 `furiosa-llm serve`에도 그대로 노출되어 있다는 뜻은 아닙니다.",
+        "Cache(spec, blocks) allocates the CacheSpec that a loaded model describes."
+      ]
+    ]
+  },
+  "models/index": {
+    "title": "지원 모델과 벤치마크 읽기",
+    "partial": true,
+    "blocks": [
+      [
+        "note",
+        "이 문서는 CI의 `.github/benchmarks.json`과 대시보드 데이터로 표를 **동적으로 생성**합니다. 여기서는 원문의 기준과 대표 모델군만 한글화했으며, 실시간 모델 목록·그래프는 상단 공식 문서를 참고하세요.",
+        "The inventory feeds the model tables and the checkpoints CI downloads."
+      ],
+      [
+        "p",
+        "공식 목록에 실리는 체크포인트는 CI에서 실제 RNGD에 실행되고, 그 실행 속도가 측정된 경우입니다. 단순히 코드만 존재하는 모델을 지원 모델로 표시하지 않습니다.",
+        "These checkpoints run on RNGD at the speed CI measures for them. A model is listed only while it runs in CI."
+      ],
+      [
+        "h2",
+        "현재 검증 대상의 예시",
+        "Available models"
+      ],
+      [
+        "table",
+        [
+          "모델 계열",
+          "원문에서 열거한 예시",
+          "용도"
+        ],
+        [
+          [
+            "Qwen3",
+            "0.6B, 1.7B, 4B, 8B",
+            "텍스트 생성"
+          ],
+          [
+            "Llama",
+            "Llama 3 8B, Llama 3.1 NVFP4",
+            "텍스트 생성"
+          ],
+          [
+            "Mistral",
+            "Mistral 7B, NeMo",
+            "텍스트 생성"
+          ],
+          [
+            "Gemma 4",
+            "12B NVFP4",
+            "텍스트 생성"
+          ],
+          [
+            "Qwen3 Embedding",
+            "0.6B, 4B, 8B",
+            "임베딩"
+          ],
+          [
+            "Qwen3 Reranker",
+            "0.6B, 4B, 8B",
+            "리랭킹"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "모델별 표에는 Checkpoint, Gate/Nightly 등급, Weight/Cache Precision, Kernel/Forward 검증, 서빙 검증이 표시됩니다. 최신 상태는 공식 Dashboard와 CI 이력을 함께 확인해야 합니다.",
+        "The tables list checkpoints, weights, KV cache, kernel and forward, and serving measures."
+      ],
+      [
+        "h2",
+        "지원 여부를 어떻게 유지하나요?",
+        "How availability is kept"
+      ],
+      [
+        "p",
+        "Gate 등급 모델은 모든 Pull Request마다 Forward와 서빙 스모크 테스트를 거칩니다. Nightly 등급은 매일 여러 동시성·워크로드에서 측정합니다.",
+        "Gate checkpoints are measured on every pull request; nightly checkpoints are measured once a day on main."
+      ],
+      [
+        "h2",
+        "회귀 방지 기준",
+        "Regression gate"
+      ],
+      [
+        "table",
+        [
+          "단계",
+          "기본 회귀 예산",
+          "측정"
+        ],
+        [
+          [
+            "Kernel",
+            "0.5%",
+            "장치 Cycle Counter"
+          ],
+          [
+            "Forward",
+            "3%",
+            "모델 호출의 Host Wall Time"
+          ],
+          [
+            "Serving",
+            "차단 게이트가 아닌 관찰 측정",
+            "vLLM 요청 지연"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "장치 커널이 0.5%를 초과해 느려지면 전체 Forward가 3% 이내라도 PR이 차단될 수 있습니다. 반면 Serving 측정은 실행 간 편차가 커서 기록만 합니다.",
+        "A kernel slowdown of more than 0.5% blocks even when forward time stays within 3%. Serving measurements are recorded but do not block."
+      ],
+      [
+        "h2",
+        "어떤 시간을 측정하나요?",
+        "What is measured"
+      ],
+      [
+        "table",
+        [
+          "측정",
+          "대상",
+          "단위"
+        ],
+        [
+          [
+            "Kernel",
+            "NPU에서 커널이 실행된 시간",
+            "Device Cycle → ms"
+          ],
+          [
+            "Forward",
+            "모델 함수 전체 호출 시간",
+            "Host ms"
+          ],
+          [
+            "Serving",
+            "프레임워크를 거친 요청",
+            "TTFT, TPOT, Request Latency"
+          ]
+        ]
+      ],
+      [
+        "p",
+        "Serving은 동시성을 바꿔가며 여러 요청을 실행하고 각 단계의 중앙값을 기록합니다. Trace의 최하위 단계부터 병목을 찾아야 전체 지연 증가 원인을 판단할 수 있습니다.",
+        "Three levels cover three layers of the stack, and a regression is attributed to the lowest level that shows it."
+      ],
+      [
+        "h2",
+        "대시보드 읽기",
+        "Reading the dashboards"
+      ],
+      [
+        "p",
+        "추세 그래프는 커밋 간 성능 변화를 표시하고, Throughput 그래프는 최신 Nightly의 동시성별 처리량과 상호작용 속도 관계를 보여 줍니다. 데이터가 없는 경우 측정이 아직 없음을 뜻합니다.",
+        "Trend charts plot each measurement as its change from the commit measured before it. Throughput charts draw the latest four nightly commits."
+      ]
+    ]
+  }
+});
